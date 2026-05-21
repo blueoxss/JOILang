@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"SetAirConditionerCoolMode\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"if ((#AirConditioner).AirConditioner_Temperature >= 30) {\\n    (#AirConditioner).AirConditioner_SetAirConditionerMode(\\\"cool\\\")\\n}\"\n}",
       "prompt_tokens": 75472,
       "completion_tokens": 75,
-      "prompt_prep_sec": 0.1796,
-      "generate_sec": 14.0305,
+      "prompt_prep_sec": 0.1794,
+      "generate_sec": 14.022,
       "decode_sec": 0.0003,
-      "total_worker_sec": 14.2172,
-      "worker_pid": 940881,
+      "total_worker_sec": 14.2083,
+      "worker_pid": 950520,
       "peak_vram_bytes": 30356977664,
       "peak_vram_gb": 28.2721,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 30356977664,
     "peak_vram_gb": 28.2721,
-    "prompt_prep_sec": 0.1796,
-    "generate_sec": 14.0305,
+    "prompt_prep_sec": 0.1794,
+    "generate_sec": 14.022,
     "decode_sec": 0.0003,
-    "total_worker_sec": 14.2172,
-    "worker_pid": 940881,
-    "latency_sec": 14.2234,
+    "total_worker_sec": 14.2083,
+    "worker_pid": 950520,
+    "latency_sec": 14.2155,
     "attempt": 1
   }
 }

@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"TurnOnLightWhenContactDetected\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"wait until ((#ContactSensor).ContactSensor_Presence == true)\\n(#Light).Switch_On()\"\n}",
       "prompt_tokens": 75416,
       "completion_tokens": 59,
-      "prompt_prep_sec": 0.1785,
-      "generate_sec": 13.5169,
+      "prompt_prep_sec": 0.1781,
+      "generate_sec": 13.5014,
       "decode_sec": 0.0003,
-      "total_worker_sec": 13.7024,
-      "worker_pid": 940881,
+      "total_worker_sec": 13.6863,
+      "worker_pid": 950520,
       "peak_vram_bytes": 30345248768,
       "peak_vram_gb": 28.2612,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 30345248768,
     "peak_vram_gb": 28.2612,
-    "prompt_prep_sec": 0.1785,
-    "generate_sec": 13.5169,
+    "prompt_prep_sec": 0.1781,
+    "generate_sec": 13.5014,
     "decode_sec": 0.0003,
-    "total_worker_sec": 13.7024,
-    "worker_pid": 940881,
-    "latency_sec": 13.7093,
+    "total_worker_sec": 13.6863,
+    "worker_pid": 950520,
+    "latency_sec": 13.6925,
     "attempt": 1
   }
 }

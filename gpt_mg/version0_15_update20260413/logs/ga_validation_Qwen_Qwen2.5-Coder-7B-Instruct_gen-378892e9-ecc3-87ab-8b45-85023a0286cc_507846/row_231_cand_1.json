@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"RepeatDoorOpeningClosing\",\n  \"cron\": \"\",\n  \"period\": 100,\n  \"code\": \"prev := (#Door).Door_DoorState\\ncurr = (#Door).Door_DoorState\\nif (prev != \\\"open\\\" and curr == \\\"open\\\") {\\n    (#Door).Door_Close()\\n    delay(1 HOUR)\\n    (#Door).Door_Open()\\n}\\nprev = curr\"\n}",
       "prompt_tokens": 76729,
       "completion_tokens": 101,
-      "prompt_prep_sec": 0.1801,
-      "generate_sec": 15.2316,
+      "prompt_prep_sec": 0.1823,
+      "generate_sec": 15.2286,
       "decode_sec": 0.0003,
-      "total_worker_sec": 15.4188,
-      "worker_pid": 940881,
+      "total_worker_sec": 15.4179,
+      "worker_pid": 950520,
       "peak_vram_bytes": 30607406080,
       "peak_vram_gb": 28.5054,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 30607406080,
     "peak_vram_gb": 28.5054,
-    "prompt_prep_sec": 0.1801,
-    "generate_sec": 15.2316,
+    "prompt_prep_sec": 0.1823,
+    "generate_sec": 15.2286,
     "decode_sec": 0.0003,
-    "total_worker_sec": 15.4188,
-    "worker_pid": 940881,
-    "latency_sec": 15.4253,
+    "total_worker_sec": 15.4179,
+    "worker_pid": 950520,
+    "latency_sec": 15.4248,
     "attempt": 1
   }
 }
