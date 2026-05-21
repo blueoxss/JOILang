@@ -1,7 +1,0 @@
-{
-  "results_dir": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/paper_study_qwen25_coder_14b_20260514_215606/B3_fixed_block",
-  "output_dir": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/paper_study_qwen25_coder_14b_20260514_215606/B3_fixed_block/paper_figures",
-  "figures": {},
-  "status": "plotting_failed",
-  "error": "No module named 'matplotlib'"
-}

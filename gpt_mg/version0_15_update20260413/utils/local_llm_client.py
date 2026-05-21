@@ -450,7 +450,11 @@ def _local_model_dir_from_base(model: str, configured_model_name: str) -> str:
         "microsoft/phi-3.5-mini-instruct": "phi35_mini",
         "google/gemma-2-9b-it": "gemma2_9b_it",
         "qwen/qwen2.5-coder-7b-instruct": "qwen25_coder_7b",
+
+        # Llama 3.1 8B variants
+        "meta-llama/llama-3.1-8b-instruct": "llama31_8b",
         "meta-llama/meta-llama-3.1-8b-instruct": "llama31_8b",
+
         "qwen/qwen2.5-coder-14b-instruct": "qwen25_coder_14b",
     }
 
@@ -458,6 +462,9 @@ def _local_model_dir_from_base(model: str, configured_model_name: str) -> str:
     if not folder_name:
         return configured_model_name
 
+    if folder_name is None and "llama-3.1-8b" in normalized:
+        folder_name = "llama31_8b"
+        
     candidate = Path(base_dir).expanduser() / folder_name
     if candidate.exists():
         return str(candidate.resolve())

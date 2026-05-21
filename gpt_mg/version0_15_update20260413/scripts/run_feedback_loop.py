@@ -327,8 +327,16 @@ def evaluate_genome_on_rows(
     det_profile: str = "legacy",
     output_dir: str | Path | None = None,
 ) -> dict[str, Any]:
-    temperature, max_tokens, model = _llm_settings(genome, argparse.Namespace(temperature=None, max_tokens=None))
-    run_id = make_run_id(f"{run_label}_{genome.get('id', 'genome')}", seed)
+    temperature, max_tokens, model = _llm_settings(
+        genome,
+        argparse.Namespace(temperature=None, max_tokens=None),
+    )
+
+    model_slug = slugify(str(model))
+    run_id = make_run_id(
+        f"{run_label}_{model_slug}_{genome.get('id', 'genome')}",
+        seed,
+    )
     output_root = Path(output_dir).expanduser().resolve() if output_dir else RESULTS_DIR
     output_root.mkdir(parents=True, exist_ok=True)
     output_csv = output_root / f"candidates_{slugify(run_id)}.csv"
@@ -498,92 +506,3 @@ def run_feedback_loop(
             "improved": improved,
             "manual_rule_count": len(manual_rules),
         }
-        attempts_log.append(attempt_record)
-        dump_json(patch_dir / f"attempt_{attempt_index + 1}.json", {"attempt": attempt_record, "metrics": metrics})
-        if improved:
-            best_genome = patched_genome
-            best_metrics = metrics
-
-    report_lines = [
-        f"# version0_14 Feedback Loop Report",
-        "",
-        f"- profile: {profile}",
-        f"- base_genome: {genome.get('id', 'unknown')}",
-        f"- baseline_avg_det_score: {baseline['avg_det_score']}",
-        f"- best_avg_det_score: {best_metrics['avg_det_score']}",
-        f"- validation_size: {len(validation_rows)}",
-        f"- patch_dir: {patch_dir}",
-        "",
-        "## Top Failure Types",
-    ]
-    for name, count in baseline["failure_summary"].get("top_failure_types", []):
-        report_lines.append(f"- {name}: {count}")
-    report_lines.append("")
-    report_lines.append("## Patch Attempts")
-    for item in attempts_log:
-        report_lines.append(
-            f"- attempt {item['attempt']}: failures={','.join(item['failure_types'])} avg_det_score={item['avg_det_score']} improved={item['improved']}"
-        )
-    if manual_rules:
-        report_lines.append("")
-        report_lines.append("## Manual Focus Rules")
-        for rule in manual_rules:
-            report_lines.append(f"- {rule}")
-    (patch_dir / "report.md").write_text("\n".join(report_lines) + "\n", encoding="utf-8")
-
-    result = {
-        "baseline": baseline,
-        "best_metrics": best_metrics,
-        "best_genome": best_genome,
-        "attempts": attempts_log,
-        "patch_dir": str(patch_dir),
-        "manual_rules": manual_rules,
-        "improved": float(best_metrics["avg_det_score"]) > float(baseline["avg_det_score"]) + improvement_threshold,
-    }
-    dump_json(patch_dir / "summary.json", result)
-    dump_json(patch_dir / "best_genome.json", best_genome)
-    return result
-
-
-def main() -> int:
-    parser = build_parser()
-    args = parser.parse_args()
-
-    genome = load_genome(args.genome_json)
-    service_schema = load_service_schema(args.service_schema)
-    rows = load_dataset_rows(args.dataset)
-    selected_rows = select_rows(
-        rows,
-        start_row=args.start_row,
-        end_row=args.end_row,
-        limit=args.limit,
-        categories=args.category,
-    )
-    if not selected_rows:
-        raise SystemExit("No rows selected. Check --start-row/--end-row/--limit/--category.")
-
-    result = run_feedback_loop(
-        profile=args.profile,
-        genome=genome,
-        dataset_rows=selected_rows,
-        service_schema=service_schema,
-        validation_size=args.validation_size,
-        candidate_k=args.candidate_k,
-        attempts=args.attempts,
-        improvement_threshold=args.improvement_threshold,
-        llm_mode=args.llm_mode,
-        llm_endpoint=args.llm_endpoint,
-        timeout_sec=args.timeout_sec,
-        retries=args.retries,
-        seed=args.seed,
-    )
-    print("Feedback loop completed")
-    print(f"- baseline_avg_det_score: {result['baseline']['avg_det_score']}")
-    print(f"- best_avg_det_score: {result['best_metrics']['avg_det_score']}")
-    print(f"- improved: {result['improved']}")
-    print(f"- patch_dir: {result['patch_dir']}")
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

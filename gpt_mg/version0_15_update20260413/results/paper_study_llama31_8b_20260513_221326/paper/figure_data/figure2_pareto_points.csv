@@ -1,3 +1,0 @@
-model_key,model_label,variant,variant_label,DETPass,SDET,avg_prompt_tokens,warm_latency_p50,deployment_point,source_dir
-llama31_8b,Llama-3.1-8B-Instruct,B2,Direct cloud-to-local transfer,15.0,19.3864,26880.075,14.3962,True,/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/paper_study_llama31_8b_20260513_221326/B2_direct_cloud_to_local
-llama31_8b,Llama-3.1-8B-Instruct,B3,Fixed block,75.0,86.6525,18062.675,6.4018,True,/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/paper_study_llama31_8b_20260513_221326/B3_fixed_block

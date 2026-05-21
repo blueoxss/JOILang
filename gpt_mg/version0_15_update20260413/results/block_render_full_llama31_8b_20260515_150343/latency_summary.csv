@@ -1,2 +1,0 @@
-model_key,model_label,cold_load_sec,warm_latency_mean,warm_latency_p50,warm_latency_p95,row_success_rate
-llama31_8b,Llama-3.1-8B-Instruct,0.0000,0.0000,0.0000,0.0000,0.0000

@@ -1,3 +1,0 @@
-model_key,model_label,variant,variant_label,DETPass,SDET,avg_prompt_tokens,warm_latency_p50,deployment_point,source_dir
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,B2,Direct cloud-to-local transfer,92.5,93.3548,41386.95,15.5449,True,/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/paper_study_qwen25_coder_14b_20260515_133515/B2_direct_cloud_to_local
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,B3,Fixed block,75.0,80.9571,38495.725,14.3791,True,/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/paper_study_qwen25_coder_14b_20260515_133515/B3_fixed_block

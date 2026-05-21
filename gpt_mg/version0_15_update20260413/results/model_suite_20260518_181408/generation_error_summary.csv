@@ -1,2 +1,0 @@
-model_key,model_label,generation_error_type,count
-phi35_mini,Phi-3.5-mini-instruct,worker_crash,1

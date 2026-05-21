@@ -1,6 +1,0 @@
-{
-  "status": "measured",
-  "description": "Deployment-aware Pareto frontier. GPT-4.1-mini is an upper cloud reference, not a local frontier point.",
-  "point_count": 2,
-  "notes": []
-}

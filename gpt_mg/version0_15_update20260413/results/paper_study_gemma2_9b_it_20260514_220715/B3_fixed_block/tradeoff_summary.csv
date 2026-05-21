@@ -1,2 +1,0 @@
-model_key,model_label,avg_det_score,warm_latency_p50,avg_prompt_tokens,peak_vram_gb_max,cold_load_sec,oom_count,generation_error_rate,failure_rate,det_per_latency,det_per_prompt_token,det_per_vram,pareto_det_vs_warm_latency,pareto_det_vs_prompt_tokens,pareto_det_vs_peak_vram
-gemma2_9b_it,Gemma-2-9B-it,0.0000,10.8277,20141.9000,27.5449,22.6127,0,0.0000,1.0000,0.0000,0.000000,0.0000,True,True,True

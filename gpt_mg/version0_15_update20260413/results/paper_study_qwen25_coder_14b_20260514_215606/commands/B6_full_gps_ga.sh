@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-/root/llm/je/bin/python /root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/scripts/run_local_prompt_ga_study.py --output-root /root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/paper_study_qwen25_coder_14b_20260514_215606/B6_full_gps_ga --prompt-assets-dir /root/llm/JOILang-Server/gpt_mg/version0_13 --population 10 --gens 10 --sample-size 4 --validation-size 4 --candidate-k 1 --det-profile strict --service-context-mode retrieval_fallback --retrieval-topk 10 --retrieval-mode hybrid --retrieval-device cpu --timeout-sec 1800 --skip-unavailable --model-key qwen25_coder_14b --category 1 --category 2 --category 3 --category 4 --category 5 --category 6 --category 7 --category 8 --limit-per-category 5

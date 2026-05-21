@@ -1,2 +1,0 @@
-model_key,model_label,generation_error_type,count
-gemma2_9b_it,Gemma-2-9B-it,cuda_oom,4

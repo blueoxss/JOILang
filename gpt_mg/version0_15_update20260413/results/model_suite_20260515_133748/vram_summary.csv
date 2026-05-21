@@ -1,2 +1,0 @@
-model_key,model_label,peak_vram_gb_max,oom_count,cold_load_sec
-phi35_mini,Phi-3.5-mini-instruct,0.0000,0,0.0000

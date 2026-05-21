@@ -1,2 +1,0 @@
-model_key,model_label,peak_vram_gb_max,oom_count,cold_load_sec
-gemma2_9b_it,Gemma-2-9B-it,27.5449,0,22.6127

@@ -1,7 +1,0 @@
-{
-  "results_dir": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/block_render_full_qwen25_coder_7b_20260515_160027",
-  "output_dir": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/block_render_full_qwen25_coder_7b_20260515_160027/paper_figures",
-  "figures": {},
-  "status": "plotting_failed",
-  "error": "Key backend: 'module://matplotlib_inline.backend_inline' is not a valid value for backend; supported values are ['gtk3agg', 'gtk3cairo', 'gtk4agg', 'gtk4cairo', 'macosx', 'nbagg', 'notebook', 'qtagg', 'qtcairo', 'qt5agg', 'qt5cairo', 'tkagg', 'tkcairo', 'webagg', 'wx', 'wxagg', 'wxcairo', 'agg', 'cairo', 'pdf', 'pgf', 'ps', 'svg', 'template']"
-}

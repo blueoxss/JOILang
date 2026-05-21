@@ -1,2 +1,0 @@
-model_key,model_label,failure_reason,count
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,invalid_json,1

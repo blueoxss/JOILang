@@ -1,2 +1,0 @@
-model_key,model_label,avg_prompt_chars,avg_prompt_tokens,avg_completion_tokens,avg_total_tokens,avg_tokens_per_sec
-gemma2_9b_it,Gemma-2-9B-it,102208.4750,26085.0750,2.0750,26087.1500,1420.5695

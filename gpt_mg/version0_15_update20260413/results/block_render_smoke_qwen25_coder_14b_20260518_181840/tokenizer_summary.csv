@@ -1,2 +1,0 @@
-model_key,model_label,avg_prompt_chars,avg_prompt_tokens,avg_completion_tokens,avg_total_tokens,avg_tokens_per_sec
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,193682.0000,41926.0000,51.0000,41977.0000,1628.6252

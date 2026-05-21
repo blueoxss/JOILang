@@ -1,9 +1,0 @@
-{
-  "row_count": 1,
-  "row_nos": [
-    1
-  ],
-  "candidate_count": 1,
-  "cold_load_sec": 35.2453,
-  "output_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/paper_study_gemma2_9b_it_20260514_220715/B2_direct_cloud_to_local/gemma2_9b_it_warmup_candidates.csv"
-}

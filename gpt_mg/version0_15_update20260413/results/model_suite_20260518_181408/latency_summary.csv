@@ -1,2 +1,0 @@
-model_key,model_label,cold_load_sec,warm_latency_mean,warm_latency_p50,warm_latency_p95,row_success_rate
-phi35_mini,Phi-3.5-mini-instruct,0.0000,0.0000,0.0000,0.0000,0.0000

@@ -1,2 +1,0 @@
-model_key,model_label,cold_load_sec,warm_latency_mean,warm_latency_p50,warm_latency_p95,row_success_rate
-gemma2_9b_it,Gemma-2-9B-it,35.2453,18.5258,21.0611,23.2945,0.0000

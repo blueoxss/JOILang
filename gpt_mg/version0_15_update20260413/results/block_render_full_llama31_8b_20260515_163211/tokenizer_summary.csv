@@ -1,2 +1,0 @@
-model_key,model_label,avg_prompt_chars,avg_prompt_tokens,avg_completion_tokens,avg_total_tokens,avg_tokens_per_sec
-llama31_8b,Llama-3.1-8B-Instruct,126016.7857,0.0000,0.0000,0.0000,0.0000

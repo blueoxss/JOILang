@@ -1,2 +1,0 @@
-model_key,model_label,category,row_count,avg_det_score,avg_gt_similarity,gt_exact_count,gt_exact_rate,pass_count,det_pass_rate,fail_count,warm_latency_p50,avg_prompt_tokens,avg_total_tokens,peak_vram_gb_max,oom_count,generation_error_rate,failure_rate,row_success_rate,top_failure_types
-phi35_mini,Phi-3.5-mini-instruct,1,1,0.0000,0.0000,0,0.0000,0,0.0000,1,0.0000,0.0000,0.0000,0.0000,0,1.0000,1.0000,0.0000,"[[""invalid_json"", 1]]"

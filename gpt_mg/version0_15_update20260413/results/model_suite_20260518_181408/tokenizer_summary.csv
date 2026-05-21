@@ -1,2 +1,0 @@
-model_key,model_label,avg_prompt_chars,avg_prompt_tokens,avg_completion_tokens,avg_total_tokens,avg_tokens_per_sec
-phi35_mini,Phi-3.5-mini-instruct,193701.0000,0.0000,0.0000,0.0000,0.0000
