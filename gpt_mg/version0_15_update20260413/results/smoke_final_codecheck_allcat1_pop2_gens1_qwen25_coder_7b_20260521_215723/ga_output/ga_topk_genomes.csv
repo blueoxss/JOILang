@@ -1,0 +1,3 @@
+generation,rank,model_key,genome_id,det,det_pass_rate,det_pass_count,row_count,tokens,core_blocks,optional_blocks,parent_ids,major_mutations,advisor_proposal_id,fitness
+1,1,qwen25_coder_7b,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,85.7577,62.5,5,8,70282.75,"01,02","05,06",,initial_random,,-56.283652
+1,2,qwen25_coder_7b,gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e,81.8215,50.0,4,8,68963.75,"01,02","03,05,06",,initial_random,,-63.249649

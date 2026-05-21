@@ -1,6 +1,6 @@
 {
   "stage": "full-run",
-  "status": "STARTED",
-  "timestamp": "2026-05-21T21:57:23",
-  "selected_row_count": 8
+  "status": "PASS",
+  "timestamp": "2026-05-21T22:06:13",
+  "output_root": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_codecheck_allcat1_pop2_gens1_qwen25_coder_7b_20260521_215723/ga_output"
 }
