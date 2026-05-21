@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "reason": "",
+  "returncode": 0,
+  "elapsed_sec": 1121.4,
+  "last_activity_age_sec": 0.0,
+  "timestamp": "2026-05-21T21:50:25",
+  "log_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_14b_20260521_213143/_watchdog_logs/run_stdout_stderr.log",
+  "watchdog_dir": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_14b_20260521_213143/_watchdog_logs",
+  "ga_output_dir": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_14b_20260521_213143/ga_output"
+}

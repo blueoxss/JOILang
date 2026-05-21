@@ -1,0 +1,120 @@
+{
+  "best_history": [
+    {
+      "generation": 1,
+      "genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+      "fitness": -56.283652,
+      "avg_det_score": 85.7577,
+      "validation_avg_det_score": 85.7577,
+      "train_det_pass_rate": 62.5,
+      "train_gt_exact_rate": 50.0,
+      "validation_det_pass_rate": 62.5,
+      "validation_gt_exact_rate": 50.0,
+      "genome": {
+        "id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+        "seed": 626297831,
+        "blocks": [
+          "01",
+          "02",
+          "05",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+          "temperature": 0.0,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "minimal",
+            "direct",
+            "canonical_names_first",
+            "compact_json"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 3,
+            "micro_rules": [
+              "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+            ]
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [],
+          "mutation_types": [
+            "initial_random"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": ""
+        }
+      }
+    }
+  ],
+  "output_root": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_7b_20260521_211158/ga_output",
+  "generation_progress_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_7b_20260521_211158/ga_output/ga_generation_progress.csv",
+  "generation_progress_jsonl": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_7b_20260521_211158/ga_output/ga_generation_progress.jsonl",
+  "topk_genomes_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_7b_20260521_211158/ga_output/ga_topk_genomes.csv",
+  "block_diffs_jsonl": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_7b_20260521_211158/ga_output/ga_block_diffs.jsonl",
+  "population_diagnostics_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_7b_20260521_211158/ga_output/ga_population_diagnostics.csv",
+  "population_diagnostics_jsonl": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_7b_20260521_211158/ga_output/ga_population_diagnostics.jsonl",
+  "advisor_mutation_proposals_jsonl": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_7b_20260521_211158/ga_output/advisor_mutation_proposals.jsonl",
+  "advisor_mutation_summary_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_7b_20260521_211158/ga_output/advisor_mutation_summary.csv",
+  "structured_feedback_jsonl": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_7b_20260521_211158/ga_output/structured_feedback.jsonl",
+  "structured_feedback_summary_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_7b_20260521_211158/ga_output/structured_feedback_summary.csv",
+  "population_transitions_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_7b_20260521_211158/ga_output/population_transitions.csv",
+  "promotion_decisions_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_7b_20260521_211158/ga_output/promotion_decisions.csv",
+  "best_genome": {
+    "id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+    "seed": 626297831,
+    "blocks": [
+      "01",
+      "02",
+      "05",
+      "06"
+    ],
+    "params": {
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "temperature": 0.0,
+      "few_shot_count": 3,
+      "max_tokens": 1024,
+      "candidate_strategies": [
+        "minimal",
+        "direct",
+        "canonical_names_first",
+        "compact_json"
+      ]
+    },
+    "block_params": {
+      "02": {
+        "few_shot_count": 3,
+        "micro_rules": [
+          "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+        ]
+      },
+      "05": {
+        "repair_mode": "conservative",
+        "few_shot_count": 3
+      }
+    },
+    "_ga_metadata": {
+      "parent_ids": [],
+      "mutation_types": [
+        "initial_random"
+      ],
+      "crossover_used": false,
+      "feedback_types_used": [],
+      "base_genome_id": ""
+    }
+  },
+  "best_fitness": -56.283652,
+  "best_validation_avg_det_score": 85.7577,
+  "fitness_formula": "AvgDET - 0.5 * VarDET",
+  "retrieval_policy": "fixed runtime service-context construction; not mutated by GA",
+  "stage": "full-run",
+  "advisor_status": "skipped"
+}

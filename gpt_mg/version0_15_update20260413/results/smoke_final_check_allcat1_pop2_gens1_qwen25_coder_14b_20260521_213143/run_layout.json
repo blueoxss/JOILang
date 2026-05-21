@@ -1,0 +1,22 @@
+{
+  "run_name": "smoke_final_check_allcat1_pop2_gens1_qwen25_coder_14b_20260521_213143",
+  "run_root": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_14b_20260521_213143",
+  "ga_output_dir": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_14b_20260521_213143/ga_output",
+  "watchdog_dir": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_qwen25_coder_14b_20260521_213143/_watchdog_logs",
+  "model_key": "qwen25_coder_14b",
+  "categories": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "limit_per_category": 1,
+  "population": 2,
+  "gens": 1,
+  "sample_size": 8,
+  "validation_size": 8
+}

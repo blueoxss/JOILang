@@ -1,0 +1,18 @@
+{
+  "rows": [
+    {
+      "generation": 1,
+      "candidate_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+      "model_key": "llama31_8b",
+      "DETPass": 75.0,
+      "SDET": 88.3701,
+      "avg_prompt_tokens": 69776.0,
+      "replay_gate_pass": true,
+      "regression_gate_pass": true,
+      "promoted": true,
+      "rejection_reason": "",
+      "accepted_prompt_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/smoke_final_check_allcat1_pop2_gens1_llama31_8b_20260521_212052/ga_output/accepted_genomes/generation_001_gen-378892e9-ecc3-87ab-8b45-85023a0286cc.json",
+      "previous_accepted_prompt": ""
+    }
+  ]
+}
