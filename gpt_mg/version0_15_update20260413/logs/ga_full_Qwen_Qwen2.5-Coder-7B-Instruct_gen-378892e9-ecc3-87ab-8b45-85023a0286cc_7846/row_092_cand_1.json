@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"TurnOnTV\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"(#TV).tvchannelup()\"\n}",
       "prompt_tokens": 76733,
       "completion_tokens": 40,
-      "prompt_prep_sec": 0.185,
-      "generate_sec": 13.2427,
+      "prompt_prep_sec": 0.1807,
+      "generate_sec": 13.3608,
       "decode_sec": 0.0003,
-      "total_worker_sec": 13.4346,
-      "worker_pid": 948804,
+      "total_worker_sec": 13.5485,
+      "worker_pid": 956276,
       "peak_vram_bytes": 30608032768,
       "peak_vram_gb": 28.506,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 30608032768,
     "peak_vram_gb": 28.506,
-    "prompt_prep_sec": 0.185,
-    "generate_sec": 13.2427,
+    "prompt_prep_sec": 0.1807,
+    "generate_sec": 13.3608,
     "decode_sec": 0.0003,
-    "total_worker_sec": 13.4346,
-    "worker_pid": 948804,
-    "latency_sec": 13.4414,
+    "total_worker_sec": 13.5485,
+    "worker_pid": 956276,
+    "latency_sec": 13.5553,
     "attempt": 1
   }
 }

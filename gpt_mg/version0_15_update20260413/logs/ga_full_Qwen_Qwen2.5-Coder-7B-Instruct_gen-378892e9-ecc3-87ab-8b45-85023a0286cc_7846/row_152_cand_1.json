@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"SetAirPurifierHighModeIfCO2Above1200PPMAndPersonDetected\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"co2_level = (#AirQualitySensor).AirQualitySensor_CarbonDioxide\\nperson_detected = (#PresenceSensor).PresenceSensor_Presence\\nif (co2_level >= 1200 && person_detected == true) {\\n    (#AirPurifier).AirPurifier_SetDehumidifierMode(\\\"auto\\\")\\n    (#Speaker).Speaker_Speak(\\\"공기청정기가 강풍 모드로 변경되었습니다.\\\")\\n}\"\n}",
       "prompt_tokens": 76847,
       "completion_tokens": 148,
-      "prompt_prep_sec": 0.1836,
-      "generate_sec": 16.7542,
+      "prompt_prep_sec": 0.182,
+      "generate_sec": 16.7678,
       "decode_sec": 0.0004,
-      "total_worker_sec": 16.9447,
-      "worker_pid": 948804,
+      "total_worker_sec": 16.9569,
+      "worker_pid": 956276,
       "peak_vram_bytes": 30630053888,
       "peak_vram_gb": 28.5265,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 30630053888,
     "peak_vram_gb": 28.5265,
-    "prompt_prep_sec": 0.1836,
-    "generate_sec": 16.7542,
+    "prompt_prep_sec": 0.182,
+    "generate_sec": 16.7678,
     "decode_sec": 0.0004,
-    "total_worker_sec": 16.9447,
-    "worker_pid": 948804,
-    "latency_sec": 16.9514,
+    "total_worker_sec": 16.9569,
+    "worker_pid": 956276,
+    "latency_sec": 16.9636,
     "attempt": 1
   }
 }

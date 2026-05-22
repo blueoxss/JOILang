@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"SwitchTheTVToChannel7AndThenToChannel11After1Hour\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"delay(1 HOUR)\\n(#Television).television_setchannel(11)\"\n}",
       "prompt_tokens": 74943,
       "completion_tokens": 68,
-      "prompt_prep_sec": 0.1796,
-      "generate_sec": 17.5111,
+      "prompt_prep_sec": 0.1775,
+      "generate_sec": 17.5468,
       "decode_sec": 0.0004,
-      "total_worker_sec": 17.6999,
-      "worker_pid": 943684,
+      "total_worker_sec": 17.7335,
+      "worker_pid": 1149383,
       "peak_vram_bytes": 34842076160,
       "peak_vram_gb": 32.4492,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 34842076160,
     "peak_vram_gb": 32.4492,
-    "prompt_prep_sec": 0.1796,
-    "generate_sec": 17.5111,
+    "prompt_prep_sec": 0.1775,
+    "generate_sec": 17.5468,
     "decode_sec": 0.0004,
-    "total_worker_sec": 17.6999,
-    "worker_pid": 943684,
-    "latency_sec": 17.7063,
+    "total_worker_sec": 17.7335,
+    "worker_pid": 1149383,
+    "latency_sec": 17.7408,
     "attempt": 1
   }
 }

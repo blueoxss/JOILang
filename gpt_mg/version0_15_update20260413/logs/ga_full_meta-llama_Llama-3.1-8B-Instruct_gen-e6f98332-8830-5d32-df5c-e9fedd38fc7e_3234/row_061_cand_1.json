@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"StopRecordingAndSaveAsTestMp3\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"(#AudioRecorder).audiorecorder_recordstop(\\\"test.mp3\\\")\"\n}",
       "prompt_tokens": 74967,
       "completion_tokens": 61,
-      "prompt_prep_sec": 0.179,
-      "generate_sec": 17.1363,
+      "prompt_prep_sec": 0.1788,
+      "generate_sec": 17.1303,
       "decode_sec": 0.0004,
-      "total_worker_sec": 17.3244,
-      "worker_pid": 943684,
+      "total_worker_sec": 17.3182,
+      "worker_pid": 1149383,
       "peak_vram_bytes": 34844695552,
       "peak_vram_gb": 32.4517,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 34844695552,
     "peak_vram_gb": 32.4517,
-    "prompt_prep_sec": 0.179,
-    "generate_sec": 17.1363,
+    "prompt_prep_sec": 0.1788,
+    "generate_sec": 17.1303,
     "decode_sec": 0.0004,
-    "total_worker_sec": 17.3244,
-    "worker_pid": 943684,
-    "latency_sec": 17.3391,
+    "total_worker_sec": 17.3182,
+    "worker_pid": 1149383,
+    "latency_sec": 17.3263,
     "attempt": 1
   }
 }

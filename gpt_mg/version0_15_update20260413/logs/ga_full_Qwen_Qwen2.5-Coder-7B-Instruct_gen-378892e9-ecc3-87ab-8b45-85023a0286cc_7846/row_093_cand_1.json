@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"StopSpeakerPlayback\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"wait until ((#SoundSensor).soundsensor_sound > 50)\\n(#Speaker).speaker_stop()\"\n}",
       "prompt_tokens": 76765,
       "completion_tokens": 55,
-      "prompt_prep_sec": 0.1873,
-      "generate_sec": 13.7304,
+      "prompt_prep_sec": 0.1899,
+      "generate_sec": 13.8191,
       "decode_sec": 0.0003,
-      "total_worker_sec": 13.9247,
-      "worker_pid": 948804,
+      "total_worker_sec": 14.0159,
+      "worker_pid": 956276,
       "peak_vram_bytes": 30614158336,
       "peak_vram_gb": 28.5117,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 30614158336,
     "peak_vram_gb": 28.5117,
-    "prompt_prep_sec": 0.1873,
-    "generate_sec": 13.7304,
+    "prompt_prep_sec": 0.1899,
+    "generate_sec": 13.8191,
     "decode_sec": 0.0003,
-    "total_worker_sec": 13.9247,
-    "worker_pid": 948804,
-    "latency_sec": 13.9312,
+    "total_worker_sec": 14.0159,
+    "worker_pid": 956276,
+    "latency_sec": 14.0222,
     "attempt": 1
   }
 }

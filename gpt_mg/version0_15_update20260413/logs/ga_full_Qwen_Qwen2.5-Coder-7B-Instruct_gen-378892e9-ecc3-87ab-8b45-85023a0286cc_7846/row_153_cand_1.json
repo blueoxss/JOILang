@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"DehumidifierSetDryingMode\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"wait until ((#RainSensor).RainSensor_Rain == true)\\nwait until ((#WeatherProvider).WeatherProvider_Weather != \\\"rain\\\")\\n(#Dehumidifier).Dehumidifier_SetDehumidifierMode(\\\"drying\\\")\\n(#Speaker).Speaker_Speak(\\\"제습기가 건조 모드로 작동합니다\\\")\"\n}",
       "prompt_tokens": 76865,
       "completion_tokens": 112,
-      "prompt_prep_sec": 0.1843,
-      "generate_sec": 15.5998,
+      "prompt_prep_sec": 0.1826,
+      "generate_sec": 15.6013,
       "decode_sec": 0.0004,
-      "total_worker_sec": 15.7911,
-      "worker_pid": 948804,
+      "total_worker_sec": 15.7909,
+      "worker_pid": 956276,
       "peak_vram_bytes": 30635995136,
       "peak_vram_gb": 28.532,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 30635995136,
     "peak_vram_gb": 28.532,
-    "prompt_prep_sec": 0.1843,
-    "generate_sec": 15.5998,
+    "prompt_prep_sec": 0.1826,
+    "generate_sec": 15.6013,
     "decode_sec": 0.0004,
-    "total_worker_sec": 15.7911,
-    "worker_pid": 948804,
-    "latency_sec": 15.7985,
+    "total_worker_sec": 15.7909,
+    "worker_pid": 956276,
+    "latency_sec": 15.7973,
     "attempt": 1
   }
 }

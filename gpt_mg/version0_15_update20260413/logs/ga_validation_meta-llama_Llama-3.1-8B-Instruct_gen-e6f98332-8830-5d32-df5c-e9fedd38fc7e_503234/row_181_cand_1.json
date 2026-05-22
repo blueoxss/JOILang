@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"Every10MinutesIfTemperatureIs30OrHigherSetAirConditionerToCoolMode\",\n  \"cron\": \"\",\n  \"period\": 10000,\n  \"code\": \"if ((#TemperatureSensor).temperaturesensor_temperature >= 30) { (#AirConditioner).airconditioner_setairconditionermode(\\\"cool\\\") }\"\n}",
       "prompt_tokens": 74957,
       "completion_tokens": 88,
-      "prompt_prep_sec": 0.1777,
-      "generate_sec": 18.582,
+      "prompt_prep_sec": 0.1783,
+      "generate_sec": 18.5932,
       "decode_sec": 0.0004,
-      "total_worker_sec": 18.7689,
-      "worker_pid": 943684,
+      "total_worker_sec": 18.7809,
+      "worker_pid": 1149383,
       "peak_vram_bytes": 34844936192,
       "peak_vram_gb": 32.4519,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 34844936192,
     "peak_vram_gb": 32.4519,
-    "prompt_prep_sec": 0.1777,
-    "generate_sec": 18.582,
+    "prompt_prep_sec": 0.1783,
+    "generate_sec": 18.5932,
     "decode_sec": 0.0004,
-    "total_worker_sec": 18.7689,
-    "worker_pid": 943684,
-    "latency_sec": 18.7832,
+    "total_worker_sec": 18.7809,
+    "worker_pid": 1149383,
+    "latency_sec": 18.7881,
     "attempt": 1
   }
 }

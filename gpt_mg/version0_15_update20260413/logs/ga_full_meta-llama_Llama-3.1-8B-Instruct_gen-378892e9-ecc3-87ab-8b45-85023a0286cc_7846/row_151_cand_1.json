@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"SetAirConditionerToCoolMode\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"(#AirConditioner).airconditioner_setairconditionermode(\\\"cool\\\")\\nif ((#AirConditioner).airconditioner_targettemperature < 24) {\\n    (#AirConditioner).airconditioner_settargettemperature(24)\\n}\"\n}",
       "prompt_tokens": 76293,
       "completion_tokens": 125,
-      "prompt_prep_sec": 0.1813,
-      "generate_sec": 21.0468,
+      "prompt_prep_sec": 0.1802,
+      "generate_sec": 21.1363,
       "decode_sec": 0.0004,
-      "total_worker_sec": 21.2374,
-      "worker_pid": 943684,
+      "total_worker_sec": 21.326,
+      "worker_pid": 1149383,
       "peak_vram_bytes": 35172835328,
       "peak_vram_gb": 32.7573,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 35172835328,
     "peak_vram_gb": 32.7573,
-    "prompt_prep_sec": 0.1813,
-    "generate_sec": 21.0468,
+    "prompt_prep_sec": 0.1802,
+    "generate_sec": 21.1363,
     "decode_sec": 0.0004,
-    "total_worker_sec": 21.2374,
-    "worker_pid": 943684,
-    "latency_sec": 21.2442,
+    "total_worker_sec": 21.326,
+    "worker_pid": 1149383,
+    "latency_sec": 21.3334,
     "attempt": 1
   }
 }

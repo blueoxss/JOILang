@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"EveryHourRepeatOpenCloseDoor\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"delay(1 HOUR)\\nif ((#Clock).clock_hour == 0) { break }\\nall(#Door).door_open()\\ndelay(1 HOUR)\\nall(#Door).door_close()\"\n}",
       "prompt_tokens": 74909,
       "completion_tokens": 85,
-      "prompt_prep_sec": 0.1807,
-      "generate_sec": 18.4172,
+      "prompt_prep_sec": 0.1777,
+      "generate_sec": 18.4535,
       "decode_sec": 0.0004,
-      "total_worker_sec": 18.6071,
-      "worker_pid": 943684,
+      "total_worker_sec": 18.6404,
+      "worker_pid": 1149383,
       "peak_vram_bytes": 34828693504,
       "peak_vram_gb": 32.4367,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 34828693504,
     "peak_vram_gb": 32.4367,
-    "prompt_prep_sec": 0.1807,
-    "generate_sec": 18.4172,
+    "prompt_prep_sec": 0.1777,
+    "generate_sec": 18.4535,
     "decode_sec": 0.0004,
-    "total_worker_sec": 18.6071,
-    "worker_pid": 943684,
-    "latency_sec": 18.6137,
+    "total_worker_sec": 18.6404,
+    "worker_pid": 1149383,
+    "latency_sec": 18.6473,
     "attempt": 1
   }
 }

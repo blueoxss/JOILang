@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"StopChargingIfVoltageIs220VOrHigher\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"while ((#Charger).charger_voltage >= 220000) {\\n    (#Charger).switch_off()\\n}\"\n}",
       "prompt_tokens": 76755,
       "completion_tokens": 71,
-      "prompt_prep_sec": 0.183,
-      "generate_sec": 14.2276,
+      "prompt_prep_sec": 0.1813,
+      "generate_sec": 14.372,
       "decode_sec": 0.0003,
-      "total_worker_sec": 14.4177,
-      "worker_pid": 948804,
+      "total_worker_sec": 14.5602,
+      "worker_pid": 956276,
       "peak_vram_bytes": 30614107136,
       "peak_vram_gb": 28.5116,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 30614107136,
     "peak_vram_gb": 28.5116,
-    "prompt_prep_sec": 0.183,
-    "generate_sec": 14.2276,
+    "prompt_prep_sec": 0.1813,
+    "generate_sec": 14.372,
     "decode_sec": 0.0003,
-    "total_worker_sec": 14.4177,
-    "worker_pid": 948804,
-    "latency_sec": 14.4243,
+    "total_worker_sec": 14.5602,
+    "worker_pid": 956276,
+    "latency_sec": 14.5667,
     "attempt": 1
   }
 }
