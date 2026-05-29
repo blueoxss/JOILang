@@ -798,6 +798,320 @@ def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
         for row in rows:
             handle.write(json.dumps(row, ensure_ascii=False) + "\n")
 
+def _safe_read_json(path: Path, default: Any = None) -> Any:
+    if not path.exists():
+        return default
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def _read_csv_records(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    try:
+        import csv
+        with path.open("r", encoding="utf-8", newline="") as handle:
+            return [dict(row) for row in csv.DictReader(handle)]
+    except Exception:
+        return []
+
+
+def _read_jsonl_records(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    rows: list[dict[str, Any]] = []
+    try:
+        with path.open("r", encoding="utf-8") as handle:
+            for line in handle:
+                line = line.strip()
+                if not line:
+                    continue
+                rows.append(json.loads(line))
+    except Exception:
+        pass
+    return rows
+
+
+def _json_to_tuple(value: Any) -> Any:
+    if isinstance(value, list):
+        return tuple(_json_to_tuple(item) for item in value)
+    if isinstance(value, dict):
+        return {key: _json_to_tuple(item) for key, item in value.items()}
+    return value
+
+
+def _truthy(value: Any) -> bool:
+    return str(value).strip().lower() in {"1", "true", "yes", "y"}
+
+
+def _latest_generation_checkpoint(output_root: Path) -> Path | None:
+    ckpt_dir = output_root / "checkpoints"
+    if not ckpt_dir.exists():
+        return None
+
+    paths = sorted(ckpt_dir.glob("ga_generation_*.json"))
+    return paths[-1] if paths else None
+
+
+def _load_all_checkpoint_evaluations(output_root: Path) -> list[dict[str, Any]]:
+    ckpt_dir = output_root / "checkpoints"
+    if not ckpt_dir.exists():
+        return []
+
+    evaluations: list[dict[str, Any]] = []
+
+    for path in sorted(ckpt_dir.glob("ga_generation_*.json")):
+        payload = _safe_read_json(path, {})
+        for item in payload.get("population", []) or []:
+            if isinstance(item, dict) and "genome" in item:
+                evaluations.append(item)
+
+    return evaluations
+
+
+def _find_evaluation_by_genome_id(
+    evaluations: list[dict[str, Any]],
+    genome_id: str,
+) -> dict[str, Any] | None:
+    for item in evaluations:
+        genome = item.get("genome") or {}
+        if str(genome.get("id", "")) == str(genome_id):
+            return item
+    return None
+
+
+def _minimal_evaluation_from_history(row: dict[str, Any]) -> dict[str, Any] | None:
+    genome = row.get("genome")
+    if not isinstance(genome, dict):
+        return None
+
+    validation_avg = float(row.get("validation_avg_det_score") or 0.0)
+    fitness = float(row.get("fitness") or validation_avg)
+
+    return {
+        "genome": genome,
+        "fitness": fitness,
+        "avg_det_score": float(row.get("avg_det_score") or validation_avg),
+        "variance": 0.0,
+        "validation_avg_det_score": validation_avg,
+        "train_metrics": {
+            "rows": [],
+            "avg_det_score": float(row.get("avg_det_score") or 0.0),
+            "variance": 0.0,
+            "generation_summary": {"rows": []},
+        },
+        "validation_metrics": {
+            "rows": [],
+            "avg_det_score": validation_avg,
+            "variance": 0.0,
+            "generation_summary": {"rows": []},
+        },
+    }
+
+
+def _estimate_no_improvement_generations(progress_rows: list[dict[str, Any]]) -> int:
+    best = -float("inf")
+    stale = 0
+
+    for row in sorted(progress_rows, key=lambda item: int(float(item.get("generation") or 0))):
+        try:
+            value = float(row.get("validation_avg_det_score") or row.get("avg_det_score") or 0.0)
+        except Exception:
+            value = 0.0
+
+        if value > best:
+            best = value
+            stale = 0
+        else:
+            stale += 1
+
+    return stale
+
+
+def _load_ga_resume_state(
+    *,
+    output_root: Path,
+    args: argparse.Namespace,
+    rng: random.Random,
+    base_genome: dict[str, Any],
+) -> dict[str, Any] | None:
+    progress_rows = _read_csv_records(output_root / "ga_generation_progress.csv")
+    latest_checkpoint = _latest_generation_checkpoint(output_root)
+    resume_state_path = output_root / "checkpoints" / "ga_resume_state.json"
+    resume_state = _safe_read_json(resume_state_path, {})
+
+    completed_from_csv = [
+        int(float(row.get("generation") or 0))
+        for row in progress_rows
+        if str(row.get("generation", "")).strip()
+    ]
+
+    completed_from_checkpoint = []
+    if latest_checkpoint is not None:
+        checkpoint_payload = _safe_read_json(latest_checkpoint, {})
+        if checkpoint_payload.get("generation") is not None:
+            completed_from_checkpoint.append(int(checkpoint_payload.get("generation") or 0))
+
+    completed = max(completed_from_csv + completed_from_checkpoint) if (completed_from_csv or completed_from_checkpoint) else 0
+
+    if completed <= 0:
+        return None
+
+    start_generation = completed + 1
+
+    all_evaluations = _load_all_checkpoint_evaluations(output_root)
+
+    best_history = _safe_read_json(output_root / "best_genomes.json", [])
+    if not isinstance(best_history, list):
+        best_history = []
+
+    global_best = None
+    if all_evaluations:
+        global_best = max(
+            all_evaluations,
+            key=lambda item: float(item.get("validation_avg_det_score") or 0.0),
+        )
+    elif best_history:
+        history_best = max(
+            best_history,
+            key=lambda item: float(item.get("validation_avg_det_score") or 0.0),
+        )
+        global_best = _minimal_evaluation_from_history(history_best)
+
+    promotion_rows = _read_csv_records(output_root / "promotion_decisions.csv")
+    accepted_best = None
+    promoted_rows = [row for row in promotion_rows if _truthy(row.get("promoted"))]
+    if promoted_rows:
+        latest_promoted = max(
+            promoted_rows,
+            key=lambda item: int(float(item.get("generation") or 0)),
+        )
+        accepted_best = _find_evaluation_by_genome_id(
+            all_evaluations,
+            str(latest_promoted.get("candidate_id", "")),
+        )
+
+    if accepted_best is None:
+        accepted_best = global_best
+
+    latest_eval = None
+    if latest_checkpoint is not None:
+        latest_payload = _safe_read_json(latest_checkpoint, {})
+        latest_population = latest_payload.get("population", []) or []
+        latest_eval_candidates = [
+            item for item in latest_population
+            if isinstance(item, dict) and "genome" in item
+        ]
+        if latest_eval_candidates:
+            latest_eval = max(
+                latest_eval_candidates,
+                key=lambda item: float(item.get("validation_avg_det_score") or 0.0),
+            )
+
+    # Preferred exact resume path: state saved after next_population was built.
+    population_source = "resume_state_next_population"
+    population = []
+    if (
+        isinstance(resume_state, dict)
+        and int(resume_state.get("last_completed_generation") or -1) == completed
+        and isinstance(resume_state.get("next_population"), list)
+        and resume_state.get("next_population")
+    ):
+        population = [
+            validate_genome_blocks(_copy_genome(genome))
+            for genome in resume_state.get("next_population", [])
+            if isinstance(genome, dict)
+        ][: args.population]
+
+        rng_state = resume_state.get("rng_state")
+        if rng_state is not None:
+            try:
+                rng.setstate(_json_to_tuple(rng_state))
+            except Exception:
+                pass
+
+    else:
+        # Backward-compatible fallback for old partial runs.
+        # This is not bit-identical to the interrupted next_population,
+        # but it continues from the last evaluated generation.
+        population_source = "fallback_from_last_evaluated_population"
+
+        latest_population = []
+        if latest_checkpoint is not None:
+            latest_payload = _safe_read_json(latest_checkpoint, {})
+            latest_population = latest_payload.get("population", []) or []
+
+        evaluated = [
+            item for item in latest_population
+            if isinstance(item, dict) and "genome" in item
+        ]
+        evaluated.sort(
+            key=lambda item: (
+                -float(item.get("fitness") or 0.0),
+                -float(item.get("validation_avg_det_score") or 0.0),
+                str((item.get("genome") or {}).get("id", "")),
+            )
+        )
+
+        population = [
+            validate_genome_blocks(_copy_genome(item["genome"]))
+            for item in evaluated[: args.population]
+        ]
+
+        while len(population) < args.population:
+            population.append(_random_genome(base_genome, rng))
+
+    if not population:
+        return None
+
+    return {
+        "completed_generation": completed,
+        "start_generation": start_generation,
+        "population": population[: args.population],
+        "population_source": population_source,
+        "best_history": best_history,
+        "generation_progress": progress_rows,
+        "topk_rows": _read_csv_records(output_root / "ga_topk_genomes.csv"),
+        "block_diff_rows": _read_jsonl_records(output_root / "ga_block_diffs.jsonl"),
+        "population_diagnostic_rows": _read_csv_records(output_root / "ga_population_diagnostics.csv"),
+        "structured_feedback_records": _read_jsonl_records(output_root / "structured_feedback.jsonl"),
+        "structured_feedback_summary_rows": _read_csv_records(output_root / "structured_feedback_summary.csv"),
+        "population_transition_rows": _read_csv_records(output_root / "population_transitions.csv"),
+        "promotion_rows": promotion_rows,
+        "advisor_proposal_rows": _read_jsonl_records(output_root / "advisor_mutation_proposals.jsonl"),
+        "advisor_summary_rows": [],
+        "global_best": global_best,
+        "accepted_best": accepted_best,
+        "previous_generation_best": latest_eval,
+        "no_improvement_generations": _estimate_no_improvement_generations(progress_rows),
+    }
+
+
+def _write_ga_resume_state(
+    *,
+    output_root: Path,
+    generation: int,
+    next_population: list[dict[str, Any]],
+    rng: random.Random,
+    global_best: dict[str, Any] | None,
+    accepted_best: dict[str, Any] | None,
+    no_improvement_generations: int,
+) -> None:
+    payload = {
+        "last_completed_generation": generation,
+        "next_generation": generation + 1,
+        "next_population": next_population,
+        "rng_state": rng.getstate(),
+        "global_best_genome_id": str(((global_best or {}).get("genome") or {}).get("id", "")),
+        "accepted_best_genome_id": str(((accepted_best or {}).get("genome") or {}).get("id", "")),
+        "no_improvement_generations": no_improvement_generations,
+        "timestamp": datetime.now().isoformat(timespec="seconds"),
+    }
+
+    dump_json(output_root / "checkpoints" / "ga_resume_state.json", payload)
+    dump_json(output_root / "checkpoints" / f"ga_resume_state_generation_{generation:03d}.json", payload)
 
 def _extract_json_object(text: str) -> dict[str, Any]:
     raw = str(text or "").strip()
@@ -1506,7 +1820,49 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
     accepted_best: dict[str, Any] | None = None
     previous_generation_best: dict[str, Any] | None = None
     no_improvement_generations = 0
+    start_generation = 1
 
+    if args.resume:
+        resume_state = _load_ga_resume_state(
+            output_root=output_root,
+            args=args,
+            rng=rng,
+            base_genome=base_genome,
+        )
+
+        if resume_state is not None:
+            population = resume_state["population"]
+            best_history = resume_state["best_history"]
+            generation_progress = resume_state["generation_progress"]
+            topk_rows = resume_state["topk_rows"]
+            block_diff_rows = resume_state["block_diff_rows"]
+            population_diagnostic_rows = resume_state["population_diagnostic_rows"]
+            structured_feedback_records = resume_state["structured_feedback_records"]
+            structured_feedback_summary_rows = resume_state["structured_feedback_summary_rows"]
+            population_transition_rows = resume_state["population_transition_rows"]
+            promotion_rows = resume_state["promotion_rows"]
+            advisor_proposal_rows = resume_state["advisor_proposal_rows"]
+            advisor_summary_rows = resume_state["advisor_summary_rows"]
+            global_best = resume_state["global_best"]
+            accepted_best = resume_state["accepted_best"]
+            previous_generation_best = resume_state["previous_generation_best"]
+            no_improvement_generations = int(resume_state["no_improvement_generations"] or 0)
+            start_generation = int(resume_state["start_generation"])
+
+            if args.progress != "quiet":
+                print(
+                    "[RESUME]\n"
+                    f"output_root={output_root}\n"
+                    f"completed_generation={resume_state['completed_generation']}\n"
+                    f"start_generation={start_generation}\n"
+                    f"target_gens={args.gens}\n"
+                    f"population_source={resume_state['population_source']}\n"
+                    f"population={len(population)}",
+                    flush=True,
+                )
+        elif args.progress != "quiet":
+            print("[RESUME] no usable checkpoint found; starting from generation 1", flush=True)
+            
     if args.dry_run:
         dry_summary = {
             **run_manifest,
@@ -1553,7 +1909,13 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         _print_stage(args, str(getattr(args, "stage_name", "dry-run")), "PASS")
         return dry_summary
 
-    for generation in range(1, args.gens + 1):
+    if start_generation > args.gens and args.progress != "quiet":
+        print(
+            f"[RESUME] already complete: start_generation={start_generation} target_gens={args.gens}",
+            flush=True,
+        )
+
+    for generation in range(start_generation, args.gens + 1):
         train_rows = sample_rows(
             selected_rows,
             sample_size=args.sample_size,
@@ -1895,6 +2257,16 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             new_random += 1
         population = next_population[: args.population]
 
+        _write_ga_resume_state(
+            output_root=output_root,
+            generation=generation,
+            next_population=population,
+            rng=rng,
+            global_best=global_best,
+            accepted_best=accepted_best,
+            no_improvement_generations=no_improvement_generations,
+        )
+        
         transition = {
             "generation": generation,
             "survived_elites": len(elites),

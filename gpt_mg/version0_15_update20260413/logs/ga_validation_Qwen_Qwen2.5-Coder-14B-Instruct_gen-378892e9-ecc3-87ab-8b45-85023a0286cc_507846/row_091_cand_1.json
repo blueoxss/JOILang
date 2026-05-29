@@ -46,10 +46,10 @@
       "prompt_tokens": 76735,
       "completion_tokens": 57,
       "prompt_prep_sec": 0.1807,
-      "generate_sec": 31.8528,
+      "generate_sec": 31.9261,
       "decode_sec": 0.0003,
-      "total_worker_sec": 32.0453,
-      "worker_pid": 946241,
+      "total_worker_sec": 32.1186,
+      "worker_pid": 1316268,
       "peak_vram_bytes": 54189622272,
       "peak_vram_gb": 50.468,
       "peak_vram_by_device": {
@@ -59,11 +59,11 @@
     "peak_vram_bytes": 54189622272,
     "peak_vram_gb": 50.468,
     "prompt_prep_sec": 0.1807,
-    "generate_sec": 31.8528,
+    "generate_sec": 31.9261,
     "decode_sec": 0.0003,
-    "total_worker_sec": 32.0453,
-    "worker_pid": 946241,
-    "latency_sec": 32.0527,
+    "total_worker_sec": 32.1186,
+    "worker_pid": 1316268,
+    "latency_sec": 32.1254,
     "attempt": 1
   }
 }

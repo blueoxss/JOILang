@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"TurnOnLightOnContactSensorTrigger\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"if ((#ContactSensor).contactsensor_contact == true) {\\n    (#Light).switch_on()\\n}\"\n}",
       "prompt_tokens": 75416,
       "completion_tokens": 60,
-      "prompt_prep_sec": 0.1797,
-      "generate_sec": 31.3385,
+      "prompt_prep_sec": 0.1813,
+      "generate_sec": 31.3283,
       "decode_sec": 0.0003,
-      "total_worker_sec": 31.5289,
-      "worker_pid": 946241,
+      "total_worker_sec": 31.5204,
+      "worker_pid": 1316268,
       "peak_vram_bytes": 53761350656,
       "peak_vram_gb": 50.0692,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 53761350656,
     "peak_vram_gb": 50.0692,
-    "prompt_prep_sec": 0.1797,
-    "generate_sec": 31.3385,
+    "prompt_prep_sec": 0.1813,
+    "generate_sec": 31.3283,
     "decode_sec": 0.0003,
-    "total_worker_sec": 31.5289,
-    "worker_pid": 946241,
-    "latency_sec": 31.5352,
+    "total_worker_sec": 31.5204,
+    "worker_pid": 1316268,
+    "latency_sec": 31.5266,
     "attempt": 1
   }
 }

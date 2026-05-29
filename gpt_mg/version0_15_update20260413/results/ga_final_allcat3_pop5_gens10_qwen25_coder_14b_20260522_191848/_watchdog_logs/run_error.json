@@ -1,0 +1,10 @@
+{
+  "status": "ERROR",
+  "error_type": "TimeoutError",
+  "error": "total timeout: exceeded 57600 sec",
+  "traceback": "Traceback (most recent call last):\n  File \"/tmp/ipykernel_5566/583200927.py\", line 292, in run_command_with_watchdog\n    raise TimeoutError(reason)\nTimeoutError: total timeout: exceeded 57600 sec\n",
+  "timestamp": "2026-05-23T11:18:50",
+  "log_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_final_allcat3_pop5_gens10_qwen25_coder_14b_20260522_191848/_watchdog_logs/run_stdout_stderr.log",
+  "watchdog_dir": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_final_allcat3_pop5_gens10_qwen25_coder_14b_20260522_191848/_watchdog_logs",
+  "ga_output_dir": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_final_allcat3_pop5_gens10_qwen25_coder_14b_20260522_191848/ga_output"
+}

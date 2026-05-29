@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"SwitchDishwasherToDryMode\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"(#Dishwasher).dishwasher_setdishwashermode(\\\"dry\\\")\"\n}",
       "prompt_tokens": 75402,
       "completion_tokens": 53,
-      "prompt_prep_sec": 0.1774,
-      "generate_sec": 30.7216,
+      "prompt_prep_sec": 0.1791,
+      "generate_sec": 30.7668,
       "decode_sec": 0.0003,
-      "total_worker_sec": 30.9098,
-      "worker_pid": 946241,
+      "total_worker_sec": 30.9568,
+      "worker_pid": 1316268,
       "peak_vram_bytes": 53756856320,
       "peak_vram_gb": 50.065,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 53756856320,
     "peak_vram_gb": 50.065,
-    "prompt_prep_sec": 0.1774,
-    "generate_sec": 30.7216,
+    "prompt_prep_sec": 0.1791,
+    "generate_sec": 30.7668,
     "decode_sec": 0.0003,
-    "total_worker_sec": 30.9098,
-    "worker_pid": 946241,
-    "latency_sec": 30.9164,
+    "total_worker_sec": 30.9568,
+    "worker_pid": 1316268,
+    "latency_sec": 30.9641,
     "attempt": 1
   }
 }

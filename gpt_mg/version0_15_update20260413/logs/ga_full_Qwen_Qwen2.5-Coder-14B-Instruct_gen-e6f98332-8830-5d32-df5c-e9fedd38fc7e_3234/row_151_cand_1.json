@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"AdjustAirConditionerBasedOnTemperatureAndHumidity\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"if ((#AirQualitySensor).airqualitysensor_temperature >= 28 and (#AirQualitySensor).airqualitysensor_humidity >= 70) {\\n    (#AirConditioner).airconditioner_setairconditionermode(\\\"cool\\\")\\n    (#AirConditioner).airconditioner_settargettemperature(24)\\n}\"\n}",
       "prompt_tokens": 75522,
       "completion_tokens": 110,
-      "prompt_prep_sec": 0.1787,
-      "generate_sec": 35.5164,
+      "prompt_prep_sec": 0.1809,
+      "generate_sec": 35.5176,
       "decode_sec": 0.0004,
-      "total_worker_sec": 35.7068,
-      "worker_pid": 946241,
+      "total_worker_sec": 35.7101,
+      "worker_pid": 1316268,
       "peak_vram_bytes": 53802110976,
       "peak_vram_gb": 50.1071,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 53802110976,
     "peak_vram_gb": 50.1071,
-    "prompt_prep_sec": 0.1787,
-    "generate_sec": 35.5164,
+    "prompt_prep_sec": 0.1809,
+    "generate_sec": 35.5176,
     "decode_sec": 0.0004,
-    "total_worker_sec": 35.7068,
-    "worker_pid": 946241,
-    "latency_sec": 35.714,
+    "total_worker_sec": 35.7101,
+    "worker_pid": 1316268,
+    "latency_sec": 35.7169,
     "attempt": 1
   }
 }

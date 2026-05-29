@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"SwitchTVChannels\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"(#Television).television_setchannel(7)\\ndelay(1 HOUR)\\n(#Television).television_setchannel(11)\"\n}",
       "prompt_tokens": 76773,
       "completion_tokens": 63,
-      "prompt_prep_sec": 0.1801,
-      "generate_sec": 32.4671,
+      "prompt_prep_sec": 0.1826,
+      "generate_sec": 32.4325,
       "decode_sec": 0.0003,
-      "total_worker_sec": 32.6588,
-      "worker_pid": 946241,
+      "total_worker_sec": 32.6268,
+      "worker_pid": 1316268,
       "peak_vram_bytes": 54200049664,
       "peak_vram_gb": 50.4777,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 54200049664,
     "peak_vram_gb": 50.4777,
-    "prompt_prep_sec": 0.1801,
-    "generate_sec": 32.4671,
+    "prompt_prep_sec": 0.1826,
+    "generate_sec": 32.4325,
     "decode_sec": 0.0003,
-    "total_worker_sec": 32.6588,
-    "worker_pid": 946241,
-    "latency_sec": 32.6652,
+    "total_worker_sec": 32.6268,
+    "worker_pid": 1316268,
+    "latency_sec": 32.6338,
     "attempt": 1
   }
 }

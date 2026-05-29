@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"AudioRecorderToggle\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"if ((#AudioRecorder).audiorecorder_recordstatus == \\\"recording\\\") {\\n    (#AudioRecorder).audiorecorder_recordstop(test.mp3)\\n} else {\\n    (#AudioRecorder).audiorecorder_recordstart()\\n}\"\n}",
       "prompt_tokens": 76795,
       "completion_tokens": 86,
-      "prompt_prep_sec": 0.1846,
-      "generate_sec": 34.2783,
+      "prompt_prep_sec": 0.1831,
+      "generate_sec": 34.2793,
       "decode_sec": 0.0003,
-      "total_worker_sec": 34.4738,
-      "worker_pid": 946241,
+      "total_worker_sec": 34.4734,
+      "worker_pid": 1316268,
       "peak_vram_bytes": 54205073408,
       "peak_vram_gb": 50.4824,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 54205073408,
     "peak_vram_gb": 50.4824,
-    "prompt_prep_sec": 0.1846,
-    "generate_sec": 34.2783,
+    "prompt_prep_sec": 0.1831,
+    "generate_sec": 34.2793,
     "decode_sec": 0.0003,
-    "total_worker_sec": 34.4738,
-    "worker_pid": 946241,
-    "latency_sec": 34.4814,
+    "total_worker_sec": 34.4734,
+    "worker_pid": 1316268,
+    "latency_sec": 34.48,
     "attempt": 1
   }
 }

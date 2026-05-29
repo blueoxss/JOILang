@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"SetLivingRoomLightToYellow\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"(#LivingRoom #Light).light_movetorgb(255, 255, 0)\"\n}",
       "prompt_tokens": 24877,
       "completion_tokens": 60,
-      "prompt_prep_sec": 0.0586,
-      "generate_sec": 7.883,
+      "prompt_prep_sec": 0.0583,
+      "generate_sec": 7.8931,
       "decode_sec": 0.0003,
-      "total_worker_sec": 7.9463,
-      "worker_pid": 946241,
+      "total_worker_sec": 7.9561,
+      "worker_pid": 1316268,
       "peak_vram_bytes": 37536081920,
       "peak_vram_gb": 34.9582,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 37536081920,
     "peak_vram_gb": 34.9582,
-    "prompt_prep_sec": 0.0586,
-    "generate_sec": 7.883,
+    "prompt_prep_sec": 0.0583,
+    "generate_sec": 7.8931,
     "decode_sec": 0.0003,
-    "total_worker_sec": 7.9463,
-    "worker_pid": 946241,
-    "latency_sec": 7.95,
+    "total_worker_sec": 7.9561,
+    "worker_pid": 1316268,
+    "latency_sec": 7.9626,
     "attempt": 1
   }
 }
