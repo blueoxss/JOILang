@@ -1,0 +1,259 @@
+{
+  "best_history": [
+    {
+      "generation": 1,
+      "genome_id": "gen-2b132d31-5209-14c4-0eef-092879070b33",
+      "fitness": 4.796875,
+      "avg_det_score": 24.0,
+      "validation_avg_det_score": 24.0,
+      "train_det_pass_rate": 0.0,
+      "train_gt_exact_rate": 0.0,
+      "validation_det_pass_rate": 0.0,
+      "validation_gt_exact_rate": 0.0,
+      "genome": {
+        "id": "gen-2b132d31-5209-14c4-0eef-092879070b33",
+        "seed": 427082549,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "05",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+          "temperature": 0.05,
+          "few_shot_count": 3,
+          "max_tokens": 512,
+          "candidate_strategies": [
+            "minimal",
+            "canonical_names_first",
+            "explicit_preconditions",
+            "compact_json"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 1,
+            "micro_rules": [
+              "Prefer canonical_name exactly when available.",
+              "Keep the code minimal and remove unrelated actions.",
+              "Use value entries in conditions and function entries in actions."
+            ]
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [],
+          "mutation_types": [
+            "initial_random"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": ""
+        }
+      }
+    },
+    {
+      "generation": 2,
+      "genome_id": "gen-062479cf-b5b7-bad3-0198-596637c9e3c3",
+      "fitness": 4.796875,
+      "avg_det_score": 24.0,
+      "validation_avg_det_score": 24.0,
+      "train_det_pass_rate": 0.0,
+      "train_gt_exact_rate": 0.0,
+      "validation_det_pass_rate": 0.0,
+      "validation_gt_exact_rate": 0.0,
+      "genome": {
+        "id": "gen-062479cf-b5b7-bad3-0198-596637c9e3c3",
+        "seed": 470787386,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "05",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+          "temperature": 0.05,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "minimal",
+            "direct",
+            "canonical_names_first",
+            "compact_json",
+            "explicit_preconditions"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 3,
+            "micro_rules": [
+              "For INTEGER and DOUBLE arguments, avoid quoted numeric literals.",
+              "Prefer canonical_name exactly when available.",
+              "Keep the code minimal and remove unrelated actions.",
+              "Use value entries in conditions and function entries in actions."
+            ]
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [
+            "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+            "gen-2b132d31-5209-14c4-0eef-092879070b33"
+          ],
+          "mutation_types": [],
+          "crossover_used": true,
+          "feedback_types_used": [],
+          "base_genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+          "crossover": {
+            "parent_a": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+            "parent_b": "gen-2b132d31-5209-14c4-0eef-092879070b33",
+            "inherited_core_blocks": [
+              "01",
+              "02"
+            ],
+            "optional_from_a": [],
+            "optional_from_b": [
+              "03",
+              "05",
+              "06"
+            ],
+            "inherited_optional_blocks": [
+              "03",
+              "05",
+              "06"
+            ],
+            "inherited_params": {
+              "candidate_strategies": "gen-2b132d31-5209-14c4-0eef-092879070b33",
+              "model": "gen-2b132d31-5209-14c4-0eef-092879070b33",
+              "temperature": "gen-2b132d31-5209-14c4-0eef-092879070b33",
+              "max_tokens": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+              "few_shot_count": "gen-2b132d31-5209-14c4-0eef-092879070b33"
+            },
+            "crossover_type": "block_artifact_uniform"
+          }
+        }
+      }
+    }
+  ],
+  "output_root": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529",
+  "generation_progress_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/ga_generation_progress.csv",
+  "generation_progress_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/ga_generation_progress.jsonl",
+  "topk_genomes_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/ga_topk_genomes.csv",
+  "block_diffs_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/ga_block_diffs.jsonl",
+  "population_diagnostics_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/ga_population_diagnostics.csv",
+  "population_diagnostics_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/ga_population_diagnostics.jsonl",
+  "advisor_mutation_proposals_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/advisor_mutation_proposals.jsonl",
+  "advisor_mutation_summary_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/advisor_mutation_summary.csv",
+  "structured_feedback_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/structured_feedback.jsonl",
+  "structured_feedback_summary_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/structured_feedback_summary.csv",
+  "population_transitions_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/population_transitions.csv",
+  "promotion_decisions_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/promotion_decisions.csv",
+  "mutation_proposals_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/mutation_proposals.jsonl",
+  "pareto_archive_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/pareto_archive.csv",
+  "mutation_operator_credit_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_redesign_crossover_only_smoke_20260529/mutation_operator_credit.csv",
+  "best_genome": {
+    "id": "gen-062479cf-b5b7-bad3-0198-596637c9e3c3",
+    "seed": 470787386,
+    "blocks": [
+      "01",
+      "02",
+      "03",
+      "05",
+      "06"
+    ],
+    "params": {
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "temperature": 0.05,
+      "few_shot_count": 3,
+      "max_tokens": 1024,
+      "candidate_strategies": [
+        "minimal",
+        "direct",
+        "canonical_names_first",
+        "compact_json",
+        "explicit_preconditions"
+      ]
+    },
+    "block_params": {
+      "02": {
+        "few_shot_count": 3,
+        "micro_rules": [
+          "For INTEGER and DOUBLE arguments, avoid quoted numeric literals.",
+          "Prefer canonical_name exactly when available.",
+          "Keep the code minimal and remove unrelated actions.",
+          "Use value entries in conditions and function entries in actions."
+        ]
+      },
+      "05": {
+        "repair_mode": "conservative",
+        "few_shot_count": 3
+      }
+    },
+    "_ga_metadata": {
+      "parent_ids": [
+        "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+        "gen-2b132d31-5209-14c4-0eef-092879070b33"
+      ],
+      "mutation_types": [],
+      "crossover_used": true,
+      "feedback_types_used": [],
+      "base_genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+      "crossover": {
+        "parent_a": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+        "parent_b": "gen-2b132d31-5209-14c4-0eef-092879070b33",
+        "inherited_core_blocks": [
+          "01",
+          "02"
+        ],
+        "optional_from_a": [],
+        "optional_from_b": [
+          "03",
+          "05",
+          "06"
+        ],
+        "inherited_optional_blocks": [
+          "03",
+          "05",
+          "06"
+        ],
+        "inherited_params": {
+          "candidate_strategies": "gen-2b132d31-5209-14c4-0eef-092879070b33",
+          "model": "gen-2b132d31-5209-14c4-0eef-092879070b33",
+          "temperature": "gen-2b132d31-5209-14c4-0eef-092879070b33",
+          "max_tokens": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+          "few_shot_count": "gen-2b132d31-5209-14c4-0eef-092879070b33"
+        },
+        "crossover_type": "block_artifact_uniform"
+      }
+    }
+  },
+  "best_fitness": 4.796875,
+  "best_validation_avg_det_score": 24.0,
+  "fitness_formula": "phase-aware DETPass + AvgDET + category/compression - token/variance/regression penalties",
+  "retrieval_policy": "fixed runtime service-context construction; not mutated by GA",
+  "stage": "full-run",
+  "advisor_status": "skipped",
+  "final_phase": "FINAL_SELECTION",
+  "stop_reason": "max generations reached",
+  "best_so_far_DETPass": 0.0,
+  "accepted_best": "gen-062479cf-b5b7-bad3-0198-596637c9e3c3",
+  "compact_best": "",
+  "pareto_archive_size": 7,
+  "cloudless_mutation_used": false,
+  "advisor_used": false,
+  "category_balance_mode": "guard",
+  "token_penalty_mode": "off",
+  "mutation_family_counts": {},
+  "compression_success_count": 0,
+  "compression_rejection_count": 0
+}

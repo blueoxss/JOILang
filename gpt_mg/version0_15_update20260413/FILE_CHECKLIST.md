@@ -14,6 +14,12 @@
 - `scripts/run_rerank.py` - DET scoring + repair runner.
 - `scripts/run_feedback_loop.py` - validation and prompt-surgery loop.
 - `scripts/run_ga_search.py` - GA orchestration with plateau handling.
+- `scripts/ga_metrics.py` - redesigned DETPass/token/category metric bundle, token penalty, compression gain, Pareto rows, and best tie-breaker.
+- `scripts/ga_selection.py` - archive state, quota-based elitism, group specialist archives, and regression gate helpers.
+- `scripts/ga_mutation.py` - phase-aware cloudless mutation proposal application and family scheduling.
+- `scripts/prompt_decompiler.py` - deterministic prompt-unit segmentation and duplicate/compression proposal extraction.
+- `scripts/mutation_proposals.py` - shared `MutationProposal` schema for cloudless and advisor-guided mutation.
+- `scripts/ga_stop_controller.py` - active phase/action controller for plateau diagnosis and next-action selection.
 - `utils/ga_block_model.py` - core/optional prompt-block genotype helpers and deterministic feedback-to-mutation mapping.
 - `utils/prompt_surgery_rules.py` - version0_13-derived DET failure to prompt-block surgery mapping.
 - `scripts/run_model_suite_benchmark.py` - fixed-prompt multi-model benchmark runner for row-level and dataset-level comparison.
@@ -29,6 +35,10 @@
 - `results/paper_study_<timestamp>/availability_summary.csv` - model runnable/blocked/failed/skipped status for the paper suite.
 - `results/paper_study_<timestamp>/structured_feedback.jsonl` - deterministic validation feedback records used for future mutation/repair guidance.
 - `results/ga_search_<timestamp>/advisor_mutation_proposals.jsonl` - optional LLM advisor prompt-block mutation proposals.
+- `results/ga_search_<timestamp>/mutation_proposals.jsonl` - canonical cloudless/advisor mutation proposals and accept/reject metadata.
+- `results/ga_search_<timestamp>/cloudless_prompt_units.jsonl` - prompt decompiler unit table when cloudless decompiler mode is enabled.
+- `results/ga_search_<timestamp>/pareto_archive.csv` - non-dominated DETPass/token candidates.
+- `results/ga_search_<timestamp>/mutation_operator_credit.csv` - mutation-family/operator credit table.
 - `results/ga_search_<timestamp>/ga_population_diagnostics.csv` - generation/category DET diagnostics used by feedback-guided mutation and advisor prompts.
 - `results/ga_search_<timestamp>/stage_status/` - staged GA execution status files for dry-run, smoke, category-smoke, advisor-smoke, or full-run.
 - `results/paper_study_<timestamp>/paper/figures/` - final paper Figure 1 and Figure 2 image/PDF outputs.

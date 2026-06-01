@@ -46,7 +46,30 @@ Retrieval pre-mapping은 실험 조건의 fixed runtime context입니다. GA는 
 
 ### GA Fitness and Feedback
 
-현재 GA selection signal은 `fitness = AvgDET - alpha * VarDET`입니다. token/latency는 GA fitness에 직접 들어가지 않으며, 최종 deployment comparison에서 별도로 보고합니다.
+Legacy GA selection signal은 `fitness = AvgDET - alpha * VarDET`입니다. token/latency는 legacy fitness에 직접 들어가지 않으며, 최종 deployment comparison에서 별도로 보고합니다.
+
+Redesigned GA selection is opt-in and is enabled with:
+
+- `--selection-mode redesign`
+- `--fitness-mode phase_aware`
+- `--mutation-mode cloudless_decompiler`
+- `--stop-controller-mode active`
+- `--enable-pareto-archive`
+- `--token-penalty-mode budget|accepted|hybrid`
+
+In redesigned mode, DETPass is the primary objective. AvgDET/SDET is a secondary tie-breaker, and token penalty/compression gain are used conservatively so one validation-row DETPass loss is not outweighed by small token savings. The run records both raw generation best and best-so-far DETPass.
+
+New redesign artifacts:
+
+- `mutation_proposals.jsonl` and `mutation_proposals.csv`
+- `cloudless_prompt_units.jsonl`
+- `mutation_operator_credit.csv`
+- `pareto_archive.csv` and `pareto_archive.jsonl`
+- extended `ga_generation_progress.csv`
+- extended `ga_topk_genomes.csv`
+- extended `population_transitions.csv`
+
+The active stop controller records `generation_phase`, `plateau_type`, `next_action`, and `stop_reason`. Plateau is treated as a signal for robustness, compression, diversity, or finalization rather than only as passive early stopping.
 
 Prompt artifact genotype은 core block과 optional guidance block으로 나뉩니다.
 

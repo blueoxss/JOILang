@@ -20,6 +20,30 @@ if str(VERSION_ROOT) not in sys.path:
 
 from scripts.run_feedback_loop import evaluate_genome_on_rows, run_feedback_loop
 from scripts.run_model_suite_benchmark import PAPER_LOCAL5_SUITE
+from scripts.ga_metrics import (
+    GenomeMetricBundle,
+    assign_pareto,
+    best_tie_key,
+    metrics_from_evaluation,
+    one_row_margin,
+    pareto_rows as build_pareto_rows,
+    pareto_summary as build_pareto_summary,
+)
+from scripts.ga_mutation import (
+    apply_mutation_proposal,
+    mutation_family_for_phase,
+    proposal_for_family,
+)
+from scripts.ga_selection import (
+    ArchiveState,
+    metric_of,
+    quota_elites,
+    regression_gate,
+    update_archives,
+)
+from scripts.ga_stop_controller import decide_next_action
+from scripts.mutation_proposals import MutationProposal, proposal_from_advisor
+from scripts.prompt_decompiler import compression_proposals_from_artifact, decompile_prompt
 from utils.ga_block_model import (
     get_core_blocks,
     get_optional_blocks,
@@ -259,6 +283,37 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--min-core-blocks", default="01,02")
     parser.add_argument("--pareto-selection", action="store_true", help="Reserved; default GA selection remains fitness-based.")
     parser.add_argument("--inject-mock-token-feedback", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--selection-mode", choices=["legacy", "redesign"], default="legacy")
+    parser.add_argument("--fitness-mode", choices=["legacy", "detpass_token", "phase_aware"], default="legacy")
+    parser.add_argument("--category-balance-mode", choices=["off", "guard", "fitness", "routing"], default="off")
+    parser.add_argument("--token-penalty-mode", choices=["off", "budget", "accepted", "hybrid"], default="off")
+    parser.add_argument("--target-detpass", type=float, default=95.0)
+    parser.add_argument("--detpass-row-margin", type=float, default=0.0)
+    parser.add_argument("--fitness-token-weight-min", type=float, default=0.0)
+    parser.add_argument("--fitness-token-weight-max", type=float, default=2.0)
+    parser.add_argument("--fitness-regression-weight", type=float, default=2.0)
+    parser.add_argument("--fitness-category-weight", type=float, default=0.05)
+    parser.add_argument("--fitness-avgdet-weight", type=float, default=0.20)
+    parser.add_argument("--fitness-variance-weight", type=float, default=0.05)
+    parser.add_argument("--preserve-global-best", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--enable-pareto-archive", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--enable-group-specialist-archives", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--mutation-mode", choices=["legacy", "family", "cloudless_decompiler", "hybrid"], default="legacy")
+    parser.add_argument("--enable-compression-mutation", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--enable-prompt-decompiler", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--compression-min-token-reduction", type=float, default=0.05)
+    parser.add_argument("--compression-detpass-margin-rows", type=int, default=1)
+    parser.add_argument("--enable-rendered-prompt-dedupe", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--enable-operator-credit", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--reasoning-mutation-mode", choices=["off", "compact", "skeleton", "auto"], default="off")
+    parser.add_argument("--intent-hint-mode", choices=["none", "keyword_list", "json_hint", "typed_slots", "auto"], default="none")
+    parser.add_argument("--stop-controller-mode", choices=["legacy", "active"], default="legacy")
+    parser.add_argument("--min-generations", type=int, default=3)
+    parser.add_argument("--max-generations", type=int, default=None)
+    parser.add_argument("--plateau-window", type=int, default=3)
+    parser.add_argument("--disruptive-max-attempts", type=int, default=2)
+    parser.add_argument("--advisor-trigger-mode", choices=["off", "on_plateau", "on_failure_plateau"], default="off")
+    parser.add_argument("--diversity-collapse-threshold", type=float, default=0.5)
     return parser
 
 
@@ -370,6 +425,9 @@ def _final_artifacts(summary: dict[str, Any]) -> list[tuple[str, str]]:
         ("ga_block_diffs.jsonl", str(summary.get("block_diffs_jsonl") or output_root / "ga_block_diffs.jsonl")),
         ("ga_population_diagnostics.csv", str(summary.get("population_diagnostics_csv") or output_root / "ga_population_diagnostics.csv")),
         ("structured_feedback.jsonl", str(summary.get("structured_feedback_jsonl") or output_root / "structured_feedback.jsonl")),
+        ("mutation_proposals.jsonl", str(summary.get("mutation_proposals_jsonl") or output_root / "mutation_proposals.jsonl")),
+        ("pareto_archive.csv", str(summary.get("pareto_archive_csv") or output_root / "pareto_archive.csv")),
+        ("mutation_operator_credit.csv", str(summary.get("mutation_operator_credit_csv") or output_root / "mutation_operator_credit.csv")),
         ("advisor_mutation_proposals.jsonl", str(summary.get("advisor_mutation_proposals_jsonl") or output_root / "advisor_mutation_proposals.jsonl")),
         ("population_transitions.csv", str(summary.get("population_transitions_csv") or output_root / "population_transitions.csv")),
         ("promotion_decisions.csv", str(summary.get("promotion_decisions_csv") or output_root / "promotion_decisions.csv")),
@@ -1753,6 +1811,193 @@ def _metric_progress(metrics: dict[str, Any], *, threshold: float = DET_PASS_THR
     }
 
 
+def _redesign_enabled(args: argparse.Namespace) -> bool:
+    return (
+        args.selection_mode == "redesign"
+        or args.fitness_mode != "legacy"
+        or args.mutation_mode != "legacy"
+        or args.stop_controller_mode == "active"
+        or bool(args.enable_pareto_archive)
+    )
+
+
+def _phase_token_weight(args: argparse.Namespace, phase: str) -> float:
+    if args.fitness_mode == "legacy":
+        return 0.0
+    if phase == "COMPRESSION_SEARCH":
+        return float(args.fitness_token_weight_max)
+    if phase == "ROBUSTNESS_STABILIZATION":
+        return (float(args.fitness_token_weight_min) + float(args.fitness_token_weight_max)) / 2.0
+    return float(args.fitness_token_weight_min)
+
+
+def _metric_for_eval(item: dict[str, Any]) -> GenomeMetricBundle | None:
+    metric = item.get("redesign_metrics")
+    return metric if isinstance(metric, GenomeMetricBundle) else None
+
+
+def _attach_redesign_metrics(
+    evaluated_population: list[dict[str, Any]],
+    *,
+    args: argparse.Namespace,
+    accepted_best: dict[str, Any] | None,
+    generation_phase: str,
+    token_budget: int | None,
+    row_margin: float,
+) -> None:
+    accepted_metric = _metric_for_eval(accepted_best or {})
+    parent_metrics_by_id = {
+        str((item.get("genome") or {}).get("id", "")): _metric_for_eval(item)
+        for item in evaluated_population
+    }
+    token_weight = _phase_token_weight(args, generation_phase)
+    for item in evaluated_population:
+        meta = (item.get("genome") or {}).get("_ga_metadata", {}) or {}
+        parent_id = ""
+        parents = meta.get("parent_ids") or []
+        if parents:
+            parent_id = str(parents[0])
+        metric = metrics_from_evaluation(
+            item,
+            token_budget=token_budget,
+            token_penalty_mode=args.token_penalty_mode,
+            accepted_metrics=accepted_metric,
+            parent_metrics=parent_metrics_by_id.get(parent_id),
+            fitness_avgdet_weight=args.fitness_avgdet_weight,
+            fitness_token_weight=token_weight,
+            fitness_regression_weight=args.fitness_regression_weight,
+            fitness_variance_weight=args.fitness_variance_weight,
+            fitness_category_weight=(args.fitness_category_weight if args.category_balance_mode == "fitness" else 0.0),
+            row_margin=row_margin,
+        )
+        item["redesign_metrics"] = metric
+        if args.fitness_mode != "legacy":
+            item["fitness"] = metric.score_main
+            item["avg_det_score"] = metric.validation_avg_det_score
+            item["variance"] = metric.det_score_variance
+            item["validation_avg_det_score"] = metric.validation_avg_det_score
+
+
+def _sort_evaluated_population(evaluated_population: list[dict[str, Any]], args: argparse.Namespace) -> None:
+    if _redesign_enabled(args):
+        evaluated_population.sort(
+            key=lambda item: (
+                -float((_metric_for_eval(item) or metrics_from_evaluation(item)).score_main),
+                *best_tie_key(_metric_for_eval(item) or metrics_from_evaluation(item), generation=int(item.get("generation", 0) or 0)),
+            )
+        )
+    else:
+        evaluated_population.sort(
+            key=lambda item: (-float(item["fitness"]), -float(item["validation_avg_det_score"]), item["genome"]["id"])
+        )
+
+
+def _best_by_redesign_tiebreak(evaluated_population: list[dict[str, Any]], generation: int) -> dict[str, Any] | None:
+    if not evaluated_population:
+        return None
+    return min(
+        evaluated_population,
+        key=lambda item: best_tie_key(_metric_for_eval(item) or metrics_from_evaluation(item), generation=generation),
+    )
+
+
+def _accepted_metric_row(accepted_best: dict[str, Any] | None) -> GenomeMetricBundle | None:
+    return _metric_for_eval(accepted_best or {})
+
+
+def _proposal_to_row(proposal: MutationProposal) -> dict[str, Any]:
+    return proposal.to_row()
+
+
+def _cloudless_mutation_proposals(
+    *,
+    generation: int,
+    parent_genome: dict[str, Any],
+    feedback_hint: dict[str, Any] | None,
+    args: argparse.Namespace,
+    rng: random.Random,
+    active_failure_families: list[str],
+) -> list[MutationProposal]:
+    proposals: list[MutationProposal] = []
+    family = mutation_family_for_phase(str(getattr(args, "_generation_phase", "ACCURACY_SEARCH")), rng)
+    if feedback_hint and family == "accuracy_repair":
+        proposals.append(
+            proposal_for_family(
+                family="accuracy_repair",
+                generation=generation,
+                parent_genome_id=str(parent_genome.get("id", "")),
+                feedback_hint=feedback_hint,
+                rng=rng,
+            )
+        )
+    if args.enable_compression_mutation or args.mutation_mode in {"cloudless_decompiler", "hybrid"}:
+        proposals.append(
+            proposal_for_family(
+                family="compression",
+                generation=generation,
+                parent_genome_id=str(parent_genome.get("id", "")),
+                feedback_hint=None,
+                rng=rng,
+            )
+        )
+    if args.enable_prompt_decompiler or args.mutation_mode in {"cloudless_decompiler", "hybrid"}:
+        prompt_like = json.dumps(
+            {
+                "blocks": parent_genome.get("blocks", []),
+                "params": parent_genome.get("params", {}),
+                "block_params": parent_genome.get("block_params", {}),
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        artifact = decompile_prompt(prompt_like, active_failure_families=active_failure_families)
+        proposals.extend(
+            compression_proposals_from_artifact(
+                artifact,
+                generation=generation,
+                parent_genome_id=str(parent_genome.get("id", "")),
+                max_proposals=2,
+            )
+        )
+    return proposals[: max(1, args.compression_children_per_parent)]
+
+
+def _write_redesign_artifacts(
+    output_root: Path,
+    *,
+    mutation_proposal_rows: list[dict[str, Any]],
+    mutation_operator_credit_rows: list[dict[str, Any]],
+    pareto_archive_rows: list[dict[str, Any]],
+    prompt_unit_rows: list[dict[str, Any]],
+) -> None:
+    _write_jsonl(output_root / "mutation_proposals.jsonl", mutation_proposal_rows)
+    if mutation_proposal_rows:
+        atomic_write_csv(output_root / "mutation_proposals.csv", list(mutation_proposal_rows[0].keys()), mutation_proposal_rows)
+    else:
+        atomic_write_csv(output_root / "mutation_proposals.csv", ["proposal_id", "source", "mutation_family", "operator"], [])
+    if mutation_operator_credit_rows:
+        atomic_write_csv(output_root / "mutation_operator_credit.csv", list(mutation_operator_credit_rows[0].keys()), mutation_operator_credit_rows)
+    else:
+        atomic_write_csv(output_root / "mutation_operator_credit.csv", ["generation", "mutation_family", "mutation_operator"], [])
+    if pareto_archive_rows:
+        atomic_write_csv(output_root / "pareto_archive.csv", list(pareto_archive_rows[0].keys()), pareto_archive_rows)
+    else:
+        atomic_write_csv(output_root / "pareto_archive.csv", ["generation", "genome_id", "det_pass_rate", "avg_prompt_tokens"], [])
+    _write_jsonl(output_root / "pareto_archive.jsonl", pareto_archive_rows)
+    _write_jsonl(output_root / "cloudless_prompt_units.jsonl", prompt_unit_rows)
+
+
+def _checkpoint_population(evaluated_population: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for item in evaluated_population:
+        clone = dict(item)
+        metric = _metric_for_eval(clone)
+        if metric:
+            clone["redesign_metrics"] = metric.to_row()
+        rows.append(clone)
+    return rows
+
+
 def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
     ensure_workspace()
     output_root = _resolve_output_root(args.output_root)
@@ -1777,6 +2022,25 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
     categories = sorted({str(row.get("category", "")) for _row_no, row in selected_rows if str(row.get("category", ""))})
     model_key = args.model_key or str(base_genome.get("params", {}).get("model", ""))
     model_label = _model_label_for_key(args.model_key) if args.model_key else model_key
+    if args.max_generations is not None:
+        args.gens = int(args.max_generations)
+    token_budget = args.token_budget
+    budget_source = "global_fallback" if token_budget else "none"
+    budget_fallback_reason = ""
+    if args.model_token_budget_json:
+        budget_path = Path(args.model_token_budget_json).expanduser().resolve()
+        try:
+            budget_map = json.loads(budget_path.read_text(encoding="utf-8"))
+            if model_key in budget_map:
+                token_budget = int(budget_map[model_key])
+                budget_source = "model_json"
+            elif token_budget:
+                budget_fallback_reason = f"model_key {model_key!r} missing from model token budget JSON"
+            else:
+                budget_fallback_reason = f"model_key {model_key!r} missing from model token budget JSON and no --token-budget provided"
+        except Exception as exc:
+            budget_fallback_reason = f"failed to read model token budget JSON: {exc}"
+            budget_source = "global_fallback" if token_budget else "none"
 
     run_manifest = {
         "profile": args.profile,
@@ -1795,6 +2059,24 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         "optional_blocks": get_optional_blocks(),
         "retrieval_policy": "fixed runtime service-context construction; not mutated by GA",
         "fitness": f"AvgDET - {args.alpha} * VarDET",
+        "redesign_modes": {
+            "selection_mode": args.selection_mode,
+            "fitness_mode": args.fitness_mode,
+            "mutation_mode": args.mutation_mode,
+            "stop_controller_mode": args.stop_controller_mode,
+            "category_balance_mode": args.category_balance_mode,
+            "token_penalty_mode": args.token_penalty_mode,
+        },
+        "budget_snapshot": {
+            "run_id": output_root.name,
+            "timestamp": datetime.now().isoformat(timespec="seconds"),
+            "model_key": model_key,
+            "baseline_token_budget": token_budget,
+            "budget_source": budget_source,
+            "model_token_budget_json": str(Path(args.model_token_budget_json).expanduser().resolve()) if args.model_token_budget_json else "",
+            "fallback_used": bool(budget_fallback_reason),
+            "fallback_reason": budget_fallback_reason,
+        },
         "command": " ".join(sys.argv),
     }
     dump_json(output_root / "ga_run_manifest.json", run_manifest)
@@ -1816,11 +2098,20 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
     promotion_rows: list[dict[str, Any]] = []
     advisor_proposal_rows: list[dict[str, Any]] = []
     advisor_summary_rows: list[dict[str, Any]] = []
+    mutation_proposal_rows: list[dict[str, Any]] = []
+    mutation_operator_credit_rows: list[dict[str, Any]] = []
+    pareto_archive_rows: list[dict[str, Any]] = []
+    pareto_generation_summary_rows: list[dict[str, Any]] = []
+    prompt_unit_rows: list[dict[str, Any]] = []
     global_best: dict[str, Any] | None = None
     accepted_best: dict[str, Any] | None = None
+    archives = ArchiveState()
     previous_generation_best: dict[str, Any] | None = None
     no_improvement_generations = 0
     start_generation = 1
+    best_so_far_detpass = 0.0
+    best_so_far_avgdet = 0.0
+    disruptive_attempt_count = 0
 
     if args.resume:
         resume_state = _load_ga_resume_state(
@@ -1884,6 +2175,8 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                 "ga_population_diagnostics_csv": str(output_root / "ga_population_diagnostics.csv"),
                 "structured_feedback_jsonl": str(output_root / "structured_feedback.jsonl"),
                 "advisor_mutation_proposals_jsonl": str(output_root / "advisor_mutation_proposals.jsonl"),
+                "mutation_proposals_jsonl": str(output_root / "mutation_proposals.jsonl"),
+                "pareto_archive_csv": str(output_root / "pareto_archive.csv"),
                 "promotion_decisions_csv": str(output_root / "promotion_decisions.csv"),
             },
         }
@@ -1897,6 +2190,17 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         _write_jsonl(output_root / "ga_population_diagnostics.jsonl", [])
         _write_jsonl(output_root / "advisor_mutation_proposals.jsonl", [])
         atomic_write_csv(output_root / "advisor_mutation_summary.csv", ["generation", "proposal_id", "accepted"], [])
+        _write_redesign_artifacts(
+            output_root,
+            mutation_proposal_rows=[],
+            mutation_operator_credit_rows=[],
+            pareto_archive_rows=[],
+            prompt_unit_rows=[],
+        )
+        atomic_write_csv(output_root / "ga_pareto_frontier.csv", PARETO_COLUMNS, [])
+        _write_jsonl(output_root / "ga_pareto_frontier.jsonl", [])
+        atomic_write_csv(output_root / "ga_pareto_generation_summary.csv", PARETO_SUMMARY_COLUMNS, [])
+        _write_jsonl(output_root / "ga_pareto_generation_summary.jsonl", [])
         _write_jsonl(output_root / "structured_feedback.jsonl", [])
         atomic_write_csv(output_root / "structured_feedback_summary.csv", ["failure_type", "failure_count"], [])
         atomic_write_csv(output_root / "population_transitions.csv", ["generation", "next_population"], [])
@@ -1916,6 +2220,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         )
 
     for generation in range(start_generation, args.gens + 1):
+        generation_phase = str(getattr(args, "_generation_phase", "ACCURACY_SEARCH"))
         train_rows = sample_rows(
             selected_rows,
             sample_size=args.sample_size,
@@ -1946,12 +2251,34 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             )
             evaluated_population.append(evaluation)
 
-        evaluated_population.sort(
-            key=lambda item: (-float(item["fitness"]), -float(item["validation_avg_det_score"]), item["genome"]["id"])
+        validation_row_margin = one_row_margin(
+            len(validation_rows),
+            args.detpass_row_margin if args.detpass_row_margin > 0 else None,
         )
+        if _redesign_enabled(args):
+            _attach_redesign_metrics(
+                evaluated_population,
+                args=args,
+                accepted_best=accepted_best,
+                generation_phase=generation_phase,
+                token_budget=token_budget,
+                row_margin=validation_row_margin,
+            )
+        _sort_evaluated_population(evaluated_population, args)
         generation_best = evaluated_population[0]
+        raw_generation_best = _best_by_redesign_tiebreak(evaluated_population, generation) or generation_best
         train_progress = _metric_summary(generation_best["train_metrics"])
         validation_progress = _metric_summary(generation_best["validation_metrics"])
+        redesign_metric = _metric_for_eval(generation_best)
+        raw_metric = _metric_for_eval(raw_generation_best)
+        if redesign_metric:
+            validation_progress["det_pass_rate"] = redesign_metric.validation_det_pass_rate
+            validation_progress["avg_det_score"] = redesign_metric.validation_avg_det_score
+            validation_progress["variance"] = redesign_metric.det_score_variance
+            validation_progress["avg_prompt_tokens"] = redesign_metric.avg_prompt_tokens
+        raw_generation_detpass = raw_metric.validation_det_pass_rate if raw_metric else validation_progress["det_pass_rate"]
+        best_so_far_detpass = max(best_so_far_detpass, raw_generation_detpass)
+        best_so_far_avgdet = max(best_so_far_avgdet, validation_progress["avg_det_score"])
         best_meta = generation_best["genome"].get("_ga_metadata", {}) or {}
         active = active_block_summary(generation_best["genome"])
         parent_ids = ",".join(str(item) for item in best_meta.get("parent_ids", []) or [])
@@ -1985,6 +2312,28 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             "advisor_used": bool(best_meta.get("advisor_used", False)),
             "feedback_types_used": feedback_types_used,
             "promoted_candidate": False,
+            "raw_generation_best_DETPass": raw_generation_detpass,
+            "best_so_far_DETPass": best_so_far_detpass,
+            "accepted_best_DETPass": (_metric_for_eval(accepted_best).validation_det_pass_rate if _metric_for_eval(accepted_best or {}) else ""),
+            "score_main": redesign_metric.score_main if redesign_metric else generation_best["fitness"],
+            "score_accuracy": redesign_metric.score_accuracy if redesign_metric else "",
+            "score_efficiency": redesign_metric.score_efficiency if redesign_metric else "",
+            "score_balanced": redesign_metric.score_balanced if redesign_metric else "",
+            "score_deployment": redesign_metric.score_deployment if redesign_metric else "",
+            "token_penalty": redesign_metric.token_penalty if redesign_metric else "",
+            "compression_gain": redesign_metric.compression_gain if redesign_metric else "",
+            "category_balance_score": redesign_metric.category_balance_score if redesign_metric else "",
+            "regression_penalty": redesign_metric.regression_penalty if redesign_metric else "",
+            "pareto_rank": redesign_metric.pareto_rank if redesign_metric else "",
+            "pareto_frontier_member": redesign_metric.pareto_frontier_member if redesign_metric else "",
+            "generation_phase": generation_phase,
+            "plateau_type": "",
+            "next_action": "",
+            "stop_candidate": False,
+            "stop_reason": "",
+            "unique_prompt_hash_count": "",
+            "pareto_archive_size": "",
+            "pareto_archive_delta": "",
         }
 
         generation_feedback_records: list[dict[str, Any]] = []
@@ -2009,6 +2358,57 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             evaluated_population=evaluated_population,
         )
         population_diagnostic_rows.extend(generation_category_diagnostics)
+        if _redesign_enabled(args):
+            generation_pareto_rows = build_pareto_rows(
+                [_metric_for_eval(item) for item in evaluated_population if _metric_for_eval(item)],
+                generation=generation,
+                model_key=model_key,
+                previous_frontier_ids={str(row.get("genome_id", "")) for row in pareto_archive_rows},
+            )
+            generation_pareto_summary = build_pareto_summary(generation_pareto_rows, generation=generation, model_key=model_key)
+            pareto_generation_summary_rows.append(generation_pareto_summary)
+            pareto_archive_delta = int(generation_pareto_summary.get("new_frontier", 0) or 0)
+            pareto_archive_rows.extend([row for row in generation_pareto_rows if row.get("is_pareto_frontier")])
+            unique_prompt_hash_count = len({(_metric_for_eval(item).prompt_hash if _metric_for_eval(item) else item["genome"]["id"]) for item in evaluated_population})
+            controller = decide_next_action(
+                generation_progress + [progress_record],
+                generation=generation,
+                max_generations=args.gens,
+                min_generations=args.min_generations,
+                plateau_window=args.plateau_window,
+                target_detpass=args.target_detpass,
+                pareto_archive_delta=pareto_archive_delta,
+                unique_prompt_hash_count=unique_prompt_hash_count,
+                population_size=args.population,
+                advisor_enabled=bool(args.llm_mutation_advisor),
+                advisor_trigger_mode=args.advisor_trigger_mode,
+                disruptive_attempt_count=disruptive_attempt_count,
+                disruptive_max_attempts=args.disruptive_max_attempts,
+            )
+            if controller.next_action == "trigger_disruptive_mutation":
+                disruptive_attempt_count += 1
+            args._generation_phase = controller.generation_phase
+            progress_record.update(controller.to_row())
+            progress_record["unique_prompt_hash_count"] = unique_prompt_hash_count
+            progress_record["pareto_archive_size"] = len({str(row.get("genome_id", "")) for row in pareto_archive_rows})
+            progress_record["pareto_archive_delta"] = pareto_archive_delta
+            _attach_redesign_metrics(
+                evaluated_population,
+                args=args,
+                accepted_best=accepted_best,
+                generation_phase=controller.generation_phase,
+                token_budget=token_budget,
+                row_margin=validation_row_margin,
+            )
+            _sort_evaluated_population(evaluated_population, args)
+            generation_best = evaluated_population[0]
+            validation_progress = _metric_summary(generation_best["validation_metrics"])
+            redesign_metric = _metric_for_eval(generation_best)
+            if redesign_metric:
+                validation_progress["det_pass_rate"] = redesign_metric.validation_det_pass_rate
+                validation_progress["avg_det_score"] = redesign_metric.validation_avg_det_score
+                validation_progress["variance"] = redesign_metric.det_score_variance
+                validation_progress["avg_prompt_tokens"] = redesign_metric.avg_prompt_tokens
 
         replay_gate_pass = True
         regression_gate_pass = True
@@ -2017,15 +2417,24 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         if accepted_best is None:
             promoted = True
         else:
-            accepted_validation = _metric_summary(accepted_best["validation_metrics"])
-            if validation_progress["avg_det_score"] < accepted_validation["avg_det_score"]:
-                regression_gate_pass = False
-                rejection_reason = "candidate regressed avg DET versus previous accepted prompt"
-            elif validation_progress["det_pass_rate"] < accepted_validation["det_pass_rate"]:
-                regression_gate_pass = False
-                rejection_reason = "candidate regressed DETPass versus previous accepted prompt"
+            if _redesign_enabled(args) and _metric_for_eval(generation_best):
+                regression_gate_pass, rejection_reason = regression_gate(
+                    _metric_for_eval(generation_best),
+                    _accepted_metric_row(accepted_best),
+                    margin=validation_row_margin,
+                    category_balance_mode=args.category_balance_mode,
+                )
+                promoted = regression_gate_pass
             else:
-                promoted = True
+                accepted_validation = _metric_summary(accepted_best["validation_metrics"])
+                if validation_progress["avg_det_score"] < accepted_validation["avg_det_score"]:
+                    regression_gate_pass = False
+                    rejection_reason = "candidate regressed avg DET versus previous accepted prompt"
+                elif validation_progress["det_pass_rate"] < accepted_validation["det_pass_rate"]:
+                    regression_gate_pass = False
+                    rejection_reason = "candidate regressed DETPass versus previous accepted prompt"
+                else:
+                    promoted = True
         accepted_prompt_path = ""
         previous_accepted_prompt = str((accepted_best or {}).get("genome", {}).get("id", ""))
         if promoted:
@@ -2064,29 +2473,42 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                 "genome": generation_best["genome"],
             }
         )
-        dump_json(output_root / "checkpoints" / f"ga_generation_{generation:03d}.json", {"generation": generation, "population": evaluated_population})
+        dump_json(
+            output_root / "checkpoints" / f"ga_generation_{generation:03d}.json",
+            {"generation": generation, "population": _checkpoint_population(evaluated_population)},
+        )
 
         generation_top_rows: list[dict[str, Any]] = []
         for rank, item in enumerate(evaluated_population[: max(1, args.top_k)], start=1):
             validation = _metric_summary(item["validation_metrics"])
             item_active = active_block_summary(item["genome"])
             item_meta = item["genome"].get("_ga_metadata", {}) or {}
+            item_metric = _metric_for_eval(item)
             top_row = {
                 "generation": generation,
                 "rank": rank,
                 "model_key": model_key,
                 "genome_id": item["genome"]["id"],
-                "det": validation["avg_det_score"],
-                "det_pass_rate": validation["det_pass_rate"],
+                "det": item_metric.validation_avg_det_score if item_metric else validation["avg_det_score"],
+                "det_pass_rate": item_metric.validation_det_pass_rate if item_metric else validation["det_pass_rate"],
                 "det_pass_count": validation["det_pass_count"],
                 "row_count": validation["row_count"],
-                "tokens": validation["avg_prompt_tokens"],
+                "tokens": item_metric.avg_prompt_tokens if item_metric else validation["avg_prompt_tokens"],
                 "core_blocks": ",".join(item_active["core"]),
                 "optional_blocks": ",".join(item_active["optional"]),
                 "parent_ids": ",".join(str(parent) for parent in item_meta.get("parent_ids", []) or []),
                 "major_mutations": ",".join(str(mut) for mut in item_meta.get("mutation_types", []) or []),
                 "advisor_proposal_id": item_meta.get("advisor_proposal_id", ""),
                 "fitness": item["fitness"],
+                "elite_reason": item.get("elite_reason", ""),
+                "selection_reason": item.get("selection_reason", ""),
+                "archive_membership": item.get("archive_membership", ""),
+                "pareto_rank": item_metric.pareto_rank if item_metric else "",
+                "prompt_hash": item_metric.prompt_hash if item_metric else "",
+                "block_signature": item_metric.block_signature if item_metric else "",
+                "rule_signature": item_metric.rule_signature if item_metric else "",
+                "mutation_family": item_meta.get("mutation_family", ""),
+                "mutation_operator": item_meta.get("mutation_operator", ""),
             }
             generation_top_rows.append(top_row)
             topk_rows.append(top_row)
@@ -2102,11 +2524,30 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         ]
         block_diff_rows.extend(best_diffs)
 
-        if global_best is None or float(generation_best["validation_avg_det_score"]) > float(global_best["validation_avg_det_score"]):
-            global_best = generation_best
-            no_improvement_generations = 0
+        if _redesign_enabled(args):
+            archives = update_archives(
+                archives,
+                evaluated_population,
+                accepted_best=accepted_best,
+                generation=generation,
+                one_row_margin=validation_row_margin,
+                enable_group_specialists=bool(args.enable_group_specialist_archives or args.category_balance_mode == "routing"),
+            )
+            candidate_global = archives.global_best_detpass or generation_best
+            if global_best is None or best_tie_key(
+                _metric_for_eval(candidate_global) or metrics_from_evaluation(candidate_global),
+                generation=generation,
+            ) < best_tie_key(_metric_for_eval(global_best) or metrics_from_evaluation(global_best), generation=generation):
+                global_best = candidate_global
+                no_improvement_generations = 0
+            else:
+                no_improvement_generations += 1
         else:
-            no_improvement_generations += 1
+            if global_best is None or float(generation_best["validation_avg_det_score"]) > float(global_best["validation_avg_det_score"]):
+                global_best = generation_best
+                no_improvement_generations = 0
+            else:
+                no_improvement_generations += 1
 
         if no_improvement_generations >= args.plateau_generations:
             feedback = run_feedback_loop(
@@ -2177,6 +2618,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                     "proposed_micro_rule": proposal.get("proposed_micro_rule", ""),
                 }
             )
+            mutation_proposal_rows.append(_proposal_to_row(proposal_from_advisor(proposal, generation=generation)))
         if args.llm_mutation_advisor:
             advisor_summary_rows.append(
                 {
@@ -2189,14 +2631,97 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             )
 
         advisor_slots = min(len(advisor_safe_proposals), max(0, args.population - 1))
-        elite_count = max(1, min(args.elites, args.population - advisor_slots))
-        elites = [item["genome"] for item in evaluated_population[:elite_count]]
+        if _redesign_enabled(args):
+            elite_target = 3 if args.population <= 5 else max(args.elites, 5)
+            elite_quota = max(1, min(args.population - 1, elite_target))
+            elite_items = quota_elites(
+                evaluated_population,
+                archives,
+                population_size=elite_quota,
+                category_balance_mode=args.category_balance_mode,
+                one_row_margin=validation_row_margin,
+            )
+            elites = [item["genome"] for item in elite_items]
+        else:
+            elite_count = max(1, min(args.elites, args.population - advisor_slots))
+            elite_items = evaluated_population[:elite_count]
+            elites = [item["genome"] for item in elite_items]
         next_population: list[dict[str, Any]] = [_copy_genome(genome) for genome in elites]
         new_by_crossover = 0
         new_by_mutation = 0
         new_by_advisor = 0
+        new_by_compression = 0
+        new_by_diversity = 0
+        new_by_specialist = 0
+        new_by_disruptive = 0
         new_random = 0
         feedback_hint = suggest_mutation_from_feedback(generation_feedback_summary) if args.feedback_guided_mutation else None
+        active_failure_families = [str(item.get("affected_block_family", "")) for item in generation_feedback_summary]
+        if args.enable_prompt_decompiler or args.mutation_mode in {"cloudless_decompiler", "hybrid"}:
+            artifact = decompile_prompt(
+                json.dumps(generation_best["genome"].get("block_params", {}), ensure_ascii=False, sort_keys=True),
+                active_failure_families=active_failure_families,
+            )
+            for unit in artifact.units:
+                row = unit.to_row()
+                row.update({"generation": generation, "model_key": model_key, "genome_id": generation_best["genome"]["id"]})
+                prompt_unit_rows.append(row)
+        if args.mutation_mode in {"family", "cloudless_decompiler", "hybrid"} or args.enable_compression_mutation:
+            for proposal in _cloudless_mutation_proposals(
+                generation=generation + 1,
+                parent_genome=generation_best["genome"],
+                feedback_hint=feedback_hint,
+                args=args,
+                rng=rng,
+                active_failure_families=active_failure_families,
+            ):
+                if len(next_population) >= args.population:
+                    proposal.accepted = False
+                    proposal.rejection_reason = "population full before cloudless proposal could be added"
+                    mutation_proposal_rows.append(_proposal_to_row(proposal))
+                    continue
+                child, child_diffs = apply_mutation_proposal(generation_best["genome"], proposal, rng=rng)
+                proposal.child_genome_id = child["id"]
+                proposal.accepted = True
+                next_population.append(child)
+                mutation_proposal_rows.append(_proposal_to_row(proposal))
+                mutation_operator_credit_rows.append(
+                    {
+                        "generation": generation + 1,
+                        "mutation_family": proposal.mutation_family,
+                        "mutation_operator": proposal.operator,
+                        "parent_genome_id": proposal.parent_genome_id,
+                        "child_genome_id": child["id"],
+                        "delta_DETPass": "",
+                        "delta_AvgDET": "",
+                        "delta_tokens": "",
+                        "delta_latency": "",
+                        "delta_basic_DETPass": "",
+                        "delta_temporal_DETPass": "",
+                        "delta_complex_DETPass": "",
+                        "accepted": True,
+                        "elite_reason": "",
+                        "operator_credit": "",
+                    }
+                )
+                new_by_mutation += 1
+                if proposal.mutation_family == "compression":
+                    new_by_compression += 1
+                elif proposal.mutation_family == "diversity":
+                    new_by_diversity += 1
+                elif proposal.mutation_family == "specialist":
+                    new_by_specialist += 1
+                if str(progress_record.get("next_action", "")).startswith("trigger_disruptive"):
+                    new_by_disruptive += 1
+                block_diff_rows.extend(
+                    {
+                        "generation": generation + 1,
+                        "genome_id": child["id"],
+                        "base_genome_id": str((child.get("_ga_metadata", {}) or {}).get("base_genome_id", "")),
+                        **diff,
+                    }
+                    for diff in child_diffs
+                )
         for proposal in advisor_safe_proposals:
             if len(next_population) >= args.population:
                 break
@@ -2210,6 +2735,25 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             next_population.append(child)
             new_by_advisor += 1
             new_by_mutation += 1
+            mutation_operator_credit_rows.append(
+                {
+                    "generation": generation + 1,
+                    "mutation_family": "advisor_guided",
+                    "mutation_operator": proposal.get("mutation_type", ""),
+                    "parent_genome_id": str(parent.get("id", "")),
+                    "child_genome_id": child["id"],
+                    "delta_DETPass": "",
+                    "delta_AvgDET": "",
+                    "delta_tokens": "",
+                    "delta_latency": "",
+                    "delta_basic_DETPass": "",
+                    "delta_temporal_DETPass": "",
+                    "delta_complex_DETPass": "",
+                    "accepted": True,
+                    "elite_reason": "",
+                    "operator_credit": "",
+                }
+            )
             block_diff_rows.extend(
                 {
                     "generation": generation + 1,
@@ -2270,11 +2814,19 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         transition = {
             "generation": generation,
             "survived_elites": len(elites),
+            "survived_global_best": any(str(genome.get("id", "")) == str(((archives.global_best_detpass or {}).get("genome") or {}).get("id", "")) for genome in elites) if _redesign_enabled(args) else "",
+            "survived_accepted_best": any(str(genome.get("id", "")) == str(((accepted_best or {}).get("genome") or {}).get("id", "")) for genome in elites) if _redesign_enabled(args) else "",
             "new_by_crossover": new_by_crossover,
             "new_by_mutation": new_by_mutation,
             "new_by_advisor": new_by_advisor,
+            "new_by_compression": new_by_compression,
+            "new_by_diversity": new_by_diversity,
+            "new_by_specialist": new_by_specialist,
+            "new_by_disruptive": new_by_disruptive,
             "new_random": new_random,
             "duplicates_removed": duplicates_removed,
+            "duplicates_removed_by_prompt_hash": 0,
+            "refill_reason": "dedupe_refill" if new_random else "",
             "next_population": len(population),
             "promotion_rejected": 0 if promoted else 1,
         }
@@ -2314,6 +2866,23 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             atomic_write_csv(output_root / "advisor_mutation_summary.csv", list(advisor_proposal_rows[0].keys()), advisor_proposal_rows)
         else:
             atomic_write_csv(output_root / "advisor_mutation_summary.csv", ["generation", "proposal_id", "accepted"], [])
+        _write_redesign_artifacts(
+            output_root,
+            mutation_proposal_rows=mutation_proposal_rows,
+            mutation_operator_credit_rows=mutation_operator_credit_rows,
+            pareto_archive_rows=pareto_archive_rows,
+            prompt_unit_rows=prompt_unit_rows,
+        )
+        if pareto_archive_rows:
+            atomic_write_csv(output_root / "ga_pareto_frontier.csv", list(pareto_archive_rows[0].keys()), pareto_archive_rows)
+        else:
+            atomic_write_csv(output_root / "ga_pareto_frontier.csv", PARETO_COLUMNS, [])
+        _write_jsonl(output_root / "ga_pareto_frontier.jsonl", pareto_archive_rows)
+        if pareto_generation_summary_rows:
+            atomic_write_csv(output_root / "ga_pareto_generation_summary.csv", list(pareto_generation_summary_rows[0].keys()), pareto_generation_summary_rows)
+        else:
+            atomic_write_csv(output_root / "ga_pareto_generation_summary.csv", PARETO_SUMMARY_COLUMNS, [])
+        _write_jsonl(output_root / "ga_pareto_generation_summary.jsonl", pareto_generation_summary_rows)
         _write_jsonl(output_root / "structured_feedback.jsonl", structured_feedback_records)
         if structured_feedback_summary_rows:
             atomic_write_csv(output_root / "structured_feedback_summary.csv", list(structured_feedback_summary_rows[0].keys()), structured_feedback_summary_rows)
@@ -2339,16 +2908,46 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         "structured_feedback_summary_csv": str(output_root / "structured_feedback_summary.csv"),
         "population_transitions_csv": str(output_root / "population_transitions.csv"),
         "promotion_decisions_csv": str(output_root / "promotion_decisions.csv"),
+        "mutation_proposals_jsonl": str(output_root / "mutation_proposals.jsonl"),
+        "pareto_archive_csv": str(output_root / "pareto_archive.csv"),
+        "mutation_operator_credit_csv": str(output_root / "mutation_operator_credit.csv"),
         "best_genome": final_best.get("genome") if final_best else None,
         "best_fitness": final_best.get("fitness") if final_best else None,
         "best_validation_avg_det_score": final_best.get("validation_avg_det_score") if final_best else None,
-        "fitness_formula": f"AvgDET - {args.alpha} * VarDET",
+        "fitness_formula": (
+            "phase-aware DETPass + AvgDET + category/compression - token/variance/regression penalties"
+            if args.fitness_mode != "legacy"
+            else f"AvgDET - {args.alpha} * VarDET"
+        ),
         "retrieval_policy": "fixed runtime service-context construction; not mutated by GA",
         "stage": str(getattr(args, "stage_name", "ga")),
         "advisor_status": "enabled" if args.llm_mutation_advisor else "skipped",
+        "final_phase": str(getattr(args, "_generation_phase", "")),
+        "stop_reason": generation_progress[-1].get("stop_reason", "") if generation_progress else "",
+        "best_so_far_DETPass": best_so_far_detpass,
+        "accepted_best": str(((accepted_best or {}).get("genome") or {}).get("id", "")),
+        "compact_best": str(((archives.compact_best_within_epsilon or {}).get("genome") or {}).get("id", "")),
+        "pareto_archive_size": len({str(row.get("genome_id", "")) for row in pareto_archive_rows}),
+        "cloudless_mutation_used": args.mutation_mode in {"cloudless_decompiler", "hybrid"} or bool(args.enable_prompt_decompiler),
+        "advisor_used": bool(args.llm_mutation_advisor),
+        "category_balance_mode": args.category_balance_mode,
+        "token_penalty_mode": args.token_penalty_mode,
+        "mutation_family_counts": dict(Counter(str(row.get("mutation_family", "")) for row in mutation_proposal_rows if str(row.get("mutation_family", "")))),
+        "compression_success_count": sum(1 for row in mutation_proposal_rows if row.get("mutation_family") == "compression" and _truthy(row.get("accepted"))),
+        "compression_rejection_count": sum(1 for row in mutation_proposal_rows if row.get("mutation_family") == "compression" and not _truthy(row.get("accepted"))),
     }
     dump_json(output_root / "ga_summary.json", summary)
     if summary["best_genome"] is not None:
+        best_metric = _metric_for_eval(final_best) if final_best else None
+        if best_metric:
+            summary["best_genome"].setdefault("_ga_metadata", {})
+            summary["best_genome"]["_ga_metadata"].update(
+                {
+                    "prompt_hash": best_metric.prompt_hash,
+                    "block_signature": best_metric.block_signature,
+                    "rule_signature": best_metric.rule_signature,
+                }
+            )
         dump_json(output_root / "best_genome.json", summary["best_genome"])
         best_summary = active_block_summary(summary["best_genome"])
         dump_json(
@@ -2359,6 +2958,9 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                 "optional_blocks": best_summary["optional"],
                 "params": summary["best_genome"].get("params", {}),
                 "block_params": summary["best_genome"].get("block_params", {}),
+                "prompt_hash": best_metric.prompt_hash if best_metric else "",
+                "block_signature": best_metric.block_signature if best_metric else "",
+                "rule_signature": best_metric.rule_signature if best_metric else "",
                 "full_prompt_printed": False,
             },
         )

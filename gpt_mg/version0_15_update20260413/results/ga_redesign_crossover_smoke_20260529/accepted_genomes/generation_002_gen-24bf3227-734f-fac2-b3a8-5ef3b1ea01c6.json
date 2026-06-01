@@ -1,0 +1,63 @@
+{
+  "id": "gen-24bf3227-734f-fac2-b3a8-5ef3b1ea01c6",
+  "seed": 262004705,
+  "blocks": [
+    "01",
+    "02",
+    "03",
+    "05",
+    "06"
+  ],
+  "params": {
+    "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "temperature": 0.05,
+    "few_shot_count": 3,
+    "max_tokens": 512,
+    "candidate_strategies": [
+      "minimal",
+      "canonical_names_first"
+    ]
+  },
+  "block_params": {
+    "02": {
+      "few_shot_count": 1,
+      "micro_rules": [
+        "Prefer canonical_name exactly when available.",
+        "Keep the code minimal and remove unrelated actions.",
+        "Use value entries in conditions and function entries in actions."
+      ]
+    },
+    "05": {
+      "repair_mode": "conservative",
+      "few_shot_count": 3
+    }
+  },
+  "_ga_metadata": {
+    "parent_ids": [
+      "gen-2b132d31-5209-14c4-0eef-092879070b33"
+    ],
+    "mutation_types": [
+      "reduce_candidate_strategies"
+    ],
+    "crossover_used": false,
+    "feedback_types_used": [],
+    "base_genome_id": "gen-2b132d31-5209-14c4-0eef-092879070b33",
+    "mutation_family": "compression",
+    "mutation_operator": "reduce_candidate_strategies",
+    "mutation_proposal_id": "compression_g002_3bf6baf9",
+    "diffs": [
+      {
+        "block_id": "genome",
+        "field": "params",
+        "old_value": "{\"candidate_strategies\": [\"minimal\", \"canonical_names_first\", \"explicit_preconditions\", \"compact_json\"], \"few_shot_count\": 3, \"max_tokens\": 512, \"model\": \"Qwen/Qwen2.5-Coder-7B-Instruct\", \"temperature\": 0.05}",
+        "new_value": "{\"candidate_strategies\": [\"minimal\", \"canonical_names_first\"], \"few_shot_count\": 3, \"max_tokens\": 512, \"model\": \"Qwen/Qwen2.5-Coder-7B-Instruct\", \"temperature\": 0.05}",
+        "mutation_type": "reduce_candidate_strategies",
+        "mutation_family": "compression",
+        "feedback_driven": false,
+        "llm_advised": false,
+        "advisor_proposal_id": "",
+        "failure_type_source": ""
+      }
+    ]
+  }
+}

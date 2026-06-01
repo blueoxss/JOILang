@@ -447,7 +447,36 @@ Advisor artifact:
 fitness = AvgDET - alpha * VarDET
 ```
 
-Token/latency는 GA fitness의 직접 항이 아니라, deployment comparison artifact에서 별도로 평가합니다.
+Legacy GA에서는 token/latency가 selection fitness의 직접 항이 아니며 deployment comparison artifact에서 별도로 평가됩니다.
+
+Redesigned GA mode에서는 `--fitness-mode phase_aware`와 `--token-penalty-mode budget|accepted|hybrid`를 켜면 DETPass를 1차 목표로 두고 AvgDET, category guard, token penalty, compression gain, regression penalty를 함께 기록/사용합니다. 이 모드는 기존 artifact를 덮어쓰지 않고 `score_main`, `best_so_far_DETPass`, `generation_phase`, `pareto_archive_size`, `mutation_proposals.jsonl`, `pareto_archive.csv` 같은 새 필드를 추가합니다.
+
+Redesign preset:
+
+```bash
+python -u gpt_mg/version0_15_update20260413/scripts/run_ga_search.py \
+  --profile version0_15 \
+  --model-key qwen25_coder_7b \
+  --selection-mode redesign \
+  --fitness-mode phase_aware \
+  --mutation-mode cloudless_decompiler \
+  --enable-compression-mutation \
+  --enable-rendered-prompt-dedupe \
+  --stop-controller-mode active \
+  --enable-pareto-archive \
+  --category-balance-mode guard \
+  --token-penalty-mode hybrid \
+  --population 10 \
+  --gens 20 \
+  --full-run
+```
+
+Important boundaries:
+
+- Retrieval pre-mapping, retrieval top-k/mode, and service-context construction remain fixed runtime paths and are not GA mutation targets.
+- Core blocks remain active; optional guidance blocks and block params are the prompt artifact search space.
+- Cloudless mutation and advisor mutation both write canonical proposal rows to `mutation_proposals.jsonl`.
+- `raw_generation_best_DETPass` and `best_so_far_DETPass` are separate so raw generation oscillation is not mistaken for loss of the archive best.
 
 빠른 GA smoke:
 

@@ -1144,6 +1144,48 @@ Advisor options (GA prompt search):
 
 The advisor does not replace GA selection. It only proposes mutation candidates; GA still evaluates all children and performs normal selection.
 
+### 13-4. Redesigned GA mode: archive, Pareto, cloudless mutation, active controller
+
+The redesigned GA core is opt-in so legacy experiments remain reproducible.
+
+Recommended smoke:
+
+```bash
+python -u gpt_mg/version0_15_update20260413/scripts/run_ga_search.py \
+  --profile version0_15 \
+  --model-key qwen25_coder_7b \
+  --population 5 \
+  --gens 3 \
+  --sample-size 4 \
+  --validation-size 4 \
+  --candidate-k 1 \
+  --repair-attempts 0 \
+  --selection-mode redesign \
+  --fitness-mode phase_aware \
+  --mutation-mode cloudless_decompiler \
+  --enable-compression-mutation \
+  --enable-rendered-prompt-dedupe \
+  --stop-controller-mode active \
+  --enable-pareto-archive \
+  --category-balance-mode guard \
+  --token-penalty-mode hybrid \
+  --category 1 \
+  --category 2 \
+  --limit-per-category 2 \
+  --full-run
+```
+
+What changes in redesigned mode:
+
+- `ga_generation_progress.csv` separates `raw_generation_best_DETPass` from `best_so_far_DETPass`.
+- Selection can use phase-aware `score_main` with DETPass primary, AvgDET secondary, and conservative token/regression penalties.
+- `population_transitions.csv` records archive survival and child origin: crossover, mutation, compression, diversity, specialist, disruptive.
+- `mutation_proposals.jsonl` is the shared proposal table for cloudless and advisor-guided mutation.
+- `pareto_archive.csv` records DETPass/token non-dominated candidates.
+- `generation_phase`, `plateau_type`, and `next_action` explain whether the controller stayed in accuracy search, switched to robustness, switched to compression, increased diversity, or finalized.
+
+Retrieval pre-mapping remains fixed runtime context. The redesigned GA mutates prompt artifacts only: optional blocks, block params, few-shot count, micro-rules, layout/reasoning hints, candidate strategies, and compression/output-budget settings.
+
 Progress modes:
 - `--progress quiet`: final summary only
 - `--progress minimal`: compact stage/generation progress

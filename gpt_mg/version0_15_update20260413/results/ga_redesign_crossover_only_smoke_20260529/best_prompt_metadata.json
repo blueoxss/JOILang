@@ -1,0 +1,44 @@
+{
+  "genome_id": "gen-062479cf-b5b7-bad3-0198-596637c9e3c3",
+  "core_blocks": [
+    "01",
+    "02"
+  ],
+  "optional_blocks": [
+    "03",
+    "05",
+    "06"
+  ],
+  "params": {
+    "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "temperature": 0.05,
+    "few_shot_count": 3,
+    "max_tokens": 1024,
+    "candidate_strategies": [
+      "minimal",
+      "direct",
+      "canonical_names_first",
+      "compact_json",
+      "explicit_preconditions"
+    ]
+  },
+  "block_params": {
+    "02": {
+      "few_shot_count": 3,
+      "micro_rules": [
+        "For INTEGER and DOUBLE arguments, avoid quoted numeric literals.",
+        "Prefer canonical_name exactly when available.",
+        "Keep the code minimal and remove unrelated actions.",
+        "Use value entries in conditions and function entries in actions."
+      ]
+    },
+    "05": {
+      "repair_mode": "conservative",
+      "few_shot_count": 3
+    }
+  },
+  "prompt_hash": "c581a5e4acafd8ed",
+  "block_signature": "01,02,03,05,06",
+  "rule_signature": "7b709409444aec49",
+  "full_prompt_printed": false
+}
