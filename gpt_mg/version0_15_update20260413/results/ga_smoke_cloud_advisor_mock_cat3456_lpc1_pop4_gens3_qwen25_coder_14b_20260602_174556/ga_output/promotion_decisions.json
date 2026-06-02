@@ -1,0 +1,46 @@
+{
+  "rows": [
+    {
+      "generation": 1,
+      "candidate_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+      "model_key": "qwen25_coder_14b",
+      "DETPass": 0.0,
+      "SDET": 15.9375,
+      "avg_prompt_tokens": 0.0,
+      "replay_gate_pass": true,
+      "regression_gate_pass": true,
+      "promoted": true,
+      "rejection_reason": "",
+      "accepted_prompt_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_mock_cat3456_lpc1_pop4_gens3_qwen25_coder_14b_20260602_174556/ga_output/accepted_genomes/generation_001_gen-378892e9-ecc3-87ab-8b45-85023a0286cc.json",
+      "previous_accepted_prompt": ""
+    },
+    {
+      "generation": 2,
+      "candidate_id": "gen-2e1069de-7225-be6c-3bf6-baf915e48f91",
+      "model_key": "qwen25_coder_14b",
+      "DETPass": 0.0,
+      "SDET": 15.9375,
+      "avg_prompt_tokens": 0.0,
+      "replay_gate_pass": true,
+      "regression_gate_pass": true,
+      "promoted": true,
+      "rejection_reason": "",
+      "accepted_prompt_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_mock_cat3456_lpc1_pop4_gens3_qwen25_coder_14b_20260602_174556/ga_output/accepted_genomes/generation_002_gen-2e1069de-7225-be6c-3bf6-baf915e48f91.json",
+      "previous_accepted_prompt": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc"
+    },
+    {
+      "generation": 3,
+      "candidate_id": "gen-2e1069de-7225-be6c-3bf6-baf915e48f91",
+      "model_key": "qwen25_coder_14b",
+      "DETPass": 0.0,
+      "SDET": 15.9375,
+      "avg_prompt_tokens": 0.0,
+      "replay_gate_pass": true,
+      "regression_gate_pass": true,
+      "promoted": true,
+      "rejection_reason": "",
+      "accepted_prompt_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_mock_cat3456_lpc1_pop4_gens3_qwen25_coder_14b_20260602_174556/ga_output/accepted_genomes/generation_003_gen-2e1069de-7225-be6c-3bf6-baf915e48f91.json",
+      "previous_accepted_prompt": "gen-2e1069de-7225-be6c-3bf6-baf915e48f91"
+    }
+  ]
+}

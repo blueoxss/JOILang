@@ -1,0 +1,108 @@
+[
+  {
+    "generation": 1,
+    "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+    "fitness": 120.0,
+    "avg_det_score": 100.0,
+    "validation_avg_det_score": 100.0,
+    "train_det_pass_rate": 100.0,
+    "train_gt_exact_rate": 100.0,
+    "validation_det_pass_rate": 100.0,
+    "validation_gt_exact_rate": 100.0,
+    "genome": {
+      "id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+      "seed": 929273219,
+      "blocks": [
+        "01",
+        "02",
+        "03",
+        "05",
+        "06"
+      ],
+      "params": {
+        "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+        "temperature": 0.1,
+        "few_shot_count": 3,
+        "max_tokens": 1024,
+        "candidate_strategies": [
+          "compact_json",
+          "explicit_preconditions",
+          "direct",
+          "minimal"
+        ]
+      },
+      "block_params": {
+        "02": {
+          "few_shot_count": 2,
+          "micro_rules": []
+        },
+        "05": {
+          "repair_mode": "conservative",
+          "few_shot_count": 3
+        }
+      },
+      "_ga_metadata": {
+        "parent_ids": [],
+        "mutation_types": [
+          "initial_random"
+        ],
+        "crossover_used": false,
+        "feedback_types_used": [],
+        "base_genome_id": ""
+      }
+    }
+  },
+  {
+    "generation": 2,
+    "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+    "fitness": 120.0,
+    "avg_det_score": 100.0,
+    "validation_avg_det_score": 100.0,
+    "train_det_pass_rate": 100.0,
+    "train_gt_exact_rate": 100.0,
+    "validation_det_pass_rate": 100.0,
+    "validation_gt_exact_rate": 100.0,
+    "genome": {
+      "id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+      "seed": 929273219,
+      "blocks": [
+        "01",
+        "02",
+        "03",
+        "05",
+        "06"
+      ],
+      "params": {
+        "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+        "temperature": 0.1,
+        "few_shot_count": 3,
+        "max_tokens": 1024,
+        "candidate_strategies": [
+          "compact_json",
+          "explicit_preconditions",
+          "direct",
+          "minimal"
+        ]
+      },
+      "block_params": {
+        "02": {
+          "few_shot_count": 2,
+          "micro_rules": []
+        },
+        "05": {
+          "repair_mode": "conservative",
+          "few_shot_count": 3
+        }
+      },
+      "_ga_metadata": {
+        "parent_ids": [],
+        "mutation_types": [
+          "initial_random"
+        ],
+        "crossover_used": false,
+        "feedback_types_used": [],
+        "base_genome_id": ""
+      }
+    }
+  }
+]

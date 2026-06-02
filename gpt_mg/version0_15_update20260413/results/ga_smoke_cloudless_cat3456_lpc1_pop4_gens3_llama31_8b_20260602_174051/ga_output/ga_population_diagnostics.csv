@@ -1,0 +1,13 @@
+generation,model_key,category,row_evaluations,avg_det_score,det_pass_count,det_pass_rate,failure_histogram
+1,llama31_8b,3,4,0.0,0,0.0,"{""invalid_json"": 4}"
+1,llama31_8b,4,4,0.0,0,0.0,"{""invalid_json"": 4}"
+1,llama31_8b,5,4,0.0,0,0.0,"{""invalid_json"": 4}"
+1,llama31_8b,6,4,0.0,0,0.0,"{""invalid_json"": 4}"
+2,llama31_8b,3,4,0.0,0,0.0,"{""invalid_json"": 4}"
+2,llama31_8b,4,4,0.0,0,0.0,"{""invalid_json"": 4}"
+2,llama31_8b,5,4,0.0,0,0.0,"{""invalid_json"": 4}"
+2,llama31_8b,6,4,0.0,0,0.0,"{""invalid_json"": 4}"
+3,llama31_8b,3,4,0.0,0,0.0,"{""invalid_json"": 4}"
+3,llama31_8b,4,4,0.0,0,0.0,"{""invalid_json"": 4}"
+3,llama31_8b,5,4,0.0,0,0.0,"{""invalid_json"": 4}"
+3,llama31_8b,6,4,0.0,0,0.0,"{""invalid_json"": 4}"

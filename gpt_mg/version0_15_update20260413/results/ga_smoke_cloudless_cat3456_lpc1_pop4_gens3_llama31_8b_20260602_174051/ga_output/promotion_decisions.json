@@ -1,0 +1,46 @@
+{
+  "rows": [
+    {
+      "generation": 1,
+      "candidate_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+      "model_key": "llama31_8b",
+      "DETPass": 0.0,
+      "SDET": 0.0,
+      "avg_prompt_tokens": 0.0,
+      "replay_gate_pass": true,
+      "regression_gate_pass": true,
+      "promoted": true,
+      "rejection_reason": "",
+      "accepted_prompt_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloudless_cat3456_lpc1_pop4_gens3_llama31_8b_20260602_174051/ga_output/accepted_genomes/generation_001_gen-378892e9-ecc3-87ab-8b45-85023a0286cc.json",
+      "previous_accepted_prompt": ""
+    },
+    {
+      "generation": 2,
+      "candidate_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+      "model_key": "llama31_8b",
+      "DETPass": 0.0,
+      "SDET": 0.0,
+      "avg_prompt_tokens": 0.0,
+      "replay_gate_pass": true,
+      "regression_gate_pass": true,
+      "promoted": true,
+      "rejection_reason": "",
+      "accepted_prompt_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloudless_cat3456_lpc1_pop4_gens3_llama31_8b_20260602_174051/ga_output/accepted_genomes/generation_002_gen-378892e9-ecc3-87ab-8b45-85023a0286cc.json",
+      "previous_accepted_prompt": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc"
+    },
+    {
+      "generation": 3,
+      "candidate_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+      "model_key": "llama31_8b",
+      "DETPass": 0.0,
+      "SDET": 0.0,
+      "avg_prompt_tokens": 0.0,
+      "replay_gate_pass": true,
+      "regression_gate_pass": true,
+      "promoted": true,
+      "rejection_reason": "",
+      "accepted_prompt_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloudless_cat3456_lpc1_pop4_gens3_llama31_8b_20260602_174051/ga_output/accepted_genomes/generation_003_gen-378892e9-ecc3-87ab-8b45-85023a0286cc.json",
+      "previous_accepted_prompt": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc"
+    }
+  ]
+}

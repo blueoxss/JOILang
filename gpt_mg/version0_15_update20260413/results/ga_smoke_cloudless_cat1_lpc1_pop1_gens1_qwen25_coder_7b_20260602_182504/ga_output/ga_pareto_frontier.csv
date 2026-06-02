@@ -1,0 +1,2 @@
+generation,genome_id,model_key,det,det_pass_rate,sdet,avg_prompt_tokens,warm_latency_p50,peak_vram_gb,oom_count,failure_rate,is_pareto_frontier,newly_discovered_frontier,dominated_by,pareto_rank,knee_candidate,pareto_status
+1,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,qwen25_coder_7b,0.0,0.0,0.0,0.0,0.0,,,100.0,True,True,,1,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,partial_metrics

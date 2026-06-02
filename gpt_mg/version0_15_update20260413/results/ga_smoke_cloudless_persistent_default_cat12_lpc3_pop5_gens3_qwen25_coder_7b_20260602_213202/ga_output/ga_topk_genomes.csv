@@ -1,0 +1,4 @@
+generation,rank,model_key,genome_id,det,det_pass_rate,det_pass_count,row_count,tokens,core_blocks,optional_blocks,parent_ids,major_mutations,advisor_proposal_id,fitness,elite_reason,selection_reason,archive_membership,pareto_rank,prompt_hash,block_signature,rule_signature,mutation_family,mutation_operator
+1,1,qwen25_coder_7b,gen-af17dfa2-8346-1468-fe4c-138bdd4e7245,98.8672,100.0,6,6,26435.166667,"01,02",03,,initial_random,,119.770232,,,,999,bf04ea331e632db9,"01,02,03",d7c3c8779ca6fe58,,
+1,2,qwen25_coder_7b,gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e,98.8553,100.0,6,6,48340.333333,"01,02","03,05,06",,initial_random,,119.767784,,,,999,405e78ea3c6a6f8e,"01,02,03,05,06",da39a3ee5e6b4b0d,,
+1,3,qwen25_coder_7b,gen-bbf8b961-f83c-3169-009b-831460788576,98.8553,100.0,6,6,48387.333333,"01,02","03,05,06",,initial_random,,119.767784,,,,999,6e6e8c3aa0b75feb,"01,02,03,05,06",828da936fcacd0d1,,

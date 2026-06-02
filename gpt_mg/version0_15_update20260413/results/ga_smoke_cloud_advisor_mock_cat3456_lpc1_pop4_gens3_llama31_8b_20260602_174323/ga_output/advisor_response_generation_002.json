@@ -1,0 +1,52 @@
+{
+  "raw_content": "{\"generation\": 2, \"model_key\": \"llama31_8b\", \"diagnosis\": [{\"category_group\": \"validation\", \"main_failure\": \"schema_violation\", \"hypothesis\": \"Service_Mapping needs a targeted micro-rule from deterministic validation.\"}], \"mutation_proposals\": [{\"target_block_id\": \"02\", \"target_block_family\": \"Service_Mapping\", \"mutation_type\": \"add_schema_grounding_rule\", \"priority\": 1, \"reason\": \"Mock advisor proposal generated for schema validation smoke.\", \"edit_instruction\": \"Add the proposed micro-rule to the target prompt block.\", \"proposed_micro_rule\": \"Read descriptor, return_descriptor, argument_type, and argument_bounds before choosing service names or numeric units.\"}], \"do_not_change\": [\"core blocks\", \"retrieval pre-mapping\"], \"advisor_backend\": \"mock_schema\"}",
+  "parsed": {
+    "generation": 2,
+    "model_key": "llama31_8b",
+    "diagnosis": [
+      {
+        "category_group": "validation",
+        "main_failure": "schema_violation",
+        "hypothesis": "Service_Mapping needs a targeted micro-rule from deterministic validation."
+      }
+    ],
+    "mutation_proposals": [
+      {
+        "target_block_id": "02",
+        "target_block_family": "Service_Mapping",
+        "mutation_type": "add_schema_grounding_rule",
+        "priority": 1,
+        "reason": "Mock advisor proposal generated for schema validation smoke.",
+        "edit_instruction": "Add the proposed micro-rule to the target prompt block.",
+        "proposed_micro_rule": "Read descriptor, return_descriptor, argument_type, and argument_bounds before choosing service names or numeric units."
+      }
+    ],
+    "do_not_change": [
+      "core blocks",
+      "retrieval pre-mapping"
+    ],
+    "advisor_backend": "mock_schema"
+  },
+  "advisor_batch_id": "advisor_batch_g002_927c031b",
+  "accepted_proposals": [],
+  "rejected_proposals": [
+    {
+      "target_block_id": "02",
+      "target_block_family": "Service_Mapping",
+      "mutation_type": "add_schema_grounding_rule",
+      "priority": 1,
+      "reason": "Mock advisor proposal generated for schema validation smoke.",
+      "edit_instruction": "Add the proposed micro-rule to the target prompt block.",
+      "proposed_micro_rule": "Read descriptor, return_descriptor, argument_type, and argument_bounds before choosing service names or numeric units.",
+      "proposal_id": "advisor_g002_01",
+      "advisor_generation": 2,
+      "advisor_batch_id": "advisor_batch_g002_927c031b",
+      "proposal_state": "rejected",
+      "affected_failure_families": [
+        "Service_Mapping"
+      ],
+      "accepted": false,
+      "rejection_reason": "duplicates an existing micro-rule exactly"
+    }
+  ]
+}

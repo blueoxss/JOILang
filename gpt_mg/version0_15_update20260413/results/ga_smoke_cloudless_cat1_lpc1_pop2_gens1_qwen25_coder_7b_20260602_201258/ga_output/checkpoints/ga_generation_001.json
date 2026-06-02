@@ -1,0 +1,670 @@
+{
+  "generation": 1,
+  "population": [
+    {
+      "genome": {
+        "id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+        "seed": 626297831,
+        "blocks": [
+          "01",
+          "02",
+          "05",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+          "temperature": 0.0,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "minimal",
+            "direct",
+            "canonical_names_first",
+            "compact_json"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 3,
+            "micro_rules": [
+              "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+            ]
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [],
+          "mutation_types": [
+            "initial_random"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": ""
+        }
+      },
+      "fitness": 0.0,
+      "avg_det_score": 0.0,
+      "variance": 0.0,
+      "validation_avg_det_score": 0.0,
+      "train_metrics": {
+        "run_id": "ga_quick_Qwen_Qwen2.5-Coder-7B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_7846",
+        "output_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloudless_cat1_lpc1_pop2_gens1_qwen25_coder_7b_20260602_201258/ga_output/candidates/candidates_ga_quick_Qwen_Qwen2.5-Coder-7B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_7846.csv",
+        "rows": [
+          {
+            "row_no": 1,
+            "category": "1",
+            "command_eng": "Switch the dishwasher to dry mode.",
+            "det_score": 0.0,
+            "det_gt_exact": false,
+            "det_gt_similarity": 0.0,
+            "failure_reasons": [
+              "invalid_json"
+            ],
+            "output": "",
+            "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"(#Dishwasher).dishwasher_setdishwashermode(\\\"dry\\\")\"}"
+          }
+        ],
+        "avg_det_score": 0.0,
+        "variance": 0.0,
+        "failure_summary": {
+          "top_failure_types": [
+            [
+              "invalid_json",
+              1
+            ]
+          ],
+          "count": 1
+        },
+        "generation_summary": {
+          "run_id": "ga_quick_Qwen_Qwen2.5-Coder-7B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_7846",
+          "output_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloudless_cat1_lpc1_pop2_gens1_qwen25_coder_7b_20260602_201258/ga_output/candidates/candidates_ga_quick_Qwen_Qwen2.5-Coder-7B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_7846.csv",
+          "jsonl_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/candidates_ga_quick_Qwen_Qwen2.5-Coder-7B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_7846.jsonl",
+          "row_count": 1,
+          "rows": [
+            {
+              "index": "1",
+              "category": "1",
+              "command_kor": "식기세척기를 건조 모드로 설정해줘.",
+              "command_eng": "Switch the dishwasher to dry mode.",
+              "gt_raw": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"(#Dishwasher).SetDishwasherMode(\\\"dry\\\")\"}",
+              "connected_devices": "",
+              "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"(#Dishwasher).dishwasher_setdishwashermode(\\\"dry\\\")\"}",
+              "row_no": 1,
+              "profile": "version0_15",
+              "genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+              "genome_seed": 626297831,
+              "run_id": "ga_quick_Qwen_Qwen2.5-Coder-7B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_7846",
+              "candidate_count": 1,
+              "candidates": "[\"\"]",
+              "candidate_metadata": "[{\"candidate_index\": 0, \"strategy\": \"minimal\", \"prompt_chars\": 359010, \"error\": \"\", \"error_type\": \"worker_crash\", \"oom_flag\": false, \"block_manifest\": [{\"id\": \"01\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/01_preamble.txt\", \"metadata\": {\"id\": \"01\", \"role\": \"preprocessor\", \"params\": \"temperature, micro_rules\", \"description\": \"Global deterministic JOILang generation rules and schema-faithful behavior.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"02\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt\", \"metadata\": {\"id\": \"02\", \"role\": \"generator\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Main JOILang generator block with deterministic JSON-only output and schema-grounded exemplars.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {candidate_strategy}\"}}, {\"id\": \"05\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/05_repair_prompt.txt\", \"metadata\": {\"id\": \"05\", \"role\": \"repair\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Targeted repair prompt that fixes schema mismatch, arg typing, and semantic drift with minimal edits.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {best_candidate}, {det_diagnostics}, {failure_summary}\"}}, {\"id\": \"06\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/06_det_helper.txt\", \"metadata\": {\"id\": \"06\", \"role\": \"helper\", \"params\": \"micro_rules\", \"description\": \"Diagnostic helper block enumerating the evaluator targets so the generator avoids common failures.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}]}]",
+              "prompt_log_paths": "[\"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/logs/ga_quick_Qwen_Qwen2.5-Coder-7B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_7846/row_001_cand_1.json\"]",
+              "generation_status": "partial_error",
+              "generation_total_pipeline_sec": 11.1955,
+              "llm_mode": "worker",
+              "llm_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+              "prompt_render_mode": "blocks",
+              "prompt_assets_dir": "",
+              "service_list_snippet_source": "service_schema_fallback",
+              "service_list_device_count": 50,
+              "service_list_retrieval_status": "disabled",
+              "service_list_retrieval_mode": "hybrid",
+              "service_list_retrieval_topk": 10,
+              "service_list_retrieval_device": "cpu",
+              "service_list_retrieval_categories": "[]",
+              "service_list_retrieval_scores": "[]",
+              "service_list_retrieval_fallback_reason": "",
+              "generation_call_count": 1,
+              "generation_error_count": 1,
+              "generation_error_type": "worker_crash",
+              "generation_error_types": "[\"worker_crash\"]",
+              "generation_oom_flag": false,
+              "generation_prompt_chars_total": 359010,
+              "generation_prompt_tokens_total": 0,
+              "generation_completion_tokens_total": 0,
+              "generation_total_tokens_total": 0,
+              "generation_llm_latency_sec": 0.0,
+              "generation_peak_vram_gb": 0.0
+            }
+          ],
+          "fieldnames": [
+            "index",
+            "category",
+            "command_kor",
+            "command_eng",
+            "gt_raw",
+            "connected_devices",
+            "gt",
+            "row_no",
+            "profile",
+            "genome_id",
+            "genome_seed",
+            "run_id",
+            "candidate_count",
+            "candidates",
+            "candidate_metadata",
+            "prompt_log_paths",
+            "generation_status",
+            "generation_total_pipeline_sec",
+            "llm_mode",
+            "llm_model",
+            "prompt_render_mode",
+            "prompt_assets_dir",
+            "service_list_snippet_source",
+            "service_list_device_count",
+            "service_list_retrieval_status",
+            "service_list_retrieval_mode",
+            "service_list_retrieval_topk",
+            "service_list_retrieval_device",
+            "service_list_retrieval_categories",
+            "service_list_retrieval_scores",
+            "service_list_retrieval_fallback_reason",
+            "generation_call_count",
+            "generation_error_count",
+            "generation_error_type",
+            "generation_error_types",
+            "generation_oom_flag",
+            "generation_prompt_chars_total",
+            "generation_prompt_tokens_total",
+            "generation_completion_tokens_total",
+            "generation_total_tokens_total",
+            "generation_llm_latency_sec",
+            "generation_peak_vram_gb"
+          ]
+        }
+      },
+      "validation_metrics": {
+        "run_id": "ga_validation_Qwen_Qwen2.5-Coder-7B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_507846",
+        "output_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloudless_cat1_lpc1_pop2_gens1_qwen25_coder_7b_20260602_201258/ga_output/candidates/candidates_ga_validation_Qwen_Qwen2.5-Coder-7B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_507846.csv",
+        "rows": [
+          {
+            "row_no": 1,
+            "category": "1",
+            "command_eng": "Switch the dishwasher to dry mode.",
+            "det_score": 0.0,
+            "det_gt_exact": false,
+            "det_gt_similarity": 0.0,
+            "failure_reasons": [
+              "invalid_json"
+            ],
+            "output": "",
+            "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"(#Dishwasher).dishwasher_setdishwashermode(\\\"dry\\\")\"}"
+          }
+        ],
+        "avg_det_score": 0.0,
+        "variance": 0.0,
+        "failure_summary": {
+          "top_failure_types": [
+            [
+              "invalid_json",
+              1
+            ]
+          ],
+          "count": 1
+        },
+        "generation_summary": {
+          "run_id": "ga_validation_Qwen_Qwen2.5-Coder-7B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_507846",
+          "output_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloudless_cat1_lpc1_pop2_gens1_qwen25_coder_7b_20260602_201258/ga_output/candidates/candidates_ga_validation_Qwen_Qwen2.5-Coder-7B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_507846.csv",
+          "jsonl_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/candidates_ga_validation_Qwen_Qwen2.5-Coder-7B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_507846.jsonl",
+          "row_count": 1,
+          "rows": [
+            {
+              "index": "1",
+              "category": "1",
+              "command_kor": "식기세척기를 건조 모드로 설정해줘.",
+              "command_eng": "Switch the dishwasher to dry mode.",
+              "gt_raw": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"(#Dishwasher).SetDishwasherMode(\\\"dry\\\")\"}",
+              "connected_devices": "",
+              "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"(#Dishwasher).dishwasher_setdishwashermode(\\\"dry\\\")\"}",
+              "row_no": 1,
+              "profile": "version0_15",
+              "genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+              "genome_seed": 626297831,
+              "run_id": "ga_validation_Qwen_Qwen2.5-Coder-7B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_507846",
+              "candidate_count": 1,
+              "candidates": "[\"\"]",
+              "candidate_metadata": "[{\"candidate_index\": 0, \"strategy\": \"minimal\", \"prompt_chars\": 359010, \"error\": \"\", \"error_type\": \"worker_crash\", \"oom_flag\": false, \"block_manifest\": [{\"id\": \"01\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/01_preamble.txt\", \"metadata\": {\"id\": \"01\", \"role\": \"preprocessor\", \"params\": \"temperature, micro_rules\", \"description\": \"Global deterministic JOILang generation rules and schema-faithful behavior.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"02\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt\", \"metadata\": {\"id\": \"02\", \"role\": \"generator\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Main JOILang generator block with deterministic JSON-only output and schema-grounded exemplars.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {candidate_strategy}\"}}, {\"id\": \"05\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/05_repair_prompt.txt\", \"metadata\": {\"id\": \"05\", \"role\": \"repair\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Targeted repair prompt that fixes schema mismatch, arg typing, and semantic drift with minimal edits.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {best_candidate}, {det_diagnostics}, {failure_summary}\"}}, {\"id\": \"06\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/06_det_helper.txt\", \"metadata\": {\"id\": \"06\", \"role\": \"helper\", \"params\": \"micro_rules\", \"description\": \"Diagnostic helper block enumerating the evaluator targets so the generator avoids common failures.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}]}]",
+              "prompt_log_paths": "[\"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/logs/ga_validation_Qwen_Qwen2.5-Coder-7B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_507846/row_001_cand_1.json\"]",
+              "generation_status": "partial_error",
+              "generation_total_pipeline_sec": 10.5245,
+              "llm_mode": "worker",
+              "llm_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+              "prompt_render_mode": "blocks",
+              "prompt_assets_dir": "",
+              "service_list_snippet_source": "service_schema_fallback",
+              "service_list_device_count": 50,
+              "service_list_retrieval_status": "disabled",
+              "service_list_retrieval_mode": "hybrid",
+              "service_list_retrieval_topk": 10,
+              "service_list_retrieval_device": "cpu",
+              "service_list_retrieval_categories": "[]",
+              "service_list_retrieval_scores": "[]",
+              "service_list_retrieval_fallback_reason": "",
+              "generation_call_count": 1,
+              "generation_error_count": 1,
+              "generation_error_type": "worker_crash",
+              "generation_error_types": "[\"worker_crash\"]",
+              "generation_oom_flag": false,
+              "generation_prompt_chars_total": 359010,
+              "generation_prompt_tokens_total": 0,
+              "generation_completion_tokens_total": 0,
+              "generation_total_tokens_total": 0,
+              "generation_llm_latency_sec": 0.0,
+              "generation_peak_vram_gb": 0.0
+            }
+          ],
+          "fieldnames": [
+            "index",
+            "category",
+            "command_kor",
+            "command_eng",
+            "gt_raw",
+            "connected_devices",
+            "gt",
+            "row_no",
+            "profile",
+            "genome_id",
+            "genome_seed",
+            "run_id",
+            "candidate_count",
+            "candidates",
+            "candidate_metadata",
+            "prompt_log_paths",
+            "generation_status",
+            "generation_total_pipeline_sec",
+            "llm_mode",
+            "llm_model",
+            "prompt_render_mode",
+            "prompt_assets_dir",
+            "service_list_snippet_source",
+            "service_list_device_count",
+            "service_list_retrieval_status",
+            "service_list_retrieval_mode",
+            "service_list_retrieval_topk",
+            "service_list_retrieval_device",
+            "service_list_retrieval_categories",
+            "service_list_retrieval_scores",
+            "service_list_retrieval_fallback_reason",
+            "generation_call_count",
+            "generation_error_count",
+            "generation_error_type",
+            "generation_error_types",
+            "generation_oom_flag",
+            "generation_prompt_chars_total",
+            "generation_prompt_tokens_total",
+            "generation_completion_tokens_total",
+            "generation_total_tokens_total",
+            "generation_llm_latency_sec",
+            "generation_peak_vram_gb"
+          ]
+        }
+      },
+      "redesign_metrics": {
+        "genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+        "validation_det_pass_rate": 0.0,
+        "validation_avg_det_score": 0.0,
+        "avg_prompt_tokens": 0.0,
+        "avg_latency_sec": 0.0,
+        "det_score_variance": 0.0,
+        "basic_detpass": 0.0,
+        "temporal_detpass": 0.0,
+        "complex_detpass": 0.0,
+        "min_group_detpass": 0.0,
+        "harmonic_group_detpass": 1e-06,
+        "category_gap": 0.0,
+        "token_penalty": 0.0,
+        "latency_penalty": 0.0,
+        "variance_penalty": 0.0,
+        "regression_penalty": 0.0,
+        "category_balance_score": 0.0,
+        "schema_robustness_score": 0.0,
+        "compression_gain": 0.0,
+        "pareto_rank": 999,
+        "pareto_frontier_member": false,
+        "score_accuracy": 0.0,
+        "score_efficiency": 100.0,
+        "score_balanced": 0.0,
+        "score_deployment": 0.0,
+        "score_main": 0.0,
+        "prompt_hash": "f46bf2e71841352a",
+        "block_signature": "01,02,05,06",
+        "rule_signature": "c4d08f4d9268f2bc",
+        "unavailable_metrics": "avg_prompt_tokens|avg_latency_sec"
+      }
+    },
+    {
+      "genome": {
+        "id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+        "seed": 929273219,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "05",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+          "temperature": 0.1,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "compact_json",
+            "explicit_preconditions",
+            "direct",
+            "minimal"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 2,
+            "micro_rules": []
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [],
+          "mutation_types": [
+            "initial_random"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": ""
+        }
+      },
+      "fitness": 0.0,
+      "avg_det_score": 0.0,
+      "variance": 0.0,
+      "validation_avg_det_score": 0.0,
+      "train_metrics": {
+        "run_id": "ga_quick_Qwen_Qwen2.5-Coder-7B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_3234",
+        "output_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloudless_cat1_lpc1_pop2_gens1_qwen25_coder_7b_20260602_201258/ga_output/candidates/candidates_ga_quick_Qwen_Qwen2.5-Coder-7B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_3234.csv",
+        "rows": [
+          {
+            "row_no": 1,
+            "category": "1",
+            "command_eng": "Switch the dishwasher to dry mode.",
+            "det_score": 0.0,
+            "det_gt_exact": false,
+            "det_gt_similarity": 0.0,
+            "failure_reasons": [
+              "invalid_json"
+            ],
+            "output": "",
+            "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"(#Dishwasher).dishwasher_setdishwashermode(\\\"dry\\\")\"}"
+          }
+        ],
+        "avg_det_score": 0.0,
+        "variance": 0.0,
+        "failure_summary": {
+          "top_failure_types": [
+            [
+              "invalid_json",
+              1
+            ]
+          ],
+          "count": 1
+        },
+        "generation_summary": {
+          "run_id": "ga_quick_Qwen_Qwen2.5-Coder-7B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_3234",
+          "output_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloudless_cat1_lpc1_pop2_gens1_qwen25_coder_7b_20260602_201258/ga_output/candidates/candidates_ga_quick_Qwen_Qwen2.5-Coder-7B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_3234.csv",
+          "jsonl_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/candidates_ga_quick_Qwen_Qwen2.5-Coder-7B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_3234.jsonl",
+          "row_count": 1,
+          "rows": [
+            {
+              "index": "1",
+              "category": "1",
+              "command_kor": "식기세척기를 건조 모드로 설정해줘.",
+              "command_eng": "Switch the dishwasher to dry mode.",
+              "gt_raw": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"(#Dishwasher).SetDishwasherMode(\\\"dry\\\")\"}",
+              "connected_devices": "",
+              "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"(#Dishwasher).dishwasher_setdishwashermode(\\\"dry\\\")\"}",
+              "row_no": 1,
+              "profile": "version0_15",
+              "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+              "genome_seed": 929273219,
+              "run_id": "ga_quick_Qwen_Qwen2.5-Coder-7B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_3234",
+              "candidate_count": 1,
+              "candidates": "[\"\"]",
+              "candidate_metadata": "[{\"candidate_index\": 0, \"strategy\": \"compact_json\", \"prompt_chars\": 354351, \"error\": \"\", \"error_type\": \"worker_crash\", \"oom_flag\": false, \"block_manifest\": [{\"id\": \"01\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/01_preamble.txt\", \"metadata\": {\"id\": \"01\", \"role\": \"preprocessor\", \"params\": \"temperature, micro_rules\", \"description\": \"Global deterministic JOILang generation rules and schema-faithful behavior.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"02\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt\", \"metadata\": {\"id\": \"02\", \"role\": \"generator\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Main JOILang generator block with deterministic JSON-only output and schema-grounded exemplars.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {candidate_strategy}\"}}, {\"id\": \"03\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/03_postprocessor.txt\", \"metadata\": {\"id\": \"03\", \"role\": \"postprocessor\", \"params\": \"max_tokens, micro_rules\", \"description\": \"Final JOILang output scrubber that enforces JSON shape and strips explanation drift.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"05\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/05_repair_prompt.txt\", \"metadata\": {\"id\": \"05\", \"role\": \"repair\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Targeted repair prompt that fixes schema mismatch, arg typing, and semantic drift with minimal edits.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {best_candidate}, {det_diagnostics}, {failure_summary}\"}}, {\"id\": \"06\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/06_det_helper.txt\", \"metadata\": {\"id\": \"06\", \"role\": \"helper\", \"params\": \"micro_rules\", \"description\": \"Diagnostic helper block enumerating the evaluator targets so the generator avoids common failures.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}]}]",
+              "prompt_log_paths": "[\"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/logs/ga_quick_Qwen_Qwen2.5-Coder-7B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_3234/row_001_cand_1.json\"]",
+              "generation_status": "partial_error",
+              "generation_total_pipeline_sec": 10.6101,
+              "llm_mode": "worker",
+              "llm_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+              "prompt_render_mode": "blocks",
+              "prompt_assets_dir": "",
+              "service_list_snippet_source": "service_schema_fallback",
+              "service_list_device_count": 50,
+              "service_list_retrieval_status": "disabled",
+              "service_list_retrieval_mode": "hybrid",
+              "service_list_retrieval_topk": 10,
+              "service_list_retrieval_device": "cpu",
+              "service_list_retrieval_categories": "[]",
+              "service_list_retrieval_scores": "[]",
+              "service_list_retrieval_fallback_reason": "",
+              "generation_call_count": 1,
+              "generation_error_count": 1,
+              "generation_error_type": "worker_crash",
+              "generation_error_types": "[\"worker_crash\"]",
+              "generation_oom_flag": false,
+              "generation_prompt_chars_total": 354351,
+              "generation_prompt_tokens_total": 0,
+              "generation_completion_tokens_total": 0,
+              "generation_total_tokens_total": 0,
+              "generation_llm_latency_sec": 0.0,
+              "generation_peak_vram_gb": 0.0
+            }
+          ],
+          "fieldnames": [
+            "index",
+            "category",
+            "command_kor",
+            "command_eng",
+            "gt_raw",
+            "connected_devices",
+            "gt",
+            "row_no",
+            "profile",
+            "genome_id",
+            "genome_seed",
+            "run_id",
+            "candidate_count",
+            "candidates",
+            "candidate_metadata",
+            "prompt_log_paths",
+            "generation_status",
+            "generation_total_pipeline_sec",
+            "llm_mode",
+            "llm_model",
+            "prompt_render_mode",
+            "prompt_assets_dir",
+            "service_list_snippet_source",
+            "service_list_device_count",
+            "service_list_retrieval_status",
+            "service_list_retrieval_mode",
+            "service_list_retrieval_topk",
+            "service_list_retrieval_device",
+            "service_list_retrieval_categories",
+            "service_list_retrieval_scores",
+            "service_list_retrieval_fallback_reason",
+            "generation_call_count",
+            "generation_error_count",
+            "generation_error_type",
+            "generation_error_types",
+            "generation_oom_flag",
+            "generation_prompt_chars_total",
+            "generation_prompt_tokens_total",
+            "generation_completion_tokens_total",
+            "generation_total_tokens_total",
+            "generation_llm_latency_sec",
+            "generation_peak_vram_gb"
+          ]
+        }
+      },
+      "validation_metrics": {
+        "run_id": "ga_validation_Qwen_Qwen2.5-Coder-7B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_503234",
+        "output_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloudless_cat1_lpc1_pop2_gens1_qwen25_coder_7b_20260602_201258/ga_output/candidates/candidates_ga_validation_Qwen_Qwen2.5-Coder-7B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_503234.csv",
+        "rows": [
+          {
+            "row_no": 1,
+            "category": "1",
+            "command_eng": "Switch the dishwasher to dry mode.",
+            "det_score": 0.0,
+            "det_gt_exact": false,
+            "det_gt_similarity": 0.0,
+            "failure_reasons": [
+              "invalid_json"
+            ],
+            "output": "",
+            "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"(#Dishwasher).dishwasher_setdishwashermode(\\\"dry\\\")\"}"
+          }
+        ],
+        "avg_det_score": 0.0,
+        "variance": 0.0,
+        "failure_summary": {
+          "top_failure_types": [
+            [
+              "invalid_json",
+              1
+            ]
+          ],
+          "count": 1
+        },
+        "generation_summary": {
+          "run_id": "ga_validation_Qwen_Qwen2.5-Coder-7B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_503234",
+          "output_csv": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloudless_cat1_lpc1_pop2_gens1_qwen25_coder_7b_20260602_201258/ga_output/candidates/candidates_ga_validation_Qwen_Qwen2.5-Coder-7B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_503234.csv",
+          "jsonl_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/candidates_ga_validation_Qwen_Qwen2.5-Coder-7B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_503234.jsonl",
+          "row_count": 1,
+          "rows": [
+            {
+              "index": "1",
+              "category": "1",
+              "command_kor": "식기세척기를 건조 모드로 설정해줘.",
+              "command_eng": "Switch the dishwasher to dry mode.",
+              "gt_raw": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"(#Dishwasher).SetDishwasherMode(\\\"dry\\\")\"}",
+              "connected_devices": "",
+              "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"(#Dishwasher).dishwasher_setdishwashermode(\\\"dry\\\")\"}",
+              "row_no": 1,
+              "profile": "version0_15",
+              "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+              "genome_seed": 929273219,
+              "run_id": "ga_validation_Qwen_Qwen2.5-Coder-7B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_503234",
+              "candidate_count": 1,
+              "candidates": "[\"\"]",
+              "candidate_metadata": "[{\"candidate_index\": 0, \"strategy\": \"compact_json\", \"prompt_chars\": 354351, \"error\": \"\", \"error_type\": \"worker_crash\", \"oom_flag\": false, \"block_manifest\": [{\"id\": \"01\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/01_preamble.txt\", \"metadata\": {\"id\": \"01\", \"role\": \"preprocessor\", \"params\": \"temperature, micro_rules\", \"description\": \"Global deterministic JOILang generation rules and schema-faithful behavior.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"02\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt\", \"metadata\": {\"id\": \"02\", \"role\": \"generator\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Main JOILang generator block with deterministic JSON-only output and schema-grounded exemplars.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {candidate_strategy}\"}}, {\"id\": \"03\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/03_postprocessor.txt\", \"metadata\": {\"id\": \"03\", \"role\": \"postprocessor\", \"params\": \"max_tokens, micro_rules\", \"description\": \"Final JOILang output scrubber that enforces JSON shape and strips explanation drift.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"05\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/05_repair_prompt.txt\", \"metadata\": {\"id\": \"05\", \"role\": \"repair\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Targeted repair prompt that fixes schema mismatch, arg typing, and semantic drift with minimal edits.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {best_candidate}, {det_diagnostics}, {failure_summary}\"}}, {\"id\": \"06\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/06_det_helper.txt\", \"metadata\": {\"id\": \"06\", \"role\": \"helper\", \"params\": \"micro_rules\", \"description\": \"Diagnostic helper block enumerating the evaluator targets so the generator avoids common failures.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}]}]",
+              "prompt_log_paths": "[\"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/logs/ga_validation_Qwen_Qwen2.5-Coder-7B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_503234/row_001_cand_1.json\"]",
+              "generation_status": "partial_error",
+              "generation_total_pipeline_sec": 11.3774,
+              "llm_mode": "worker",
+              "llm_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+              "prompt_render_mode": "blocks",
+              "prompt_assets_dir": "",
+              "service_list_snippet_source": "service_schema_fallback",
+              "service_list_device_count": 50,
+              "service_list_retrieval_status": "disabled",
+              "service_list_retrieval_mode": "hybrid",
+              "service_list_retrieval_topk": 10,
+              "service_list_retrieval_device": "cpu",
+              "service_list_retrieval_categories": "[]",
+              "service_list_retrieval_scores": "[]",
+              "service_list_retrieval_fallback_reason": "",
+              "generation_call_count": 1,
+              "generation_error_count": 1,
+              "generation_error_type": "worker_crash",
+              "generation_error_types": "[\"worker_crash\"]",
+              "generation_oom_flag": false,
+              "generation_prompt_chars_total": 354351,
+              "generation_prompt_tokens_total": 0,
+              "generation_completion_tokens_total": 0,
+              "generation_total_tokens_total": 0,
+              "generation_llm_latency_sec": 0.0,
+              "generation_peak_vram_gb": 0.0
+            }
+          ],
+          "fieldnames": [
+            "index",
+            "category",
+            "command_kor",
+            "command_eng",
+            "gt_raw",
+            "connected_devices",
+            "gt",
+            "row_no",
+            "profile",
+            "genome_id",
+            "genome_seed",
+            "run_id",
+            "candidate_count",
+            "candidates",
+            "candidate_metadata",
+            "prompt_log_paths",
+            "generation_status",
+            "generation_total_pipeline_sec",
+            "llm_mode",
+            "llm_model",
+            "prompt_render_mode",
+            "prompt_assets_dir",
+            "service_list_snippet_source",
+            "service_list_device_count",
+            "service_list_retrieval_status",
+            "service_list_retrieval_mode",
+            "service_list_retrieval_topk",
+            "service_list_retrieval_device",
+            "service_list_retrieval_categories",
+            "service_list_retrieval_scores",
+            "service_list_retrieval_fallback_reason",
+            "generation_call_count",
+            "generation_error_count",
+            "generation_error_type",
+            "generation_error_types",
+            "generation_oom_flag",
+            "generation_prompt_chars_total",
+            "generation_prompt_tokens_total",
+            "generation_completion_tokens_total",
+            "generation_total_tokens_total",
+            "generation_llm_latency_sec",
+            "generation_peak_vram_gb"
+          ]
+        }
+      },
+      "redesign_metrics": {
+        "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+        "validation_det_pass_rate": 0.0,
+        "validation_avg_det_score": 0.0,
+        "avg_prompt_tokens": 0.0,
+        "avg_latency_sec": 0.0,
+        "det_score_variance": 0.0,
+        "basic_detpass": 0.0,
+        "temporal_detpass": 0.0,
+        "complex_detpass": 0.0,
+        "min_group_detpass": 0.0,
+        "harmonic_group_detpass": 1e-06,
+        "category_gap": 0.0,
+        "token_penalty": 0.0,
+        "latency_penalty": 0.0,
+        "variance_penalty": 0.0,
+        "regression_penalty": 0.0,
+        "category_balance_score": 0.0,
+        "schema_robustness_score": 0.0,
+        "compression_gain": 0.0,
+        "pareto_rank": 999,
+        "pareto_frontier_member": false,
+        "score_accuracy": 0.0,
+        "score_efficiency": 100.0,
+        "score_balanced": 0.0,
+        "score_deployment": 0.0,
+        "score_main": 0.0,
+        "prompt_hash": "405e78ea3c6a6f8e",
+        "block_signature": "01,02,03,05,06",
+        "rule_signature": "da39a3ee5e6b4b0d",
+        "unavailable_metrics": "avg_prompt_tokens|avg_latency_sec"
+      }
+    }
+  ]
+}

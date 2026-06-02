@@ -1,0 +1,6 @@
+{
+  "stage": "full-run",
+  "status": "PASS",
+  "timestamp": "2026-06-02T17:45:57",
+  "output_root": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_mock_cat3456_lpc1_pop4_gens3_qwen25_coder_14b_20260602_174556/ga_output"
+}

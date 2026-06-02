@@ -1,0 +1,6 @@
+{
+  "stage": "full-run",
+  "status": "PASS",
+  "timestamp": "2026-06-02T21:07:53",
+  "output_root": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloudless_persistent_default_cat1_lpc1_pop2_gens1_qwen25_coder_7b_20260602_210742/ga_output"
+}

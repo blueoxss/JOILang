@@ -1,0 +1,13 @@
+generation,genome_id,model_key,det,det_pass_rate,sdet,avg_prompt_tokens,warm_latency_p50,peak_vram_gb,oom_count,failure_rate,is_pareto_frontier,newly_discovered_frontier,dominated_by,pareto_rank,knee_candidate,pareto_status
+1,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,llama31_8b,15.9375,0.0,15.9375,0.0,0.0,,,100.0,True,True,,1,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,partial_metrics
+1,gen-af17dfa2-8346-1468-fe4c-138bdd4e7245,llama31_8b,15.9375,0.0,15.9375,0.0,0.0,,,100.0,True,True,,1,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,partial_metrics
+1,gen-bbf8b961-f83c-3169-009b-831460788576,llama31_8b,15.9375,0.0,15.9375,0.0,0.0,,,100.0,True,True,,1,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,partial_metrics
+1,gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e,llama31_8b,15.9375,0.0,15.9375,0.0,0.0,,,100.0,True,True,,1,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,partial_metrics
+2,gen-2e1069de-7225-be6c-3bf6-baf915e48f91,llama31_8b,15.9375,0.0,15.9375,0.0,0.0,,,100.0,True,True,,1,gen-2e1069de-7225-be6c-3bf6-baf915e48f91,partial_metrics
+2,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,llama31_8b,15.9375,0.0,15.9375,0.0,0.0,,,100.0,True,False,,1,gen-2e1069de-7225-be6c-3bf6-baf915e48f91,partial_metrics
+2,gen-af17dfa2-8346-1468-fe4c-138bdd4e7245,llama31_8b,15.9375,0.0,15.9375,0.0,0.0,,,100.0,True,False,,1,gen-2e1069de-7225-be6c-3bf6-baf915e48f91,partial_metrics
+2,gen-e9ba0849-96e0-2eac-d8d6-0cf7c3776827,llama31_8b,15.9375,0.0,15.9375,0.0,0.0,,,100.0,True,True,,1,gen-2e1069de-7225-be6c-3bf6-baf915e48f91,partial_metrics
+3,gen-2e1069de-7225-be6c-3bf6-baf915e48f91,llama31_8b,15.9375,0.0,15.9375,0.0,0.0,,,100.0,True,False,,1,gen-2e1069de-7225-be6c-3bf6-baf915e48f91,partial_metrics
+3,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,llama31_8b,15.9375,0.0,15.9375,0.0,0.0,,,100.0,True,False,,1,gen-2e1069de-7225-be6c-3bf6-baf915e48f91,partial_metrics
+3,gen-a85ef3b1-ea01-c673-b58d-152daf6d4d97,llama31_8b,15.9375,0.0,15.9375,0.0,0.0,,,100.0,True,True,,1,gen-2e1069de-7225-be6c-3bf6-baf915e48f91,partial_metrics
+3,gen-af17dfa2-8346-1468-fe4c-138bdd4e7245,llama31_8b,15.9375,0.0,15.9375,0.0,0.0,,,100.0,True,False,,1,gen-2e1069de-7225-be6c-3bf6-baf915e48f91,partial_metrics

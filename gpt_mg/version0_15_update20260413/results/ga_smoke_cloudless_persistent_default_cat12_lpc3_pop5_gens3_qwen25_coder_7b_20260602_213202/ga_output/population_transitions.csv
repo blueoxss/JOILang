@@ -1,0 +1,2 @@
+generation,survived_elites,survived_global_best,survived_accepted_best,new_by_crossover,new_by_mutation,new_by_advisor,new_by_compression,new_by_diversity,new_by_specialist,new_by_disruptive,new_random,duplicates_removed,duplicates_removed_by_prompt_hash,refill_reason,next_population,promotion_rejected,advisor_proposals_generated,advisor_proposals_accepted_applied,advisor_proposals_accepted_not_scheduled,advisor_proposals_rejected,advisor_children_scheduled
+1,3,True,True,0,2,0,1,0,0,0,1,1,0,dedupe_refill,5,0,0,0,0,0,0

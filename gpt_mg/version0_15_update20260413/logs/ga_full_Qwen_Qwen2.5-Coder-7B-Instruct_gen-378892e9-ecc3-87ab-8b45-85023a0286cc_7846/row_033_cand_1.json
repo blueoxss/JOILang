@@ -27,7 +27,7 @@
       "cuda_devices": [
         "NVIDIA A100 80GB PCIe"
       ],
-      "transformers_version": "5.8.1",
+      "transformers_version": "5.8.0",
       "python_path": "/root/llm/je/bin/python",
       "worker_path": "/root/llm/JOILang-Server/gpt_mg/version0_13/qwen_local_worker.py",
       "persistent_worker_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/utils/persistent_qwen_worker.py",
@@ -45,11 +45,11 @@
       "content": "{\n  \"name\": \"SetLivingRoomLightBrightness\",\n  \"cron\": \"\",\n  \"period\": 0,\n  \"code\": \"(#LivingRoom_Light).light_movetobrightness(80)\"\n}",
       "prompt_tokens": 23397,
       "completion_tokens": 50,
-      "prompt_prep_sec": 0.0546,
-      "generate_sec": 3.2784,
-      "decode_sec": 0.0003,
-      "total_worker_sec": 3.336,
-      "worker_pid": 956276,
+      "prompt_prep_sec": 0.05,
+      "generate_sec": 3.9595,
+      "decode_sec": 0.0004,
+      "total_worker_sec": 4.0204,
+      "worker_pid": 1591745,
       "peak_vram_bytes": 19928527872,
       "peak_vram_gb": 18.5599,
       "peak_vram_by_device": {
@@ -58,12 +58,12 @@
     },
     "peak_vram_bytes": 19928527872,
     "peak_vram_gb": 18.5599,
-    "prompt_prep_sec": 0.0546,
-    "generate_sec": 3.2784,
-    "decode_sec": 0.0003,
-    "total_worker_sec": 3.336,
-    "worker_pid": 956276,
-    "latency_sec": 3.3392,
+    "prompt_prep_sec": 0.05,
+    "generate_sec": 3.9595,
+    "decode_sec": 0.0004,
+    "total_worker_sec": 4.0204,
+    "worker_pid": 1591745,
+    "latency_sec": 4.0227,
     "attempt": 1
   }
 }
