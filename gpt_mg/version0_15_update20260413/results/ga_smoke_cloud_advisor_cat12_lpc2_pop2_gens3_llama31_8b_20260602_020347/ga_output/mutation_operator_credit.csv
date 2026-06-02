@@ -1,4 +1,0 @@
-generation,mutation_family,mutation_operator,parent_genome_id,child_genome_id,delta_DETPass,delta_AvgDET,delta_tokens,delta_latency,delta_basic_DETPass,delta_temporal_DETPass,delta_complex_DETPass,accepted,elite_reason,operator_credit
-2,accuracy_repair,add_targeted_repair_hint,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,gen-bdd4e724-5407-b1de-8fa2-b132d3152091,,,,,,,,True,,
-3,compression,compact_reasoning_skeleton,gen-bdd4e724-5407-b1de-8fa2-b132d3152091,gen-eacd8d60-cf7c-3776-8272-e1069de7225b,,,,,,,,True,,
-4,accuracy_repair,add_targeted_repair_hint,gen-bdd4e724-5407-b1de-8fa2-b132d3152091,gen-f6d4d979-6538-7164-6c83-770691877a47,,,,,,,,True,,

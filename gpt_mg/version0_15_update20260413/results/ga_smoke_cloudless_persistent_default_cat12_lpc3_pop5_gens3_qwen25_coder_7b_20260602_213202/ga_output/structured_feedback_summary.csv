@@ -1,4 +1,0 @@
-failure_type,affected_block_family,suggested_mutation_type,prompt_block_id,failure_count,original_failure_reasons,rule,priority,generation,model_key
-semantic_error,DET_Helper,add_targeted_repair_hint,06,7,gt_mismatch,"If code is schema-valid but not target-equivalent, repair receiver coverage, service coverage, dataflow, numeric, and enum grounding.",3,1,qwen25_coder_7b
-enum_type_mismatch,Enum_Grounding,strengthen_enum_type_rule,02,5,arg_type,"For ENUM arguments, copy an allowed enum value exactly; for numeric arguments, use unquoted numeric literals.",1,1,qwen25_coder_7b
-temporal_error,Temporal_Rule,strengthen_temporal_rule,06,5,numeric_grounding,Convert elapsed time and units exactly according to the service descriptor before writing numeric literals.,2,1,qwen25_coder_7b

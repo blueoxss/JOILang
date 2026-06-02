@@ -1,7 +1,0 @@
-generation,model_key,category,row_evaluations,avg_det_score,det_pass_count,det_pass_rate,failure_histogram
-1,qwen25_coder_14b,1,4,0.0,0,0.0,"{""invalid_json"": 4}"
-1,qwen25_coder_14b,2,4,100.0,4,100.0,{}
-2,qwen25_coder_14b,1,4,0.0,0,0.0,"{""invalid_json"": 4}"
-2,qwen25_coder_14b,2,4,100.0,4,100.0,{}
-3,qwen25_coder_14b,1,4,50.0,2,50.0,"{""invalid_json"": 2}"
-3,qwen25_coder_14b,2,4,100.0,4,100.0,{}

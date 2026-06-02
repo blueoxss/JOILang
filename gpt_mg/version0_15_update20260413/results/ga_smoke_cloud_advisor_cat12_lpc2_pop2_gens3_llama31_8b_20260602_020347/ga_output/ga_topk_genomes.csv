@@ -1,7 +1,0 @@
-generation,rank,model_key,genome_id,det,det_pass_rate,det_pass_count,row_count,tokens,core_blocks,optional_blocks,parent_ids,major_mutations,advisor_proposal_id,fitness,elite_reason,selection_reason,archive_membership,pareto_rank,prompt_hash,block_signature,rule_signature,mutation_family,mutation_operator
-1,1,llama31_8b,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,99.3815,100.0,4,4,49040.5,"01,02","05,06",,initial_random,,119.875726,,,,999,f46bf2e71841352a,"01,02,05,06",c4d08f4d9268f2bc,,
-1,2,llama31_8b,gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e,90.0429,75.0,3,4,47742.5,"01,02","03,05,06",,initial_random,,92.859863,,,,999,405e78ea3c6a6f8e,"01,02,03,05,06",da39a3ee5e6b4b0d,,
-2,1,llama31_8b,gen-bdd4e724-5407-b1de-8fa2-b132d3152091,100.0,100.0,4,4,49074.5,"01,02","05,06",gen-378892e9-ecc3-87ab-8b45-85023a0286cc,add_targeted_repair_hint,,120.0,,,,999,ae8554319acc5d29,"01,02,05,06",41370bcd18a3f6cc,accuracy_repair,add_targeted_repair_hint
-2,2,llama31_8b,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,99.3815,100.0,4,4,49040.5,"01,02","05,06",,initial_random,,119.875726,,,,999,f46bf2e71841352a,"01,02,05,06",c4d08f4d9268f2bc,,
-3,1,llama31_8b,gen-bdd4e724-5407-b1de-8fa2-b132d3152091,100.0,100.0,4,4,49074.5,"01,02","05,06",gen-378892e9-ecc3-87ab-8b45-85023a0286cc,add_targeted_repair_hint,,120.0,,,,999,ae8554319acc5d29,"01,02,05,06",41370bcd18a3f6cc,accuracy_repair,add_targeted_repair_hint
-3,2,llama31_8b,gen-6c3bf6ba-f915-e48f-9141-09fb9b540624,88.9611,75.0,3,4,27749.75,"01,02","03,06",,initial_random,,92.609432,,,,999,bce15b3be8751685,"01,02,03,06",d7c3c8779ca6fe58,,

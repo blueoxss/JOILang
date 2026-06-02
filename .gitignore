@@ -211,3 +211,31 @@ pyrightconfig.json
 
 # Local notebooks may contain secrets
 /gpt_mg/version0_15_update20260413/notebooks/Untitled.ipynb
+
+# Generated experiment artifacts
+gpt_mg/version0_15_update20260413/results/
+gpt_mg/version0_15_update20260413/logs/
+gpt_mg/version0_15_update20260413/notebooks/Untitled.ipynb
+
+# Python caches
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Local notebooks and generated experiment artifacts
+gpt_mg/version0_15_update20260413/notebooks/JOILang_PromptOps_Cloud_a6000.ipynb
+gpt_mg/version0_15_update20260413/notebooks/Untitled.ipynb
+gpt_mg/version0_15_update20260413/results/
+gpt_mg/version0_15_update20260413/logs/
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+
+# Local notebooks and generated experiment artifacts
+gpt_mg/version0_15_update20260413/results/
+gpt_mg/version0_15_update20260413/logs/
+gpt_mg/version0_15_update20260413/notebooks/JOILang_PromptOps_Cloud_a6000.ipynb
+gpt_mg/version0_15_update20260413/notebooks/Untitled.ipynb
+.ipynb_checkpoints/
+__pycache__/
+*.pyc

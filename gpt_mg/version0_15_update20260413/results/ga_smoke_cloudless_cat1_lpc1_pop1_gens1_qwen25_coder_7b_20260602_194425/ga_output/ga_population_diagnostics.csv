@@ -1,2 +1,0 @@
-generation,model_key,category,row_evaluations,avg_det_score,det_pass_count,det_pass_rate,failure_histogram
-1,qwen25_coder_7b,1,1,0.0,0,0.0,"{""invalid_json"": 1}"

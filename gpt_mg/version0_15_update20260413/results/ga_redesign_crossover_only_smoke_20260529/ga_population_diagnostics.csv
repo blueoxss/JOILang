@@ -1,5 +1,0 @@
-generation,model_key,category,row_evaluations,avg_det_score,det_pass_count,det_pass_rate,failure_histogram
-1,qwen25_coder_7b,1,10,21.5,0,0.0,"{""arg_type"": 10, ""enum_grounding"": 5, ""extraneous"": 10, ""gt_mismatch"": 10, ""gt_receiver_coverage"": 10, ""gt_service_coverage"": 10, ""numeric_grounding"": 5, ""precondition"": 10, ""semantic"": 10, ""service_match"": 10}"
-1,qwen25_coder_7b,2,10,26.5,0,0.0,"{""arg_type"": 10, ""extraneous"": 10, ""gt_mismatch"": 10, ""gt_receiver_coverage"": 10, ""gt_service_coverage"": 10, ""precondition"": 10, ""semantic"": 10, ""service_match"": 10}"
-2,qwen25_coder_7b,1,10,21.5,0,0.0,"{""arg_type"": 10, ""enum_grounding"": 5, ""extraneous"": 10, ""gt_mismatch"": 10, ""gt_receiver_coverage"": 10, ""gt_service_coverage"": 10, ""numeric_grounding"": 5, ""precondition"": 10, ""semantic"": 10, ""service_match"": 10}"
-2,qwen25_coder_7b,2,10,26.5,0,0.0,"{""arg_type"": 10, ""extraneous"": 10, ""gt_mismatch"": 10, ""gt_receiver_coverage"": 10, ""gt_service_coverage"": 10, ""precondition"": 10, ""semantic"": 10, ""service_match"": 10}"

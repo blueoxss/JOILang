@@ -1,2 +1,0 @@
-failure_type,affected_block_family,suggested_mutation_type,prompt_block_id,failure_count,original_failure_reasons,rule,priority,generation,model_key
-invalid_json,Output_Schema,strengthen_json_only_rule,03,1,invalid_json,"Return exactly one JSON object only; never emit markdown, prose, comments, or code fences.",1,1,qwen25_coder_7b

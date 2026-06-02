@@ -1,2 +1,0 @@
-{"generation": 1, "model_key": "qwen25_coder_7b", "category": "1", "row_evaluations": 15, "avg_det_score": 100.0, "det_pass_count": 15, "det_pass_rate": 100.0, "failure_histogram": "{}"}
-{"generation": 1, "model_key": "qwen25_coder_7b", "category": "2", "row_evaluations": 15, "avg_det_score": 97.385, "det_pass_count": 15, "det_pass_rate": 100.0, "failure_histogram": "{\"arg_type\": 5, \"gt_mismatch\": 7, \"numeric_grounding\": 5}"}

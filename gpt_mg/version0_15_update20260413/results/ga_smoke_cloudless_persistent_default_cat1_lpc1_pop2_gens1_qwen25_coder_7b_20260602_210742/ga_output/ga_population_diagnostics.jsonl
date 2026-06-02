@@ -1,1 +1,0 @@
-{"generation": 1, "model_key": "qwen25_coder_7b", "category": "1", "row_evaluations": 2, "avg_det_score": 0.0, "det_pass_count": 0, "det_pass_rate": 0.0, "failure_histogram": "{\"invalid_json\": 2}"}

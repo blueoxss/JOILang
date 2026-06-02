@@ -1,8 +1,0 @@
-failure_type,affected_block_family,suggested_mutation_type,prompt_block_id,failure_count,original_failure_reasons,rule,priority,generation,model_key
-semantic_error,DET_Helper,add_targeted_repair_hint,06,12,gt_mismatch,"If code is schema-valid but not target-equivalent, repair receiver coverage, service coverage, dataflow, numeric, and enum grounding.",3,1,llama31_8b
-semantic_error,Skeleton,strengthen_skeleton_rule,06,6,semantic,"Choose the smallest JOILang skeleton that matches the command verb, timing, target receiver, and side effect.",3,1,llama31_8b
-owner_device_mismatch,Owner_Device_Rule,strengthen_owner_device_rule,02,6,gt_receiver_coverage,"Preserve command-implied device, owner, location, and group selector tags in the receiver expression.",2,1,llama31_8b
-schema_violation,Service_Mapping,add_schema_grounding_rule,02,6,gt_service_coverage,"Read descriptor, return_descriptor, argument_type, and argument_bounds before choosing service names or numeric units.",1,1,llama31_8b
-temporal_error,Temporal_Rule,strengthen_temporal_rule,06,4,numeric_grounding,Convert elapsed time and units exactly according to the service descriptor before writing numeric literals.,2,1,llama31_8b
-dataflow_error,Dataflow,add_sensor_to_action_flow_rule,06,2,dataflow,"When reading a value for reporting or control, bind it to a variable and use that variable in the downstream action.",1,1,llama31_8b
-extraneous_action,Minimality,strengthen_no_unrelated_action_rule,03,1,extraneous,"Emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers.",2,1,llama31_8b

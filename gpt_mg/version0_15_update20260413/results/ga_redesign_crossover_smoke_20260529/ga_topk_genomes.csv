@@ -1,7 +1,0 @@
-generation,rank,model_key,genome_id,det,det_pass_rate,det_pass_count,row_count,tokens,core_blocks,optional_blocks,parent_ids,major_mutations,advisor_proposal_id,fitness,elite_reason,selection_reason,archive_membership,pareto_rank,prompt_hash,block_signature,rule_signature,mutation_family,mutation_operator
-1,1,qwen25_coder_7b,gen-2b132d31-5209-14c4-0eef-092879070b33,24.0,0.0,0,4,0.0,"01,02","03,05,06",,initial_random,,4.796875,,,,999,8051f64fb5250a8e,"01,02,03,05,06",449f772554767a2b,,
-1,2,qwen25_coder_7b,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,24.0,0.0,0,4,0.0,"01,02","05,06",,initial_random,,4.796875,,,,999,f46bf2e71841352a,"01,02,05,06",c4d08f4d9268f2bc,,
-1,3,qwen25_coder_7b,gen-af17dfa2-8346-1468-fe4c-138bdd4e7245,24.0,0.0,0,4,0.0,"01,02",03,,initial_random,,4.796875,,,,999,bf04ea331e632db9,"01,02,03",d7c3c8779ca6fe58,,
-2,1,qwen25_coder_7b,gen-24bf3227-734f-fac2-b3a8-5ef3b1ea01c6,24.0,0.0,0,4,0.0,"01,02","03,05,06",gen-2b132d31-5209-14c4-0eef-092879070b33,reduce_candidate_strategies,,4.796875,,,,999,f106e1e89f0b81d2,"01,02,03,05,06",449f772554767a2b,compression,reduce_candidate_strategies
-2,2,qwen25_coder_7b,gen-2b132d31-5209-14c4-0eef-092879070b33,24.0,0.0,0,4,0.0,"01,02","03,05,06",,initial_random,,4.796875,,,,999,8051f64fb5250a8e,"01,02,03,05,06",449f772554767a2b,,
-2,3,qwen25_coder_7b,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,24.0,0.0,0,4,0.0,"01,02","05,06",,initial_random,,4.796875,,,,999,f46bf2e71841352a,"01,02,05,06",c4d08f4d9268f2bc,,

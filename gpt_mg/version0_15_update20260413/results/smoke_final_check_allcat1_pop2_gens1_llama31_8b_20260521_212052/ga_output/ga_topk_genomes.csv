@@ -1,3 +1,0 @@
-generation,rank,model_key,genome_id,det,det_pass_rate,det_pass_count,row_count,tokens,core_blocks,optional_blocks,parent_ids,major_mutations,advisor_proposal_id,fitness
-1,1,llama31_8b,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,88.3701,75.0,6,8,69776.0,"01,02","05,06",,initial_random,,-60.78524
-1,2,llama31_8b,gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e,77.671,50.0,4,8,68478.0,"01,02","03,05,06",,initial_random,,-102.139424
