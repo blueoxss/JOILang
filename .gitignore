@@ -208,3 +208,6 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,macos
+
+# Local notebooks may contain secrets
+/gpt_mg/version0_15_update20260413/notebooks/Untitled.ipynb

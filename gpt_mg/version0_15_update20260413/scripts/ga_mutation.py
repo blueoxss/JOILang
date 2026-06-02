@@ -188,7 +188,8 @@ def _diff(before: dict[str, Any], after: dict[str, Any], proposal: MutationPropo
                     "mutation_family": proposal.mutation_family,
                     "feedback_driven": proposal.source in {"det_feedback", "advisor"},
                     "llm_advised": proposal.source == "advisor",
-                    "advisor_proposal_id": proposal.proposal_id if proposal.source == "advisor" else "",
+                    "advisor_proposal_id": proposal.advisor_proposal_id or (proposal.proposal_id if proposal.source == "advisor" else ""),
+                    "advisor_batch_id": proposal.advisor_batch_id if proposal.source == "advisor" else "",
                     "failure_type_source": "|".join(proposal.affected_failure_families),
                 }
             )

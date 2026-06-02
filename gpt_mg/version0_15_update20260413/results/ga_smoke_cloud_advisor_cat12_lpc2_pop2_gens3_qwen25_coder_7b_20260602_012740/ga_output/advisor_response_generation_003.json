@@ -1,0 +1,76 @@
+{
+  "raw_content": "{\n  \"mutation_proposals\": [\n    {\n      \"target_block_id\": \"02\",\n      \"target_block_family\": \"Service_Mapping\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 1,\n      \"reason\": \"Ensure strict grounding of service names and argument types to prevent schema violations and unknown services.\",\n      \"edit_instruction\": \"Add a micro-rule to block 02 enforcing exact use of canonical service names and precise enum and numeric argument grounding.\",\n      \"proposed_micro_rule\": \"Use only canonical service names from service_list_snippet; for ENUM arguments, copy allowed enum values exactly; for numeric arguments, use unquoted numeric literals; read descriptor and argument bounds before selecting services or units.\"\n    },\n    {\n      \"target_block_id\": \"03\",\n      \"target_block_family\": \"Output_Schema\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 1,\n      \"reason\": \"Prevent invalid JSON output and extraneous actions by enforcing strict output format and minimality.\",\n      \"edit_instruction\": \"Add micro-rules to block 03 to enforce JSON-only output and emit only required actions.\",\n      \"proposed_micro_rule\": \"Return exactly one JSON object only; never emit markdown, prose, comments, or code fences; emit only actions required by the command, removing unrelated or duplicate actions.\"\n    },\n    {\n      \"target_block_id\": \"06\",\n      \"target_block_family\": \"Temporal_Rule\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 1,\n      \"reason\": \"Improve temporal grounding and dataflow correctness for delayed or duration-based commands.\",\n      \"edit_instruction\": \"Add micro-rules to block 06 to represent elapsed time with explicit state variables and bind sensor reads to variables for downstream use.\",\n      \"proposed_micro_rule\": \"Represent elapsed time with explicit state variables and comparisons; when reading values for reporting or control, bind to variables and use those variables in downstream actions.\"\n    }\n  ]\n}",
+  "parsed": {
+    "mutation_proposals": [
+      {
+        "target_block_id": "02",
+        "target_block_family": "Service_Mapping",
+        "mutation_type": "add_micro_rule",
+        "priority": 1,
+        "reason": "Ensure strict grounding of service names and argument types to prevent schema violations and unknown services.",
+        "edit_instruction": "Add a micro-rule to block 02 enforcing exact use of canonical service names and precise enum and numeric argument grounding.",
+        "proposed_micro_rule": "Use only canonical service names from service_list_snippet; for ENUM arguments, copy allowed enum values exactly; for numeric arguments, use unquoted numeric literals; read descriptor and argument bounds before selecting services or units."
+      },
+      {
+        "target_block_id": "03",
+        "target_block_family": "Output_Schema",
+        "mutation_type": "add_micro_rule",
+        "priority": 1,
+        "reason": "Prevent invalid JSON output and extraneous actions by enforcing strict output format and minimality.",
+        "edit_instruction": "Add micro-rules to block 03 to enforce JSON-only output and emit only required actions.",
+        "proposed_micro_rule": "Return exactly one JSON object only; never emit markdown, prose, comments, or code fences; emit only actions required by the command, removing unrelated or duplicate actions."
+      },
+      {
+        "target_block_id": "06",
+        "target_block_family": "Temporal_Rule",
+        "mutation_type": "add_micro_rule",
+        "priority": 1,
+        "reason": "Improve temporal grounding and dataflow correctness for delayed or duration-based commands.",
+        "edit_instruction": "Add micro-rules to block 06 to represent elapsed time with explicit state variables and bind sensor reads to variables for downstream use.",
+        "proposed_micro_rule": "Represent elapsed time with explicit state variables and comparisons; when reading values for reporting or control, bind to variables and use those variables in downstream actions."
+      }
+    ]
+  },
+  "accepted_proposals": [
+    {
+      "target_block_id": "02",
+      "target_block_family": "Service_Mapping",
+      "mutation_type": "add_micro_rule",
+      "priority": 1,
+      "reason": "Ensure strict grounding of service names and argument types to prevent schema violations and unknown services.",
+      "edit_instruction": "Add a micro-rule to block 02 enforcing exact use of canonical service names and precise enum and numeric argument grounding.",
+      "proposed_micro_rule": "Use only canonical service names from service_list_snippet; for ENUM arguments, copy allowed enum values exactly; for numeric arguments, use unquoted numeric literals; read descriptor and argument bounds before selecting services or units.",
+      "proposal_id": "advisor_g003_01",
+      "advisor_generation": 3,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "03",
+      "target_block_family": "Output_Schema",
+      "mutation_type": "add_micro_rule",
+      "priority": 1,
+      "reason": "Prevent invalid JSON output and extraneous actions by enforcing strict output format and minimality.",
+      "edit_instruction": "Add micro-rules to block 03 to enforce JSON-only output and emit only required actions.",
+      "proposed_micro_rule": "Return exactly one JSON object only; never emit markdown, prose, comments, or code fences; emit only actions required by the command, removing unrelated or duplicate actions.",
+      "proposal_id": "advisor_g003_02",
+      "advisor_generation": 3,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "06",
+      "target_block_family": "Temporal_Rule",
+      "mutation_type": "add_micro_rule",
+      "priority": 1,
+      "reason": "Improve temporal grounding and dataflow correctness for delayed or duration-based commands.",
+      "edit_instruction": "Add micro-rules to block 06 to represent elapsed time with explicit state variables and bind sensor reads to variables for downstream use.",
+      "proposed_micro_rule": "Represent elapsed time with explicit state variables and comparisons; when reading values for reporting or control, bind to variables and use those variables in downstream actions.",
+      "proposal_id": "advisor_g003_03",
+      "advisor_generation": 3,
+      "accepted": true,
+      "rejection_reason": ""
+    }
+  ],
+  "rejected_proposals": []
+}

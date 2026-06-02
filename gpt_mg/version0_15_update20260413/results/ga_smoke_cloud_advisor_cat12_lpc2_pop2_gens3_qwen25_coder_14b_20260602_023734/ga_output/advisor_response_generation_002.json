@@ -1,0 +1,142 @@
+{
+  "raw_content": "```json\n{\n  \"mutation_proposals\": [\n    {\n      \"target_block_id\": \"03\",\n      \"target_block_family\": \"Output_Schema\",\n      \"mutation_type\": \"strengthen_json_only_rule\",\n      \"priority\": 1,\n      \"reason\": \"Fix invalid JSON output failures by enforcing strict JSON-only output without markdown or prose.\",\n      \"edit_instruction\": \"Add or strengthen micro-rules to ensure the block returns exactly one JSON object only; disallow markdown, prose, comments, or code fences.\",\n      \"proposed_micro_rule\": \"Return exactly one JSON object only; never emit markdown, prose, comments, or code fences.\"\n    },\n    {\n      \"target_block_id\": \"03\",\n      \"target_block_family\": \"Minimality\",\n      \"mutation_type\": \"strengthen_no_unrelated_action_rule\",\n      \"priority\": 2,\n      \"reason\": \"Reduce extraneous or unrelated actions in output to improve minimality and correctness.\",\n      \"edit_instruction\": \"Add micro-rules to emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers.\",\n      \"proposed_micro_rule\": \"Emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers.\"\n    },\n    {\n      \"target_block_id\": \"02\",\n      \"target_block_family\": \"Service_Mapping\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 1,\n      \"reason\": \"Improve service name grounding and argument typing to reduce schema violations and unknown service errors.\",\n      \"edit_instruction\": \"Add micro-rules to use only canonical service/value names from service_list_snippet and to copy allowed enum values exactly; use unquoted numeric literals for numeric arguments.\",\n      \"proposed_micro_rule\": \"Use only canonical service/value names from service_list_snippet; copy allowed enum values exactly; use unquoted numeric literals for numeric arguments.\"\n    },\n    {\n      \"target_block_id\": \"02\",\n      \"target_block_family\": \"Service_Mapping\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 2,\n      \"reason\": \"Enhance grounding by reading descriptor, return_descriptor, argument_type, and argument_bounds before choosing service names or numeric units.\",\n      \"edit_instruction\": \"Add micro-rules to ground service and argument choices on schema descriptors before selection.\",\n      \"proposed_micro_rule\": \"Read descriptor, return_descriptor, argument_type, and argument_bounds before choosing service names or numeric units.\"\n    },\n    {\n      \"target_block_id\": \"06\",\n      \"target_block_family\": \"Temporal_Rule\",\n      \"mutation_type\": \"strengthen_temporal_rule\",\n      \"priority\": 1,\n      \"reason\": \"Improve handling of elapsed time and duration-based commands to reduce temporal errors.\",\n      \"edit_instruction\": \"Add micro-rules to represent elapsed time with explicit state variables and comparisons; convert elapsed time and units exactly according to service descriptor.\",\n      \"proposed_micro_rule\": \"For delayed or duration-based commands, represent elapsed time with explicit state variables and comparisons; convert elapsed time and units exactly according to the service descriptor.\"\n    },\n    {\n      \"target_block_id\": \"06\",\n      \"target_block_family\": \"Dataflow\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 1,\n      \"reason\": \"Improve dataflow correctness by binding sensor reads to variables used in downstream actions.\",\n      \"edit_instruction\": \"Add micro-rules to bind read values to variables and use those variables in subsequent actions.\",\n      \"proposed_micro_rule\": \"When reading a value for reporting or control, bind it to a variable and use that variable in the downstream action.\"\n    }\n  ]\n}\n```",
+  "parsed": {
+    "mutation_proposals": [
+      {
+        "target_block_id": "03",
+        "target_block_family": "Output_Schema",
+        "mutation_type": "strengthen_json_only_rule",
+        "priority": 1,
+        "reason": "Fix invalid JSON output failures by enforcing strict JSON-only output without markdown or prose.",
+        "edit_instruction": "Add or strengthen micro-rules to ensure the block returns exactly one JSON object only; disallow markdown, prose, comments, or code fences.",
+        "proposed_micro_rule": "Return exactly one JSON object only; never emit markdown, prose, comments, or code fences."
+      },
+      {
+        "target_block_id": "03",
+        "target_block_family": "Minimality",
+        "mutation_type": "strengthen_no_unrelated_action_rule",
+        "priority": 2,
+        "reason": "Reduce extraneous or unrelated actions in output to improve minimality and correctness.",
+        "edit_instruction": "Add micro-rules to emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers.",
+        "proposed_micro_rule": "Emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers."
+      },
+      {
+        "target_block_id": "02",
+        "target_block_family": "Service_Mapping",
+        "mutation_type": "add_micro_rule",
+        "priority": 1,
+        "reason": "Improve service name grounding and argument typing to reduce schema violations and unknown service errors.",
+        "edit_instruction": "Add micro-rules to use only canonical service/value names from service_list_snippet and to copy allowed enum values exactly; use unquoted numeric literals for numeric arguments.",
+        "proposed_micro_rule": "Use only canonical service/value names from service_list_snippet; copy allowed enum values exactly; use unquoted numeric literals for numeric arguments."
+      },
+      {
+        "target_block_id": "02",
+        "target_block_family": "Service_Mapping",
+        "mutation_type": "add_micro_rule",
+        "priority": 2,
+        "reason": "Enhance grounding by reading descriptor, return_descriptor, argument_type, and argument_bounds before choosing service names or numeric units.",
+        "edit_instruction": "Add micro-rules to ground service and argument choices on schema descriptors before selection.",
+        "proposed_micro_rule": "Read descriptor, return_descriptor, argument_type, and argument_bounds before choosing service names or numeric units."
+      },
+      {
+        "target_block_id": "06",
+        "target_block_family": "Temporal_Rule",
+        "mutation_type": "strengthen_temporal_rule",
+        "priority": 1,
+        "reason": "Improve handling of elapsed time and duration-based commands to reduce temporal errors.",
+        "edit_instruction": "Add micro-rules to represent elapsed time with explicit state variables and comparisons; convert elapsed time and units exactly according to service descriptor.",
+        "proposed_micro_rule": "For delayed or duration-based commands, represent elapsed time with explicit state variables and comparisons; convert elapsed time and units exactly according to the service descriptor."
+      },
+      {
+        "target_block_id": "06",
+        "target_block_family": "Dataflow",
+        "mutation_type": "add_micro_rule",
+        "priority": 1,
+        "reason": "Improve dataflow correctness by binding sensor reads to variables used in downstream actions.",
+        "edit_instruction": "Add micro-rules to bind read values to variables and use those variables in subsequent actions.",
+        "proposed_micro_rule": "When reading a value for reporting or control, bind it to a variable and use that variable in the downstream action."
+      }
+    ]
+  },
+  "accepted_proposals": [
+    {
+      "target_block_id": "03",
+      "target_block_family": "Output_Schema",
+      "mutation_type": "strengthen_json_only_rule",
+      "priority": 1,
+      "reason": "Fix invalid JSON output failures by enforcing strict JSON-only output without markdown or prose.",
+      "edit_instruction": "Add or strengthen micro-rules to ensure the block returns exactly one JSON object only; disallow markdown, prose, comments, or code fences.",
+      "proposed_micro_rule": "Return exactly one JSON object only; never emit markdown, prose, comments, or code fences.",
+      "proposal_id": "advisor_g002_01",
+      "advisor_generation": 2,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "03",
+      "target_block_family": "Minimality",
+      "mutation_type": "strengthen_no_unrelated_action_rule",
+      "priority": 2,
+      "reason": "Reduce extraneous or unrelated actions in output to improve minimality and correctness.",
+      "edit_instruction": "Add micro-rules to emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers.",
+      "proposed_micro_rule": "Emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers.",
+      "proposal_id": "advisor_g002_02",
+      "advisor_generation": 2,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "02",
+      "target_block_family": "Service_Mapping",
+      "mutation_type": "add_micro_rule",
+      "priority": 1,
+      "reason": "Improve service name grounding and argument typing to reduce schema violations and unknown service errors.",
+      "edit_instruction": "Add micro-rules to use only canonical service/value names from service_list_snippet and to copy allowed enum values exactly; use unquoted numeric literals for numeric arguments.",
+      "proposed_micro_rule": "Use only canonical service/value names from service_list_snippet; copy allowed enum values exactly; use unquoted numeric literals for numeric arguments.",
+      "proposal_id": "advisor_g002_03",
+      "advisor_generation": 2,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "02",
+      "target_block_family": "Service_Mapping",
+      "mutation_type": "add_micro_rule",
+      "priority": 2,
+      "reason": "Enhance grounding by reading descriptor, return_descriptor, argument_type, and argument_bounds before choosing service names or numeric units.",
+      "edit_instruction": "Add micro-rules to ground service and argument choices on schema descriptors before selection.",
+      "proposed_micro_rule": "Read descriptor, return_descriptor, argument_type, and argument_bounds before choosing service names or numeric units.",
+      "proposal_id": "advisor_g002_04",
+      "advisor_generation": 2,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "06",
+      "target_block_family": "Temporal_Rule",
+      "mutation_type": "strengthen_temporal_rule",
+      "priority": 1,
+      "reason": "Improve handling of elapsed time and duration-based commands to reduce temporal errors.",
+      "edit_instruction": "Add micro-rules to represent elapsed time with explicit state variables and comparisons; convert elapsed time and units exactly according to service descriptor.",
+      "proposed_micro_rule": "For delayed or duration-based commands, represent elapsed time with explicit state variables and comparisons; convert elapsed time and units exactly according to the service descriptor.",
+      "proposal_id": "advisor_g002_05",
+      "advisor_generation": 2,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "06",
+      "target_block_family": "Dataflow",
+      "mutation_type": "add_micro_rule",
+      "priority": 1,
+      "reason": "Improve dataflow correctness by binding sensor reads to variables used in downstream actions.",
+      "edit_instruction": "Add micro-rules to bind read values to variables and use those variables in subsequent actions.",
+      "proposed_micro_rule": "When reading a value for reporting or control, bind it to a variable and use that variable in the downstream action.",
+      "proposal_id": "advisor_g002_06",
+      "advisor_generation": 2,
+      "accepted": true,
+      "rejection_reason": ""
+    }
+  ],
+  "rejected_proposals": []
+}

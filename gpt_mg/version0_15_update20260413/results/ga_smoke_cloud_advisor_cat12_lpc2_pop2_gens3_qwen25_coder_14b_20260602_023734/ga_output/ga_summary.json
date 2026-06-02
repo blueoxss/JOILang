@@ -1,0 +1,250 @@
+{
+  "best_history": [
+    {
+      "generation": 1,
+      "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+      "fitness": 58.75,
+      "avg_det_score": 50.0,
+      "validation_avg_det_score": 50.0,
+      "train_det_pass_rate": 0.0,
+      "train_gt_exact_rate": 0.0,
+      "validation_det_pass_rate": 50.0,
+      "validation_gt_exact_rate": 50.0,
+      "genome": {
+        "id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+        "seed": 929273219,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "05",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+          "temperature": 0.1,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "compact_json",
+            "explicit_preconditions",
+            "direct",
+            "minimal"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 2,
+            "micro_rules": []
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [],
+          "mutation_types": [
+            "initial_random"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": ""
+        }
+      }
+    },
+    {
+      "generation": 2,
+      "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+      "fitness": 58.75,
+      "avg_det_score": 50.0,
+      "validation_avg_det_score": 50.0,
+      "train_det_pass_rate": 0.0,
+      "train_gt_exact_rate": 0.0,
+      "validation_det_pass_rate": 50.0,
+      "validation_gt_exact_rate": 50.0,
+      "genome": {
+        "id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+        "seed": 929273219,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "05",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+          "temperature": 0.1,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "compact_json",
+            "explicit_preconditions",
+            "direct",
+            "minimal"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 2,
+            "micro_rules": []
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [],
+          "mutation_types": [
+            "initial_random"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": ""
+        }
+      }
+    },
+    {
+      "generation": 3,
+      "genome_id": "gen-6c3bf6ba-f915-e48f-9141-09fb9b540624",
+      "fitness": 120.0,
+      "avg_det_score": 100.0,
+      "validation_avg_det_score": 100.0,
+      "train_det_pass_rate": 100.0,
+      "train_gt_exact_rate": 100.0,
+      "validation_det_pass_rate": 100.0,
+      "validation_gt_exact_rate": 100.0,
+      "genome": {
+        "id": "gen-6c3bf6ba-f915-e48f-9141-09fb9b540624",
+        "seed": 940578914,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+          "temperature": 0.1,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "compact_json",
+            "canonical_names_first",
+            "direct",
+            "minimal",
+            "explicit_preconditions"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 3,
+            "micro_rules": [
+              "For INTEGER and DOUBLE arguments, avoid quoted numeric literals.",
+              "Return exactly one JSON object only with keys name, cron, period, code."
+            ]
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [],
+          "mutation_types": [
+            "initial_random"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": ""
+        }
+      }
+    }
+  ],
+  "output_root": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output",
+  "generation_progress_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/ga_generation_progress.csv",
+  "generation_progress_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/ga_generation_progress.jsonl",
+  "topk_genomes_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/ga_topk_genomes.csv",
+  "block_diffs_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/ga_block_diffs.jsonl",
+  "population_diagnostics_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/ga_population_diagnostics.csv",
+  "population_diagnostics_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/ga_population_diagnostics.jsonl",
+  "advisor_mutation_proposals_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/advisor_mutation_proposals.jsonl",
+  "advisor_mutation_summary_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/advisor_mutation_summary.csv",
+  "structured_feedback_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/structured_feedback.jsonl",
+  "structured_feedback_summary_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/structured_feedback_summary.csv",
+  "population_transitions_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/population_transitions.csv",
+  "promotion_decisions_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/promotion_decisions.csv",
+  "mutation_proposals_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/mutation_proposals.jsonl",
+  "pareto_archive_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/pareto_archive.csv",
+  "mutation_operator_credit_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/ga_smoke_cloud_advisor_cat12_lpc2_pop2_gens3_qwen25_coder_14b_20260602_023734/ga_output/mutation_operator_credit.csv",
+  "best_genome": {
+    "id": "gen-6c3bf6ba-f915-e48f-9141-09fb9b540624",
+    "seed": 940578914,
+    "blocks": [
+      "01",
+      "02",
+      "03",
+      "06"
+    ],
+    "params": {
+      "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+      "temperature": 0.1,
+      "few_shot_count": 3,
+      "max_tokens": 1024,
+      "candidate_strategies": [
+        "compact_json",
+        "canonical_names_first",
+        "direct",
+        "minimal",
+        "explicit_preconditions"
+      ]
+    },
+    "block_params": {
+      "02": {
+        "few_shot_count": 3,
+        "micro_rules": [
+          "For INTEGER and DOUBLE arguments, avoid quoted numeric literals.",
+          "Return exactly one JSON object only with keys name, cron, period, code."
+        ]
+      },
+      "05": {
+        "repair_mode": "conservative",
+        "few_shot_count": 3
+      }
+    },
+    "_ga_metadata": {
+      "parent_ids": [],
+      "mutation_types": [
+        "initial_random"
+      ],
+      "crossover_used": false,
+      "feedback_types_used": [],
+      "base_genome_id": ""
+    }
+  },
+  "best_fitness": 120.0,
+  "best_validation_avg_det_score": 100.0,
+  "fitness_formula": "phase-aware DETPass + AvgDET + category/compression - token/variance/regression penalties",
+  "retrieval_policy": "fixed runtime service-context construction; not mutated by GA",
+  "stage": "full-run",
+  "advisor_status": "enabled",
+  "final_phase": "FINAL_SELECTION",
+  "stop_reason": "max generations reached",
+  "best_so_far_DETPass": 100.0,
+  "accepted_best": "gen-6c3bf6ba-f915-e48f-9141-09fb9b540624",
+  "compact_best": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+  "pareto_archive_size": 2,
+  "cloudless_mutation_used": true,
+  "advisor_used": true,
+  "category_balance_mode": "guard",
+  "token_penalty_mode": "hybrid",
+  "mutation_family_counts": {
+    "advisor_guided": 8,
+    "accuracy_repair": 2,
+    "compression": 3
+  },
+  "compression_success_count": 1,
+  "compression_rejection_count": 2
+}

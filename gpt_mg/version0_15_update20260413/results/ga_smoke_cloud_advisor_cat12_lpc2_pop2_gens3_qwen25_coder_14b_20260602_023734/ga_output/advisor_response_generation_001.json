@@ -1,0 +1,54 @@
+{
+  "raw_content": "{\n  \"mutation_proposals\": [\n    {\n      \"target_block_id\": \"03\",\n      \"target_block_family\": \"Output_Schema\",\n      \"mutation_type\": \"strengthen_json_only_rule\",\n      \"priority\": 1,\n      \"reason\": \"Prevent invalid JSON output by enforcing strict JSON-only response without markdown or comments.\",\n      \"edit_instruction\": \"Add or strengthen micro-rules to ensure the output is exactly one JSON object with no extra text, markdown, or code fences.\",\n      \"proposed_micro_rule\": \"Return exactly one JSON object only; never emit markdown, prose, comments, or code fences.\"\n    },\n    {\n      \"target_block_id\": \"03\",\n      \"target_block_family\": \"Minimality\",\n      \"mutation_type\": \"strengthen_no_unrelated_action_rule\",\n      \"priority\": 2,\n      \"reason\": \"Reduce extraneous or unrelated actions in output to improve minimality and correctness.\",\n      \"edit_instruction\": \"Add micro-rules to emit only actions required by the command, removing unrelated reads, duplicates, or invented wrappers.\",\n      \"proposed_micro_rule\": \"Emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers.\"\n    }\n  ]\n}",
+  "parsed": {
+    "mutation_proposals": [
+      {
+        "target_block_id": "03",
+        "target_block_family": "Output_Schema",
+        "mutation_type": "strengthen_json_only_rule",
+        "priority": 1,
+        "reason": "Prevent invalid JSON output by enforcing strict JSON-only response without markdown or comments.",
+        "edit_instruction": "Add or strengthen micro-rules to ensure the output is exactly one JSON object with no extra text, markdown, or code fences.",
+        "proposed_micro_rule": "Return exactly one JSON object only; never emit markdown, prose, comments, or code fences."
+      },
+      {
+        "target_block_id": "03",
+        "target_block_family": "Minimality",
+        "mutation_type": "strengthen_no_unrelated_action_rule",
+        "priority": 2,
+        "reason": "Reduce extraneous or unrelated actions in output to improve minimality and correctness.",
+        "edit_instruction": "Add micro-rules to emit only actions required by the command, removing unrelated reads, duplicates, or invented wrappers.",
+        "proposed_micro_rule": "Emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers."
+      }
+    ]
+  },
+  "accepted_proposals": [
+    {
+      "target_block_id": "03",
+      "target_block_family": "Output_Schema",
+      "mutation_type": "strengthen_json_only_rule",
+      "priority": 1,
+      "reason": "Prevent invalid JSON output by enforcing strict JSON-only response without markdown or comments.",
+      "edit_instruction": "Add or strengthen micro-rules to ensure the output is exactly one JSON object with no extra text, markdown, or code fences.",
+      "proposed_micro_rule": "Return exactly one JSON object only; never emit markdown, prose, comments, or code fences.",
+      "proposal_id": "advisor_g001_01",
+      "advisor_generation": 1,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "03",
+      "target_block_family": "Minimality",
+      "mutation_type": "strengthen_no_unrelated_action_rule",
+      "priority": 2,
+      "reason": "Reduce extraneous or unrelated actions in output to improve minimality and correctness.",
+      "edit_instruction": "Add micro-rules to emit only actions required by the command, removing unrelated reads, duplicates, or invented wrappers.",
+      "proposed_micro_rule": "Emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers.",
+      "proposal_id": "advisor_g001_02",
+      "advisor_generation": 1,
+      "accepted": true,
+      "rejection_reason": ""
+    }
+  ],
+  "rejected_proposals": []
+}

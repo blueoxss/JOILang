@@ -1,0 +1,46 @@
+{
+  "rows": [
+    {
+      "generation": 1,
+      "candidate_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+      "model_key": "qwen25_coder_7b",
+      "DETPass": 0.0,
+      "SDET": 15.9375,
+      "avg_prompt_tokens": 0.0,
+      "replay_gate_pass": true,
+      "regression_gate_pass": true,
+      "promoted": true,
+      "rejection_reason": "",
+      "accepted_prompt_path": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/cloudless_ab_smoke_20260602/accepted_genomes/generation_001_gen-378892e9-ecc3-87ab-8b45-85023a0286cc.json",
+      "previous_accepted_prompt": ""
+    },
+    {
+      "generation": 2,
+      "candidate_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+      "model_key": "qwen25_coder_7b",
+      "DETPass": 0.0,
+      "SDET": 15.9375,
+      "avg_prompt_tokens": 0.0,
+      "replay_gate_pass": true,
+      "regression_gate_pass": true,
+      "promoted": true,
+      "rejection_reason": "",
+      "accepted_prompt_path": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/cloudless_ab_smoke_20260602/accepted_genomes/generation_002_gen-378892e9-ecc3-87ab-8b45-85023a0286cc.json",
+      "previous_accepted_prompt": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc"
+    },
+    {
+      "generation": 3,
+      "candidate_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+      "model_key": "qwen25_coder_7b",
+      "DETPass": 0.0,
+      "SDET": 15.9375,
+      "avg_prompt_tokens": 0.0,
+      "replay_gate_pass": true,
+      "regression_gate_pass": true,
+      "promoted": true,
+      "rejection_reason": "",
+      "accepted_prompt_path": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/cloudless_ab_smoke_20260602/accepted_genomes/generation_003_gen-378892e9-ecc3-87ab-8b45-85023a0286cc.json",
+      "previous_accepted_prompt": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc"
+    }
+  ]
+}

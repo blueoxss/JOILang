@@ -1,0 +1,14 @@
+{
+  "raw_content": "[\n  {\n    \"target_block_id\": \"03\",\n    \"target_block_family\": \"Output_Schema\",\n    \"mutation_type\": \"strengthen_json_only_rule\",\n    \"priority\": 1,\n    \"reason\": \"Fix invalid JSON output failures by enforcing strict JSON-only output without markdown or comments.\",\n    \"edit_instruction\": \"Add or strengthen micro-rules to ensure the output is exactly one JSON object with no extraneous formatting or text.\",\n    \"proposed_micro_rule\": \"Return exactly one JSON object only; never emit markdown, prose, comments, or code fences.\"\n  },\n  {\n    \"target_block_id\": \"03\",\n    \"target_block_family\": \"Minimality\",\n    \"mutation_type\": \"strengthen_no_unrelated_action_rule\",\n    \"priority\": 2,\n    \"reason\": \"Reduce extraneous or unrelated actions in output to improve minimality and correctness.\",\n    \"edit_instruction\": \"Add micro-rules to emit only actions required by the command and remove unrelated reads, duplicates, or invented wrappers.\",\n    \"proposed_micro_rule\": \"Emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers.\"\n  },\n  {\n    \"target_block_id\": \"02\",\n    \"target_block_family\": \"Service_Mapping\",\n    \"mutation_type\": \"add_micro_rule\",\n    \"priority\": 1,\n    \"reason\": \"Improve service name grounding and argument type correctness to reduce schema violations and unknown service errors.\",\n    \"edit_instruction\": \"Add micro-rules to use only canonical service and value names from the service list snippet and to copy enum values exactly as specified.\",\n    \"proposed_micro_rule\": \"Use only canonical service/value names from service_list_snippet; never invent helper methods. For ENUM arguments, copy an allowed enum value exactly; for numeric arguments, use unquoted numeric literals.\"\n  }\n]",
+  "parsed": {
+    "target_block_id": "03",
+    "target_block_family": "Output_Schema",
+    "mutation_type": "strengthen_json_only_rule",
+    "priority": 1,
+    "reason": "Fix invalid JSON output failures by enforcing strict JSON-only output without markdown or comments.",
+    "edit_instruction": "Add or strengthen micro-rules to ensure the output is exactly one JSON object with no extraneous formatting or text.",
+    "proposed_micro_rule": "Return exactly one JSON object only; never emit markdown, prose, comments, or code fences."
+  },
+  "accepted_proposals": [],
+  "rejected_proposals": []
+}

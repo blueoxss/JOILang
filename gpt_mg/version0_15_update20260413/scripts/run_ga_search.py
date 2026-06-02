@@ -42,7 +42,21 @@ from scripts.ga_selection import (
     update_archives,
 )
 from scripts.ga_stop_controller import decide_next_action
-from scripts.mutation_proposals import MutationProposal, proposal_from_advisor
+from scripts.advisor_feedback import (
+    apply_advisor_proposal,
+    build_advisor_feedback_batch,
+    build_advisor_prompt_from_batch,
+    validate_advisor_proposal,
+)
+from scripts.mutation_proposals import (
+    PROPOSAL_STATE_ACCEPTED_APPLIED,
+    PROPOSAL_STATE_ACCEPTED_NOT_SCHEDULED,
+    PROPOSAL_STATE_FAILED_TO_APPLY,
+    PROPOSAL_STATE_PROPOSED,
+    PROPOSAL_STATE_REJECTED,
+    MutationProposal,
+    proposal_from_advisor,
+)
 from scripts.prompt_decompiler import compression_proposals_from_artifact, decompile_prompt
 from utils.ga_block_model import (
     get_core_blocks,
@@ -266,6 +280,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--advisor-bottom-k", type=int, default=3)
     parser.add_argument("--advisor-max-examples", type=int, default=5)
     parser.add_argument("--advisor-temperature", type=float, default=0.0)
+    parser.add_argument("--advisor-strict", action="store_true", help="Abort the GA run if the cloud advisor returns invalid JSON.")
+    parser.add_argument("--advisor-max-representative-failures", type=int, default=10, help="Max representative failures per advisor batch packet.")
+    parser.add_argument("--advisor-feedback-detail", choices=["compact", "normal", "verbose"], default="normal")
+    parser.add_argument("--advisor-include-candidate-code", action=argparse.BooleanOptionalAction, default=True, help="Include candidate code in advisor representative failures.")
+    parser.add_argument("--advisor-include-prompt-summary", action=argparse.BooleanOptionalAction, default=True, help="Include the current prompt/genome structure in the advisor batch.")
+    parser.add_argument("--advisor-force-child-quota", action="store_true", help="Reserve an advisor child slot even when population < advisor-min-population-for-child.")
+    parser.add_argument("--advisor-min-population-for-child", type=int, default=4, help="Minimum population required before advisor children are scheduled.")
     parser.add_argument("--llm-mode", default=None)
     parser.add_argument("--llm-endpoint", default=None)
     parser.add_argument("--timeout-sec", type=int, default=1800)
@@ -312,7 +333,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-generations", type=int, default=None)
     parser.add_argument("--plateau-window", type=int, default=3)
     parser.add_argument("--disruptive-max-attempts", type=int, default=2)
-    parser.add_argument("--advisor-trigger-mode", choices=["off", "on_plateau", "on_failure_plateau"], default="off")
+    parser.add_argument("--advisor-trigger-mode", choices=["off", "on_plateau", "on_failure_plateau", "always"], default="off")
     parser.add_argument("--diversity-collapse-threshold", type=float, default=0.5)
     return parser
 
@@ -425,6 +446,7 @@ def _final_artifacts(summary: dict[str, Any]) -> list[tuple[str, str]]:
         ("ga_block_diffs.jsonl", str(summary.get("block_diffs_jsonl") or output_root / "ga_block_diffs.jsonl")),
         ("ga_population_diagnostics.csv", str(summary.get("population_diagnostics_csv") or output_root / "ga_population_diagnostics.csv")),
         ("structured_feedback.jsonl", str(summary.get("structured_feedback_jsonl") or output_root / "structured_feedback.jsonl")),
+        ("advisor_feedback_batches.jsonl", str(summary.get("advisor_feedback_batches_jsonl") or output_root / "advisor_feedback_batches.jsonl")),
         ("mutation_proposals.jsonl", str(summary.get("mutation_proposals_jsonl") or output_root / "mutation_proposals.jsonl")),
         ("pareto_archive.csv", str(summary.get("pareto_archive_csv") or output_root / "pareto_archive.csv")),
         ("mutation_operator_credit.csv", str(summary.get("mutation_operator_credit_csv") or output_root / "mutation_operator_credit.csv")),
@@ -855,6 +877,11 @@ def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
     with path.open("w", encoding="utf-8") as handle:
         for row in rows:
             handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+def _append_jsonl(path: Path, row: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 def _safe_read_json(path: Path, default: Any = None) -> Any:
     if not path.exists():
@@ -1407,34 +1434,59 @@ def _proposal_mentions_retrieval(proposal: dict[str, Any]) -> bool:
     return any(item in text for item in forbidden)
 
 
-def _safe_advisor_proposals(payload: dict[str, Any], *, generation: int) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def _existing_micro_rules(genome: dict[str, Any]) -> set[str]:
+    rules: set[str] = set()
+    for params in (genome.get("block_params") or {}).values():
+        for rule in params.get("micro_rules") or []:
+            token = str(rule).strip().lower()
+            if token:
+                rules.add(token)
+    return rules
+
+
+def _safe_advisor_proposals(
+    payload: dict[str, Any],
+    *,
+    generation: int,
+    advisor_batch_id_value: str = "",
+    parent_genome: dict[str, Any] | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     safe: list[dict[str, Any]] = []
     rejected: list[dict[str, Any]] = []
     valid_blocks = set(get_core_blocks()) | set(get_optional_blocks())
-    for idx, raw in enumerate(payload.get("mutation_proposals") or [], start=1):
+    raw_proposals = payload.get("proposals")
+    if raw_proposals is None:
+        raw_proposals = payload.get("mutation_proposals") or []
+    existing_rules = _existing_micro_rules(parent_genome or {})
+    for idx, raw in enumerate(raw_proposals or [], start=1):
         proposal = dict(raw or {})
         proposal_id = f"advisor_g{generation:03d}_{idx:02d}"
-        proposal["proposal_id"] = proposal_id
+        proposal["proposal_id"] = str(proposal.get("proposal_id") or proposal_id)
         proposal["advisor_generation"] = generation
-        block_id = str(proposal.get("target_block_id", "") or "")
-        mutation_type = str(proposal.get("mutation_type", "") or "")
-        micro_rule = str(proposal.get("proposed_micro_rule", "") or "")
-        reason = str(proposal.get("reason", "") or "")
-        reject_reason = ""
-        if block_id not in valid_blocks:
-            reject_reason = "unknown target block"
-        elif _proposal_mentions_retrieval(proposal):
-            reject_reason = "proposal attempted to mutate retrieval context"
-        elif block_id in get_core_blocks() and mutation_type in {"block_deactivation", "block_replacement", "remove_core_block"}:
-            reject_reason = "proposal attempted to remove or replace a core block"
-        elif "(#" in micro_rule or ")." in micro_rule:
-            reject_reason = "proposal appears to generate JOILang code instead of a prompt mutation"
-        elif not micro_rule and mutation_type in {"add_micro_rule", "strengthen_rule"}:
-            reject_reason = "missing proposed_micro_rule"
+        proposal["advisor_batch_id"] = advisor_batch_id_value
+        proposal["proposal_state"] = PROPOSAL_STATE_PROPOSED
+        if not proposal.get("affected_failure_families"):
+            fallback_family = str(proposal.get("target_block_family", "") or "schema_violation")
+            proposal["affected_failure_families"] = [fallback_family]
+        ok, reject_reason = validate_advisor_proposal(
+            proposal,
+            valid_blocks=valid_blocks,
+            core_blocks=set(get_core_blocks()),
+            existing_rules=existing_rules,
+        )
         if reject_reason:
-            rejected.append({**proposal, "accepted": False, "rejection_reason": reject_reason})
+            ok = False
+        if not ok:
+            rejected.append(
+                {
+                    **proposal,
+                    "accepted": False,
+                    "proposal_state": PROPOSAL_STATE_REJECTED,
+                    "rejection_reason": reject_reason,
+                }
+            )
             continue
-        safe.append({**proposal, "accepted": True, "rejection_reason": ""})
+        safe.append({**proposal, "accepted": False, "proposal_state": PROPOSAL_STATE_PROPOSED, "rejection_reason": ""})
     return safe, rejected
 
 
@@ -1464,14 +1516,50 @@ def _call_mutation_advisor(
         prompt_path.write_text("advisor_status=skipped llm_mutation_advisor_disabled\n", encoding="utf-8")
         dump_json(response_path, {"advisor_status": "skipped", "reason": "llm_mutation_advisor_disabled"})
         return [], []
-    prompt_text = _build_advisor_prompt(
+    best_item = evaluated_population[0] if evaluated_population else {}
+    best_metric = _metric_for_eval(best_item) if best_item else None
+    top_failure_types: list[str] = []
+    for feedback in feedback_summary[:5]:
+        failure_type = str(feedback.get("failure_type", ""))
+        if failure_type:
+            top_failure_types.append(failure_type)
+    advisor_batch = build_advisor_feedback_batch(
         generation=generation,
         model_key=model_key,
+        advisor_model_key=args.advisor_model_key,
         evaluated_population=evaluated_population,
-        category_diagnostics=category_diagnostics,
-        feedback_summary=feedback_summary,
-        args=args,
+        categories=list(args.category or []),
+        limit_per_category=args.limit_per_category,
+        sample_size=args.sample_size,
+        validation_size=args.validation_size,
+        generation_phase=str(getattr(args, "_generation_phase", "")),
+        plateau_type=str(getattr(args, "_plateau_type", "")),
+        next_action=str(getattr(args, "_next_action", "")),
+        overall={
+            "best_DETPass": float(getattr(best_metric, "validation_det_pass_rate", 0.0) or 0.0),
+            "best_AvgDET": float(getattr(best_metric, "validation_avg_det_score", 0.0) or 0.0),
+            "best_tokens": float(getattr(best_metric, "avg_prompt_tokens", 0.0) or 0.0),
+            "best_latency": float(getattr(best_metric, "avg_latency_sec", 0.0) or 0.0),
+            "best_so_far_DETPass": float(getattr(args, "_best_so_far_detpass", 0.0) or 0.0),
+            "accepted_best_DETPass": float(getattr(args, "_accepted_best_detpass", 0.0) or 0.0),
+            "pareto_archive_size": int(getattr(args, "_pareto_archive_size", 0) or 0),
+            "top_failure_types": top_failure_types,
+        },
+        cloudless_feedback_summary={
+            "structured_feedback_count": len(feedback_summary),
+            "applied_cloudless_mutations": [],
+            "active_failure_families": [str(item.get("failure_type", "")) for item in feedback_summary],
+            "mutation_operator_credit": [],
+        },
+        best_genome_metric=best_metric,
+        max_representative_failures=args.advisor_max_representative_failures,
+        include_candidate_code=bool(args.advisor_include_candidate_code),
+        include_prompt_summary=bool(args.advisor_include_prompt_summary),
     )
+    batch_path = output_root / "advisor_feedback_batches.jsonl"
+    _append_jsonl(batch_path, advisor_batch)
+    dump_json(output_root / f"advisor_feedback_batch_generation_{generation:03d}.json", advisor_batch)
+    prompt_text = build_advisor_prompt_from_batch(advisor_batch, detail=args.advisor_feedback_detail)
     prompt_path.write_text(prompt_text, encoding="utf-8")
     effective_mode = (args.llm_mode or "openai").strip().lower()
     if effective_mode == "mock":
@@ -1494,6 +1582,9 @@ def _call_mutation_advisor(
             raw_content = str(response.get("content", ""))
             advisor_payload = _extract_json_object(raw_content)
         except Exception as exc:
+            raw_dir = output_root / "advisor_raw_responses"
+            raw_dir.mkdir(parents=True, exist_ok=True)
+            (raw_dir / f"generation_{generation:03d}_raw.txt").write_text("", encoding="utf-8")
             dump_json(
                 response_path,
                 {
@@ -1513,15 +1604,26 @@ def _call_mutation_advisor(
                 {
                     "proposal_id": f"advisor_g{generation:03d}_error",
                     "accepted": False,
+                    "proposal_state": PROPOSAL_STATE_REJECTED,
                     "rejection_reason": f"advisor call failed: {exc}",
+                    "advisor_batch_id": advisor_batch.get("advisor_batch_id", ""),
                 }
             ]
-    safe, rejected = _safe_advisor_proposals(advisor_payload, generation=generation)
+    raw_dir = output_root / "advisor_raw_responses"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    (raw_dir / f"generation_{generation:03d}_raw.txt").write_text(raw_content, encoding="utf-8")
+    safe, rejected = _safe_advisor_proposals(
+        advisor_payload,
+        generation=generation,
+        advisor_batch_id_value=str(advisor_batch.get("advisor_batch_id", "")),
+        parent_genome=best_item.get("genome") if best_item else {},
+    )
     dump_json(
         response_path,
         {
             "raw_content": raw_content,
             "parsed": advisor_payload,
+            "advisor_batch_id": advisor_batch.get("advisor_batch_id", ""),
             "accepted_proposals": safe,
             "rejected_proposals": rejected,
         },
@@ -1905,6 +2007,49 @@ def _accepted_metric_row(accepted_best: dict[str, Any] | None) -> GenomeMetricBu
     return _metric_for_eval(accepted_best or {})
 
 
+def _safe_metric(item: dict[str, Any] | None) -> GenomeMetricBundle | None:
+    if not item:
+        return None
+    return _metric_for_eval(item) or metrics_from_evaluation(item)
+
+
+def _latest_promoted_row(promotion_rows: list[dict[str, Any]]) -> dict[str, Any] | None:
+    promoted = [row for row in promotion_rows if _truthy(row.get("promoted"))]
+    if not promoted:
+        return None
+    return max(promoted, key=lambda row: int(float(row.get("generation") or 0)))
+
+
+def _summary_consistency_check(
+    *,
+    summary: dict[str, Any],
+    promotion_rows: list[dict[str, Any]],
+    detpass_margin: float,
+) -> dict[str, Any]:
+    errors: list[str] = []
+    latest_promoted = _latest_promoted_row(promotion_rows)
+    if latest_promoted:
+        expected = float(latest_promoted.get("DETPass") or 0.0)
+        actual = summary.get("accepted_best_DETPass")
+        if actual is None or abs(float(actual or 0.0) - expected) > 1e-6:
+            errors.append("accepted_best_DETPass does not match latest promoted candidate DETPass")
+    if summary.get("best_DETPass") is None and summary.get("best_so_far_DETPass") not in {"", None}:
+        errors.append("best_DETPass is missing despite evaluated generations")
+    compact = summary.get("compact_best_DETPass")
+    best_so_far = summary.get("best_so_far_DETPass")
+    compact_eligible = True
+    if compact not in {"", None} and best_so_far not in {"", None}:
+        compact_eligible = float(compact or 0.0) >= float(best_so_far or 0.0) - detpass_margin
+        if not compact_eligible:
+            errors.append("compact_best is outside the DETPass eligibility margin")
+    return {
+        "promotion_consistent": not any("accepted_best_DETPass" in item for item in errors),
+        "compact_best_eligible": compact_eligible,
+        "best_fields_complete": summary.get("best_DETPass") is not None and summary.get("best_genome_id", "") != "",
+        "errors": errors,
+    }
+
+
 def _proposal_to_row(proposal: MutationProposal) -> dict[str, Any]:
     return proposal.to_row()
 
@@ -2174,6 +2319,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                 "ga_generation_progress_csv": str(output_root / "ga_generation_progress.csv"),
                 "ga_population_diagnostics_csv": str(output_root / "ga_population_diagnostics.csv"),
                 "structured_feedback_jsonl": str(output_root / "structured_feedback.jsonl"),
+                "advisor_feedback_batches_jsonl": str(output_root / "advisor_feedback_batches.jsonl"),
                 "advisor_mutation_proposals_jsonl": str(output_root / "advisor_mutation_proposals.jsonl"),
                 "mutation_proposals_jsonl": str(output_root / "mutation_proposals.jsonl"),
                 "pareto_archive_csv": str(output_root / "pareto_archive.csv"),
@@ -2188,6 +2334,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         _write_jsonl(output_root / "ga_block_diffs.jsonl", [])
         atomic_write_csv(output_root / "ga_population_diagnostics.csv", ["generation", "model_key", "category"], [])
         _write_jsonl(output_root / "ga_population_diagnostics.jsonl", [])
+        _write_jsonl(output_root / "advisor_feedback_batches.jsonl", [])
         _write_jsonl(output_root / "advisor_mutation_proposals.jsonl", [])
         atomic_write_csv(output_root / "advisor_mutation_summary.csv", ["generation", "proposal_id", "accepted"], [])
         _write_redesign_artifacts(
@@ -2388,10 +2535,20 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             if controller.next_action == "trigger_disruptive_mutation":
                 disruptive_attempt_count += 1
             args._generation_phase = controller.generation_phase
+            args._plateau_type = controller.plateau_type
+            args._next_action = controller.next_action
             progress_record.update(controller.to_row())
             progress_record["unique_prompt_hash_count"] = unique_prompt_hash_count
             progress_record["pareto_archive_size"] = len({str(row.get("genome_id", "")) for row in pareto_archive_rows})
             progress_record["pareto_archive_delta"] = pareto_archive_delta
+            args._best_so_far_detpass = best_so_far_detpass
+            accepted_metric_for_advisor = _metric_for_eval(accepted_best or {})
+            args._accepted_best_detpass = (
+                accepted_metric_for_advisor.validation_det_pass_rate
+                if accepted_metric_for_advisor
+                else 0.0
+            )
+            args._pareto_archive_size = len({str(row.get("genome_id", "")) for row in pareto_archive_rows})
             _attach_redesign_metrics(
                 evaluated_population,
                 args=args,
@@ -2602,38 +2759,31 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             category_diagnostics=generation_category_diagnostics,
             feedback_summary=generation_feedback_summary,
         )
-        for proposal in advisor_safe_proposals + advisor_rejected_proposals:
-            advisor_proposal_rows.append(
-                {
-                    "generation": generation,
-                    "proposal_id": proposal.get("proposal_id", ""),
-                    "model_key": model_key,
-                    "target_block_id": proposal.get("target_block_id", ""),
-                    "target_block_family": proposal.get("target_block_family", ""),
-                    "mutation_type": proposal.get("mutation_type", ""),
-                    "priority": proposal.get("priority", ""),
-                    "accepted": proposal.get("accepted", False),
-                    "rejection_reason": proposal.get("rejection_reason", ""),
-                    "reason": proposal.get("reason", ""),
-                    "proposed_micro_rule": proposal.get("proposed_micro_rule", ""),
-                }
+        advisor_final_proposals: list[MutationProposal] = []
+        for proposal in advisor_rejected_proposals:
+            rejected_mp = proposal_from_advisor(
+                proposal,
+                generation=generation,
+                advisor_batch_id=str(proposal.get("advisor_batch_id", "")),
             )
-            mutation_proposal_rows.append(_proposal_to_row(proposal_from_advisor(proposal, generation=generation)))
-        if args.llm_mutation_advisor:
-            advisor_summary_rows.append(
-                {
-                    "generation": generation,
-                    "model_key": model_key,
-                    "accepted_proposals": len(advisor_safe_proposals),
-                    "rejected_proposals": len(advisor_rejected_proposals),
-                    "proposal_ids": ",".join(str(item.get("proposal_id", "")) for item in advisor_safe_proposals),
-                }
-            )
+            rejected_mp.accepted = False
+            rejected_mp.proposal_state = PROPOSAL_STATE_REJECTED
+            rejected_mp.rejection_reason = str(proposal.get("rejection_reason", "rejected by advisor proposal validation"))
+            advisor_final_proposals.append(rejected_mp)
 
-        advisor_slots = min(len(advisor_safe_proposals), max(0, args.population - 1))
+        advisor_can_schedule = bool(
+            args.llm_mutation_advisor
+            and advisor_safe_proposals
+            and (args.advisor_force_child_quota or args.population >= args.advisor_min_population_for_child)
+        )
+        advisor_child_quota = 1 if advisor_can_schedule else 0
+        cloudless_child_quota = 1 if (
+            args.mutation_mode in {"family", "cloudless_decompiler", "hybrid"} or args.enable_compression_mutation
+        ) else 0
         if _redesign_enabled(args):
             elite_target = 3 if args.population <= 5 else max(args.elites, 5)
-            elite_quota = max(1, min(args.population - 1, elite_target))
+            reserved_children = min(args.population - 1, advisor_child_quota + cloudless_child_quota)
+            elite_quota = max(1, min(args.population - reserved_children, elite_target))
             elite_items = quota_elites(
                 evaluated_population,
                 archives,
@@ -2643,7 +2793,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             )
             elites = [item["genome"] for item in elite_items]
         else:
-            elite_count = max(1, min(args.elites, args.population - advisor_slots))
+            elite_count = max(1, min(args.elites, args.population - advisor_child_quota))
             elite_items = evaluated_population[:elite_count]
             elites = [item["genome"] for item in elite_items]
         next_population: list[dict[str, Any]] = [_copy_genome(genome) for genome in elites]
@@ -2655,6 +2805,11 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         new_by_specialist = 0
         new_by_disruptive = 0
         new_random = 0
+        advisor_proposals_generated = len(advisor_safe_proposals) + len(advisor_rejected_proposals)
+        advisor_proposals_accepted_applied = 0
+        advisor_proposals_accepted_not_scheduled = 0
+        advisor_proposals_rejected = len(advisor_rejected_proposals)
+        advisor_children_scheduled = 0
         feedback_hint = suggest_mutation_from_feedback(generation_feedback_summary) if args.feedback_guided_mutation else None
         active_failure_families = [str(item.get("affected_block_family", "")) for item in generation_feedback_summary]
         if args.enable_prompt_decompiler or args.mutation_mode in {"cloudless_decompiler", "hybrid"}:
@@ -2675,7 +2830,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                 rng=rng,
                 active_failure_families=active_failure_families,
             ):
-                if len(next_population) >= args.population:
+                if len(next_population) >= args.population - advisor_child_quota:
                     proposal.accepted = False
                     proposal.rejection_reason = "population full before cloudless proposal could be added"
                     mutation_proposal_rows.append(_proposal_to_row(proposal))
@@ -2723,24 +2878,72 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                     for diff in child_diffs
                 )
         for proposal in advisor_safe_proposals:
-            if len(next_population) >= args.population:
-                break
             parent = _copy_genome(generation_best["genome"])
-            child, child_diffs = _mutate_genome(
-                parent,
-                rng,
-                feedback_hint=_advisor_hint_from_proposal(proposal),
-                advisor_proposal=proposal,
-            )
+            advisor_batch_id_value = str(proposal.get("advisor_batch_id", ""))
+            if not advisor_can_schedule:
+                mp = proposal_from_advisor(proposal, generation=generation, advisor_batch_id=advisor_batch_id_value)
+                mp.parent_genome_id = str(parent.get("id", ""))
+                mp.accepted = False
+                mp.proposal_state = PROPOSAL_STATE_ACCEPTED_NOT_SCHEDULED
+                mp.scheduling_reason = (
+                    "population below advisor_min_population_for_child"
+                    if args.population < args.advisor_min_population_for_child and not args.advisor_force_child_quota
+                    else "advisor child quota unavailable"
+                )
+                advisor_final_proposals.append(mp)
+                advisor_proposals_accepted_not_scheduled += 1
+                continue
+            if len(next_population) >= args.population:
+                mp = proposal_from_advisor(proposal, generation=generation, advisor_batch_id=advisor_batch_id_value)
+                mp.parent_genome_id = str(parent.get("id", ""))
+                mp.accepted = False
+                mp.proposal_state = PROPOSAL_STATE_ACCEPTED_NOT_SCHEDULED
+                mp.scheduling_reason = "population quota unavailable"
+                advisor_final_proposals.append(mp)
+                advisor_proposals_accepted_not_scheduled += 1
+                continue
+            try:
+                child, child_diffs, mp = apply_advisor_proposal(
+                    parent,
+                    proposal,
+                    generation=generation,
+                    advisor_batch_id_value=advisor_batch_id_value,
+                    rng=rng,
+                )
+            except Exception as exc:
+                mp = proposal_from_advisor(proposal, generation=generation, advisor_batch_id=advisor_batch_id_value)
+                mp.parent_genome_id = str(parent.get("id", ""))
+                mp.accepted = False
+                mp.proposal_state = PROPOSAL_STATE_FAILED_TO_APPLY
+                mp.rejection_reason = f"failed to apply advisor proposal: {exc}"
+                advisor_final_proposals.append(mp)
+                continue
+            existing_signatures = {_genome_signature(genome): str(genome.get("id", "")) for genome in next_population}
+            child_signature = _genome_signature(child)
+            if child_signature in existing_signatures:
+                mp.accepted = False
+                mp.proposal_state = PROPOSAL_STATE_ACCEPTED_NOT_SCHEDULED
+                mp.scheduling_reason = "duplicate_removed"
+                mp.advisor_child_duplicate = True
+                mp.duplicate_of = existing_signatures[child_signature]
+                advisor_final_proposals.append(mp)
+                advisor_proposals_accepted_not_scheduled += 1
+                continue
+            mp.accepted = True
+            mp.proposal_state = PROPOSAL_STATE_ACCEPTED_APPLIED
+            mp.scheduling_reason = "scheduled_into_next_population"
             next_population.append(child)
             new_by_advisor += 1
             new_by_mutation += 1
+            advisor_proposals_accepted_applied += 1
+            advisor_children_scheduled += 1
+            advisor_final_proposals.append(mp)
             mutation_operator_credit_rows.append(
                 {
                     "generation": generation + 1,
                     "mutation_family": "advisor_guided",
-                    "mutation_operator": proposal.get("mutation_type", ""),
-                    "parent_genome_id": str(parent.get("id", "")),
+                    "mutation_operator": mp.operator,
+                    "parent_genome_id": mp.parent_genome_id,
                     "child_genome_id": child["id"],
                     "delta_DETPass": "",
                     "delta_AvgDET": "",
@@ -2762,6 +2965,25 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                     **diff,
                 }
                 for diff in child_diffs
+            )
+        for proposal in advisor_final_proposals:
+            row = _proposal_to_row(proposal)
+            advisor_proposal_rows.append(row)
+            mutation_proposal_rows.append(row)
+        if args.llm_mutation_advisor:
+            advisor_summary_rows.append(
+                {
+                    "generation": generation,
+                    "model_key": model_key,
+                    "advisor_proposals_generated": advisor_proposals_generated,
+                    "accepted_proposals": advisor_proposals_accepted_applied,
+                    "rejected_proposals": advisor_proposals_rejected,
+                    "advisor_proposals_accepted_applied": advisor_proposals_accepted_applied,
+                    "advisor_proposals_accepted_not_scheduled": advisor_proposals_accepted_not_scheduled,
+                    "advisor_proposals_rejected": advisor_proposals_rejected,
+                    "advisor_children_scheduled": advisor_children_scheduled,
+                    "proposal_ids": ",".join(str(item.proposal_id) for item in advisor_final_proposals),
+                }
             )
         while len(next_population) < args.population:
             parent_a = _tournament_select(evaluated_population, rng)
@@ -2829,6 +3051,11 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             "refill_reason": "dedupe_refill" if new_random else "",
             "next_population": len(population),
             "promotion_rejected": 0 if promoted else 1,
+            "advisor_proposals_generated": advisor_proposals_generated,
+            "advisor_proposals_accepted_applied": advisor_proposals_accepted_applied,
+            "advisor_proposals_accepted_not_scheduled": advisor_proposals_accepted_not_scheduled,
+            "advisor_proposals_rejected": advisor_proposals_rejected,
+            "advisor_children_scheduled": advisor_children_scheduled,
         }
         population_transition_rows.append(transition)
 
@@ -2892,7 +3119,51 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         atomic_write_csv(output_root / "promotion_decisions.csv", PROMOTION_COLUMNS, promotion_rows)
         dump_json(output_root / "promotion_decisions.json", {"rows": promotion_rows})
 
-    final_best = global_best if global_best is not None else {}
+    final_best = archives.global_best_detpass or global_best or {}
+    final_best_metric = _safe_metric(final_best)
+    latest_promoted = _latest_promoted_row(promotion_rows)
+    accepted_metric = _safe_metric(accepted_best)
+    accepted_best_genome_id = str(((accepted_best or {}).get("genome") or {}).get("id", ""))
+    accepted_best_detpass: float | None = accepted_metric.validation_det_pass_rate if accepted_metric else None
+    accepted_best_avgdet: float | None = accepted_metric.validation_avg_det_score if accepted_metric else None
+    accepted_best_tokens: float | None = accepted_metric.avg_prompt_tokens if accepted_metric else None
+    if latest_promoted:
+        accepted_best_genome_id = str(latest_promoted.get("candidate_id", "") or accepted_best_genome_id)
+        accepted_best_detpass = float(latest_promoted.get("DETPass") or 0.0)
+        accepted_best_avgdet = float(latest_promoted.get("SDET") or 0.0)
+        accepted_best_tokens = float(latest_promoted.get("avg_prompt_tokens") or 0.0)
+
+    compact_item = archives.compact_best_within_epsilon
+    compact_metric = _safe_metric(compact_item)
+    compact_eligible = bool(
+        compact_metric
+        and compact_metric.validation_det_pass_rate >= float(best_so_far_detpass or 0.0) - validation_row_margin
+    )
+    compact_best_genome_id = str(((compact_item or {}).get("genome") or {}).get("id", "")) if compact_eligible else ""
+    compact_best_detpass = compact_metric.validation_det_pass_rate if compact_metric and compact_eligible else None
+    compact_best_tokens = compact_metric.avg_prompt_tokens if compact_metric and compact_eligible else None
+    token_minimal_unconstrained_genome_id = (
+        str(((compact_item or {}).get("genome") or {}).get("id", ""))
+        if compact_metric and not compact_eligible
+        else ""
+    )
+    advisor_generated_count = sum(1 for row in mutation_proposal_rows if row.get("source") == "advisor")
+    advisor_applied_count = sum(
+        1
+        for row in mutation_proposal_rows
+        if row.get("source") == "advisor" and row.get("proposal_state") == PROPOSAL_STATE_ACCEPTED_APPLIED
+    )
+    advisor_not_scheduled_count = sum(
+        1
+        for row in mutation_proposal_rows
+        if row.get("source") == "advisor" and row.get("proposal_state") == PROPOSAL_STATE_ACCEPTED_NOT_SCHEDULED
+    )
+    advisor_rejected_count = sum(
+        1
+        for row in mutation_proposal_rows
+        if row.get("source") == "advisor" and row.get("proposal_state") == PROPOSAL_STATE_REJECTED
+    )
+    advisor_children_scheduled_count = sum(int(row.get("advisor_children_scheduled") or 0) for row in population_transition_rows)
     summary = {
         "best_history": best_history,
         "output_root": str(output_root),
@@ -2902,6 +3173,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         "block_diffs_jsonl": str(output_root / "ga_block_diffs.jsonl"),
         "population_diagnostics_csv": str(output_root / "ga_population_diagnostics.csv"),
         "population_diagnostics_jsonl": str(output_root / "ga_population_diagnostics.jsonl"),
+        "advisor_feedback_batches_jsonl": str(output_root / "advisor_feedback_batches.jsonl"),
         "advisor_mutation_proposals_jsonl": str(output_root / "advisor_mutation_proposals.jsonl"),
         "advisor_mutation_summary_csv": str(output_root / "advisor_mutation_summary.csv"),
         "structured_feedback_jsonl": str(output_root / "structured_feedback.jsonl"),
@@ -2914,6 +3186,17 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         "best_genome": final_best.get("genome") if final_best else None,
         "best_fitness": final_best.get("fitness") if final_best else None,
         "best_validation_avg_det_score": final_best.get("validation_avg_det_score") if final_best else None,
+        "best_DETPass": final_best_metric.validation_det_pass_rate if final_best_metric else (best_so_far_detpass if generation_progress else None),
+        "best_avg_DET": final_best_metric.validation_avg_det_score if final_best_metric else (best_so_far_avgdet if generation_progress else None),
+        "best_genome_id": str(((final_best or {}).get("genome") or {}).get("id", "")),
+        "best_generation": next(
+            (
+                int(float(row.get("generation") or 0))
+                for row in generation_progress
+                if str(row.get("genome_id", "")) == str(((final_best or {}).get("genome") or {}).get("id", ""))
+            ),
+            "",
+        ),
         "fitness_formula": (
             "phase-aware DETPass + AvgDET + category/compression - token/variance/regression penalties"
             if args.fitness_mode != "legacy"
@@ -2925,17 +3208,37 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         "final_phase": str(getattr(args, "_generation_phase", "")),
         "stop_reason": generation_progress[-1].get("stop_reason", "") if generation_progress else "",
         "best_so_far_DETPass": best_so_far_detpass,
-        "accepted_best": str(((accepted_best or {}).get("genome") or {}).get("id", "")),
-        "compact_best": str(((archives.compact_best_within_epsilon or {}).get("genome") or {}).get("id", "")),
+        "accepted_best": accepted_best_genome_id,
+        "accepted_best_genome_id": accepted_best_genome_id,
+        "accepted_best_DETPass": accepted_best_detpass,
+        "accepted_best_avg_DET": accepted_best_avgdet,
+        "accepted_best_tokens": accepted_best_tokens,
+        "compact_best": compact_best_genome_id,
+        "compact_best_genome_id": compact_best_genome_id,
+        "compact_best_DETPass": compact_best_detpass,
+        "compact_best_tokens": compact_best_tokens,
+        "compact_best_eligible": compact_eligible,
+        "compact_best_reason": "within_detpass_margin" if compact_eligible and compact_best_genome_id else "no_eligible_compact_best",
+        "token_minimal_unconstrained_genome_id": token_minimal_unconstrained_genome_id,
         "pareto_archive_size": len({str(row.get("genome_id", "")) for row in pareto_archive_rows}),
         "cloudless_mutation_used": args.mutation_mode in {"cloudless_decompiler", "hybrid"} or bool(args.enable_prompt_decompiler),
         "advisor_used": bool(args.llm_mutation_advisor),
+        "advisor_proposals_generated": advisor_generated_count,
+        "advisor_proposals_accepted_applied": advisor_applied_count,
+        "advisor_proposals_accepted_not_scheduled": advisor_not_scheduled_count,
+        "advisor_proposals_rejected": advisor_rejected_count,
+        "advisor_children_scheduled": advisor_children_scheduled_count,
         "category_balance_mode": args.category_balance_mode,
         "token_penalty_mode": args.token_penalty_mode,
         "mutation_family_counts": dict(Counter(str(row.get("mutation_family", "")) for row in mutation_proposal_rows if str(row.get("mutation_family", "")))),
         "compression_success_count": sum(1 for row in mutation_proposal_rows if row.get("mutation_family") == "compression" and _truthy(row.get("accepted"))),
         "compression_rejection_count": sum(1 for row in mutation_proposal_rows if row.get("mutation_family") == "compression" and not _truthy(row.get("accepted"))),
     }
+    summary["summary_consistency_check"] = _summary_consistency_check(
+        summary=summary,
+        promotion_rows=promotion_rows,
+        detpass_margin=validation_row_margin if "validation_row_margin" in locals() else one_row_margin(len(validation_rows)),
+    )
     dump_json(output_root / "ga_summary.json", summary)
     if summary["best_genome"] is not None:
         best_metric = _metric_for_eval(final_best) if final_best else None

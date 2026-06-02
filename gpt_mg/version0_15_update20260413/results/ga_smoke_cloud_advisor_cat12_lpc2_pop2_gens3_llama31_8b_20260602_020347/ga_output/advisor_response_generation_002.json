@@ -1,0 +1,120 @@
+{
+  "raw_content": "{\n  \"mutation_proposals\": [\n    {\n      \"target_block_id\": \"02\",\n      \"target_block_family\": \"Service_Mapping\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 1,\n      \"reason\": \"Improve grounding of receiver coverage and service coverage to fix semantic errors.\",\n      \"edit_instruction\": \"Add a micro-rule to ensure all command-implied devices, owners, locations, and groups are preserved in the receiver expression.\",\n      \"proposed_micro_rule\": \"Preserve command-implied device, owner, location, and group selector tags in the receiver expression to ensure full coverage.\"\n    },\n    {\n      \"target_block_id\": \"02\",\n      \"target_block_family\": \"Enum_Grounding\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 1,\n      \"reason\": \"Strengthen enum and numeric argument grounding to reduce enum_type_mismatch failures.\",\n      \"edit_instruction\": \"Add a micro-rule to copy allowed enum values exactly and use unquoted numeric literals for numeric arguments.\",\n      \"proposed_micro_rule\": \"For ENUM arguments, copy an allowed enum value exactly from the service descriptor; for numeric arguments, use unquoted numeric literals.\"\n    },\n    {\n      \"target_block_id\": \"06\",\n      \"target_block_family\": \"Dataflow\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 1,\n      \"reason\": \"Fix dataflow errors by ensuring sensor values are bound to variables before use in actions.\",\n      \"edit_instruction\": \"Add a micro-rule to bind sensor readings to variables and use those variables in downstream actions.\",\n      \"proposed_micro_rule\": \"When reading a value for reporting or control, bind it to a variable and use that variable in the downstream action.\"\n    },\n    {\n      \"target_block_id\": \"06\",\n      \"target_block_family\": \"Temporal_Rule\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 1,\n      \"reason\": \"Improve temporal grounding to fix temporal errors and numeric grounding issues.\",\n      \"edit_instruction\": \"Add a micro-rule to represent elapsed time with explicit state variables and comparisons, converting units exactly per service descriptor.\",\n      \"proposed_micro_rule\": \"For delayed or duration-based commands, represent elapsed time with explicit state variables and comparisons; convert elapsed time and units exactly according to the service descriptor.\"\n    },\n    {\n      \"target_block_id\": \"06\",\n      \"target_block_family\": \"DET_Helper\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 3,\n      \"reason\": \"Add targeted repair hints to fix semantic errors related to receiver coverage, service coverage, dataflow, numeric, and enum grounding.\",\n      \"edit_instruction\": \"Add a micro-rule to guide repair of receiver coverage, service coverage, dataflow, numeric, and enum grounding when code is schema-valid but not target-equivalent.\",\n      \"proposed_micro_rule\": \"If code is schema-valid but not target-equivalent, repair receiver coverage, service coverage, dataflow, numeric, and enum grounding.\"\n    }\n  ]\n}",
+  "parsed": {
+    "mutation_proposals": [
+      {
+        "target_block_id": "02",
+        "target_block_family": "Service_Mapping",
+        "mutation_type": "add_micro_rule",
+        "priority": 1,
+        "reason": "Improve grounding of receiver coverage and service coverage to fix semantic errors.",
+        "edit_instruction": "Add a micro-rule to ensure all command-implied devices, owners, locations, and groups are preserved in the receiver expression.",
+        "proposed_micro_rule": "Preserve command-implied device, owner, location, and group selector tags in the receiver expression to ensure full coverage."
+      },
+      {
+        "target_block_id": "02",
+        "target_block_family": "Enum_Grounding",
+        "mutation_type": "add_micro_rule",
+        "priority": 1,
+        "reason": "Strengthen enum and numeric argument grounding to reduce enum_type_mismatch failures.",
+        "edit_instruction": "Add a micro-rule to copy allowed enum values exactly and use unquoted numeric literals for numeric arguments.",
+        "proposed_micro_rule": "For ENUM arguments, copy an allowed enum value exactly from the service descriptor; for numeric arguments, use unquoted numeric literals."
+      },
+      {
+        "target_block_id": "06",
+        "target_block_family": "Dataflow",
+        "mutation_type": "add_micro_rule",
+        "priority": 1,
+        "reason": "Fix dataflow errors by ensuring sensor values are bound to variables before use in actions.",
+        "edit_instruction": "Add a micro-rule to bind sensor readings to variables and use those variables in downstream actions.",
+        "proposed_micro_rule": "When reading a value for reporting or control, bind it to a variable and use that variable in the downstream action."
+      },
+      {
+        "target_block_id": "06",
+        "target_block_family": "Temporal_Rule",
+        "mutation_type": "add_micro_rule",
+        "priority": 1,
+        "reason": "Improve temporal grounding to fix temporal errors and numeric grounding issues.",
+        "edit_instruction": "Add a micro-rule to represent elapsed time with explicit state variables and comparisons, converting units exactly per service descriptor.",
+        "proposed_micro_rule": "For delayed or duration-based commands, represent elapsed time with explicit state variables and comparisons; convert elapsed time and units exactly according to the service descriptor."
+      },
+      {
+        "target_block_id": "06",
+        "target_block_family": "DET_Helper",
+        "mutation_type": "add_micro_rule",
+        "priority": 3,
+        "reason": "Add targeted repair hints to fix semantic errors related to receiver coverage, service coverage, dataflow, numeric, and enum grounding.",
+        "edit_instruction": "Add a micro-rule to guide repair of receiver coverage, service coverage, dataflow, numeric, and enum grounding when code is schema-valid but not target-equivalent.",
+        "proposed_micro_rule": "If code is schema-valid but not target-equivalent, repair receiver coverage, service coverage, dataflow, numeric, and enum grounding."
+      }
+    ]
+  },
+  "accepted_proposals": [
+    {
+      "target_block_id": "02",
+      "target_block_family": "Service_Mapping",
+      "mutation_type": "add_micro_rule",
+      "priority": 1,
+      "reason": "Improve grounding of receiver coverage and service coverage to fix semantic errors.",
+      "edit_instruction": "Add a micro-rule to ensure all command-implied devices, owners, locations, and groups are preserved in the receiver expression.",
+      "proposed_micro_rule": "Preserve command-implied device, owner, location, and group selector tags in the receiver expression to ensure full coverage.",
+      "proposal_id": "advisor_g002_01",
+      "advisor_generation": 2,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "02",
+      "target_block_family": "Enum_Grounding",
+      "mutation_type": "add_micro_rule",
+      "priority": 1,
+      "reason": "Strengthen enum and numeric argument grounding to reduce enum_type_mismatch failures.",
+      "edit_instruction": "Add a micro-rule to copy allowed enum values exactly and use unquoted numeric literals for numeric arguments.",
+      "proposed_micro_rule": "For ENUM arguments, copy an allowed enum value exactly from the service descriptor; for numeric arguments, use unquoted numeric literals.",
+      "proposal_id": "advisor_g002_02",
+      "advisor_generation": 2,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "06",
+      "target_block_family": "Dataflow",
+      "mutation_type": "add_micro_rule",
+      "priority": 1,
+      "reason": "Fix dataflow errors by ensuring sensor values are bound to variables before use in actions.",
+      "edit_instruction": "Add a micro-rule to bind sensor readings to variables and use those variables in downstream actions.",
+      "proposed_micro_rule": "When reading a value for reporting or control, bind it to a variable and use that variable in the downstream action.",
+      "proposal_id": "advisor_g002_03",
+      "advisor_generation": 2,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "06",
+      "target_block_family": "Temporal_Rule",
+      "mutation_type": "add_micro_rule",
+      "priority": 1,
+      "reason": "Improve temporal grounding to fix temporal errors and numeric grounding issues.",
+      "edit_instruction": "Add a micro-rule to represent elapsed time with explicit state variables and comparisons, converting units exactly per service descriptor.",
+      "proposed_micro_rule": "For delayed or duration-based commands, represent elapsed time with explicit state variables and comparisons; convert elapsed time and units exactly according to the service descriptor.",
+      "proposal_id": "advisor_g002_04",
+      "advisor_generation": 2,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "06",
+      "target_block_family": "DET_Helper",
+      "mutation_type": "add_micro_rule",
+      "priority": 3,
+      "reason": "Add targeted repair hints to fix semantic errors related to receiver coverage, service coverage, dataflow, numeric, and enum grounding.",
+      "edit_instruction": "Add a micro-rule to guide repair of receiver coverage, service coverage, dataflow, numeric, and enum grounding when code is schema-valid but not target-equivalent.",
+      "proposed_micro_rule": "If code is schema-valid but not target-equivalent, repair receiver coverage, service coverage, dataflow, numeric, and enum grounding.",
+      "proposal_id": "advisor_g002_05",
+      "advisor_generation": 2,
+      "accepted": true,
+      "rejection_reason": ""
+    }
+  ],
+  "rejected_proposals": []
+}

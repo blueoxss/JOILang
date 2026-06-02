@@ -1,0 +1,7 @@
+generation,genome_id,model_key,det,det_pass_rate,sdet,avg_prompt_tokens,warm_latency_p50,peak_vram_gb,oom_count,failure_rate,is_pareto_frontier,newly_discovered_frontier,dominated_by,pareto_rank,knee_candidate,pareto_status
+1,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,llama31_8b,99.3815,100.0,99.3815,49040.5,19.5891,,,0.0,True,True,,1,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,full_metrics
+1,gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e,llama31_8b,90.0429,75.0,90.0429,47742.5,18.971375,,,25.0,True,True,,1,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,full_metrics
+2,gen-bdd4e724-5407-b1de-8fa2-b132d3152091,llama31_8b,100.0,100.0,100.0,49074.5,20.18885,,,0.0,True,True,,1,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,full_metrics
+2,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,llama31_8b,99.3815,100.0,99.3815,49040.5,19.58765,,,0.0,True,False,,1,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,full_metrics
+3,gen-bdd4e724-5407-b1de-8fa2-b132d3152091,llama31_8b,100.0,100.0,100.0,49074.5,20.1743,,,0.0,True,False,,1,gen-6c3bf6ba-f915-e48f-9141-09fb9b540624,full_metrics
+3,gen-6c3bf6ba-f915-e48f-9141-09fb9b540624,llama31_8b,88.9611,75.0,88.9611,27749.75,8.943275,,,25.0,True,True,,1,gen-6c3bf6ba-f915-e48f-9141-09fb9b540624,full_metrics

@@ -1,0 +1,164 @@
+[
+  {
+    "generation": 1,
+    "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+    "fitness": 58.75,
+    "avg_det_score": 50.0,
+    "validation_avg_det_score": 50.0,
+    "train_det_pass_rate": 0.0,
+    "train_gt_exact_rate": 0.0,
+    "validation_det_pass_rate": 50.0,
+    "validation_gt_exact_rate": 50.0,
+    "genome": {
+      "id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+      "seed": 929273219,
+      "blocks": [
+        "01",
+        "02",
+        "03",
+        "05",
+        "06"
+      ],
+      "params": {
+        "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+        "temperature": 0.1,
+        "few_shot_count": 3,
+        "max_tokens": 1024,
+        "candidate_strategies": [
+          "compact_json",
+          "explicit_preconditions",
+          "direct",
+          "minimal"
+        ]
+      },
+      "block_params": {
+        "02": {
+          "few_shot_count": 2,
+          "micro_rules": []
+        },
+        "05": {
+          "repair_mode": "conservative",
+          "few_shot_count": 3
+        }
+      },
+      "_ga_metadata": {
+        "parent_ids": [],
+        "mutation_types": [
+          "initial_random"
+        ],
+        "crossover_used": false,
+        "feedback_types_used": [],
+        "base_genome_id": ""
+      }
+    }
+  },
+  {
+    "generation": 2,
+    "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+    "fitness": 58.75,
+    "avg_det_score": 50.0,
+    "validation_avg_det_score": 50.0,
+    "train_det_pass_rate": 0.0,
+    "train_gt_exact_rate": 0.0,
+    "validation_det_pass_rate": 50.0,
+    "validation_gt_exact_rate": 50.0,
+    "genome": {
+      "id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+      "seed": 929273219,
+      "blocks": [
+        "01",
+        "02",
+        "03",
+        "05",
+        "06"
+      ],
+      "params": {
+        "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+        "temperature": 0.1,
+        "few_shot_count": 3,
+        "max_tokens": 1024,
+        "candidate_strategies": [
+          "compact_json",
+          "explicit_preconditions",
+          "direct",
+          "minimal"
+        ]
+      },
+      "block_params": {
+        "02": {
+          "few_shot_count": 2,
+          "micro_rules": []
+        },
+        "05": {
+          "repair_mode": "conservative",
+          "few_shot_count": 3
+        }
+      },
+      "_ga_metadata": {
+        "parent_ids": [],
+        "mutation_types": [
+          "initial_random"
+        ],
+        "crossover_used": false,
+        "feedback_types_used": [],
+        "base_genome_id": ""
+      }
+    }
+  },
+  {
+    "generation": 3,
+    "genome_id": "gen-6c3bf6ba-f915-e48f-9141-09fb9b540624",
+    "fitness": 120.0,
+    "avg_det_score": 100.0,
+    "validation_avg_det_score": 100.0,
+    "train_det_pass_rate": 100.0,
+    "train_gt_exact_rate": 100.0,
+    "validation_det_pass_rate": 100.0,
+    "validation_gt_exact_rate": 100.0,
+    "genome": {
+      "id": "gen-6c3bf6ba-f915-e48f-9141-09fb9b540624",
+      "seed": 940578914,
+      "blocks": [
+        "01",
+        "02",
+        "03",
+        "06"
+      ],
+      "params": {
+        "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+        "temperature": 0.1,
+        "few_shot_count": 3,
+        "max_tokens": 1024,
+        "candidate_strategies": [
+          "compact_json",
+          "canonical_names_first",
+          "direct",
+          "minimal",
+          "explicit_preconditions"
+        ]
+      },
+      "block_params": {
+        "02": {
+          "few_shot_count": 3,
+          "micro_rules": [
+            "For INTEGER and DOUBLE arguments, avoid quoted numeric literals.",
+            "Return exactly one JSON object only with keys name, cron, period, code."
+          ]
+        },
+        "05": {
+          "repair_mode": "conservative",
+          "few_shot_count": 3
+        }
+      },
+      "_ga_metadata": {
+        "parent_ids": [],
+        "mutation_types": [
+          "initial_random"
+        ],
+        "crossover_used": false,
+        "feedback_types_used": [],
+        "base_genome_id": ""
+      }
+    }
+  }
+]

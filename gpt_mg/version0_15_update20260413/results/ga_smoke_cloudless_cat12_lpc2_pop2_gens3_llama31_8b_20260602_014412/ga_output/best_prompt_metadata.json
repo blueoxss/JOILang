@@ -1,0 +1,44 @@
+{
+  "genome_id": "gen-bdd4e724-5407-b1de-8fa2-b132d3152091",
+  "core_blocks": [
+    "01",
+    "02"
+  ],
+  "optional_blocks": [
+    "05",
+    "06"
+  ],
+  "params": {
+    "model": "meta-llama/Llama-3.1-8B-Instruct",
+    "temperature": 0.0,
+    "few_shot_count": 3,
+    "max_tokens": 1024,
+    "candidate_strategies": [
+      "minimal",
+      "direct",
+      "canonical_names_first",
+      "compact_json"
+    ]
+  },
+  "block_params": {
+    "02": {
+      "few_shot_count": 3,
+      "micro_rules": [
+        "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+      ]
+    },
+    "05": {
+      "repair_mode": "conservative",
+      "few_shot_count": 3
+    },
+    "06": {
+      "micro_rules": [
+        "If code is schema-valid but not target-equivalent, repair receiver coverage, service coverage, dataflow, numeric, and enum grounding."
+      ]
+    }
+  },
+  "prompt_hash": "ae8554319acc5d29",
+  "block_signature": "01,02,05,06",
+  "rule_signature": "41370bcd18a3f6cc",
+  "full_prompt_printed": false
+}

@@ -1,0 +1,142 @@
+{
+  "raw_content": "{\n  \"mutation_proposals\": [\n    {\n      \"target_block_id\": \"06\",\n      \"target_block_family\": \"DET_Helper\",\n      \"mutation_type\": \"add_targeted_repair_hint\",\n      \"priority\": 3,\n      \"reason\": \"Address semantic errors due to gt_mismatch by improving receiver coverage, service coverage, dataflow, numeric, and enum grounding.\",\n      \"edit_instruction\": \"Add a targeted repair hint micro-rule to block 06 to guide fixing semantic mismatches.\",\n      \"proposed_micro_rule\": \"If code is schema-valid but not target-equivalent, repair receiver coverage, service coverage, dataflow, numeric, and enum grounding.\"\n    },\n    {\n      \"target_block_id\": \"02\",\n      \"target_block_family\": \"Service_Mapping\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 1,\n      \"reason\": \"Ensure strict grounding to service descriptors to prevent unknown or mismatched services.\",\n      \"edit_instruction\": \"Add a micro-rule to block 02 to enforce use of canonical service names and grounding to descriptors.\",\n      \"proposed_micro_rule\": \"Use only canonical service/value names from service_list_snippet; read descriptor, return_descriptor, argument_type, and argument_bounds before choosing service names or numeric units.\"\n    },\n    {\n      \"target_block_id\": \"02\",\n      \"target_block_family\": \"Enum_Grounding\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 1,\n      \"reason\": \"Prevent enum type mismatches by exact copying of allowed enum values and numeric literals.\",\n      \"edit_instruction\": \"Add a micro-rule to block 02 to strengthen enum and numeric argument grounding.\",\n      \"proposed_micro_rule\": \"For ENUM arguments, copy an allowed enum value exactly; for numeric arguments, use unquoted numeric literals.\"\n    },\n    {\n      \"target_block_id\": \"06\",\n      \"target_block_family\": \"Temporal_Rule\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 1,\n      \"reason\": \"Fix temporal errors by explicit representation of elapsed time with state variables and comparisons.\",\n      \"edit_instruction\": \"Add a micro-rule to block 06 to strengthen temporal rule handling.\",\n      \"proposed_micro_rule\": \"For delayed or duration-based commands, represent elapsed time with explicit state variables and comparisons.\"\n    },\n    {\n      \"target_block_id\": \"06\",\n      \"target_block_family\": \"Dataflow\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 1,\n      \"reason\": \"Improve dataflow correctness by binding sensor reads to variables used in downstream actions.\",\n      \"edit_instruction\": \"Add a micro-rule to block 06 to enforce sensor-to-action dataflow binding.\",\n      \"proposed_micro_rule\": \"When reading a value for reporting or control, bind it to a variable and use that variable in the downstream action.\"\n    },\n    {\n      \"target_block_id\": \"03\",\n      \"target_block_family\": \"Output_Schema\",\n      \"mutation_type\": \"add_micro_rule\",\n      \"priority\": 2,\n      \"reason\": \"Prevent extraneous actions by emitting only required actions and removing unrelated or duplicate ones.\",\n      \"edit_instruction\": \"Add a micro-rule to block 03 to strengthen minimality and no unrelated action rules.\",\n      \"proposed_micro_rule\": \"Emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers.\"\n    }\n  ]\n}",
+  "parsed": {
+    "mutation_proposals": [
+      {
+        "target_block_id": "06",
+        "target_block_family": "DET_Helper",
+        "mutation_type": "add_targeted_repair_hint",
+        "priority": 3,
+        "reason": "Address semantic errors due to gt_mismatch by improving receiver coverage, service coverage, dataflow, numeric, and enum grounding.",
+        "edit_instruction": "Add a targeted repair hint micro-rule to block 06 to guide fixing semantic mismatches.",
+        "proposed_micro_rule": "If code is schema-valid but not target-equivalent, repair receiver coverage, service coverage, dataflow, numeric, and enum grounding."
+      },
+      {
+        "target_block_id": "02",
+        "target_block_family": "Service_Mapping",
+        "mutation_type": "add_micro_rule",
+        "priority": 1,
+        "reason": "Ensure strict grounding to service descriptors to prevent unknown or mismatched services.",
+        "edit_instruction": "Add a micro-rule to block 02 to enforce use of canonical service names and grounding to descriptors.",
+        "proposed_micro_rule": "Use only canonical service/value names from service_list_snippet; read descriptor, return_descriptor, argument_type, and argument_bounds before choosing service names or numeric units."
+      },
+      {
+        "target_block_id": "02",
+        "target_block_family": "Enum_Grounding",
+        "mutation_type": "add_micro_rule",
+        "priority": 1,
+        "reason": "Prevent enum type mismatches by exact copying of allowed enum values and numeric literals.",
+        "edit_instruction": "Add a micro-rule to block 02 to strengthen enum and numeric argument grounding.",
+        "proposed_micro_rule": "For ENUM arguments, copy an allowed enum value exactly; for numeric arguments, use unquoted numeric literals."
+      },
+      {
+        "target_block_id": "06",
+        "target_block_family": "Temporal_Rule",
+        "mutation_type": "add_micro_rule",
+        "priority": 1,
+        "reason": "Fix temporal errors by explicit representation of elapsed time with state variables and comparisons.",
+        "edit_instruction": "Add a micro-rule to block 06 to strengthen temporal rule handling.",
+        "proposed_micro_rule": "For delayed or duration-based commands, represent elapsed time with explicit state variables and comparisons."
+      },
+      {
+        "target_block_id": "06",
+        "target_block_family": "Dataflow",
+        "mutation_type": "add_micro_rule",
+        "priority": 1,
+        "reason": "Improve dataflow correctness by binding sensor reads to variables used in downstream actions.",
+        "edit_instruction": "Add a micro-rule to block 06 to enforce sensor-to-action dataflow binding.",
+        "proposed_micro_rule": "When reading a value for reporting or control, bind it to a variable and use that variable in the downstream action."
+      },
+      {
+        "target_block_id": "03",
+        "target_block_family": "Output_Schema",
+        "mutation_type": "add_micro_rule",
+        "priority": 2,
+        "reason": "Prevent extraneous actions by emitting only required actions and removing unrelated or duplicate ones.",
+        "edit_instruction": "Add a micro-rule to block 03 to strengthen minimality and no unrelated action rules.",
+        "proposed_micro_rule": "Emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers."
+      }
+    ]
+  },
+  "accepted_proposals": [
+    {
+      "target_block_id": "06",
+      "target_block_family": "DET_Helper",
+      "mutation_type": "add_targeted_repair_hint",
+      "priority": 3,
+      "reason": "Address semantic errors due to gt_mismatch by improving receiver coverage, service coverage, dataflow, numeric, and enum grounding.",
+      "edit_instruction": "Add a targeted repair hint micro-rule to block 06 to guide fixing semantic mismatches.",
+      "proposed_micro_rule": "If code is schema-valid but not target-equivalent, repair receiver coverage, service coverage, dataflow, numeric, and enum grounding.",
+      "proposal_id": "advisor_g001_01",
+      "advisor_generation": 1,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "02",
+      "target_block_family": "Service_Mapping",
+      "mutation_type": "add_micro_rule",
+      "priority": 1,
+      "reason": "Ensure strict grounding to service descriptors to prevent unknown or mismatched services.",
+      "edit_instruction": "Add a micro-rule to block 02 to enforce use of canonical service names and grounding to descriptors.",
+      "proposed_micro_rule": "Use only canonical service/value names from service_list_snippet; read descriptor, return_descriptor, argument_type, and argument_bounds before choosing service names or numeric units.",
+      "proposal_id": "advisor_g001_02",
+      "advisor_generation": 1,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "02",
+      "target_block_family": "Enum_Grounding",
+      "mutation_type": "add_micro_rule",
+      "priority": 1,
+      "reason": "Prevent enum type mismatches by exact copying of allowed enum values and numeric literals.",
+      "edit_instruction": "Add a micro-rule to block 02 to strengthen enum and numeric argument grounding.",
+      "proposed_micro_rule": "For ENUM arguments, copy an allowed enum value exactly; for numeric arguments, use unquoted numeric literals.",
+      "proposal_id": "advisor_g001_03",
+      "advisor_generation": 1,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "06",
+      "target_block_family": "Temporal_Rule",
+      "mutation_type": "add_micro_rule",
+      "priority": 1,
+      "reason": "Fix temporal errors by explicit representation of elapsed time with state variables and comparisons.",
+      "edit_instruction": "Add a micro-rule to block 06 to strengthen temporal rule handling.",
+      "proposed_micro_rule": "For delayed or duration-based commands, represent elapsed time with explicit state variables and comparisons.",
+      "proposal_id": "advisor_g001_04",
+      "advisor_generation": 1,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "06",
+      "target_block_family": "Dataflow",
+      "mutation_type": "add_micro_rule",
+      "priority": 1,
+      "reason": "Improve dataflow correctness by binding sensor reads to variables used in downstream actions.",
+      "edit_instruction": "Add a micro-rule to block 06 to enforce sensor-to-action dataflow binding.",
+      "proposed_micro_rule": "When reading a value for reporting or control, bind it to a variable and use that variable in the downstream action.",
+      "proposal_id": "advisor_g001_05",
+      "advisor_generation": 1,
+      "accepted": true,
+      "rejection_reason": ""
+    },
+    {
+      "target_block_id": "03",
+      "target_block_family": "Output_Schema",
+      "mutation_type": "add_micro_rule",
+      "priority": 2,
+      "reason": "Prevent extraneous actions by emitting only required actions and removing unrelated or duplicate ones.",
+      "edit_instruction": "Add a micro-rule to block 03 to strengthen minimality and no unrelated action rules.",
+      "proposed_micro_rule": "Emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers.",
+      "proposal_id": "advisor_g001_06",
+      "advisor_generation": 1,
+      "accepted": true,
+      "rejection_reason": ""
+    }
+  ],
+  "rejected_proposals": []
+}

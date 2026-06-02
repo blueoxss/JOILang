@@ -1,0 +1,6 @@
+{"generation": 1, "model_key": "llama31_8b", "category": "1", "row_evaluations": 4, "avg_det_score": 100.0, "det_pass_count": 4, "det_pass_rate": 100.0, "failure_histogram": "{}"}
+{"generation": 1, "model_key": "llama31_8b", "category": "2", "row_evaluations": 4, "avg_det_score": 89.4243, "det_pass_count": 3, "det_pass_rate": 75.0, "failure_histogram": "{\"gt_mismatch\": 2, \"gt_receiver_coverage\": 1, \"gt_service_coverage\": 1}"}
+{"generation": 2, "model_key": "llama31_8b", "category": "1", "row_evaluations": 4, "avg_det_score": 100.0, "det_pass_count": 4, "det_pass_rate": 100.0, "failure_histogram": "{}"}
+{"generation": 2, "model_key": "llama31_8b", "category": "2", "row_evaluations": 4, "avg_det_score": 99.3815, "det_pass_count": 4, "det_pass_rate": 100.0, "failure_histogram": "{\"gt_mismatch\": 1}"}
+{"generation": 3, "model_key": "llama31_8b", "category": "1", "row_evaluations": 4, "avg_det_score": 88.9611, "det_pass_count": 3, "det_pass_rate": 75.0, "failure_histogram": "{\"gt_mismatch\": 1, \"gt_receiver_coverage\": 1, \"gt_service_coverage\": 1, \"semantic\": 1}"}
+{"generation": 3, "model_key": "llama31_8b", "category": "2", "row_evaluations": 4, "avg_det_score": 100.0, "det_pass_count": 4, "det_pass_rate": 100.0, "failure_histogram": "{}"}

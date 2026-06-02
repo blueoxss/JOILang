@@ -1,0 +1,67 @@
+{
+  "id": "gen-bdd4e724-5407-b1de-8fa2-b132d3152091",
+  "seed": 145150925,
+  "blocks": [
+    "01",
+    "02",
+    "05",
+    "06"
+  ],
+  "params": {
+    "model": "meta-llama/Llama-3.1-8B-Instruct",
+    "temperature": 0.0,
+    "few_shot_count": 3,
+    "max_tokens": 1024,
+    "candidate_strategies": [
+      "minimal",
+      "direct",
+      "canonical_names_first",
+      "compact_json"
+    ]
+  },
+  "block_params": {
+    "02": {
+      "few_shot_count": 3,
+      "micro_rules": [
+        "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+      ]
+    },
+    "05": {
+      "repair_mode": "conservative",
+      "few_shot_count": 3
+    },
+    "06": {
+      "micro_rules": [
+        "If code is schema-valid but not target-equivalent, repair receiver coverage, service coverage, dataflow, numeric, and enum grounding."
+      ]
+    }
+  },
+  "_ga_metadata": {
+    "parent_ids": [
+      "gen-378892e9-ecc3-87ab-8b45-85023a0286cc"
+    ],
+    "mutation_types": [
+      "add_targeted_repair_hint"
+    ],
+    "crossover_used": false,
+    "feedback_types_used": [],
+    "base_genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+    "mutation_family": "accuracy_repair",
+    "mutation_operator": "add_targeted_repair_hint",
+    "mutation_proposal_id": "accuracy_repair_g002_bf8b961f",
+    "diffs": [
+      {
+        "block_id": "06",
+        "field": "block_params",
+        "old_value": "{\"02\": {\"few_shot_count\": 3, \"micro_rules\": [\"For INTEGER and DOUBLE arguments, avoid quoted numeric literals.\"]}, \"05\": {\"few_shot_count\": 3, \"repair_mode\": \"conservative\"}}",
+        "new_value": "{\"02\": {\"few_shot_count\": 3, \"micro_rules\": [\"For INTEGER and DOUBLE arguments, avoid quoted numeric literals.\"]}, \"05\": {\"few_shot_count\": 3, \"repair_mode\": \"conservative\"}, \"06\": {\"micro_rules\": [\"If code is schema-valid but not target-equivalent, repair receiver coverage, service coverage, dataflow, numeric, and enum grounding.\"]}}",
+        "mutation_type": "add_targeted_repair_hint",
+        "mutation_family": "accuracy_repair",
+        "feedback_driven": true,
+        "llm_advised": false,
+        "advisor_proposal_id": "",
+        "failure_type_source": "semantic_error"
+      }
+    ]
+  }
+}

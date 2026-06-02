@@ -1,0 +1,4 @@
+generation,model_key,new_frontier,frontier_size,best_det,best_det_genome_id,best_tokens,best_tokens_genome_id,knee_candidate,pareto_status,oom_resolved,overbudget_children
+1,llama31_8b,2,2,100.0,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,47742.5,gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,full_metrics,,
+2,llama31_8b,1,2,100.0,gen-bdd4e724-5407-b1de-8fa2-b132d3152091,49040.5,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,full_metrics,,
+3,llama31_8b,1,2,100.0,gen-bdd4e724-5407-b1de-8fa2-b132d3152091,27749.75,gen-6c3bf6ba-f915-e48f-9141-09fb9b540624,gen-6c3bf6ba-f915-e48f-9141-09fb9b540624,full_metrics,,
