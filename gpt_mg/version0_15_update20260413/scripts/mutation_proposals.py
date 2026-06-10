@@ -58,10 +58,24 @@ class MutationProposal:
     scheduling_reason: str = ""
     advisor_child_duplicate: bool = False
     duplicate_of: str = ""
+    compression_level: str = ""
+    selected_block_ids: list[str] = field(default_factory=list)
+    expected_token_delta: int = 0
+    parent_prompt_tokens: float = 0.0
+    child_prompt_tokens: float = 0.0
+    measured_prompt_token_delta: float = 0.0
+    validation_requirement: str = ""
 
     def to_row(self) -> dict[str, Any]:
         row = asdict(self)
-        for key in ("target_units", "affected_failure_families", "rollback_units", "category_scope", "group_scope"):
+        for key in (
+            "target_units",
+            "affected_failure_families",
+            "rollback_units",
+            "category_scope",
+            "group_scope",
+            "selected_block_ids",
+        ):
             row[key] = json.dumps(row[key], ensure_ascii=False)
         return row
 
@@ -78,15 +92,27 @@ def proposal_from_advisor(
     category_scope = [int(value) for value in (raw.get("category_scope") or []) if str(value).strip().lstrip("-").isdigit()]
     group_scope = [str(value) for value in (raw.get("group_scope") or []) if str(value).strip()]
     proposal_id = str(raw.get("proposal_id", f"advisor_g{generation:03d}"))
+    raw_selected_blocks = raw.get("selected_block_ids") or raw.get("block_ids")
+    if isinstance(raw_selected_blocks, str):
+        raw_selected_blocks = [raw_selected_blocks]
+    if not raw_selected_blocks and raw.get("selected_block_id"):
+        raw_selected_blocks = [raw.get("selected_block_id")]
+    selected_block_ids = [str(value) for value in (raw_selected_blocks or []) if str(value).strip()]
+    expected_delta = int(raw.get("expected_token_delta") or raw.get("total_expected_token_delta") or 0)
     return MutationProposal(
         proposal_id=proposal_id,
         source="advisor",
         mutation_family=str(raw.get("mutation_family") or "advisor_guided"),
-        operator=str(raw.get("mutation_type") or raw.get("operator") or "add_micro_rule"),
-        target_block_id=str(raw.get("target_block_id", "")),
-        target_block_family=str(raw.get("target_block_family", "")),
-        replacement_text=str(raw.get("proposed_micro_rule") or raw.get("edit_instruction") or ""),
-        estimated_token_delta=int(raw.get("expected_token_delta") or 0),
+        operator=str(raw.get("mutation_type") or raw.get("operator") or raw.get("exact_mutation_operator") or "add_micro_rule"),
+        target_units=selected_block_ids,
+        target_block_id=str(raw.get("target_block_id") or raw.get("selected_block_id") or ""),
+        target_block_family=str(raw.get("target_block_family") or raw.get("selected_block_family") or ""),
+        replacement_text=str(
+            raw.get("proposed_micro_rule")
+            or raw.get("edit_instruction")
+            or (json.dumps(raw.get("steps"), ensure_ascii=False) if raw.get("steps") else "")
+        ),
+        estimated_token_delta=expected_delta,
         risk_score=float(raw.get("regression_risk") or raw.get("risk_score") or 0.2),
         affected_failure_families=[str(item) for item in affected if str(item).strip()],
         expected_effect=str(raw.get("expected_effect") or raw.get("reason", "")),
@@ -100,6 +126,13 @@ def proposal_from_advisor(
         group_scope=group_scope,
         priority=int(raw.get("priority") or 0),
         regression_risk=float(raw.get("regression_risk") or 0.0),
+        compression_level=str(raw.get("compression_level", "")),
+        selected_block_ids=selected_block_ids,
+        expected_token_delta=expected_delta,
+        parent_prompt_tokens=float(raw.get("parent_prompt_tokens") or 0.0),
+        child_prompt_tokens=float(raw.get("child_prompt_tokens") or 0.0),
+        measured_prompt_token_delta=float(raw.get("measured_prompt_token_delta") or 0.0),
+        validation_requirement=str(raw.get("validation_requirement") or ""),
     )
 
 

@@ -30,6 +30,10 @@ from scripts.ga_metrics import (
     pareto_summary as build_pareto_summary,
 )
 from scripts.ga_mutation import (
+    BLOCK_COMPRESSION_OPERATORS,
+    GLOBAL_BUDGET_COMPRESSION_OPERATORS,
+    MICRO_COMPRESSION_OPERATORS,
+    MULTI_BLOCK_COMPRESSION_OPERATORS,
     apply_mutation_proposal,
     mutation_family_for_phase,
     proposal_for_family,
@@ -58,6 +62,11 @@ from scripts.mutation_proposals import (
     proposal_from_advisor,
 )
 from scripts.prompt_decompiler import compression_proposals_from_artifact, decompile_prompt
+from scripts.prompt_profiler import (
+    profile_prompt_blocks_for_genome,
+    prompt_token_breakdown_for_genome,
+    reasoning_budget_for_categories,
+)
 from utils.ga_block_model import (
     get_core_blocks,
     get_optional_blocks,
@@ -309,6 +318,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--category-balance-mode", choices=["off", "guard", "fitness", "routing"], default="off")
     parser.add_argument("--token-penalty-mode", choices=["off", "budget", "accepted", "hybrid"], default="off")
     parser.add_argument("--target-detpass", type=float, default=95.0)
+    parser.add_argument("--compression-detpass-threshold", type=float, default=95.0)
     parser.add_argument("--detpass-row-margin", type=float, default=0.0)
     parser.add_argument("--fitness-token-weight-min", type=float, default=0.0)
     parser.add_argument("--fitness-token-weight-max", type=float, default=2.0)
@@ -1444,20 +1454,71 @@ def _existing_micro_rules(genome: dict[str, Any]) -> set[str]:
     return rules
 
 
+def _normalise_advisor_proposal(raw: dict[str, Any], *, source_key: str) -> dict[str, Any]:
+    proposal = dict(raw or {})
+    if source_key == "micro_compression_proposals":
+        proposal.setdefault("mutation_family", "compression")
+        proposal.setdefault("compression_level", "micro")
+        proposal.setdefault("mutation_type", proposal.get("exact_mutation_operator") or proposal.get("operator"))
+    elif source_key == "block_compression_proposals":
+        proposal.setdefault("mutation_family", "compression")
+        proposal.setdefault("compression_level", "block")
+        proposal["target_block_id"] = str(proposal.get("target_block_id") or proposal.get("selected_block_id") or "")
+        proposal["target_block_family"] = str(proposal.get("target_block_family") or proposal.get("selected_block_family") or "")
+        proposal["mutation_type"] = str(proposal.get("mutation_type") or proposal.get("exact_mutation_operator") or "")
+    elif source_key == "multi_block_compression_proposals":
+        proposal.setdefault("mutation_family", "compression")
+        proposal.setdefault("compression_level", "multi_block")
+        proposal.setdefault("mutation_type", "multi_block_compression_plan")
+        selected = proposal.get("selected_block_ids") or []
+        if isinstance(selected, str):
+            selected = [selected]
+        proposal["selected_block_ids"] = [str(item) for item in selected if str(item).strip()]
+        if proposal["selected_block_ids"]:
+            proposal.setdefault("target_block_id", proposal["selected_block_ids"][0])
+        if "total_expected_token_delta" in proposal and "expected_token_delta" not in proposal:
+            proposal["expected_token_delta"] = proposal.get("total_expected_token_delta")
+        if proposal.get("steps") and not proposal.get("edit_instruction"):
+            proposal["edit_instruction"] = json.dumps(proposal.get("steps"), ensure_ascii=False)
+    elif source_key == "global_budget_compression_proposals":
+        proposal.setdefault("mutation_family", "compression")
+        proposal.setdefault("compression_level", "global_budget")
+        proposal.setdefault("mutation_type", proposal.get("exact_mutation_operator") or proposal.get("operator") or "global_render_budget_down")
+    return proposal
+
+
+def _iter_advisor_proposals(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    proposals: list[dict[str, Any]] = []
+    for key in (
+        "proposals",
+        "mutation_proposals",
+        "micro_compression_proposals",
+        "block_compression_proposals",
+        "multi_block_compression_proposals",
+        "global_budget_compression_proposals",
+    ):
+        for raw in payload.get(key) or []:
+            if isinstance(raw, dict):
+                proposals.append(_normalise_advisor_proposal(raw, source_key=key))
+    return proposals
+
+
 def _safe_advisor_proposals(
     payload: dict[str, Any],
     *,
     generation: int,
     advisor_batch_id_value: str = "",
     parent_genome: dict[str, Any] | None = None,
+    compression_ready: bool = False,
+    block_token_breakdown: list[dict[str, Any]] | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     safe: list[dict[str, Any]] = []
     rejected: list[dict[str, Any]] = []
     valid_blocks = set(get_core_blocks()) | set(get_optional_blocks())
-    raw_proposals = payload.get("proposals")
-    if raw_proposals is None:
-        raw_proposals = payload.get("mutation_proposals") or []
+    raw_proposals = _iter_advisor_proposals(payload)
     existing_rules = _existing_micro_rules(parent_genome or {})
+    if block_token_breakdown is None and parent_genome:
+        block_token_breakdown = profile_prompt_blocks_for_genome(parent_genome)
     for idx, raw in enumerate(raw_proposals or [], start=1):
         proposal = dict(raw or {})
         proposal_id = f"advisor_g{generation:03d}_{idx:02d}"
@@ -1468,11 +1529,16 @@ def _safe_advisor_proposals(
         if not proposal.get("affected_failure_families"):
             fallback_family = str(proposal.get("target_block_family", "") or "schema_violation")
             proposal["affected_failure_families"] = [fallback_family]
+        if proposal.get("mutation_family") == "compression":
+            proposal.setdefault("validation_requirement", "strict DETPass gate" if compression_ready else "standard DETPass gate")
+        # Reject no-op and protected-block compression before it can consume a child slot.
         ok, reject_reason = validate_advisor_proposal(
             proposal,
             valid_blocks=valid_blocks,
             core_blocks=set(get_core_blocks()),
             existing_rules=existing_rules,
+            parent_genome=parent_genome or {},
+            block_token_breakdown=block_token_breakdown or [],
         )
         if reject_reason:
             ok = False
@@ -1518,6 +1584,18 @@ def _call_mutation_advisor(
         return [], []
     best_item = evaluated_population[0] if evaluated_population else {}
     best_metric = _metric_for_eval(best_item) if best_item else None
+    best_genome = best_item.get("genome") if best_item else {}
+    block_token_breakdown = list(getattr(args, "_block_token_breakdown", []) or [])
+    if best_genome and not block_token_breakdown:
+        block_token_breakdown = profile_prompt_blocks_for_genome(best_genome)
+    prompt_token_breakdown = dict(getattr(args, "_prompt_token_breakdown", {}) or {})
+    if best_genome and not prompt_token_breakdown:
+        prompt_token_breakdown = prompt_token_breakdown_for_genome(
+            best_genome,
+            block_token_breakdown=block_token_breakdown,
+            measured_prompt_tokens=float(getattr(best_metric, "avg_prompt_tokens", 0.0) or 0.0),
+        )
+    compression_policy = dict(getattr(args, "_compression_policy", {}) or {})
     top_failure_types: list[str] = []
     for feedback in feedback_summary[:5]:
         failure_type = str(feedback.get("failure_type", ""))
@@ -1555,6 +1633,9 @@ def _call_mutation_advisor(
         max_representative_failures=args.advisor_max_representative_failures,
         include_candidate_code=bool(args.advisor_include_candidate_code),
         include_prompt_summary=bool(args.advisor_include_prompt_summary),
+        compression_policy=compression_policy,
+        block_token_breakdown=block_token_breakdown,
+        prompt_token_breakdown=prompt_token_breakdown,
     )
     batch_path = output_root / "advisor_feedback_batches.jsonl"
     _append_jsonl(batch_path, advisor_batch)
@@ -1574,7 +1655,7 @@ def _call_mutation_advisor(
                 endpoint=args.llm_endpoint,
                 model=_advisor_model_name(args.advisor_model_key),
                 temperature=args.advisor_temperature,
-                max_tokens=1024,
+                max_tokens=2048,
                 timeout_sec=args.timeout_sec,
                 retries=args.retries,
                 log_path=output_root / "logs" / f"advisor_generation_{generation:03d}.json",
@@ -1616,7 +1697,9 @@ def _call_mutation_advisor(
         advisor_payload,
         generation=generation,
         advisor_batch_id_value=str(advisor_batch.get("advisor_batch_id", "")),
-        parent_genome=best_item.get("genome") if best_item else {},
+        parent_genome=best_genome if best_item else {},
+        compression_ready=bool(compression_policy.get("compression_ready")),
+        block_token_breakdown=block_token_breakdown,
     )
     dump_json(
         response_path,
@@ -2054,6 +2137,518 @@ def _proposal_to_row(proposal: MutationProposal) -> dict[str, Any]:
     return proposal.to_row()
 
 
+def _update_measured_prompt_token_deltas(
+    mutation_proposal_rows: list[dict[str, Any]],
+    evaluated_population: list[dict[str, Any]],
+) -> None:
+    tokens_by_genome: dict[str, float] = {}
+    for item in evaluated_population:
+        genome_id = str((item.get("genome") or {}).get("id", ""))
+        metric = _metric_for_eval(item)
+        if genome_id and metric:
+            tokens_by_genome[genome_id] = float(metric.avg_prompt_tokens or 0.0)
+    for row in mutation_proposal_rows:
+        child_id = str(row.get("child_genome_id", "") or "")
+        if not child_id or child_id not in tokens_by_genome:
+            continue
+        child_tokens = tokens_by_genome[child_id]
+        if child_tokens <= 0:
+            continue
+        row["child_prompt_tokens"] = child_tokens
+        try:
+            parent_tokens = float(row.get("parent_prompt_tokens") or 0.0)
+        except Exception:
+            parent_tokens = 0.0
+        if parent_tokens > 0:
+            row["measured_prompt_token_delta"] = round(child_tokens - parent_tokens, 6)
+
+
+def _compression_enabled(args: argparse.Namespace) -> bool:
+    return bool(args.enable_compression_mutation or args.mutation_mode in {"cloudless_decompiler", "hybrid"})
+
+
+def _compression_state(
+    args: argparse.Namespace,
+    *,
+    best_so_far_detpass: float,
+    plateau_type: str,
+) -> tuple[str, bool, bool]:
+    threshold = float(getattr(args, "compression_detpass_threshold", args.target_detpass) or args.target_detpass)
+    compression_ready = float(best_so_far_detpass or 0.0) >= threshold
+    plateau = str(plateau_type or "")
+    aggressive = compression_ready and plateau in {
+        "saturated_accuracy_plateau",
+        "token_plateau",
+        "accuracy_target_reached",
+        "stable_pareto",
+    }
+    if aggressive:
+        return "AGGRESSIVE_COMPRESSION", compression_ready, True
+    if compression_ready:
+        return "COMPRESSION_READY", True, False
+    return "ACCURACY_SEARCH", False, False
+
+
+def _compression_quotas(
+    args: argparse.Namespace,
+    *,
+    state: str,
+    population_slots: int,
+) -> dict[str, int]:
+    quotas = {
+        "micro": 0,
+        "block": 0,
+        "multi_block": 0,
+        "global_budget": 0,
+    }
+    if not _compression_enabled(args) or population_slots <= 0:
+        return quotas
+    # Case A: always-on micro compression.
+    # This lane performs small, low-risk token reductions even before DETPass reaches the threshold.
+    # It must not mutate protected prompt blocks or replace correctness-oriented repair mutations.
+    quotas["micro"] = 1
+    if state in {"COMPRESSION_READY", "AGGRESSIVE_COMPRESSION"}:
+        # Case B: threshold-gated block compression.
+        # Once DETPass is high enough, token optimization becomes an explicit objective.
+        # We compress large non-protected prompt blocks using block_token_breakdown while preserving strict validator-critical rules.
+        quotas["block"] = 1
+    if state == "AGGRESSIVE_COMPRESSION":
+        # Case C: aggressive compression.
+        # This state is entered only after DETPass is above threshold and progress has plateaued.
+        # It keeps Case B block compression active, increases its quota, and additionally schedules multi-block/global-budget compression.
+        quotas["block"] = max(quotas["block"], 2 if args.compression_strength == "aggressive" else 1)
+        quotas["multi_block"] = 1
+        quotas["global_budget"] = 1 if args.compression_strength == "aggressive" else 0
+    remaining = max(0, min(population_slots, int(args.max_compression_children_per_gen or population_slots)))
+    capped: dict[str, int] = {}
+    for key in ("micro", "block", "multi_block", "global_budget"):
+        value = min(quotas[key], remaining)
+        capped[key] = value
+        remaining -= value
+    return capped
+
+
+def _block_by_id(block_token_breakdown: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return {str(block.get("block_id")): block for block in block_token_breakdown}
+
+
+def _proposal_payload(**values: Any) -> str:
+    return json.dumps(values, ensure_ascii=False, sort_keys=True)
+
+
+def _make_compression_proposal(
+    *,
+    generation: int,
+    parent_genome: dict[str, Any],
+    rng: random.Random,
+    operator: str,
+    compression_level: str,
+    expected_delta: int,
+    target_block_id: str = "",
+    target_block_family: str = "",
+    replacement_payload: dict[str, Any] | list[dict[str, Any]] | None = None,
+    selected_block_ids: list[str] | None = None,
+    source: str = "cloudless",
+    expected_effect: str = "",
+) -> MutationProposal:
+    if isinstance(replacement_payload, list):
+        replacement_text = json.dumps(replacement_payload, ensure_ascii=False)
+    elif isinstance(replacement_payload, dict):
+        replacement_text = _proposal_payload(**replacement_payload)
+    else:
+        replacement_text = ""
+    return MutationProposal(
+        proposal_id=f"{compression_level}_compression_g{generation:03d}_{seeded_uuid(rng)[:8]}",
+        source=source,
+        mutation_family="compression",
+        operator=operator,
+        target_units=list(selected_block_ids or ([] if not target_block_id else [target_block_id])),
+        target_block_id=target_block_id,
+        target_block_family=target_block_family,
+        replacement_text=replacement_text,
+        estimated_token_delta=int(expected_delta),
+        expected_token_delta=int(expected_delta),
+        risk_score=0.15 if compression_level == "micro" else 0.3,
+        regression_risk=0.15 if compression_level == "micro" else 0.3,
+        expected_effect=expected_effect or f"{compression_level} compression via {operator}",
+        requires_validation=True,
+        generation=generation,
+        parent_genome_id=str(parent_genome.get("id", "")),
+        compression_level=compression_level,
+        selected_block_ids=list(selected_block_ids or ([] if not target_block_id else [target_block_id])),
+        validation_requirement="strict DETPass gate",
+    )
+
+
+def _duplicate_micro_rule_count(genome: dict[str, Any]) -> int:
+    duplicates = 0
+    for params in (genome.get("block_params") or {}).values():
+        seen: set[str] = set()
+        for rule in params.get("micro_rules") or []:
+            key = " ".join(str(rule).strip().lower().split())
+            if key in seen:
+                duplicates += 1
+            elif key:
+                seen.add(key)
+    return duplicates
+
+
+def _micro_compression_proposal(
+    *,
+    generation: int,
+    parent_genome: dict[str, Any],
+    block_token_breakdown: list[dict[str, Any]],
+    rng: random.Random,
+) -> MutationProposal | None:
+    params = parent_genome.get("params", {}) or {}
+    strategies = list(params.get("candidate_strategies") or [])
+    if strategies != ["minimal"]:
+        return _make_compression_proposal(
+            generation=generation,
+            parent_genome=parent_genome,
+            rng=rng,
+            operator="compress_candidate_strategies_to_minimal",
+            compression_level="micro",
+            expected_delta=-max(8, 12 * max(1, len(strategies) - 1)),
+            expected_effect="Collapse candidate strategy fanout to the compact minimal strategy.",
+        )
+    duplicate_count = _duplicate_micro_rule_count(parent_genome)
+    if duplicate_count:
+        return _make_compression_proposal(
+            generation=generation,
+            parent_genome=parent_genome,
+            rng=rng,
+            operator="dedupe_duplicate_micro_rules",
+            compression_level="micro",
+            expected_delta=-max(8, duplicate_count * 12),
+            expected_effect="Remove exact duplicate micro-rules without changing protected rules.",
+        )
+    prune_target = next((block for block in block_token_breakdown if int(block.get("micro_rule_count") or 0) > 4), None)
+    if prune_target:
+        return _make_compression_proposal(
+            generation=generation,
+            parent_genome=parent_genome,
+            rng=rng,
+            operator="prune_micro_rules_to_top_k_safe",
+            compression_level="micro",
+            target_block_id=str(prune_target.get("block_id")),
+            target_block_family=str(prune_target.get("block_family")),
+            expected_delta=-max(8, (int(prune_target.get("micro_rule_count") or 0) - 4) * 12),
+            replacement_payload={"k": 4},
+            expected_effect="Keep only the highest-priority micro-rules in a non-destructive safe pass.",
+        )
+    few_shot_target = next(
+        (
+            block
+            for block in sorted(block_token_breakdown, key=lambda item: int(item.get("example_token_estimate") or 0), reverse=True)
+            if int(block.get("few_shot_count") or 0) > 0 and not block.get("is_protected_block")
+        ),
+        None,
+    )
+    if few_shot_target:
+        count = int(few_shot_target.get("few_shot_count") or 0)
+        example_tokens = int(few_shot_target.get("example_token_estimate") or 0)
+        return _make_compression_proposal(
+            generation=generation,
+            parent_genome=parent_genome,
+            rng=rng,
+            operator="reduce_few_shot_count_by_one",
+            compression_level="micro",
+            target_block_id=str(few_shot_target.get("block_id")),
+            target_block_family=str(few_shot_target.get("block_family")),
+            expected_delta=-max(8, int(example_tokens / max(1, count))),
+            expected_effect="Trim one few-shot example from a non-protected block.",
+        )
+    max_tokens = int(params.get("max_tokens", 0) or 0)
+    if max_tokens > 512:
+        return _make_compression_proposal(
+            generation=generation,
+            parent_genome=parent_genome,
+            rng=rng,
+            operator="lower_output_max_tokens_safe",
+            compression_level="micro",
+            expected_delta=-8,
+            expected_effect="Lower completion budget to reduce explanation tails.",
+        )
+    return None
+
+
+def _block_compression_proposal(
+    *,
+    generation: int,
+    parent_genome: dict[str, Any],
+    block_token_breakdown: list[dict[str, Any]],
+    rng: random.Random,
+    exclude_blocks: set[str] | None = None,
+) -> MutationProposal | None:
+    exclude_blocks = exclude_blocks or set()
+    candidates = [
+        block
+        for block in block_token_breakdown
+        if block.get("compression_allowed") and str(block.get("block_id")) not in exclude_blocks
+    ]
+    candidates.sort(key=lambda item: int(item.get("token_estimate") or 0), reverse=True)
+    for block in candidates:
+        block_id = str(block.get("block_id"))
+        family = str(block.get("block_family"))
+        token_estimate = int(block.get("token_estimate") or 0)
+        few_shot = int(block.get("few_shot_count") or 0)
+        if few_shot > 0:
+            delta = -max(32, int(block.get("example_token_estimate") or token_estimate // 3 or 32))
+            return _make_compression_proposal(
+                generation=generation,
+                parent_genome=parent_genome,
+                rng=rng,
+                operator="reduce_few_shot_count_to_zero",
+                compression_level="block",
+                target_block_id=block_id,
+                target_block_family=family,
+                expected_delta=delta,
+                expected_effect="Remove non-protected few-shot examples after DETPass is stable.",
+            )
+        micro_rules = int(block.get("micro_rule_count") or 0)
+        if micro_rules > 3:
+            return _make_compression_proposal(
+                generation=generation,
+                parent_genome=parent_genome,
+                rng=rng,
+                operator="prune_micro_rules_to_top_k",
+                compression_level="block",
+                target_block_id=block_id,
+                target_block_family=family,
+                expected_delta=-max(32, (micro_rules - 3) * 12),
+                replacement_payload={"k": 3},
+                expected_effect="Prune redundant micro-rules in a non-protected block.",
+            )
+        if block.get("optional_status") == "optional" and token_estimate >= 32 and not block.get("protected_content_markers"):
+            return _make_compression_proposal(
+                generation=generation,
+                parent_genome=parent_genome,
+                rng=rng,
+                operator="drop_optional_block",
+                compression_level="block",
+                target_block_id=block_id,
+                target_block_family=family,
+                expected_delta=-token_estimate,
+                expected_effect="Drop a large non-protected optional block.",
+            )
+    return None
+
+
+def _multi_block_compression_proposal(
+    *,
+    generation: int,
+    parent_genome: dict[str, Any],
+    block_token_breakdown: list[dict[str, Any]],
+    rng: random.Random,
+) -> MutationProposal | None:
+    steps: list[dict[str, Any]] = []
+    used: set[str] = set()
+    total_delta = 0
+    for _idx in range(3):
+        proposal = _block_compression_proposal(
+            generation=generation,
+            parent_genome=parent_genome,
+            block_token_breakdown=block_token_breakdown,
+            rng=rng,
+            exclude_blocks=used,
+        )
+        if not proposal:
+            break
+        used.add(proposal.target_block_id)
+        step: dict[str, Any] = {"block_id": proposal.target_block_id, "operator": proposal.operator}
+        if proposal.replacement_text:
+            try:
+                step.update(json.loads(proposal.replacement_text))
+            except Exception:
+                pass
+        steps.append(step)
+        total_delta += int(proposal.expected_token_delta or proposal.estimated_token_delta or 0)
+    if len(steps) < 2 or total_delta >= -32:
+        return None
+    block_map = _block_by_id(block_token_breakdown)
+    selected = [step["block_id"] for step in steps]
+    families = [str((block_map.get(block_id) or {}).get("block_family", "")) for block_id in selected]
+    return _make_compression_proposal(
+        generation=generation,
+        parent_genome=parent_genome,
+        rng=rng,
+        operator="multi_block_compression_plan",
+        compression_level="multi_block",
+        expected_delta=total_delta,
+        target_block_id=selected[0],
+        target_block_family=",".join(family for family in families if family),
+        replacement_payload=steps,
+        selected_block_ids=selected,
+        expected_effect="Apply several safe block compression steps in one child.",
+    )
+
+
+def _global_budget_compression_proposal(
+    *,
+    generation: int,
+    parent_genome: dict[str, Any],
+    rng: random.Random,
+) -> MutationProposal:
+    return _make_compression_proposal(
+        generation=generation,
+        parent_genome=parent_genome,
+        rng=rng,
+        operator="global_render_budget_down",
+        compression_level="global_budget",
+        expected_delta=-64,
+        expected_effect="Tighten global render budgets without changing retrieval or pre-mapping logic.",
+    )
+
+
+def _compression_lane_proposals(
+    *,
+    generation: int,
+    parent_genome: dict[str, Any],
+    block_token_breakdown: list[dict[str, Any]],
+    quotas: dict[str, int],
+    rng: random.Random,
+) -> list[MutationProposal]:
+    proposals: list[MutationProposal] = []
+    for _ in range(int(quotas.get("micro", 0) or 0)):
+        proposal = _micro_compression_proposal(
+            generation=generation,
+            parent_genome=parent_genome,
+            block_token_breakdown=block_token_breakdown,
+            rng=rng,
+        )
+        if proposal:
+            proposals.append(proposal)
+    used_blocks: set[str] = set()
+    for _ in range(int(quotas.get("block", 0) or 0)):
+        proposal = _block_compression_proposal(
+            generation=generation,
+            parent_genome=parent_genome,
+            block_token_breakdown=block_token_breakdown,
+            rng=rng,
+            exclude_blocks=used_blocks,
+        )
+        if proposal:
+            used_blocks.add(proposal.target_block_id)
+            proposals.append(proposal)
+    for _ in range(int(quotas.get("multi_block", 0) or 0)):
+        proposal = _multi_block_compression_proposal(
+            generation=generation,
+            parent_genome=parent_genome,
+            block_token_breakdown=block_token_breakdown,
+            rng=rng,
+        )
+        if proposal:
+            proposals.append(proposal)
+    for _ in range(int(quotas.get("global_budget", 0) or 0)):
+        proposals.append(_global_budget_compression_proposal(generation=generation, parent_genome=parent_genome, rng=rng))
+    return proposals
+
+
+def _fallback_compression_proposal(
+    *,
+    generation: int,
+    parent_genome: dict[str, Any],
+    block_token_breakdown: list[dict[str, Any]],
+    rng: random.Random,
+) -> MutationProposal | None:
+    # Compression fallback path.
+    # If the advisor proposes a no-op or invalid compression, schedule the next strongest safe operator
+    # so that compression_ready generations still explore meaningful token reduction.
+    candidates = [block for block in block_token_breakdown if block.get("compression_allowed")]
+    candidates.sort(key=lambda item: int(item.get("token_estimate") or 0), reverse=True)
+    optional_ids = [
+        str(block.get("block_id"))
+        for block in candidates
+        if block.get("optional_status") == "optional"
+        and int(block.get("token_estimate") or 0) >= 32
+        and not block.get("protected_content_markers")
+    ]
+    if optional_ids:
+        token_delta = -sum(int((_block_by_id(block_token_breakdown).get(block_id) or {}).get("token_estimate") or 0) for block_id in optional_ids)
+        return _make_compression_proposal(
+            generation=generation,
+            parent_genome=parent_genome,
+            rng=rng,
+            operator="drop_optional_blocks_for_budget",
+            compression_level="block",
+            target_block_id=optional_ids[0],
+            target_block_family=str((_block_by_id(block_token_breakdown).get(optional_ids[0]) or {}).get("block_family", "")),
+            expected_delta=min(-32, token_delta),
+            replacement_payload={"block_ids": optional_ids},
+            selected_block_ids=optional_ids,
+            source="compression_fallback",
+            expected_effect="Fallback after invalid advisor compression; drop safe optional blocks for budget.",
+        )
+    for block in candidates:
+        if int(block.get("few_shot_count") or 0) > 0:
+            return _make_compression_proposal(
+                generation=generation,
+                parent_genome=parent_genome,
+                rng=rng,
+                operator="reduce_few_shot_count_to_zero",
+                compression_level="block",
+                target_block_id=str(block.get("block_id")),
+                target_block_family=str(block.get("block_family")),
+                expected_delta=-max(32, int(block.get("example_token_estimate") or 0)),
+                source="compression_fallback",
+                expected_effect="Fallback after invalid advisor compression; remove few-shot examples from a safe block.",
+            )
+    for block in candidates:
+        if int(block.get("micro_rule_count") or 0) > 3:
+            return _make_compression_proposal(
+                generation=generation,
+                parent_genome=parent_genome,
+                rng=rng,
+                operator="prune_micro_rules_to_top_k",
+                compression_level="block",
+                target_block_id=str(block.get("block_id")),
+                target_block_family=str(block.get("block_family")),
+                expected_delta=-max(32, (int(block.get("micro_rule_count") or 0) - 3) * 12),
+                replacement_payload={"k": 3},
+                source="compression_fallback",
+                expected_effect="Fallback after invalid advisor compression; prune micro-rules.",
+            )
+    for block in candidates:
+        if block.get("current_params"):
+            return _make_compression_proposal(
+                generation=generation,
+                parent_genome=parent_genome,
+                rng=rng,
+                operator="compact_block_params",
+                compression_level="block",
+                target_block_id=str(block.get("block_id")),
+                target_block_family=str(block.get("block_family")),
+                expected_delta=-32,
+                source="compression_fallback",
+                expected_effect="Fallback after invalid advisor compression; compact block params.",
+            )
+    params = parent_genome.get("params", {}) or {}
+    if int(params.get("max_tokens", 0) or 0) > 256:
+        return _make_compression_proposal(
+            generation=generation,
+            parent_genome=parent_genome,
+            rng=rng,
+            operator="lower_output_max_tokens_aggressive",
+            compression_level="micro",
+            expected_delta=-8,
+            source="compression_fallback",
+            expected_effect="Fallback after invalid advisor compression; lower output token budget.",
+        )
+    if list(params.get("candidate_strategies") or []) != ["minimal"]:
+        return _make_compression_proposal(
+            generation=generation,
+            parent_genome=parent_genome,
+            rng=rng,
+            operator="compress_candidate_strategies_to_minimal",
+            compression_level="micro",
+            expected_delta=-8,
+            source="compression_fallback",
+            expected_effect="Fallback after invalid advisor compression; collapse candidate strategies.",
+        )
+    return None
+
+
 def _cloudless_mutation_proposals(
     *,
     generation: int,
@@ -2062,6 +2657,8 @@ def _cloudless_mutation_proposals(
     args: argparse.Namespace,
     rng: random.Random,
     active_failure_families: list[str],
+    block_token_breakdown: list[dict[str, Any]] | None = None,
+    compression_quotas: dict[str, int] | None = None,
 ) -> list[MutationProposal]:
     proposals: list[MutationProposal] = []
     family = mutation_family_for_phase(str(getattr(args, "_generation_phase", "ACCURACY_SEARCH")), rng)
@@ -2076,12 +2673,13 @@ def _cloudless_mutation_proposals(
             )
         )
     if args.enable_compression_mutation or args.mutation_mode in {"cloudless_decompiler", "hybrid"}:
-        proposals.append(
-            proposal_for_family(
-                family="compression",
+        block_token_breakdown = block_token_breakdown or profile_prompt_blocks_for_genome(parent_genome)
+        proposals.extend(
+            _compression_lane_proposals(
                 generation=generation,
-                parent_genome_id=str(parent_genome.get("id", "")),
-                feedback_hint=None,
+                parent_genome=parent_genome,
+                block_token_breakdown=block_token_breakdown,
+                quotas=compression_quotas or {"micro": 1, "block": 0, "multi_block": 0, "global_budget": 0},
                 rng=rng,
             )
         )
@@ -2104,7 +2702,9 @@ def _cloudless_mutation_proposals(
                 max_proposals=2,
             )
         )
-    return proposals[: max(1, args.compression_children_per_parent)]
+    requested = sum(int(value or 0) for value in (compression_quotas or {}).values())
+    max_return = max(1, int(args.compression_children_per_parent), requested + (1 if feedback_hint else 0))
+    return proposals[:max_return]
 
 
 def _write_redesign_artifacts(
@@ -2211,6 +2811,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             "stop_controller_mode": args.stop_controller_mode,
             "category_balance_mode": args.category_balance_mode,
             "token_penalty_mode": args.token_penalty_mode,
+            "compression_detpass_threshold": args.compression_detpass_threshold,
         },
         "budget_snapshot": {
             "run_id": output_root.name,
@@ -2566,6 +3167,10 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                 validation_progress["avg_det_score"] = redesign_metric.validation_avg_det_score
                 validation_progress["variance"] = redesign_metric.det_score_variance
                 validation_progress["avg_prompt_tokens"] = redesign_metric.avg_prompt_tokens
+            # Record both estimated and measured token deltas.
+            # expected_token_delta comes from the advisor/operator plan, while measured_prompt_token_delta
+            # is filled after evaluation from actual rendered prompt token counts.
+            _update_measured_prompt_token_deltas(mutation_proposal_rows, evaluated_population)
 
         replay_gate_pass = True
         regression_gate_pass = True
@@ -2751,6 +3356,65 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                     global_best = generation_best
                 no_improvement_generations = 0
 
+        compression_state, compression_ready, aggressive_compression = _compression_state(
+            args,
+            best_so_far_detpass=best_so_far_detpass,
+            plateau_type=str(getattr(args, "_plateau_type", "")),
+        )
+        block_token_breakdown = profile_prompt_blocks_for_genome(generation_best["genome"])
+        prompt_token_breakdown = prompt_token_breakdown_for_genome(
+            generation_best["genome"],
+            block_token_breakdown=block_token_breakdown,
+            measured_prompt_tokens=float(validation_progress.get("avg_prompt_tokens") or 0.0),
+        )
+        compression_quotas = _compression_quotas(
+            args,
+            state=compression_state,
+            population_slots=max(0, args.population - 1),
+        )
+        compression_policy = {
+            "state": compression_state,
+            "compression_ready": compression_ready,
+            "aggressive_compression": aggressive_compression,
+            "compression_detpass_threshold": float(args.compression_detpass_threshold),
+            "best_so_far_DETPass": float(best_so_far_detpass or 0.0),
+            "plateau_type": str(getattr(args, "_plateau_type", "")),
+            "reasoning_budget": reasoning_budget_for_categories(list(args.category or [])),
+            "quotas": compression_quotas,
+        }
+        args._compression_policy = compression_policy
+        args._block_token_breakdown = block_token_breakdown
+        args._prompt_token_breakdown = prompt_token_breakdown
+        progress_record["compression_state"] = compression_state
+        progress_record["compression_ready"] = compression_ready
+        progress_record["aggressive_compression"] = aggressive_compression
+        progress_record["micro_compression_quota"] = compression_quotas.get("micro", 0)
+        progress_record["block_compression_quota"] = compression_quotas.get("block", 0)
+        progress_record["multi_block_compression_quota"] = compression_quotas.get("multi_block", 0)
+        progress_record["global_budget_compression_quota"] = compression_quotas.get("global_budget", 0)
+        # Record both estimated and measured token deltas.
+        # block_token_breakdown and prompt_token_breakdown explain why compression targets were selected.
+        dump_json(
+            output_root / f"block_token_breakdown_generation_{generation:03d}.json",
+            {
+                "generation": generation,
+                "model_key": model_key,
+                "genome_id": generation_best["genome"]["id"],
+                "block_token_breakdown": block_token_breakdown,
+            },
+        )
+        dump_json(output_root / "block_token_breakdown.json", {"rows": block_token_breakdown})
+        dump_json(
+            output_root / f"prompt_token_breakdown_generation_{generation:03d}.json",
+            {
+                "generation": generation,
+                "model_key": model_key,
+                "genome_id": generation_best["genome"]["id"],
+                "prompt_token_breakdown": prompt_token_breakdown,
+            },
+        )
+        dump_json(output_root / "prompt_token_breakdown.json", prompt_token_breakdown)
+
         advisor_safe_proposals, advisor_rejected_proposals = _call_mutation_advisor(
             args=args,
             output_root=output_root,
@@ -2770,6 +3434,8 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             rejected_mp.accepted = False
             rejected_mp.proposal_state = PROPOSAL_STATE_REJECTED
             rejected_mp.rejection_reason = str(proposal.get("rejection_reason", "rejected by advisor proposal validation"))
+            rejected_mp.parent_genome_id = str(generation_best["genome"].get("id", ""))
+            rejected_mp.parent_prompt_tokens = float(validation_progress.get("avg_prompt_tokens") or 0.0)
             advisor_final_proposals.append(rejected_mp)
 
         advisor_can_schedule = bool(
@@ -2778,9 +3444,9 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             and (args.advisor_force_child_quota or args.population >= args.advisor_min_population_for_child)
         )
         advisor_child_quota = 1 if advisor_can_schedule else 0
-        cloudless_child_quota = 1 if (
-            args.mutation_mode in {"family", "cloudless_decompiler", "hybrid"} or args.enable_compression_mutation
-        ) else 0
+        cloudless_child_quota = sum(int(value or 0) for value in compression_quotas.values()) if _compression_enabled(args) else 0
+        if args.mutation_mode == "family" and not cloudless_child_quota:
+            cloudless_child_quota = 1
         if _redesign_enabled(args):
             elite_target = 3 if args.population <= 5 else max(args.elites, 5)
             reserved_children = min(args.population - 1, advisor_child_quota + cloudless_child_quota)
@@ -2802,6 +3468,11 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         new_by_mutation = 0
         new_by_advisor = 0
         new_by_compression = 0
+        new_by_micro_compression = 0
+        new_by_block_compression = 0
+        new_by_multi_block_compression = 0
+        new_by_global_budget_compression = 0
+        new_by_compression_fallback = 0
         new_by_diversity = 0
         new_by_specialist = 0
         new_by_disruptive = 0
@@ -2823,14 +3494,36 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                 row.update({"generation": generation, "model_key": model_key, "genome_id": generation_best["genome"]["id"]})
                 prompt_unit_rows.append(row)
         if args.mutation_mode in {"family", "cloudless_decompiler", "hybrid"} or args.enable_compression_mutation:
-            for proposal in _cloudless_mutation_proposals(
+            cloudless_proposals = _cloudless_mutation_proposals(
                 generation=generation + 1,
                 parent_genome=generation_best["genome"],
                 feedback_hint=feedback_hint,
                 args=args,
                 rng=rng,
                 active_failure_families=active_failure_families,
-            ):
+                block_token_breakdown=block_token_breakdown,
+                compression_quotas=compression_quotas,
+            )
+            advisor_rejected_compression = any(
+                proposal.get("mutation_family") == "compression" or proposal.get("compression_level")
+                for proposal in advisor_rejected_proposals
+            )
+            advisor_has_block_compression = any(
+                proposal.get("mutation_family") == "compression"
+                and str(proposal.get("compression_level", "")) in {"block", "multi_block", "global_budget"}
+                for proposal in advisor_safe_proposals
+            )
+            if compression_ready and advisor_rejected_compression and not advisor_has_block_compression:
+                fallback = _fallback_compression_proposal(
+                    generation=generation + 1,
+                    parent_genome=generation_best["genome"],
+                    block_token_breakdown=block_token_breakdown,
+                    rng=rng,
+                )
+                if fallback:
+                    cloudless_proposals.insert(0, fallback)
+            for proposal in cloudless_proposals:
+                proposal.parent_prompt_tokens = float(validation_progress.get("avg_prompt_tokens") or 0.0)
                 if len(next_population) >= args.population - advisor_child_quota:
                     proposal.accepted = False
                     proposal.rejection_reason = "population full before cloudless proposal could be added"
@@ -2863,6 +3556,17 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                 new_by_mutation += 1
                 if proposal.mutation_family == "compression":
                     new_by_compression += 1
+                    level = str(proposal.compression_level or "")
+                    if level == "micro":
+                        new_by_micro_compression += 1
+                    elif level == "block":
+                        new_by_block_compression += 1
+                    elif level == "multi_block":
+                        new_by_multi_block_compression += 1
+                    elif level == "global_budget":
+                        new_by_global_budget_compression += 1
+                    if proposal.source == "compression_fallback":
+                        new_by_compression_fallback += 1
                 elif proposal.mutation_family == "diversity":
                     new_by_diversity += 1
                 elif proposal.mutation_family == "specialist":
@@ -2884,6 +3588,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             if not advisor_can_schedule:
                 mp = proposal_from_advisor(proposal, generation=generation, advisor_batch_id=advisor_batch_id_value)
                 mp.parent_genome_id = str(parent.get("id", ""))
+                mp.parent_prompt_tokens = float(validation_progress.get("avg_prompt_tokens") or 0.0)
                 mp.accepted = False
                 mp.proposal_state = PROPOSAL_STATE_ACCEPTED_NOT_SCHEDULED
                 mp.scheduling_reason = (
@@ -2897,6 +3602,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             if len(next_population) >= args.population:
                 mp = proposal_from_advisor(proposal, generation=generation, advisor_batch_id=advisor_batch_id_value)
                 mp.parent_genome_id = str(parent.get("id", ""))
+                mp.parent_prompt_tokens = float(validation_progress.get("avg_prompt_tokens") or 0.0)
                 mp.accepted = False
                 mp.proposal_state = PROPOSAL_STATE_ACCEPTED_NOT_SCHEDULED
                 mp.scheduling_reason = "population quota unavailable"
@@ -2914,6 +3620,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             except Exception as exc:
                 mp = proposal_from_advisor(proposal, generation=generation, advisor_batch_id=advisor_batch_id_value)
                 mp.parent_genome_id = str(parent.get("id", ""))
+                mp.parent_prompt_tokens = float(validation_progress.get("avg_prompt_tokens") or 0.0)
                 mp.accepted = False
                 mp.proposal_state = PROPOSAL_STATE_FAILED_TO_APPLY
                 mp.rejection_reason = f"failed to apply advisor proposal: {exc}"
@@ -2933,9 +3640,21 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             mp.accepted = True
             mp.proposal_state = PROPOSAL_STATE_ACCEPTED_APPLIED
             mp.scheduling_reason = "scheduled_into_next_population"
+            mp.parent_prompt_tokens = float(validation_progress.get("avg_prompt_tokens") or 0.0)
             next_population.append(child)
             new_by_advisor += 1
             new_by_mutation += 1
+            if mp.mutation_family == "compression":
+                new_by_compression += 1
+                level = str(mp.compression_level or "")
+                if level == "micro":
+                    new_by_micro_compression += 1
+                elif level == "block":
+                    new_by_block_compression += 1
+                elif level == "multi_block":
+                    new_by_multi_block_compression += 1
+                elif level == "global_budget":
+                    new_by_global_budget_compression += 1
             advisor_proposals_accepted_applied += 1
             advisor_children_scheduled += 1
             advisor_final_proposals.append(mp)
@@ -2983,6 +3702,13 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                     "advisor_proposals_accepted_not_scheduled": advisor_proposals_accepted_not_scheduled,
                     "advisor_proposals_rejected": advisor_proposals_rejected,
                     "advisor_children_scheduled": advisor_children_scheduled,
+                    "compression_state": compression_state,
+                    "compression_ready": compression_ready,
+                    "aggressive_compression": aggressive_compression,
+                    "micro_compression_quota": compression_quotas.get("micro", 0),
+                    "block_compression_quota": compression_quotas.get("block", 0),
+                    "multi_block_compression_quota": compression_quotas.get("multi_block", 0),
+                    "global_budget_compression_quota": compression_quotas.get("global_budget", 0),
                     "proposal_ids": ",".join(str(item.proposal_id) for item in advisor_final_proposals),
                 }
             )
@@ -3042,7 +3768,12 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             "new_by_crossover": new_by_crossover,
             "new_by_mutation": new_by_mutation,
             "new_by_advisor": new_by_advisor,
+            "new_by_micro_compression": new_by_micro_compression,
+            "new_by_block_compression": new_by_block_compression,
+            "new_by_multi_block_compression": new_by_multi_block_compression,
+            "new_by_global_budget_compression": new_by_global_budget_compression,
             "new_by_compression": new_by_compression,
+            "new_by_compression_fallback": new_by_compression_fallback,
             "new_by_diversity": new_by_diversity,
             "new_by_specialist": new_by_specialist,
             "new_by_disruptive": new_by_disruptive,
@@ -3177,6 +3908,8 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         "advisor_feedback_batches_jsonl": str(output_root / "advisor_feedback_batches.jsonl"),
         "advisor_mutation_proposals_jsonl": str(output_root / "advisor_mutation_proposals.jsonl"),
         "advisor_mutation_summary_csv": str(output_root / "advisor_mutation_summary.csv"),
+        "block_token_breakdown_json": str(output_root / "block_token_breakdown.json"),
+        "prompt_token_breakdown_json": str(output_root / "prompt_token_breakdown.json"),
         "structured_feedback_jsonl": str(output_root / "structured_feedback.jsonl"),
         "structured_feedback_summary_csv": str(output_root / "structured_feedback_summary.csv"),
         "population_transitions_csv": str(output_root / "population_transitions.csv"),
@@ -3229,9 +3962,12 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         "advisor_proposals_accepted_not_scheduled": advisor_not_scheduled_count,
         "advisor_proposals_rejected": advisor_rejected_count,
         "advisor_children_scheduled": advisor_children_scheduled_count,
+        "compression_detpass_threshold": float(args.compression_detpass_threshold),
         "category_balance_mode": args.category_balance_mode,
         "token_penalty_mode": args.token_penalty_mode,
         "mutation_family_counts": dict(Counter(str(row.get("mutation_family", "")) for row in mutation_proposal_rows if str(row.get("mutation_family", "")))),
+        "compression_level_counts": dict(Counter(str(row.get("compression_level", "")) for row in mutation_proposal_rows if str(row.get("compression_level", "")))),
+        "compression_fallback_count": sum(1 for row in mutation_proposal_rows if row.get("source") == "compression_fallback"),
         "compression_success_count": sum(1 for row in mutation_proposal_rows if row.get("mutation_family") == "compression" and _truthy(row.get("accepted"))),
         "compression_rejection_count": sum(1 for row in mutation_proposal_rows if row.get("mutation_family") == "compression" and not _truthy(row.get("accepted"))),
     }

@@ -19,12 +19,23 @@ from collections import Counter
 from typing import Any
 
 from scripts.ga_metrics import DET_PASS_THRESHOLD, category_group
-from scripts.ga_mutation import apply_mutation_proposal
+from scripts.ga_mutation import (
+    BLOCK_COMPRESSION_OPERATORS,
+    GLOBAL_BUDGET_COMPRESSION_OPERATORS,
+    MICRO_COMPRESSION_OPERATORS,
+    MULTI_BLOCK_COMPRESSION_OPERATORS,
+    apply_mutation_proposal,
+)
 from scripts.mutation_proposals import (
     MutationProposal,
     PROPOSAL_STATE_PROPOSED,
     PROPOSAL_STATE_REJECTED,
     proposal_from_advisor,
+)
+from scripts.prompt_profiler import (
+    profile_prompt_blocks_for_genome,
+    prompt_token_breakdown_for_genome,
+    reasoning_budget_for_categories,
 )
 from utils.prompt_surgery_rules import base_failure_reason, get_prompt_surgery_rule
 
@@ -51,7 +62,7 @@ SUPPORTED_ADVISOR_MUTATION_TYPES = {
     "prune_stale_micro_rules",
     "template_compress_rule_family",
     "reduce_few_shot_count",
-}
+} | MICRO_COMPRESSION_OPERATORS | BLOCK_COMPRESSION_OPERATORS | MULTI_BLOCK_COMPRESSION_OPERATORS | GLOBAL_BUDGET_COMPRESSION_OPERATORS
 
 RULE_ADDING_MUTATION_TYPES = {
     "add_micro_rule",
@@ -427,7 +438,13 @@ def advisor_batch_id(generation: int, model_key: str) -> str:
     return f"advisor_batch_g{generation:03d}_{digest}"
 
 
-def _genome_prompt_summary(genome: dict[str, Any], *, prompt_token_count: float) -> dict[str, Any]:
+def _genome_prompt_summary(
+    genome: dict[str, Any],
+    *,
+    prompt_token_count: float,
+    block_token_breakdown: list[dict[str, Any]] | None = None,
+    prompt_token_breakdown: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     block_params = genome.get("block_params", {}) or {}
     micro_rules_by_block = {
         block_id: list(params.get("micro_rules") or [])
@@ -452,9 +469,25 @@ def _genome_prompt_summary(genome: dict[str, Any], *, prompt_token_count: float)
         "block_params_summary": block_params_summary,
         "micro_rules_by_block": micro_rules_by_block,
         "prompt_token_count": round(float(prompt_token_count or 0.0), 2),
+        "prompt_token_breakdown": prompt_token_breakdown or {},
+        "block_token_breakdown": block_token_breakdown or [],
         "block_signature": block_signature,
         "prompt_hash": prompt_hash,
     }
+
+
+def _compression_state_from_policy(compression_policy: dict[str, Any] | None) -> str:
+    state = str((compression_policy or {}).get("state") or "").strip()
+    return state or "ACCURACY_SEARCH"
+
+
+def _advisor_case_from_policy(compression_policy: dict[str, Any] | None) -> str:
+    state = _compression_state_from_policy(compression_policy)
+    if state == "AGGRESSIVE_COMPRESSION":
+        return "C"
+    if state == "COMPRESSION_READY":
+        return "B"
+    return "A"
 
 
 def build_advisor_feedback_batch(
@@ -477,6 +510,9 @@ def build_advisor_feedback_batch(
     include_candidate_code: bool = False,
     include_prompt_summary: bool = True,
     already_fixed_families: set[str] | None = None,
+    compression_policy: dict[str, Any] | None = None,
+    block_token_breakdown: list[dict[str, Any]] | None = None,
+    prompt_token_breakdown: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     batch_id = advisor_batch_id(generation, model_key)
     category_diagnostics = build_category_diagnostics(
@@ -494,8 +530,27 @@ def build_advisor_feedback_batch(
     )
     best = evaluated_population[0]["genome"] if evaluated_population else {}
     prompt_token_count = float(getattr(best_genome_metric, "avg_prompt_tokens", 0.0) or 0.0)
+    if best and block_token_breakdown is None:
+        block_token_breakdown = profile_prompt_blocks_for_genome(best)
+    if best and prompt_token_breakdown is None:
+        prompt_token_breakdown = prompt_token_breakdown_for_genome(
+            best,
+            block_token_breakdown=block_token_breakdown or [],
+            measured_prompt_tokens=prompt_token_count,
+        )
+    compression_policy = dict(compression_policy or {})
+    compression_policy.setdefault("state", "ACCURACY_SEARCH")
+    compression_policy.setdefault("advisor_case", _advisor_case_from_policy(compression_policy))
+    compression_policy.setdefault("reasoning_budget", reasoning_budget_for_categories(categories))
     current_prompt_artifact = (
-        _genome_prompt_summary(best, prompt_token_count=prompt_token_count) if include_prompt_summary and best else {}
+        _genome_prompt_summary(
+            best,
+            prompt_token_count=prompt_token_count,
+            block_token_breakdown=block_token_breakdown,
+            prompt_token_breakdown=prompt_token_breakdown,
+        )
+        if include_prompt_summary and best
+        else {}
     )
 
     def genome_card(item: dict[str, Any], rank: int) -> dict[str, Any]:
@@ -546,6 +601,9 @@ def build_advisor_feedback_batch(
         },
         "representative_failures": representative_failures,
         "current_prompt_artifact": current_prompt_artifact,
+        "compression_policy": compression_policy,
+        "prompt_token_breakdown": prompt_token_breakdown or {},
+        "block_token_breakdown": block_token_breakdown or [],
         "cloudless_feedback_summary": cloudless_feedback_summary,
         "advisor_request": {
             "goal": "Generate structured mutation proposals for the next generation.",
@@ -557,6 +615,9 @@ def build_advisor_feedback_batch(
                 "Do not remove safety/output schema constraints.",
                 "Every proposal must specify target block/family and affected failure family.",
                 "If compression is proposed, specify expected token reduction and regression risk.",
+                "Reject no-op compression, including candidate_strategies -> ['minimal'] when already minimal.",
+                "Block compression must use block_token_breakdown and name a concrete non-protected block.",
+                "Multi-block compression must preserve validator-critical output, service mapping, retrieval, temporal, and variable rules.",
             ],
         },
     }
@@ -570,7 +631,82 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
     if detail == "compact":
         packet.pop("current_prompt_artifact", None)
         packet.pop("group_diagnostics", None)
+    compression_policy = packet.get("compression_policy") or {}
+    advisor_case = _advisor_case_from_policy(compression_policy)
+    case_instructions = {
+        "A": [
+            "Advisor Case A: general / accuracy-search advisor.",
+            "DETPass is below the compression threshold. Prioritize correctness and deterministic repair.",
+            "Still allow one optional low-risk micro_compression_proposal when it is not a no-op.",
+            "Do not propose aggressive block deletion or protected block mutation.",
+        ],
+        "B": [
+            "Advisor Case B: compression-ready advisor.",
+            "DETPass is at or above threshold. Inspect prompt_token_breakdown and block_token_breakdown.",
+            "Select at least one large non-protected block when available.",
+            "Every block-level proposal must identify selected_block_id, exact operator, preserved/removable content, expected token delta, risk, and validation requirement.",
+        ],
+        "C": [
+            "Advisor Case C: aggressive compression advisor.",
+            "DETPass is above threshold and plateau/token plateau is active.",
+            "Keep block compression active; multi-block/global proposals are additions, not replacements.",
+            "Produce at least one block-level proposal if possible, and optionally one multi-block/global-budget proposal.",
+            "Prefer meaningful token reductions and keep DETPass as a hard validation gate.",
+        ],
+    }[advisor_case]
     required_schema = {
+        "advisor_status": "accepted|skipped|rejected",
+        "compression_policy": {
+            "state": compression_policy.get("state", "ACCURACY_SEARCH"),
+            "advisor_case": advisor_case,
+        },
+        "prompt_token_breakdown_seen": True,
+        "block_token_breakdown_seen": True,
+        "micro_compression_proposals": [
+            {
+                "proposal_id": "g{:03d}_micro_01".format(int(batch.get("generation", 0) or 0)),
+                "mutation_family": "compression",
+                "compression_level": "micro",
+                "mutation_type": "dedupe_duplicate_micro_rules",
+                "expected_token_delta": -40,
+                "regression_risk": 0.05,
+                "validation_requirement": "standard DETPass gate",
+            }
+        ],
+        "block_compression_proposals": [
+            {
+                "proposal_id": "g{:03d}_block_01".format(int(batch.get("generation", 0) or 0)),
+                "mutation_family": "compression",
+                "compression_level": "block",
+                "selected_block_id": "06",
+                "selected_block_family": "DET_Helper",
+                "exact_mutation_operator": "prune_micro_rules_to_top_k",
+                "original_token_estimate": 1200,
+                "proposed_token_estimate_after": 700,
+                "expected_token_delta": -500,
+                "preserved_content": ["validator-critical temporal rules"],
+                "removable_content": ["duplicate hints"],
+                "why_safe": "non-protected block and redundant rules",
+                "regression_risk": 0.2,
+                "validation_requirement": "strict DETPass gate",
+            }
+        ],
+        "multi_block_compression_proposals": [
+            {
+                "proposal_id": "g{:03d}_multi_01".format(int(batch.get("generation", 0) or 0)),
+                "mutation_family": "compression",
+                "compression_level": "multi_block",
+                "selected_block_ids": ["05", "06"],
+                "steps": [
+                    {"block_id": "05", "operator": "reduce_few_shot_count_to_zero"},
+                    {"block_id": "06", "operator": "prune_micro_rules_to_top_k", "k": 3},
+                ],
+                "total_expected_token_delta": -900,
+                "regression_risk": 0.35,
+                "validation_requirement": "strict DETPass gate",
+            }
+        ],
+        "global_budget_compression_proposals": [],
         "proposals": [
             {
                 "proposal_id": "g{:03d}_01".format(int(batch.get("generation", 0) or 0)),
@@ -588,18 +724,29 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
                 "regression_risk": 0.2,
                 "apply_mode": "create_child",
             }
-        ]
+        ],
     }
+    # The advisor prompt is phase-aware.
+    # Below threshold, it prioritizes correctness.
+    # After threshold, it receives token/block breakdowns and must propose concrete compression targets.
+    # In aggressive mode, it must propose block-level and optionally multi-block compression plans.
     lines = [
         "You are a prompt-block mutation advisor for a JOILang code-generation system.",
         "You receive ONE generation-level feedback packet describing DET evaluation results.",
         "Return ONLY a JSON object that matches required_response_schema. No prose, no markdown.",
+        "",
+        *case_instructions,
+        "",
         "Rules:",
         "- Do not rewrite the whole prompt; propose compact, targeted prompt-block edits only.",
         "- Do not remove safety or output-schema constraints.",
         "- Do not mutate retrieval / pre-mapping / service-context construction.",
         "- Every proposal must name target_block_id, target_block_family, and affected_failure_families.",
         "- Use only allowed_mutation_types from the packet.",
+        "- Do not propose compress_candidate_strategies_to_minimal if candidate_strategies is already ['minimal'].",
+        "- Block-level compression must target a concrete selected_block_id from block_token_breakdown.",
+        "- Multi-block compression must list selected_block_ids and concrete step operators.",
+        "- Penalize tiny token deltas except for low-risk micro compression.",
         "",
         "feedback_packet:",
         json.dumps(packet, ensure_ascii=False, indent=2),
@@ -617,20 +764,40 @@ def validate_advisor_proposal(
     core_blocks: set[str],
     existing_rules: set[str] | None = None,
     max_token_expansion: int = 60,
+    parent_genome: dict[str, Any] | None = None,
+    block_token_breakdown: list[dict[str, Any]] | None = None,
+    min_meaningful_token_delta: int = 32,
 ) -> tuple[bool, str]:
     existing_rules = {str(rule).strip().lower() for rule in (existing_rules or set())}
-    block_id = str(raw.get("target_block_id", "") or "").strip()
-    family = str(raw.get("target_block_family", "") or "").strip()
-    mutation_type = str(raw.get("mutation_type", "") or raw.get("operator", "") or "").strip()
+    block_id = str(raw.get("target_block_id") or raw.get("selected_block_id") or "").strip()
+    family = str(raw.get("target_block_family") or raw.get("selected_block_family") or "").strip()
+    mutation_type = str(raw.get("mutation_type") or raw.get("operator") or raw.get("exact_mutation_operator") or "").strip()
     micro_rule = str(raw.get("proposed_micro_rule", "") or "").strip()
     affected = raw.get("affected_failure_families") or []
+    parent_genome = parent_genome or {}
+    if block_token_breakdown is None:
+        block_token_breakdown = profile_prompt_blocks_for_genome(parent_genome) if parent_genome else []
+    block_by_id = {str(block.get("block_id")): block for block in block_token_breakdown}
+    selected_block_ids = raw.get("selected_block_ids") or raw.get("block_ids") or []
+    if isinstance(selected_block_ids, str):
+        selected_block_ids = [selected_block_ids]
+    if block_id and block_id not in selected_block_ids:
+        selected_block_ids = [block_id, *list(selected_block_ids)]
+    compression_level = str(raw.get("compression_level", "") or "").strip()
+    is_compression = (
+        str(raw.get("mutation_family", "")).strip() == "compression"
+        or mutation_type in MICRO_COMPRESSION_OPERATORS
+        or mutation_type in BLOCK_COMPRESSION_OPERATORS
+        or mutation_type in MULTI_BLOCK_COMPRESSION_OPERATORS
+        or mutation_type in GLOBAL_BUDGET_COMPRESSION_OPERATORS
+    )
 
     text_blob = json.dumps(raw, ensure_ascii=False).lower()
     if any(marker in text_blob for marker in RETRIEVAL_MARKERS):
         return False, "proposal attempted to mutate retrieval/pre-mapping context"
-    if not block_id or not family:
+    if not is_compression and (not block_id or not family):
         return False, "missing target block id or block family"
-    if block_id not in valid_blocks:
+    if block_id and block_id not in valid_blocks:
         return False, "proposal targets unknown block that cannot be created safely"
     if not mutation_type:
         return False, "missing mutation type"
@@ -640,6 +807,53 @@ def validate_advisor_proposal(
         return False, "proposal attempted to remove or replace a protected/core block"
     if mutation_type not in SUPPORTED_ADVISOR_MUTATION_TYPES:
         return False, f"unsupported mutation type: {mutation_type}"
+    if is_compression:
+        # Reject no-op compression proposals before scheduling children.
+        # This prevents the advisor from repeatedly proposing already-applied small genome mutations.
+        # If compression is ready, a rejected advisor proposal can still trigger a stronger safe fallback operator.
+        params = parent_genome.get("params", {}) or {}
+        strategies = list(params.get("candidate_strategies") or [])
+        if mutation_type in {"compress_candidate_strategies_to_minimal", "reduce_candidate_strategies"} and strategies == ["minimal"]:
+            return False, "no-op compression: candidate_strategies already equals ['minimal']"
+        max_tokens = int(params.get("max_tokens", 0) or 0)
+        if mutation_type in {"lower_output_max_tokens", "lower_output_max_tokens_safe"} and max_tokens and max_tokens <= 512:
+            return False, "no-op compression: max_tokens already at safe lower bound"
+        if mutation_type == "lower_output_max_tokens_aggressive" and max_tokens and max_tokens <= 256:
+            return False, "no-op compression: max_tokens already at aggressive lower bound"
+        block_ops = BLOCK_COMPRESSION_OPERATORS | {"lower_output_max_tokens_aggressive"}
+        if mutation_type in block_ops and mutation_type not in MICRO_COMPRESSION_OPERATORS and not block_id:
+            return False, "block-level compression proposal missing selected_block_id"
+        if mutation_type in MULTI_BLOCK_COMPRESSION_OPERATORS and not selected_block_ids:
+            return False, "multi-block compression proposal missing selected_block_ids"
+        for selected in selected_block_ids:
+            block_info = block_by_id.get(str(selected), {})
+            # Protected blocks must not be mutated by compression, even if they are optional in the genome model.
+            if block_info.get("is_protected_block") and mutation_type not in MICRO_COMPRESSION_OPERATORS:
+                return False, "proposal attempted to compress a protected prompt block"
+        if mutation_type == "drop_optional_block":
+            block_info = block_by_id.get(block_id, {})
+            if block_info.get("is_core_block") or block_info.get("is_protected_block"):
+                return False, "drop_optional_block targets a core/protected block"
+            if block_info.get("protected_content_markers"):
+                return False, "drop_optional_block would remove validator-critical protected content"
+            if not any(block.get("compression_allowed") and block.get("optional_status") == "optional" for block in block_token_breakdown):
+                return False, "drop_optional_block requested but no optional compression block remains"
+        if mutation_type == "reduce_few_shot_count_to_zero":
+            if int((block_by_id.get(block_id) or {}).get("few_shot_count") or 0) <= 0:
+                return False, "no-op compression: few_shot_count already equals 0"
+        if mutation_type == "reduce_few_shot_count":
+            target_count = int(raw.get("target_count") or raw.get("k") or 0)
+            current_count = int((block_by_id.get(block_id) or {}).get("few_shot_count") or 0)
+            if current_count <= target_count:
+                return False, "no-op compression: few_shot_count already <= target_count"
+        expected_delta_raw = raw.get("expected_token_delta", raw.get("total_expected_token_delta"))
+        if expected_delta_raw in (None, ""):
+            return False, "compression proposal missing expected_token_delta"
+        expected_delta = int(expected_delta_raw or 0)
+        if expected_delta >= 0:
+            return False, "compression proposal expected_token_delta must be negative"
+        if compression_level not in {"micro", "genome"} and abs(expected_delta) < int(min_meaningful_token_delta):
+            return False, "compression proposal expected_token_delta too small for block/global scheduling"
     if any(marker in micro_rule.lower() for marker in ("remove json", "drop json", "do not return json", "ignore schema")):
         return False, "proposal attempted to remove a protected output-schema/safety rule"
     if mutation_type in RULE_ADDING_MUTATION_TYPES and not micro_rule:
@@ -648,7 +862,7 @@ def validate_advisor_proposal(
         return False, "proposal appears to generate JOILang code instead of a prompt mutation"
     if micro_rule and micro_rule.lower() in existing_rules:
         return False, "duplicates an existing micro-rule exactly"
-    if not affected:
+    if not affected and not is_compression:
         return False, "proposal missing affected_failure_families"
     token_delta = int(raw.get("expected_token_delta") or 0)
     if token_delta > max_token_expansion and not affected:
@@ -684,7 +898,7 @@ def apply_advisor_proposal(
             "advisor_proposal_id": mp.advisor_proposal_id,
             "advisor_batch_id": advisor_batch_id_value,
             "advisor_mutation_type": mp.operator,
-            "mutation_family": "advisor_guided",
+            "mutation_family": mp.mutation_family or "advisor_guided",
         }
     )
     augmented = [{**diff, "advisor_batch_id": advisor_batch_id_value} for diff in diffs]

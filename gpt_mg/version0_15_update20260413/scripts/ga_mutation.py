@@ -39,6 +39,42 @@ FAMILY_RATIOS = {
     },
 }
 
+MICRO_COMPRESSION_OPERATORS = {
+    "compress_candidate_strategies_to_minimal",
+    "reduce_candidate_strategies",
+    "lower_output_max_tokens_safe",
+    "lower_output_max_tokens_aggressive",
+    "lower_output_max_tokens",
+    "dedupe_duplicate_micro_rules",
+    "merge_duplicate_micro_rules",
+    "prune_micro_rules_to_top_k_safe",
+    "reduce_few_shot_count_by_one",
+    "compact_block_params_safe",
+    "remove_redundant_hint_lines",
+}
+
+BLOCK_COMPRESSION_OPERATORS = {
+    "reduce_few_shot_count_to_zero",
+    "reduce_few_shot_count",
+    "prune_micro_rules_to_top_k",
+    "compact_block_params",
+    "drop_optional_block",
+    "drop_optional_blocks_for_budget",
+    "compact_reasoning_skeleton",
+}
+
+MULTI_BLOCK_COMPRESSION_OPERATORS = {"multi_block_compression_plan"}
+GLOBAL_BUDGET_COMPRESSION_OPERATORS = {
+    "global_render_budget_down",
+    "category_example_budget_down",
+    "service_context_render_budget_down",
+    "compact_service_schema_fields",
+    "dedupe_service_value_enums",
+    "drop_unused_device_capabilities",
+}
+
+PROTECTED_COMPRESSION_BLOCKS = {"01", "02", "03"}
+
 
 def mutation_family_for_phase(phase: str, rng: random.Random) -> str:
     ratios = FAMILY_RATIOS.get(str(phase or "ACCURACY_SEARCH"), FAMILY_RATIOS["ACCURACY_SEARCH"])
@@ -63,11 +99,11 @@ def proposal_for_family(
         operator = rng.choice(
             [
                 "drop_optional_block",
-                "reduce_few_shot_count",
-                "merge_duplicate_micro_rules",
-                "reduce_candidate_strategies",
+                "reduce_few_shot_count_by_one",
+                "dedupe_duplicate_micro_rules",
+                "compress_candidate_strategies_to_minimal",
                 "compact_reasoning_skeleton",
-                "lower_output_max_tokens",
+                "lower_output_max_tokens_safe",
             ]
         )
     elif family == "temporal_reasoning":
@@ -96,6 +132,143 @@ def proposal_for_family(
     )
 
 
+def _proposal_payload(proposal: MutationProposal) -> dict[str, Any]:
+    try:
+        parsed = json.loads(proposal.replacement_text or "{}")
+    except Exception:
+        parsed = {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
+def _selected_blocks(proposal: MutationProposal) -> list[str]:
+    blocks = [str(item) for item in (proposal.selected_block_ids or proposal.target_units or []) if str(item).strip()]
+    if proposal.target_block_id and proposal.target_block_id not in blocks:
+        blocks.insert(0, proposal.target_block_id)
+    return blocks
+
+
+def _safe_optional_blocks(genome: dict[str, Any]) -> list[str]:
+    return [
+        block
+        for block in genome.get("blocks", []) or []
+        if block in get_optional_blocks() and block not in PROTECTED_COMPRESSION_BLOCKS
+    ]
+
+
+def _set_few_shot_count(child: dict[str, Any], block_id: str, count: int) -> None:
+    child.setdefault("block_params", {}).setdefault(block_id, {})["few_shot_count"] = max(0, int(count))
+
+
+def _current_few_shot_count(child: dict[str, Any], block_id: str) -> int:
+    params = child.setdefault("block_params", {}).setdefault(block_id, {})
+    fallback = child.setdefault("params", {}).get("few_shot_count", 3)
+    try:
+        return int(params.get("few_shot_count", fallback) or 0)
+    except Exception:
+        return 0
+
+
+def _dedupe_micro_rules(child: dict[str, Any], *, block_id: str = "", top_k: int | None = None) -> None:
+    block_params = child.setdefault("block_params", {})
+    target_items = [(block_id, block_params.setdefault(block_id, {}))] if block_id else list(block_params.items())
+    for _bid, params in target_items:
+        rules = list(params.get("micro_rules") or [])
+        deduped = []
+        seen = set()
+        for rule in rules:
+            cleaned = str(rule).strip()
+            key = " ".join(cleaned.lower().split())
+            if not cleaned or key in seen:
+                continue
+            seen.add(key)
+            deduped.append(cleaned)
+        params["micro_rules"] = deduped[:top_k] if top_k is not None else deduped
+
+
+def _compact_block_params(child: dict[str, Any], block_id: str) -> None:
+    params = child.setdefault("block_params", {}).setdefault(block_id, {})
+    if "micro_rules" in params:
+        _dedupe_micro_rules(child, block_id=block_id, top_k=4)
+        if not params.get("micro_rules"):
+            params.pop("micro_rules", None)
+    for key in list(params.keys()):
+        if params.get(key) in ("", None, [], {}):
+            params.pop(key, None)
+
+
+def _apply_single_compression_operator(
+    child: dict[str, Any],
+    operator: str,
+    *,
+    target_block_id: str = "",
+    payload: dict[str, Any] | None = None,
+    rng: random.Random,
+) -> None:
+    payload = payload or {}
+    child.setdefault("params", {})
+    child.setdefault("block_params", {})
+    child.setdefault("blocks", get_core_blocks())
+    if operator in {"drop_optional_block", "drop_optional_blocks_for_budget"}:
+        requested = [target_block_id] if target_block_id else [str(item) for item in payload.get("block_ids", []) or []]
+        candidates = [block for block in requested if block in _safe_optional_blocks(child)]
+        if not candidates:
+            candidates = _safe_optional_blocks(child)
+        remove_count = len(candidates) if operator == "drop_optional_blocks_for_budget" else min(1, len(candidates))
+        remove_set = set(candidates[:remove_count])
+        child["blocks"] = normalize_active_blocks([block for block in child.get("blocks", []) if block not in remove_set])
+    elif operator in {"reduce_few_shot_count", "few_shot_reduction", "reduce_few_shot_count_by_one"}:
+        block_id = target_block_id if target_block_id else "02"
+        before_count = _current_few_shot_count(child, block_id)
+        target_count = payload.get("target_count")
+        if target_count is None:
+            target_count = max(0, before_count - 1)
+        _set_few_shot_count(child, block_id, int(target_count))
+    elif operator == "reduce_few_shot_count_to_zero":
+        _set_few_shot_count(child, target_block_id or "02", 0)
+    elif operator in {"merge_duplicate_micro_rules", "dedupe_duplicate_micro_rules", "prune_stale_micro_rules", "template_compress_rule_family"}:
+        _dedupe_micro_rules(child, top_k=4)
+    elif operator in {"prune_micro_rules_to_top_k", "prune_micro_rules_to_top_k_safe"}:
+        block_id = target_block_id if target_block_id else ""
+        k = int(payload.get("k") or payload.get("top_k") or (4 if operator.endswith("_safe") else 3))
+        _dedupe_micro_rules(child, block_id=block_id, top_k=max(0, k))
+    elif operator in {"compact_block_params", "compact_block_params_safe", "remove_redundant_hint_lines"}:
+        blocks = [target_block_id] if target_block_id else list(child.get("block_params", {}).keys())
+        for block_id in blocks:
+            _compact_block_params(child, str(block_id))
+    elif operator in {"reduce_candidate_strategies", "compress_candidate_strategies_to_minimal"}:
+        child["params"]["candidate_strategies"] = ["minimal"]
+    elif operator in {"lower_output_max_tokens", "lower_max_tokens", "lower_output_max_tokens_safe"}:
+        current = int(child["params"].get("max_tokens", 768) or 768)
+        child["params"]["max_tokens"] = min(current, 512)
+    elif operator == "lower_output_max_tokens_aggressive":
+        current = int(child["params"].get("max_tokens", 768) or 768)
+        child["params"]["max_tokens"] = min(current, 256)
+    elif operator == "compact_reasoning_skeleton":
+        block_id = target_block_id or "06"
+        current = _current_few_shot_count(child, block_id)
+        if current > 1:
+            _set_few_shot_count(child, block_id, 1)
+        child["block_params"].setdefault(block_id, {})["reasoning_budget"] = payload.get("reasoning_budget", "cod_2")
+    elif operator in GLOBAL_BUDGET_COMPRESSION_OPERATORS:
+        # Global budget operators only tighten rendered context budgets; retrieval and pre-mapping stay unchanged.
+        budget = child["params"].setdefault("render_budgets", {})
+        if operator == "category_example_budget_down":
+            budget["category_examples"] = max(0, int(budget.get("category_examples", 2) or 2) - 1)
+        elif operator == "service_context_render_budget_down":
+            budget["service_context"] = "compact"
+        else:
+            budget[operator] = "compact"
+    elif operator in {"activate_temporal_skeleton", "strengthen_temporal_rule"}:
+        blocks = list(child.get("blocks", []))
+        if "06" not in blocks:
+            blocks.append("06")
+        child["blocks"] = normalize_active_blocks(blocks)
+        rules = child["block_params"].setdefault("06", {}).setdefault("micro_rules", [])
+        rule = "Use compact skeleton: trigger -> delay/repeat -> guard -> action -> termination."
+        if rule not in rules:
+            rules.append(rule)
+
+
 def apply_mutation_proposal(
     genome: dict[str, Any],
     proposal: MutationProposal,
@@ -109,42 +282,38 @@ def apply_mutation_proposal(
     child.setdefault("params", {})
     child.setdefault("block_params", {})
     child.setdefault("blocks", get_core_blocks())
-    optional = [block for block in child.get("blocks", []) if block in get_optional_blocks()]
     operator = proposal.operator
-    if operator in {"drop_optional_block", "drop_optional_blocks_for_budget"} and optional:
-        removable = [block for block in optional if block not in {"03"}]
-        target = removable[0] if removable else optional[-1]
-        child["blocks"] = normalize_active_blocks([block for block in child.get("blocks", []) if block != target])
-    elif operator in {"reduce_few_shot_count", "few_shot_reduction"}:
-        block = child["block_params"].setdefault("02", {})
-        before_count = int(block.get("few_shot_count", 2) or 2)
-        block["few_shot_count"] = max(0, before_count - 1)
-    elif operator in {"merge_duplicate_micro_rules", "prune_stale_micro_rules", "template_compress_rule_family"}:
-        for block_id, params in child["block_params"].items():
-            rules = list(params.get("micro_rules") or [])
-            deduped = []
-            seen = set()
-            for rule in rules:
-                key = " ".join(str(rule).lower().split())
-                if key in seen:
-                    continue
-                seen.add(key)
-                deduped.append(str(rule).strip())
-            params["micro_rules"] = deduped[:4]
-    elif operator == "reduce_candidate_strategies":
-        strategies = list(child["params"].get("candidate_strategies") or [])
-        child["params"]["candidate_strategies"] = strategies[: max(1, min(2, len(strategies)))] or ["direct"]
-    elif operator in {"lower_output_max_tokens", "lower_max_tokens"}:
-        child["params"]["max_tokens"] = min(int(child["params"].get("max_tokens", 768) or 768), 512)
-    elif operator in {"activate_temporal_skeleton", "strengthen_temporal_rule"}:
-        blocks = list(child.get("blocks", []))
-        if "06" not in blocks:
-            blocks.append("06")
-        child["blocks"] = normalize_active_blocks(blocks)
-        rules = child["block_params"].setdefault("06", {}).setdefault("micro_rules", [])
-        rule = "Use compact skeleton: trigger -> delay/repeat -> guard -> action -> termination."
-        if rule not in rules:
-            rules.append(rule)
+    payload = _proposal_payload(proposal)
+    if operator in MICRO_COMPRESSION_OPERATORS | BLOCK_COMPRESSION_OPERATORS | GLOBAL_BUDGET_COMPRESSION_OPERATORS:
+        _apply_single_compression_operator(
+            child,
+            operator,
+            target_block_id=proposal.target_block_id,
+            payload=payload,
+            rng=rng,
+        )
+    elif operator in MULTI_BLOCK_COMPRESSION_OPERATORS:
+        steps = []
+        try:
+            raw_steps = json.loads(proposal.replacement_text or "[]")
+            steps = raw_steps if isinstance(raw_steps, list) else []
+        except Exception:
+            steps = []
+        if not steps:
+            steps = [{"block_id": block_id, "operator": "compact_block_params"} for block_id in _selected_blocks(proposal)]
+        for step in steps:
+            if not isinstance(step, dict):
+                continue
+            block_id = str(step.get("block_id") or step.get("selected_block_id") or "")
+            if block_id in PROTECTED_COMPRESSION_BLOCKS:
+                continue
+            _apply_single_compression_operator(
+                child,
+                str(step.get("operator") or step.get("mutation_type") or "compact_block_params"),
+                target_block_id=block_id,
+                payload=step,
+                rng=rng,
+            )
     elif operator in {"layout_shuffle", "block_variant_switch", "random_compact_seed"}:
         child["params"]["layout_mode"] = rng.choice(["schema_task_output", "output_first", "temporal_first", "skeleton_first"])
     elif proposal.replacement_text:
