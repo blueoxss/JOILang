@@ -55,12 +55,27 @@ ADVISOR_COMPRESSION_MUTATION_TYPES = {
 }
 
 
+def _safe_int(value: Any, default: int = 0) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _safe_float(value: Any, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
 @dataclass
 class MutationProposal:
     proposal_id: str
     source: str
     mutation_family: str
     operator: str
+    mutation_type: str = ""
     target_units: list[str] = field(default_factory=list)
     target_block_id: str = ""
     target_block_family: str = ""
@@ -78,9 +93,12 @@ class MutationProposal:
     parent_genome_id: str = ""
     child_genome_id: str = ""
     # --- advisor lifecycle / provenance (used by the cloud-advisor path) ---
+    schema_source: str = ""
     proposal_state: str = PROPOSAL_STATE_PROPOSED
     advisor_batch_id: str = ""
     advisor_proposal_id: str = ""
+    raw_response_path: str = ""
+    advisor_prompt_path: str = ""
     category_scope: list[int] = field(default_factory=list)
     group_scope: list[str] = field(default_factory=list)
     priority: int = 0
@@ -99,12 +117,15 @@ class MutationProposal:
     expected_token_delta: int = 0
     measured_prompt_token_delta: float = 0.0
     measured_prompt_token_delta_pct: float = 0.0
+    fallback_reason: str = ""
     largest_token_component: str = ""
     preserved_content: list[str] = field(default_factory=list)
     removable_content: list[str] = field(default_factory=list)
 
     def to_row(self) -> dict[str, Any]:
         row = asdict(self)
+        row["mutation_type"] = row.get("mutation_type") or row.get("operator", "")
+        row["operator"] = row.get("operator") or row.get("mutation_type", "")
         for key in (
             "target_units",
             "affected_failure_families",
@@ -131,7 +152,12 @@ def proposal_from_advisor(
     category_scope = [int(value) for value in (raw.get("category_scope") or []) if str(value).strip().lstrip("-").isdigit()]
     group_scope = [str(value) for value in (raw.get("group_scope") or []) if str(value).strip()]
     proposal_id = str(raw.get("proposal_id", f"advisor_g{generation:03d}"))
-    operator = str(raw.get("exact_mutation_operator") or raw.get("mutation_type") or raw.get("operator") or "add_micro_rule")
+    operator = str(
+        raw.get("exact_mutation_operator")
+        or raw.get("operator")
+        or raw.get("mutation_type")
+        or ("" if raw.get("rejection_reason") else "add_micro_rule")
+    )
     mutation_family = str(raw.get("mutation_family") or "")
     if not mutation_family:
         mutation_family = "compression" if operator in ADVISOR_COMPRESSION_MUTATION_TYPES else "advisor_guided"
@@ -151,41 +177,46 @@ def proposal_from_advisor(
             compression_level = "block"
         else:
             compression_level = "micro"
-    expected_token_delta = int(raw.get("expected_token_delta") or raw.get("total_expected_token_delta") or 0)
+    expected_token_delta = _safe_int(raw.get("expected_token_delta") or raw.get("total_expected_token_delta") or 0)
     return MutationProposal(
         proposal_id=proposal_id,
         source="advisor",
         mutation_family=mutation_family,
         operator=operator,
+        mutation_type=str(raw.get("mutation_type") or operator),
         target_units=selected_block_ids,
         target_block_id=selected_block_id,
         target_block_family=str(raw.get("selected_block_family") or raw.get("target_block_family") or ""),
         replacement_text=str(raw.get("proposed_micro_rule") or raw.get("edit_instruction") or ""),
         estimated_token_delta=expected_token_delta,
-        risk_score=float(raw.get("regression_risk") or raw.get("risk_score") or 0.2),
+        risk_score=_safe_float(raw.get("regression_risk") or raw.get("risk_score") or 0.2),
         affected_failure_families=[str(item) for item in affected if str(item).strip()],
         expected_effect=str(raw.get("expected_effect") or raw.get("reason", "")),
         generation=generation,
         accepted=bool(raw.get("accepted", True)),
         rejection_reason=str(raw.get("rejection_reason", "")),
+        schema_source=str(raw.get("schema_source") or ""),
         proposal_state=str(raw.get("proposal_state") or PROPOSAL_STATE_PROPOSED),
         advisor_batch_id=str(raw.get("advisor_batch_id") or advisor_batch_id),
         advisor_proposal_id=proposal_id,
+        raw_response_path=str(raw.get("raw_response_path") or ""),
+        advisor_prompt_path=str(raw.get("advisor_prompt_path") or ""),
         category_scope=category_scope,
         group_scope=group_scope,
-        priority=int(raw.get("priority") or 0),
-        regression_risk=float(raw.get("regression_risk") or 0.0),
+        priority=_safe_int(raw.get("priority") or 0),
+        regression_risk=_safe_float(raw.get("regression_risk") or 0.0),
         compression_level=compression_level,
         compression_phase=str(raw.get("compression_phase") or ""),
         selected_compression_target=str(raw.get("selected_compression_target") or selected_block_id or ",".join(selected_block_ids)),
         selected_block_id=selected_block_id,
         selected_block_ids=selected_block_ids,
         block_family=str(raw.get("selected_block_family") or raw.get("block_family") or raw.get("target_block_family") or ""),
-        block_token_before=int(raw.get("original_token_estimate") or raw.get("block_token_before") or 0),
-        block_token_after_estimate=int(raw.get("proposed_token_estimate_after") or raw.get("block_token_after_estimate") or 0),
+        block_token_before=_safe_int(raw.get("original_token_estimate") or raw.get("block_token_before") or 0),
+        block_token_after_estimate=_safe_int(raw.get("proposed_token_estimate_after") or raw.get("block_token_after_estimate") or 0),
         expected_token_delta=expected_token_delta,
-        measured_prompt_token_delta=float(raw.get("measured_prompt_token_delta") or 0.0),
-        measured_prompt_token_delta_pct=float(raw.get("measured_prompt_token_delta_pct") or 0.0),
+        measured_prompt_token_delta=_safe_float(raw.get("measured_prompt_token_delta") or 0.0),
+        measured_prompt_token_delta_pct=_safe_float(raw.get("measured_prompt_token_delta_pct") or 0.0),
+        fallback_reason=str(raw.get("fallback_reason") or ""),
         largest_token_component=str(raw.get("largest_token_component") or ""),
         preserved_content=[str(item) for item in (raw.get("preserved_content") or [])],
         removable_content=[str(item) for item in (raw.get("removable_content") or [])],

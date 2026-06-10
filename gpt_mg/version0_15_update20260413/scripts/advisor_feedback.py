@@ -708,6 +708,8 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
                 "selected_block_id": "06",
                 "selected_block_family": "DET_Helper",
                 "exact_mutation_operator": "prune_micro_rules_to_top_k",
+                "operator": "prune_micro_rules_to_top_k",
+                "mutation_type": "prune_micro_rules_to_top_k",
                 "original_token_estimate": 5200,
                 "proposed_token_estimate_after": 2600,
                 "expected_token_delta": -2600,
@@ -743,17 +745,25 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
             "Advisor Case A: DETPass is below threshold or accuracy-first.",
             "- Focus on correctness and DET repair.",
             "- Optional micro compression is allowed only when it is not a no-op.",
+            "- Legacy proposals are allowed for backward compatibility.",
+            "- Do not propose no-op compression.",
             "- Do not propose aggressive block deletion.",
         ],
         "COMPRESSION_READY": [
             "Advisor Case B: DETPass is above threshold.",
             "- Inspect prompt_token_breakdown and block_token_breakdown.",
-            "- Select at least one large non-protected block-level target if available.",
-            "- Include selected_block_id, preserved/removable content, expected_token_delta, and regression_risk.",
+            "- Prefer the largest non-protected compression_allowed block-level target.",
+            "- Output at least one block_compression_proposals item when any compression_allowed block exists.",
+            "- If the largest block is protected, explicitly skip it and choose the next largest non-protected block.",
+            "- Do not propose only compress_candidate_strategies_to_minimal unless no block-level target exists and the delta is non-trivial.",
+            "- Required block fields: proposal_id, selected_block_id, selected_block_family, exact_mutation_operator, operator, mutation_type, original_token_estimate, proposed_token_estimate_after, expected_token_delta, preserved_content, removable_content, why_safe, regression_risk, validation_requirement.",
         ],
         "AGGRESSIVE_COMPRESSION": [
             "Advisor Case C: threshold is met and plateau/token plateau is active.",
             "- Keep block compression active; multi-block/global proposals are additive.",
+            "- Increase block compression quota/probability; add multi_block_compression_proposals when at least two safe block changes exist.",
+            "- Add global_budget_compression_proposals only when render-budget hooks are enabled in the packet.",
+            "- Prioritize removal or zeroing of examples/rules in non-protected optional blocks.",
             "- Prioritize largest non-protected token components and avoid tiny deltas.",
             "- DETPass remains a hard validation gate.",
         ],
@@ -774,6 +784,8 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
         "- Prefer reducing few-shot count, duplicate micro-rules, candidate strategies, optional blocks, and max output tokens before adding new rules.",
         "- Compression proposals must include expected_token_delta as a negative number.",
         "- Do not repeat no-op compression, such as compress_candidate_strategies_to_minimal when strategies are already [\"minimal\"].",
+        "- When compression_ready=True, do not return only genome-level candidate_strategies compression unless candidate_strategies is not already minimal, no non-protected block-level compression target exists, and expected_token_delta is non-trivial.",
+        "- If block_token_breakdown shows compression_allowed=false or is_protected_block=true, do not target that block; explain the skip reason or choose another block.",
         "- Do not remove output schema, JSON-only rules, core blocks, service mapping, retrieval, pre-mapping, or service-context construction.",
         "",
         "feedback_packet:",
@@ -796,6 +808,8 @@ def validate_advisor_proposal(
     block_token_breakdown: list[dict[str, Any]] | None = None,
     min_compression_token_delta: int = 32,
 ) -> tuple[bool, str]:
+    if not isinstance(raw, dict):
+        return False, "malformed_proposal"
     existing_rules = {str(rule).strip().lower() for rule in (existing_rules or set())}
     current_genome = current_genome or {}
     block_token_breakdown = block_token_breakdown or []
@@ -815,35 +829,40 @@ def validate_advisor_proposal(
 
     text_blob = json.dumps(raw, ensure_ascii=False).lower()
     if any(marker in text_blob for marker in RETRIEVAL_MARKERS):
-        return False, "proposal attempted to mutate retrieval/pre-mapping context"
+        return False, "attempts_to_modify_retrieval_or_premapping"
+    if not mutation_type:
+        return False, "unsupported_operator"
+    if mutation_type in PROTECTED_REMOVAL_OPERATORS or (
+        block_id in core_blocks and mutation_type in {"block_deactivation", "block_replacement", "remove_core_block"}
+    ):
+        return False, "protected_block_target"
+    if mutation_type not in SUPPORTED_ADVISOR_MUTATION_TYPES:
+        return False, "unsupported_operator"
+    if is_compression and compression_level == "block" and (not block_id or block_id == "genome"):
+        return False, "missing_selected_block_id"
+    if is_compression and compression_level == "multi_block" and not selected_block_ids:
+        return False, "missing_selected_block_ids"
     if not block_id or not family:
-        return False, "missing target block id or block family"
+        return False, "malformed_proposal"
     if block_id == "genome" and not is_compression:
         return False, "genome pseudo-target is only allowed for compression proposals"
     if block_id not in valid_blocks and not (is_compression and block_id == "genome"):
         return False, "proposal targets unknown block that cannot be created safely"
-    if not mutation_type:
-        return False, "missing mutation type"
-    if mutation_type in PROTECTED_REMOVAL_OPERATORS or (
-        block_id in core_blocks and mutation_type in {"block_deactivation", "block_replacement", "remove_core_block"}
-    ):
-        return False, "proposal attempted to remove or replace a protected/core block"
+    protected_target = block_id in core_blocks or block_id in {"02", "03"} or family in {"Core_System", "Service_Mapping", "Output_Schema"}
+    if is_compression and protected_target and block_id != "genome":
+        return False, "protected_block_target"
+    if is_compression and any(str(value) in core_blocks or str(value) in {"02", "03"} for value in selected_block_ids):
+        return False, "protected_block_target"
     if is_compression and mutation_type in {"drop_optional_block", "drop_optional_blocks_for_budget", "block_deactivation"}:
         if block_id in core_blocks or block_id == "03" or family in {"Core_System", "Service_Mapping", "Output_Schema"}:
-            return False, "proposal attempted to remove a protected/core/schema block"
-    if is_compression and compression_level == "block" and not block_id:
-        return False, "block-level compression proposal missing selected_block_id"
-    if is_compression and compression_level == "multi_block" and not selected_block_ids:
-        return False, "multi-block compression proposal missing selected_block_ids"
-    if mutation_type not in SUPPORTED_ADVISOR_MUTATION_TYPES:
-        return False, f"unsupported mutation type: {mutation_type}"
+            return False, "protected_block_target"
     if is_compression and any(
         marker in text_blob
         for marker in ("remove json", "drop json", "remove output schema", "drop output schema", "ignore schema")
     ):
-        return False, "proposal attempted to remove a protected output-schema/safety rule"
+        return False, "attempts_to_modify_output_schema"
     if any(marker in micro_rule.lower() for marker in ("remove json", "drop json", "do not return json", "ignore schema")):
-        return False, "proposal attempted to remove a protected output-schema/safety rule"
+        return False, "attempts_to_modify_output_schema"
     if mutation_type in RULE_ADDING_MUTATION_TYPES and not micro_rule:
         return False, "missing proposed_micro_rule"
     if "(#" in micro_rule or ")." in micro_rule:
@@ -861,23 +880,30 @@ def validate_advisor_proposal(
         params = current_genome.get("params") or {}
         block_params = current_genome.get("block_params") or {}
         if mutation_type == "compress_candidate_strategies_to_minimal" and list(params.get("candidate_strategies") or []) == ["minimal"]:
-            return False, "no-op compression: candidate_strategies already minimal"
+            return False, "no_op_candidate_strategies_already_minimal"
         if mutation_type == "reduce_few_shot_count_to_zero":
-            target = block_params.get(block_id, {}) if block_id and block_id != "genome" else {}
-            if target and int(target.get("few_shot_count") or 0) <= 0:
-                return False, "no-op compression: few_shot_count already zero"
+            candidate_params = [block_params.get(item, {}) for item in (selected_block_ids or ([block_id] if block_id and block_id != "genome" else list(block_params.keys())))]
+            if not any(int((params_item or {}).get("few_shot_count") or 0) > 0 for params_item in candidate_params if isinstance(params_item, dict)):
+                return False, "no_reducible_few_shot"
         if mutation_type in {"reduce_few_shot_count", "reduce_few_shot_count_by_one"}:
-            target = block_params.get(block_id, {}) if block_id and block_id != "genome" else {}
-            if target and int(target.get("few_shot_count") or 0) <= int(raw.get("target_count") or 0):
-                return False, "no-op compression: few_shot_count already below target"
+            candidate_params = [block_params.get(item, {}) for item in (selected_block_ids or ([block_id] if block_id and block_id != "genome" else list(block_params.keys())))]
+            if not any(int((params_item or {}).get("few_shot_count") or 0) > int(raw.get("target_count") or 0) for params_item in candidate_params if isinstance(params_item, dict)):
+                return False, "no_reducible_few_shot"
         if mutation_type == "lower_output_max_tokens_aggressive" and int(params.get("max_tokens") or 768) <= 256:
-            return False, "no-op compression: max_tokens already at lower bound"
+            return False, "max_tokens_already_at_lower_bound"
+        if mutation_type in {"lower_output_max_tokens", "lower_output_max_tokens_safe"} and int(params.get("max_tokens") or 768) <= 512:
+            return False, "max_tokens_already_at_lower_bound"
         token_delta_key_present = "expected_token_delta" in raw or "total_expected_token_delta" in raw
         if not token_delta_key_present:
-            return False, "compression proposal missing expected_token_delta"
-    token_delta = int(raw.get("expected_token_delta") or raw.get("total_expected_token_delta") or 0)
+            return False, "missing_expected_token_delta"
+    try:
+        token_delta = int(raw.get("expected_token_delta") or raw.get("total_expected_token_delta") or 0)
+    except (TypeError, ValueError):
+        return False, "invalid_json_schema"
+    if is_compression and token_delta >= 0:
+        return False, "expected_token_delta_too_small"
     if is_compression and compression_level not in {"micro", ""} and abs(token_delta) < int(min_compression_token_delta):
-        return False, "compression expected_token_delta too small for block/global proposal"
+        return False, "expected_token_delta_too_small"
     if token_delta > max_token_expansion and not affected:
         return False, "token expansion too high without accuracy justification"
     return True, ""

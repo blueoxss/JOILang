@@ -972,7 +972,7 @@ BLOCK_FAMILY_LABELS = {
 def _proposal_operator(proposal: dict[str, Any] | MutationProposal) -> str:
     if isinstance(proposal, MutationProposal):
         return str(proposal.operator or "")
-    return str(proposal.get("mutation_type") or proposal.get("operator") or "")
+    return str(proposal.get("exact_mutation_operator") or proposal.get("operator") or proposal.get("mutation_type") or "")
 
 
 def _is_compression_proposal(proposal: dict[str, Any] | MutationProposal) -> bool:
@@ -1029,8 +1029,6 @@ def _build_token_breakdowns(genome: dict[str, Any], *, generation: int, model_ke
                 "compact_reasoning_skeleton",
                 "drop_optional_block",
             ])
-        elif block_id == "03":
-            safe_mutations.extend(["prune_micro_rules_to_top_k_safe", "compact_block_params_safe"])
         block_rows.append(
             {
                 "generation": generation,
@@ -1206,7 +1204,9 @@ def _make_compression_lane_proposal(
                 source=source,
             )
         selected_params = block_params.get(selected_block_id, {}) or {}
-        if int(selected_params.get("few_shot_count") or 0) > 0:
+        if selected_block_id in get_optional_blocks() and selected_block_id not in {"02", "03"} and int(block_row.get("token_estimate") or 0) > 0:
+            operator = "drop_optional_block"
+        elif int(selected_params.get("few_shot_count") or 0) > 0:
             operator = "reduce_few_shot_count_to_zero"
         elif int(block_row.get("micro_rule_count") or 0) > 3:
             operator = "prune_micro_rules_to_top_k"
@@ -1531,22 +1531,73 @@ def _extract_json_object(text: str) -> dict[str, Any]:
     raw = str(text or "").strip()
     if not raw:
         raise ValueError("empty advisor response")
-    try:
-        parsed = json.loads(raw)
-        if isinstance(parsed, dict):
-            return parsed
-    except json.JSONDecodeError:
-        pass
-    decoder = json.JSONDecoder()
-    for idx, char in enumerate(raw):
-        if char != "{":
-            continue
+
+    def candidate_score(value: dict[str, Any]) -> tuple[int, int]:
+        proposal_keys = {
+            "proposals",
+            "mutation_proposals",
+            "micro_compression_proposals",
+            "block_compression_proposals",
+            "multi_block_compression_proposals",
+            "global_budget_compression_proposals",
+        }
+        keys = set(value.keys())
+        score = 0
+        if "advisor_status" in keys:
+            score += 30
+        if "compression_policy" in keys:
+            score += 10
+        if keys & proposal_keys:
+            score += 40 + (5 * len(keys & proposal_keys))
+        if "prompt_token_breakdown_seen" in keys:
+            score += 5
+        if "block_token_breakdown_seen" in keys:
+            score += 5
+        if keys and keys <= {
+            "activate_when_detpass_ge",
+            "compression_ready",
+            "compression_phase",
+            "prefer_compression_if_accuracy_saturated",
+            "target_token_reduction_ratio",
+            "allow_aggressive_compression",
+            "preserve_core_blocks",
+            "preserve_output_schema",
+            "preserve_service_mapping",
+        }:
+            score -= 50
+        return (score, len(json.dumps(value, ensure_ascii=False)))
+
+    def unfence(value: str) -> str:
+        stripped = value.strip()
+        if stripped.startswith("```"):
+            lines = stripped.splitlines()
+            if lines and lines[0].strip().startswith("```"):
+                lines = lines[1:]
+            if lines and lines[-1].strip().startswith("```"):
+                lines = lines[:-1]
+            return "\n".join(lines).strip()
+        return stripped
+
+    candidates: list[dict[str, Any]] = []
+    for candidate_text in (raw, unfence(raw)):
         try:
-            parsed, _end = decoder.raw_decode(raw[idx:])
+            parsed = json.loads(candidate_text)
+            if isinstance(parsed, dict):
+                candidates.append(parsed)
         except json.JSONDecodeError:
-            continue
-        if isinstance(parsed, dict):
-            return parsed
+            pass
+        decoder = json.JSONDecoder()
+        for idx, char in enumerate(candidate_text):
+            if char != "{":
+                continue
+            try:
+                parsed, _end = decoder.raw_decode(candidate_text[idx:])
+            except json.JSONDecodeError:
+                continue
+            if isinstance(parsed, dict):
+                candidates.append(parsed)
+    if candidates:
+        return max(candidates, key=candidate_score)
     raise ValueError("advisor response did not contain a JSON object")
 
 
@@ -1741,8 +1792,16 @@ def _mock_advisor_response(
             else "compress_candidate_strategies_to_minimal"
         )
         return {
+            "advisor_status": "accepted",
             "generation": generation,
             "model_key": model_key,
+            "compression_policy": {
+                "compression_ready": True,
+                "compression_phase": "COMPRESSION_READY",
+                "allow_aggressive_compression": bool(allow_aggressive_compression),
+            },
+            "prompt_token_breakdown_seen": True,
+            "block_token_breakdown_seen": True,
             "diagnosis": [
                 {
                     "category_group": "compression",
@@ -1777,6 +1836,8 @@ def _mock_advisor_response(
                     "selected_block_id": str(block_target.get("block_id", "06")),
                     "selected_block_family": str(block_target.get("block_family", "DET_Helper")),
                     "exact_mutation_operator": "compact_reasoning_skeleton",
+                    "operator": "compact_reasoning_skeleton",
+                    "mutation_type": "compact_reasoning_skeleton",
                     "original_token_estimate": int(block_target.get("token_estimate") or 400),
                     "proposed_token_estimate_after": max(1, int(block_target.get("token_estimate") or 400) - 120),
                     "expected_token_delta": -120,
@@ -1839,6 +1900,154 @@ def _existing_micro_rules(genome: dict[str, Any]) -> set[str]:
     return rules
 
 
+ADVISOR_PROPOSAL_SCHEMA_KEYS = (
+    "proposals",
+    "mutation_proposals",
+    "micro_compression_proposals",
+    "block_compression_proposals",
+    "multi_block_compression_proposals",
+    "global_budget_compression_proposals",
+)
+
+MICRO_COMPRESSION_OPERATORS = {
+    "compress_candidate_strategies_to_minimal",
+    "template_compress_rule_family",
+    "lower_output_max_tokens_safe",
+    "compact_block_params_safe",
+    "dedupe_duplicate_micro_rules",
+    "prune_micro_rules_to_top_k_safe",
+    "reduce_candidate_strategies",
+}
+
+BLOCK_COMPRESSION_OPERATORS = {
+    "reduce_few_shot_count",
+    "reduce_few_shot_count_to_zero",
+    "reduce_few_shot_count_by_one",
+    "prune_micro_rules_to_top_k",
+    "compact_block_params",
+    "drop_optional_block",
+    "compact_reasoning_skeleton",
+}
+
+MULTI_BLOCK_COMPRESSION_OPERATORS = {
+    "drop_optional_blocks_for_budget",
+    "multi_block_compression_plan",
+}
+
+GLOBAL_BUDGET_COMPRESSION_OPERATORS = {
+    "global_render_budget_down",
+    "category_example_budget_down",
+    "service_context_render_budget_down",
+    "compact_service_schema_fields",
+    "dedupe_service_value_enums",
+    "drop_unused_device_capabilities",
+}
+
+
+def _schema_default_compression_level(schema_source: str) -> str:
+    if schema_source == "block_compression_proposals":
+        return "block"
+    if schema_source == "multi_block_compression_proposals":
+        return "multi_block"
+    if schema_source == "global_budget_compression_proposals":
+        return "global_budget"
+    if schema_source == "micro_compression_proposals":
+        return "micro"
+    return ""
+
+
+def _infer_advisor_compression_level(proposal: dict[str, Any], schema_source: str) -> str:
+    explicit = str(proposal.get("compression_level") or "").strip()
+    if explicit in {"micro", "block", "multi_block", "global_budget"}:
+        return explicit
+    operator = _proposal_operator(proposal)
+    selected_block_ids = [str(value) for value in (proposal.get("selected_block_ids") or []) if str(value).strip()]
+    target_block_id = str(proposal.get("selected_block_id") or proposal.get("target_block_id") or "").strip()
+    schema_default = _schema_default_compression_level(schema_source)
+    if operator in GLOBAL_BUDGET_COMPRESSION_OPERATORS or schema_default == "global_budget":
+        return "global_budget"
+    if operator in MULTI_BLOCK_COMPRESSION_OPERATORS or schema_default == "multi_block" or selected_block_ids:
+        return "multi_block"
+    if schema_default == "block" or operator in BLOCK_COMPRESSION_OPERATORS:
+        return "block"
+    if target_block_id and target_block_id != "genome":
+        return "block"
+    return schema_default or "micro"
+
+
+def _normalize_advisor_proposal(
+    raw: dict[str, Any],
+    *,
+    schema_source: str,
+    generation: int,
+    advisor_batch_id_value: str,
+) -> dict[str, Any]:
+    proposal = dict(raw or {})
+    if proposal.get("proposal_id"):
+        proposal["proposal_id"] = str(proposal.get("proposal_id"))
+    proposal["schema_source"] = schema_source
+    proposal["advisor_generation"] = generation
+    proposal["advisor_batch_id"] = advisor_batch_id_value
+    proposal["proposal_state"] = PROPOSAL_STATE_PROPOSED
+    operator = str(proposal.get("exact_mutation_operator") or proposal.get("operator") or proposal.get("mutation_type") or "").strip()
+    if not proposal.get("operator") and operator:
+        proposal["operator"] = operator
+    if not proposal.get("mutation_type") and operator:
+        proposal["mutation_type"] = operator
+    if proposal.get("exact_mutation_operator") and not proposal.get("operator"):
+        proposal["operator"] = str(proposal.get("exact_mutation_operator"))
+    target_block_id = str(proposal.get("target_block_id") or "").strip()
+    if target_block_id and target_block_id != "genome" and not proposal.get("selected_block_id"):
+        proposal["selected_block_id"] = target_block_id
+    if proposal.get("selected_block_id") and not proposal.get("target_block_id"):
+        proposal["target_block_id"] = proposal.get("selected_block_id")
+    if proposal.get("selected_block_family") and not proposal.get("target_block_family"):
+        proposal["target_block_family"] = proposal.get("selected_block_family")
+    if proposal.get("total_expected_token_delta") is not None and proposal.get("expected_token_delta") is None:
+        proposal["expected_token_delta"] = proposal.get("total_expected_token_delta")
+    if _is_compression_proposal(proposal):
+        proposal.setdefault("mutation_family", "compression")
+        proposal["compression_level"] = _infer_advisor_compression_level(proposal, schema_source)
+        proposal.setdefault("target_block_id", "genome")
+        proposal.setdefault("target_block_family", "Compression")
+        proposal.setdefault("affected_failure_families", ["token_overbudget"])
+    if not proposal.get("affected_failure_families"):
+        fallback_family = str(proposal.get("target_block_family", "") or "schema_violation")
+        proposal["affected_failure_families"] = [fallback_family]
+    return proposal
+
+
+def _advisor_rejection_diagnostic(
+    *,
+    generation: int,
+    advisor_batch_id_value: str,
+    schema_source: str,
+    rejection_reason: str,
+    raw_response_path: str = "",
+    advisor_prompt_path: str = "",
+) -> dict[str, Any]:
+    level = _schema_default_compression_level(schema_source)
+    is_compression_schema = bool(level or "compression" in schema_source)
+    return {
+        "proposal_id": f"advisor_g{generation:03d}_{schema_source}_diagnostic",
+        "schema_source": schema_source,
+        "advisor_generation": generation,
+        "advisor_batch_id": advisor_batch_id_value,
+        "mutation_family": "compression" if is_compression_schema else "advisor_guided",
+        "compression_level": level,
+        "operator": "",
+        "mutation_type": "",
+        "target_block_id": "genome" if is_compression_schema else "",
+        "target_block_family": "Compression" if is_compression_schema else "",
+        "expected_token_delta": 0,
+        "accepted": False,
+        "proposal_state": PROPOSAL_STATE_REJECTED,
+        "rejection_reason": rejection_reason,
+        "raw_response_path": raw_response_path,
+        "advisor_prompt_path": advisor_prompt_path,
+    }
+
+
 def _safe_advisor_proposals(
     payload: dict[str, Any],
     *,
@@ -1847,35 +2056,63 @@ def _safe_advisor_proposals(
     parent_genome: dict[str, Any] | None = None,
     block_token_breakdown: list[dict[str, Any]] | None = None,
     min_compression_token_delta: int = 32,
+    raw_response_path: str = "",
+    advisor_prompt_path: str = "",
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     safe: list[dict[str, Any]] = []
     rejected: list[dict[str, Any]] = []
     valid_blocks = set(get_core_blocks()) | set(get_optional_blocks())
     raw_proposals: list[dict[str, Any]] = []
-    for key in (
-        "proposals",
-        "mutation_proposals",
-        "micro_compression_proposals",
-        "block_compression_proposals",
-        "multi_block_compression_proposals",
-        "global_budget_compression_proposals",
-    ):
-        for raw in payload.get(key) or []:
-            proposal = dict(raw or {})
-            if key == "micro_compression_proposals":
-                proposal.setdefault("compression_level", "micro")
-                proposal.setdefault("mutation_family", "compression")
-            elif key == "block_compression_proposals":
-                proposal.setdefault("compression_level", "block")
-                proposal.setdefault("mutation_family", "compression")
-            elif key == "multi_block_compression_proposals":
-                proposal.setdefault("compression_level", "multi_block")
-                proposal.setdefault("mutation_family", "compression")
-                proposal.setdefault("exact_mutation_operator", "multi_block_compression_plan")
-            elif key == "global_budget_compression_proposals":
-                proposal.setdefault("compression_level", "global_budget")
-                proposal.setdefault("mutation_family", "compression")
-            raw_proposals.append(proposal)
+    for key in ADVISOR_PROPOSAL_SCHEMA_KEYS:
+        if key not in payload:
+            continue
+        value = payload.get(key)
+        if value is None:
+            continue
+        if not isinstance(value, list):
+            rejected.append(
+                _advisor_rejection_diagnostic(
+                    generation=generation,
+                    advisor_batch_id_value=advisor_batch_id_value,
+                    schema_source=key,
+                    rejection_reason="invalid_json_schema",
+                    raw_response_path=raw_response_path,
+                    advisor_prompt_path=advisor_prompt_path,
+                )
+            )
+            continue
+        for raw in value:
+            if not isinstance(raw, dict):
+                rejected.append(
+                    _advisor_rejection_diagnostic(
+                        generation=generation,
+                        advisor_batch_id_value=advisor_batch_id_value,
+                        schema_source=key,
+                        rejection_reason="malformed_proposal",
+                        raw_response_path=raw_response_path,
+                        advisor_prompt_path=advisor_prompt_path,
+                    )
+                )
+                continue
+            raw_proposals.append(
+                _normalize_advisor_proposal(
+                    raw,
+                    schema_source=key,
+                    generation=generation,
+                    advisor_batch_id_value=advisor_batch_id_value,
+                )
+            )
+    if not raw_proposals and not rejected:
+        rejected.append(
+            _advisor_rejection_diagnostic(
+                generation=generation,
+                advisor_batch_id_value=advisor_batch_id_value,
+                schema_source="no_schema",
+                rejection_reason="no_advisor_proposals_parsed",
+                raw_response_path=raw_response_path,
+                advisor_prompt_path=advisor_prompt_path,
+            )
+        )
     existing_rules = _existing_micro_rules(parent_genome or {})
     for idx, raw in enumerate(raw_proposals or [], start=1):
         proposal = dict(raw or {})
@@ -1884,17 +2121,8 @@ def _safe_advisor_proposals(
         proposal["advisor_generation"] = generation
         proposal["advisor_batch_id"] = advisor_batch_id_value
         proposal["proposal_state"] = PROPOSAL_STATE_PROPOSED
-        if proposal.get("exact_mutation_operator") and not proposal.get("mutation_type"):
-            proposal["mutation_type"] = proposal["exact_mutation_operator"]
-        if proposal.get("selected_block_id"):
-            proposal.setdefault("target_block_id", proposal.get("selected_block_id"))
-        if proposal.get("selected_block_family"):
-            proposal.setdefault("target_block_family", proposal.get("selected_block_family"))
-        if proposal.get("total_expected_token_delta") and not proposal.get("expected_token_delta"):
-            proposal["expected_token_delta"] = proposal["total_expected_token_delta"]
-        if not proposal.get("affected_failure_families"):
-            fallback_family = str(proposal.get("target_block_family", "") or "schema_violation")
-            proposal["affected_failure_families"] = [fallback_family]
+        proposal["raw_response_path"] = raw_response_path
+        proposal["advisor_prompt_path"] = advisor_prompt_path
         # Reject no-op/protected advisor compression before child scheduling.
         # A rejected compression proposal can still trigger compression_fallback later.
         ok, reject_reason = validate_advisor_proposal(
@@ -1914,7 +2142,7 @@ def _safe_advisor_proposals(
                     **proposal,
                     "accepted": False,
                     "proposal_state": PROPOSAL_STATE_REJECTED,
-                    "rejection_reason": reject_reason,
+                    "rejection_reason": reject_reason or "malformed_proposal",
                 }
             )
             continue
@@ -1930,6 +2158,39 @@ def _advisor_hint_from_proposal(proposal: dict[str, Any]) -> dict[str, str]:
         "suggested_mutation_type": str(proposal.get("mutation_type", "add_micro_rule") or "add_micro_rule"),
         "rule": str(proposal.get("proposed_micro_rule", "") or proposal.get("edit_instruction", "")),
     }
+
+
+def _proposal_artifact_row(proposal: dict[str, Any] | MutationProposal) -> dict[str, Any]:
+    if isinstance(proposal, MutationProposal):
+        return _proposal_to_row(proposal)
+    return dict(proposal)
+
+
+def _write_advisor_block_compression_plan(
+    output_root: Path,
+    *,
+    generation: int,
+    compression_phase: str,
+    accepted_proposals: list[dict[str, Any] | MutationProposal],
+    rejected_proposals: list[dict[str, Any] | MutationProposal],
+    fallback_used: bool,
+    fallback_reason: str,
+) -> None:
+    accepted_rows = [_proposal_artifact_row(item) for item in accepted_proposals if _is_compression_proposal(item)]
+    rejected_rows = [_proposal_artifact_row(item) for item in rejected_proposals if _is_compression_proposal(item)]
+    dump_json(
+        output_root / f"advisor_block_compression_plan_generation_{generation:03d}.json",
+        {
+            "generation": generation,
+            "compression_phase": compression_phase,
+            "accepted_block_proposals": [item for item in accepted_rows if _compression_level(item) == "block"],
+            "accepted_multi_block_proposals": [item for item in accepted_rows if _compression_level(item) == "multi_block"],
+            "accepted_global_budget_proposals": [item for item in accepted_rows if _compression_level(item) == "global_budget"],
+            "rejected_compression_proposals": rejected_rows,
+            "fallback_used": bool(fallback_used),
+            "fallback_reason": str(fallback_reason or ""),
+        },
+    )
 
 
 def _call_mutation_advisor(
@@ -2020,6 +2281,7 @@ def _call_mutation_advisor(
         )
         raw_content = json.dumps(advisor_payload, ensure_ascii=False)
     else:
+        raw_content = ""
         try:
             response = call_llm(
                 "You are a prompt-block mutation advisor. Return valid JSON only.",
@@ -2038,18 +2300,23 @@ def _call_mutation_advisor(
         except Exception as exc:
             raw_dir = output_root / "advisor_raw_responses"
             raw_dir.mkdir(parents=True, exist_ok=True)
-            (raw_dir / f"generation_{generation:03d}_raw.txt").write_text("", encoding="utf-8")
+            raw_path = raw_dir / f"generation_{generation:03d}_raw.txt"
+            raw_path.write_text(raw_content, encoding="utf-8")
             dump_json(
                 response_path,
                 {
-                    "raw_content": "",
+                    "raw_content": raw_content,
                     "parsed": {},
+                    "compression_policy": {},
+                    "advisor_batch_id": advisor_batch.get("advisor_batch_id", ""),
                     "accepted_proposals": [],
                     "rejected_proposals": [
                         {
                             "proposal_id": f"advisor_g{generation:03d}_error",
                             "accepted": False,
                             "rejection_reason": f"advisor call failed: {exc}",
+                            "raw_response_path": str(raw_path),
+                            "advisor_prompt_path": str(prompt_path),
                         }
                     ],
                 },
@@ -2065,7 +2332,8 @@ def _call_mutation_advisor(
             ]
     raw_dir = output_root / "advisor_raw_responses"
     raw_dir.mkdir(parents=True, exist_ok=True)
-    (raw_dir / f"generation_{generation:03d}_raw.txt").write_text(raw_content, encoding="utf-8")
+    raw_path = raw_dir / f"generation_{generation:03d}_raw.txt"
+    raw_path.write_text(raw_content, encoding="utf-8")
     safe, rejected = _safe_advisor_proposals(
         advisor_payload,
         generation=generation,
@@ -2073,22 +2341,25 @@ def _call_mutation_advisor(
         parent_genome=best_item.get("genome") if best_item else {},
         block_token_breakdown=getattr(args, "_block_token_breakdown", []) or [],
         min_compression_token_delta=int(args.min_compression_token_delta),
+        raw_response_path=str(raw_path),
+        advisor_prompt_path=str(prompt_path),
     )
-    dump_json(
-        output_root / f"advisor_block_compression_plan_generation_{generation:03d}.json",
-        {
-            "generation": generation,
-            "compression_phase": str(getattr(args, "_compression_phase", "")),
-            "accepted_block_proposals": [item for item in safe if _compression_level(item) == "block"],
-            "accepted_multi_block_proposals": [item for item in safe if _compression_level(item) == "multi_block"],
-            "rejected_compression_proposals": [item for item in rejected if _is_compression_proposal(item)],
-        },
+    compression_policy = dict((advisor_payload or {}).get("compression_policy") or {})
+    _write_advisor_block_compression_plan(
+        output_root,
+        generation=generation,
+        compression_phase=str(getattr(args, "_compression_phase", "")),
+        accepted_proposals=safe,
+        rejected_proposals=rejected,
+        fallback_used=False,
+        fallback_reason="",
     )
     dump_json(
         response_path,
         {
             "raw_content": raw_content,
             "parsed": advisor_payload,
+            "compression_policy": compression_policy,
             "advisor_batch_id": advisor_batch.get("advisor_batch_id", ""),
             "accepted_proposals": safe,
             "rejected_proposals": rejected,
@@ -2544,7 +2815,46 @@ def _summary_consistency_check(
 
 
 def _proposal_to_row(proposal: MutationProposal) -> dict[str, Any]:
-    return proposal.to_row()
+    row = proposal.to_row()
+    row["operator"] = row.get("operator") or row.get("mutation_type", "")
+    row["mutation_type"] = row.get("mutation_type") or row.get("operator", "")
+    row.setdefault("schema_source", "")
+    if not row.get("compression_level") and row.get("mutation_family") == "compression":
+        row["compression_level"] = _compression_level(proposal)
+    row.setdefault("compression_level", "")
+    row.setdefault("selected_block_id", "")
+    row.setdefault("selected_block_ids", "[]")
+    row.setdefault("expected_token_delta", row.get("estimated_token_delta", 0))
+    if float(row.get("measured_prompt_token_delta") or 0.0) == 0.0:
+        row["measured_prompt_token_delta"] = None
+        row["measured_prompt_token_delta_pct"] = None
+    row.setdefault("raw_response_path", "")
+    row.setdefault("advisor_prompt_path", "")
+    row.setdefault("fallback_reason", "")
+    return row
+
+
+ADVISOR_MUTATION_SUMMARY_COLUMNS = [
+    "generation",
+    "proposal_id",
+    "schema_source",
+    "operator",
+    "compression_level",
+    "selected_block_id",
+    "selected_block_ids",
+    "expected_token_delta",
+    "accepted",
+    "rejection_reason",
+    "raw_response_path",
+    "advisor_prompt_path",
+]
+
+
+def _advisor_mutation_summary_rows(advisor_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    summary_rows: list[dict[str, Any]] = []
+    for row in advisor_rows:
+        summary_rows.append({key: row.get(key, "") for key in ADVISOR_MUTATION_SUMMARY_COLUMNS})
+    return summary_rows
 
 
 def _fill_measured_token_deltas(
@@ -2855,7 +3165,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         _write_jsonl(output_root / "ga_population_diagnostics.jsonl", [])
         _write_jsonl(output_root / "advisor_feedback_batches.jsonl", [])
         _write_jsonl(output_root / "advisor_mutation_proposals.jsonl", [])
-        atomic_write_csv(output_root / "advisor_mutation_summary.csv", ["generation", "proposal_id", "accepted"], [])
+        atomic_write_csv(output_root / "advisor_mutation_summary.csv", ADVISOR_MUTATION_SUMMARY_COLUMNS, [])
         _write_redesign_artifacts(
             output_root,
             mutation_proposal_rows=[],
@@ -2886,6 +3196,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                 "advisor_compression_proposals",
                 "advisor_compression_children_scheduled",
                 "cloudless_compression_fallback_scheduled",
+                "new_by_compression_fallback",
                 "new_by_micro_compression",
                 "new_by_block_compression",
                 "new_by_multi_block_compression",
@@ -3422,6 +3733,16 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         advisor_children_scheduled = 0
         advisor_compression_children_scheduled = 0
         cloudless_compression_fallback_scheduled = 0
+        fallback_used_this_generation = False
+        fallback_reason_this_generation = ""
+        if compression_ready and _compression_fallback_enabled(args):
+            rejection_reasons = {str(item.get("rejection_reason", "")) for item in advisor_rejected_proposals}
+            if "no_advisor_proposals_parsed" in rejection_reasons:
+                fallback_reason_this_generation = "no_valid_advisor_proposal"
+            elif advisor_rejected_proposals and not advisor_safe_proposals:
+                fallback_reason_this_generation = "all_advisor_proposals_rejected"
+            elif not advisor_compression_proposals:
+                fallback_reason_this_generation = "no_valid_advisor_proposal"
         new_by_micro_compression = 0
         new_by_block_compression = 0
         new_by_multi_block_compression = 0
@@ -3474,21 +3795,42 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                 # Compression fallback path.
                 # If advisor/cloudless proposals are absent or invalid, add the next safe compression operator
                 # so compression-ready generations still explore meaningful token reduction.
-                fallback_proposal = proposal_for_family(
-                    family="compression",
+                fallback_proposal = _make_compression_lane_proposal(
+                    level="block",
                     generation=generation + 1,
-                    parent_genome_id=str(generation_best["genome"].get("id", "")),
-                    feedback_hint=None,
+                    parent_genome=generation_best["genome"],
+                    block_token_breakdown=block_token_breakdown,
+                    prompt_token_breakdown={**prompt_token_breakdown, "compression_phase": str(getattr(args, "_compression_phase", ""))},
                     rng=rng,
-                    aggressive_compression=bool(args.allow_aggressive_compression or args.aggressive_compression_after_target),
+                    source="compression_fallback",
+                ) or _make_compression_lane_proposal(
+                    level="micro",
+                    generation=generation + 1,
+                    parent_genome=generation_best["genome"],
+                    block_token_breakdown=block_token_breakdown,
+                    prompt_token_breakdown={**prompt_token_breakdown, "compression_phase": str(getattr(args, "_compression_phase", ""))},
+                    rng=rng,
+                    source="compression_fallback",
                 )
+                if fallback_proposal is None:
+                    fallback_proposal = proposal_for_family(
+                        family="compression",
+                        generation=generation + 1,
+                        parent_genome_id=str(generation_best["genome"].get("id", "")),
+                        feedback_hint=None,
+                        rng=rng,
+                        aggressive_compression=True,
+                    )
                 fallback_proposal.source = "compression_fallback"
+                fallback_proposal.fallback_reason = fallback_reason_this_generation or "no_valid_advisor_proposal"
                 cloudless_proposals.insert(0, fallback_proposal)
             if compression_ready:
                 cloudless_proposals = sorted(cloudless_proposals, key=lambda item: 0 if _is_compression_proposal(item) else 1)
             for proposal in cloudless_proposals:
                 if compression_ready and _is_compression_proposal(proposal) and not advisor_compression_proposals:
                     proposal.source = "compression_fallback"
+                    if not proposal.fallback_reason:
+                        proposal.fallback_reason = fallback_reason_this_generation or "no_valid_advisor_proposal"
                 if len(next_population) >= args.population - advisor_child_quota:
                     proposal.accepted = False
                     proposal.rejection_reason = "population full before cloudless proposal could be added"
@@ -3501,6 +3843,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                         "drop_optional_blocks_for_budget",
                         "reduce_few_shot_count_to_zero",
                         "prune_micro_rules_to_top_k",
+                        "compact_reasoning_skeleton",
                         "compact_block_params",
                         "lower_output_max_tokens_aggressive",
                         "compress_candidate_strategies_to_minimal",
@@ -3515,6 +3858,9 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                     proposal.accepted = False
                     proposal.rejection_reason = "compression proposal produced no genome diff"
                     mutation_proposal_rows.append(_proposal_to_row(proposal))
+                    if proposal.source == "compression_fallback":
+                        fallback_used_this_generation = True
+                        fallback_reason_this_generation = proposal.fallback_reason or fallback_reason_this_generation or "no_valid_advisor_proposal"
                     continue
                 proposal.child_genome_id = child["id"]
                 proposal.accepted = True
@@ -3553,6 +3899,8 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                         new_by_global_budget_compression += 1
                     if proposal.source == "compression_fallback":
                         cloudless_compression_fallback_scheduled += 1
+                        fallback_used_this_generation = True
+                        fallback_reason_this_generation = proposal.fallback_reason or fallback_reason_this_generation or "no_valid_advisor_proposal"
                 elif proposal.mutation_family == "diversity":
                     new_by_diversity += 1
                 elif proposal.mutation_family == "specialist":
@@ -3677,21 +4025,41 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             # Compression fallback path.
             # Rejected/no-op advisor compression should not leave a compression-ready generation unexplored.
             # Source is recorded as compression_fallback for artifact audits.
-            fallback_proposal = proposal_for_family(
-                family="compression",
+            fallback_proposal = _make_compression_lane_proposal(
+                level="block",
                 generation=generation + 1,
-                parent_genome_id=str(generation_best["genome"].get("id", "")),
-                feedback_hint=None,
+                parent_genome=generation_best["genome"],
+                block_token_breakdown=block_token_breakdown,
+                prompt_token_breakdown={**prompt_token_breakdown, "compression_phase": str(getattr(args, "_compression_phase", ""))},
                 rng=rng,
-                aggressive_compression=bool(args.allow_aggressive_compression or args.aggressive_compression_after_target),
+                source="compression_fallback",
+            ) or _make_compression_lane_proposal(
+                level="micro",
+                generation=generation + 1,
+                parent_genome=generation_best["genome"],
+                block_token_breakdown=block_token_breakdown,
+                prompt_token_breakdown={**prompt_token_breakdown, "compression_phase": str(getattr(args, "_compression_phase", ""))},
+                rng=rng,
+                source="compression_fallback",
             )
+            if fallback_proposal is None:
+                fallback_proposal = proposal_for_family(
+                    family="compression",
+                    generation=generation + 1,
+                    parent_genome_id=str(generation_best["genome"].get("id", "")),
+                    feedback_hint=None,
+                    rng=rng,
+                    aggressive_compression=True,
+                )
             fallback_proposal.source = "compression_fallback"
+            fallback_proposal.fallback_reason = fallback_reason_this_generation or "quota_unfilled"
             child, child_diffs = apply_mutation_proposal(generation_best["genome"], fallback_proposal, rng=rng)
             if not child_diffs:
                 for retry_operator in (
                     "drop_optional_blocks_for_budget",
                     "reduce_few_shot_count_to_zero",
                     "prune_micro_rules_to_top_k",
+                    "compact_reasoning_skeleton",
                     "compact_block_params",
                     "lower_output_max_tokens_aggressive",
                     "compress_candidate_strategies_to_minimal",
@@ -3704,6 +4072,8 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                 fallback_proposal.accepted = False
                 fallback_proposal.rejection_reason = "compression fallback produced no genome diff"
                 mutation_proposal_rows.append(_proposal_to_row(fallback_proposal))
+                fallback_used_this_generation = True
+                fallback_reason_this_generation = fallback_proposal.fallback_reason or fallback_reason_this_generation or "quota_unfilled"
                 break
             fallback_proposal.child_genome_id = child["id"]
             fallback_proposal.accepted = True
@@ -3740,6 +4110,8 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             elif level == "global_budget":
                 new_by_global_budget_compression += 1
             cloudless_compression_fallback_scheduled += 1
+            fallback_used_this_generation = True
+            fallback_reason_this_generation = fallback_proposal.fallback_reason or fallback_reason_this_generation or "quota_unfilled"
             block_diff_rows.extend(
                 {
                     "generation": generation + 1,
@@ -3748,6 +4120,26 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                     **diff,
                 }
                 for diff in child_diffs
+            )
+        if args.llm_mutation_advisor:
+            final_rejected_for_plan = [
+                proposal
+                for proposal in advisor_final_proposals
+                if proposal.proposal_state in {PROPOSAL_STATE_REJECTED, PROPOSAL_STATE_FAILED_TO_APPLY}
+            ]
+            final_accepted_for_plan = [
+                proposal
+                for proposal in advisor_final_proposals
+                if proposal.proposal_state not in {PROPOSAL_STATE_REJECTED, PROPOSAL_STATE_FAILED_TO_APPLY}
+            ]
+            _write_advisor_block_compression_plan(
+                output_root,
+                generation=generation,
+                compression_phase=str(getattr(args, "_compression_phase", "")),
+                accepted_proposals=final_accepted_for_plan,
+                rejected_proposals=final_rejected_for_plan,
+                fallback_used=fallback_used_this_generation,
+                fallback_reason=fallback_reason_this_generation,
             )
         for proposal in advisor_final_proposals:
             row = _proposal_to_row(proposal)
@@ -3833,6 +4225,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             "advisor_compression_proposals": len(advisor_compression_proposals),
             "advisor_compression_children_scheduled": advisor_compression_children_scheduled,
             "cloudless_compression_fallback_scheduled": cloudless_compression_fallback_scheduled,
+            "new_by_compression_fallback": cloudless_compression_fallback_scheduled,
             "survived_elites": len(elites),
             "survived_global_best": any(str(genome.get("id", "")) == str(((archives.global_best_detpass or {}).get("genome") or {}).get("id", "")) for genome in elites) if _redesign_enabled(args) else "",
             "survived_accepted_best": any(str(genome.get("id", "")) == str(((accepted_best or {}).get("genome") or {}).get("id", "")) for genome in elites) if _redesign_enabled(args) else "",
@@ -3891,10 +4284,11 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
             atomic_write_csv(output_root / "ga_population_diagnostics.csv", ["generation", "model_key", "category"], [])
         _write_jsonl(output_root / "ga_population_diagnostics.jsonl", population_diagnostic_rows)
         _write_jsonl(output_root / "advisor_mutation_proposals.jsonl", advisor_proposal_rows)
-        if advisor_proposal_rows:
-            atomic_write_csv(output_root / "advisor_mutation_summary.csv", list(advisor_proposal_rows[0].keys()), advisor_proposal_rows)
+        advisor_csv_rows = _advisor_mutation_summary_rows(advisor_proposal_rows)
+        if advisor_csv_rows:
+            atomic_write_csv(output_root / "advisor_mutation_summary.csv", ADVISOR_MUTATION_SUMMARY_COLUMNS, advisor_csv_rows)
         else:
-            atomic_write_csv(output_root / "advisor_mutation_summary.csv", ["generation", "proposal_id", "accepted"], [])
+            atomic_write_csv(output_root / "advisor_mutation_summary.csv", ADVISOR_MUTATION_SUMMARY_COLUMNS, [])
         _write_redesign_artifacts(
             output_root,
             mutation_proposal_rows=mutation_proposal_rows,
@@ -3978,6 +4372,10 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
     cloudless_compression_fallback_scheduled_count = sum(
         int(row.get("cloudless_compression_fallback_scheduled") or 0) for row in population_transition_rows
     )
+    compression_fallback_count = sum(
+        int(row.get("new_by_compression_fallback") or row.get("cloudless_compression_fallback_scheduled") or 0)
+        for row in population_transition_rows
+    )
     micro_compression_count = sum(int(row.get("new_by_micro_compression") or 0) for row in population_transition_rows)
     block_compression_count = sum(int(row.get("new_by_block_compression") or 0) for row in population_transition_rows)
     multi_block_compression_count = sum(int(row.get("new_by_multi_block_compression") or 0) for row in population_transition_rows)
@@ -4057,6 +4455,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
         "advisor_compression_proposals_generated": advisor_compression_generated_count,
         "advisor_compression_children_scheduled": advisor_compression_children_scheduled_count,
         "cloudless_compression_fallback_scheduled": cloudless_compression_fallback_scheduled_count,
+        "new_by_compression_fallback": compression_fallback_count,
         "new_by_micro_compression": micro_compression_count,
         "new_by_block_compression": block_compression_count,
         "new_by_multi_block_compression": multi_block_compression_count,
