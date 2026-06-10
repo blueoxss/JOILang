@@ -40,6 +40,9 @@ def decide_next_action(
     advisor_trigger_mode: str,
     disruptive_attempt_count: int,
     disruptive_max_attempts: int,
+    compression_detpass_threshold: float | None = None,
+    compression_token_plateau_delta: float = 1.0,
+    aggressive_compression_after_target: bool = False,
 ) -> ControllerDecision:
     if generation >= max_generations:
         return ControllerDecision(
@@ -64,7 +67,7 @@ def decide_next_action(
             pareto_archive_delta=pareto_archive_delta,
             unique_prompt_hash_count=unique_prompt_hash_count,
             disruptive_attempt_count=disruptive_attempt_count,
-            advisor_triggered=False,
+            advisor_triggered=bool(advisor_enabled and advisor_trigger_mode == "always"),
         )
     dets = [float(row.get("best_so_far_DETPass") or row.get("validation_det_pass_rate") or 0.0) for row in recent]
     raw_dets = [float(row.get("raw_generation_best_DETPass") or row.get("validation_det_pass_rate") or 0.0) for row in recent]
@@ -75,11 +78,21 @@ def decide_next_action(
     token_delta = (max(tokens) - min(tokens)) if len(tokens) > 1 else 0.0
     diversity_ratio = unique_prompt_hash_count / max(1, population_size)
     saturated = max(dets) >= target_detpass
+    compression_threshold = target_detpass if compression_detpass_threshold is None else float(compression_detpass_threshold)
+    compression_ready = max(dets) >= compression_threshold
     advisor_triggered = False
     if diversity_ratio < 0.5:
         phase = "DISRUPTIVE_SEARCH"
         plateau = "diversity_collapse"
         action = "increase_diversity_temporarily"
+    elif aggressive_compression_after_target and compression_ready:
+        phase = "COMPRESSION_SEARCH"
+        plateau = (
+            "compression_ready_token_plateau"
+            if token_delta <= float(compression_token_plateau_delta)
+            else "accuracy_saturated_for_compression"
+        )
+        action = "switch_aggressive_compression"
     elif det_delta < 0.0001 and avgdet_delta > 0.05:
         phase = "ROBUSTNESS_STABILIZATION"
         plateau = "detpass_plateau_avgdet_improving"
@@ -107,6 +120,22 @@ def decide_next_action(
         phase = "ACCURACY_SEARCH"
         plateau = "none"
         action = "continue_accuracy"
+
+    if advisor_enabled:
+        if advisor_trigger_mode == "always":
+            advisor_triggered = True
+        elif advisor_trigger_mode == "on_compression" and phase == "COMPRESSION_SEARCH":
+            advisor_triggered = True
+        elif advisor_trigger_mode == "on_plateau" and plateau not in {"none", "warming_up"}:
+            advisor_triggered = True
+        elif advisor_trigger_mode == "on_failure_plateau" and plateau in {
+            "accuracy_plateau",
+            "detpass_plateau_avgdet_improving",
+            "regression_oscillation",
+            "compression_ready_token_plateau",
+            "accuracy_saturated_for_compression",
+        }:
+            advisor_triggered = True
 
     stop_candidate = False
     stop_reason = ""

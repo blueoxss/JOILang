@@ -51,6 +51,59 @@ SUPPORTED_ADVISOR_MUTATION_TYPES = {
     "prune_stale_micro_rules",
     "template_compress_rule_family",
     "reduce_few_shot_count",
+    "drop_optional_block",
+    "drop_optional_blocks_for_budget",
+    "reduce_candidate_strategies",
+    "compress_candidate_strategies_to_minimal",
+    "lower_output_max_tokens",
+    "lower_output_max_tokens_safe",
+    "lower_output_max_tokens_aggressive",
+    "reduce_few_shot_count_to_zero",
+    "reduce_few_shot_count_by_one",
+    "prune_micro_rules_to_top_k",
+    "prune_micro_rules_to_top_k_safe",
+    "compact_reasoning_skeleton",
+    "compact_block_params",
+    "compact_block_params_safe",
+    "dedupe_duplicate_micro_rules",
+    "remove_redundant_hint_lines",
+    "multi_block_compression_plan",
+    "global_render_budget_down",
+    "category_example_budget_down",
+    "service_context_render_budget_down",
+    "compact_service_schema_fields",
+    "dedupe_service_value_enums",
+    "drop_unused_device_capabilities",
+}
+
+ADVISOR_COMPRESSION_MUTATION_TYPES = {
+    "drop_optional_block",
+    "drop_optional_blocks_for_budget",
+    "reduce_candidate_strategies",
+    "compress_candidate_strategies_to_minimal",
+    "lower_output_max_tokens",
+    "lower_output_max_tokens_safe",
+    "lower_output_max_tokens_aggressive",
+    "reduce_few_shot_count",
+    "reduce_few_shot_count_to_zero",
+    "reduce_few_shot_count_by_one",
+    "merge_duplicate_micro_rules",
+    "dedupe_duplicate_micro_rules",
+    "prune_stale_micro_rules",
+    "prune_micro_rules_to_top_k",
+    "prune_micro_rules_to_top_k_safe",
+    "template_compress_rule_family",
+    "compact_reasoning_skeleton",
+    "compact_block_params",
+    "compact_block_params_safe",
+    "remove_redundant_hint_lines",
+    "multi_block_compression_plan",
+    "global_render_budget_down",
+    "category_example_budget_down",
+    "service_context_render_budget_down",
+    "compact_service_schema_fields",
+    "dedupe_service_value_enums",
+    "drop_unused_device_capabilities",
 }
 
 RULE_ADDING_MUTATION_TYPES = {
@@ -477,6 +530,13 @@ def build_advisor_feedback_batch(
     include_candidate_code: bool = False,
     include_prompt_summary: bool = True,
     already_fixed_families: set[str] | None = None,
+    compression_detpass_threshold: float = 90.0,
+    compression_token_reduction_target: float = 0.15,
+    allow_aggressive_compression: bool = False,
+    compression_ready: bool = False,
+    compression_phase: str = "ACCURACY_SEARCH",
+    prompt_token_breakdown: dict[str, Any] | None = None,
+    block_token_breakdown: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     batch_id = advisor_batch_id(generation, model_key)
     category_diagnostics = build_category_diagnostics(
@@ -522,6 +582,8 @@ def build_advisor_feedback_batch(
         (card for card in top_genomes if card["avg_prompt_tokens"] > 0),
         key=lambda card: card["avg_prompt_tokens"],
     )[:2]
+    prompt_token_breakdown = prompt_token_breakdown or {}
+    block_token_breakdown = block_token_breakdown or []
 
     return {
         "advisor_batch_id": batch_id,
@@ -546,10 +608,23 @@ def build_advisor_feedback_batch(
         },
         "representative_failures": representative_failures,
         "current_prompt_artifact": current_prompt_artifact,
+        "prompt_token_breakdown": prompt_token_breakdown,
+        "block_token_breakdown": block_token_breakdown,
         "cloudless_feedback_summary": cloudless_feedback_summary,
         "advisor_request": {
             "goal": "Generate structured mutation proposals for the next generation.",
             "allowed_mutation_types": sorted(SUPPORTED_ADVISOR_MUTATION_TYPES),
+            "compression_policy": {
+                "activate_when_detpass_ge": compression_detpass_threshold,
+                "compression_ready": bool(compression_ready),
+                "compression_phase": compression_phase,
+                "prefer_compression_if_accuracy_saturated": True,
+                "target_token_reduction_ratio": compression_token_reduction_target,
+                "allow_aggressive_compression": bool(allow_aggressive_compression),
+                "preserve_core_blocks": True,
+                "preserve_output_schema": True,
+                "preserve_service_mapping": True,
+            },
             "constraints": [
                 "Do not rewrite the whole prompt.",
                 "Return structured JSON proposals only.",
@@ -570,12 +645,19 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
     if detail == "compact":
         packet.pop("current_prompt_artifact", None)
         packet.pop("group_diagnostics", None)
+    compression_policy = (batch.get("advisor_request") or {}).get("compression_policy") or {}
+    compression_phase = str(compression_policy.get("compression_phase") or "ACCURACY_SEARCH")
     required_schema = {
+        "advisor_status": "accepted",
+        "compression_policy": compression_policy,
+        "prompt_token_breakdown_seen": True,
+        "block_token_breakdown_seen": True,
         "proposals": [
             {
                 "proposal_id": "g{:03d}_01".format(int(batch.get("generation", 0) or 0)),
                 "target_block_id": "02",
                 "target_block_family": "Service_Mapping",
+                "mutation_family": "accuracy_repair",
                 "mutation_type": "add_micro_rule",
                 "priority": 1,
                 "reason": "short reason",
@@ -587,9 +669,95 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
                 "expected_token_delta": 12,
                 "regression_risk": 0.2,
                 "apply_mode": "create_child",
+            },
+            {
+                "proposal_id": "g{:03d}_compress_01".format(int(batch.get("generation", 0) or 0)),
+                "target_block_id": "genome",
+                "target_block_family": "Compression",
+                "mutation_family": "compression",
+                "mutation_type": "compress_candidate_strategies_to_minimal",
+                "priority": 3,
+                "reason": "Accuracy is saturated; reduce prompt token cost.",
+                "affected_failure_families": ["token_overbudget"],
+                "category_scope": [1, 2],
+                "group_scope": ["basic"],
+                "proposed_micro_rule": "",
+                "expected_effect": "Reduce prompt tokens while preserving schema/service grounding.",
+                "expected_token_delta": -1000,
+                "regression_risk": 0.25,
+                "apply_mode": "create_child",
             }
-        ]
+        ],
+        "micro_compression_proposals": [
+            {
+                "proposal_id": "g{:03d}_micro_01".format(int(batch.get("generation", 0) or 0)),
+                "mutation_family": "compression",
+                "compression_level": "micro",
+                "target_block_id": "genome",
+                "target_block_family": "Compression",
+                "mutation_type": "dedupe_duplicate_micro_rules",
+                "expected_token_delta": -80,
+                "regression_risk": 0.05,
+            }
+        ],
+        "block_compression_proposals": [
+            {
+                "proposal_id": "g{:03d}_block_01".format(int(batch.get("generation", 0) or 0)),
+                "mutation_family": "compression",
+                "compression_level": "block",
+                "selected_block_id": "06",
+                "selected_block_family": "DET_Helper",
+                "exact_mutation_operator": "prune_micro_rules_to_top_k",
+                "original_token_estimate": 5200,
+                "proposed_token_estimate_after": 2600,
+                "expected_token_delta": -2600,
+                "preserved_content": ["validator-critical JSON/service/temporal rules"],
+                "removable_content": ["duplicate or tutorial-style rules"],
+                "why_safe": "The selected block is non-core and keeps validator-critical constraints.",
+                "regression_risk": 0.2,
+                "validation_requirement": "strict DETPass gate",
+            }
+        ],
+        "multi_block_compression_proposals": [
+            {
+                "proposal_id": "g{:03d}_multi_01".format(int(batch.get("generation", 0) or 0)),
+                "mutation_family": "compression",
+                "compression_level": "multi_block",
+                "selected_block_ids": ["05", "06"],
+                "exact_mutation_operator": "multi_block_compression_plan",
+                "steps": [
+                    {"block_id": "06", "operator": "prune_micro_rules_to_top_k", "k": 3},
+                    {"block_id": "05", "operator": "compact_block_params"},
+                ],
+                "total_expected_token_delta": -3300,
+                "regression_risk": 0.35,
+            }
+        ],
+        "global_budget_compression_proposals": [],
     }
+    # The advisor prompt is phase-aware.
+    # Below threshold it prioritizes correctness; after threshold it receives token/block
+    # breakdowns, and in aggressive mode it may add multi-block/global plans.
+    advisor_case_lines = {
+        "ACCURACY_SEARCH": [
+            "Advisor Case A: DETPass is below threshold or accuracy-first.",
+            "- Focus on correctness and DET repair.",
+            "- Optional micro compression is allowed only when it is not a no-op.",
+            "- Do not propose aggressive block deletion.",
+        ],
+        "COMPRESSION_READY": [
+            "Advisor Case B: DETPass is above threshold.",
+            "- Inspect prompt_token_breakdown and block_token_breakdown.",
+            "- Select at least one large non-protected block-level target if available.",
+            "- Include selected_block_id, preserved/removable content, expected_token_delta, and regression_risk.",
+        ],
+        "AGGRESSIVE_COMPRESSION": [
+            "Advisor Case C: threshold is met and plateau/token plateau is active.",
+            "- Keep block compression active; multi-block/global proposals are additive.",
+            "- Prioritize largest non-protected token components and avoid tiny deltas.",
+            "- DETPass remains a hard validation gate.",
+        ],
+    }.get(compression_phase, [])
     lines = [
         "You are a prompt-block mutation advisor for a JOILang code-generation system.",
         "You receive ONE generation-level feedback packet describing DET evaluation results.",
@@ -600,6 +768,13 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
         "- Do not mutate retrieval / pre-mapping / service-context construction.",
         "- Every proposal must name target_block_id, target_block_family, and affected_failure_families.",
         "- Use only allowed_mutation_types from the packet.",
+        *advisor_case_lines,
+        "- If best DETPass is above compression threshold, prioritize token-reducing mutations.",
+        "- When accuracy is saturated, propose at least one compression mutation unless regression risk is high.",
+        "- Prefer reducing few-shot count, duplicate micro-rules, candidate strategies, optional blocks, and max output tokens before adding new rules.",
+        "- Compression proposals must include expected_token_delta as a negative number.",
+        "- Do not repeat no-op compression, such as compress_candidate_strategies_to_minimal when strategies are already [\"minimal\"].",
+        "- Do not remove output schema, JSON-only rules, core blocks, service mapping, retrieval, pre-mapping, or service-context construction.",
         "",
         "feedback_packet:",
         json.dumps(packet, ensure_ascii=False, indent=2),
@@ -617,20 +792,35 @@ def validate_advisor_proposal(
     core_blocks: set[str],
     existing_rules: set[str] | None = None,
     max_token_expansion: int = 60,
+    current_genome: dict[str, Any] | None = None,
+    block_token_breakdown: list[dict[str, Any]] | None = None,
+    min_compression_token_delta: int = 32,
 ) -> tuple[bool, str]:
     existing_rules = {str(rule).strip().lower() for rule in (existing_rules or set())}
-    block_id = str(raw.get("target_block_id", "") or "").strip()
-    family = str(raw.get("target_block_family", "") or "").strip()
-    mutation_type = str(raw.get("mutation_type", "") or raw.get("operator", "") or "").strip()
+    current_genome = current_genome or {}
+    block_token_breakdown = block_token_breakdown or []
+    block_id = str(raw.get("selected_block_id") or raw.get("target_block_id", "") or "").strip()
+    family = str(raw.get("selected_block_family") or raw.get("target_block_family", "") or "").strip()
+    mutation_type = str(raw.get("exact_mutation_operator") or raw.get("mutation_type", "") or raw.get("operator", "") or "").strip()
     micro_rule = str(raw.get("proposed_micro_rule", "") or "").strip()
     affected = raw.get("affected_failure_families") or []
+    mutation_family = str(raw.get("mutation_family", "") or "").strip()
+    is_compression = mutation_family == "compression" or mutation_type in ADVISOR_COMPRESSION_MUTATION_TYPES
+    compression_level = str(raw.get("compression_level") or "").strip()
+    selected_block_ids = [
+        str(value)
+        for value in (raw.get("selected_block_ids") or raw.get("target_units") or [])
+        if str(value).strip()
+    ]
 
     text_blob = json.dumps(raw, ensure_ascii=False).lower()
     if any(marker in text_blob for marker in RETRIEVAL_MARKERS):
         return False, "proposal attempted to mutate retrieval/pre-mapping context"
     if not block_id or not family:
         return False, "missing target block id or block family"
-    if block_id not in valid_blocks:
+    if block_id == "genome" and not is_compression:
+        return False, "genome pseudo-target is only allowed for compression proposals"
+    if block_id not in valid_blocks and not (is_compression and block_id == "genome"):
         return False, "proposal targets unknown block that cannot be created safely"
     if not mutation_type:
         return False, "missing mutation type"
@@ -638,8 +828,20 @@ def validate_advisor_proposal(
         block_id in core_blocks and mutation_type in {"block_deactivation", "block_replacement", "remove_core_block"}
     ):
         return False, "proposal attempted to remove or replace a protected/core block"
+    if is_compression and mutation_type in {"drop_optional_block", "drop_optional_blocks_for_budget", "block_deactivation"}:
+        if block_id in core_blocks or block_id == "03" or family in {"Core_System", "Service_Mapping", "Output_Schema"}:
+            return False, "proposal attempted to remove a protected/core/schema block"
+    if is_compression and compression_level == "block" and not block_id:
+        return False, "block-level compression proposal missing selected_block_id"
+    if is_compression and compression_level == "multi_block" and not selected_block_ids:
+        return False, "multi-block compression proposal missing selected_block_ids"
     if mutation_type not in SUPPORTED_ADVISOR_MUTATION_TYPES:
         return False, f"unsupported mutation type: {mutation_type}"
+    if is_compression and any(
+        marker in text_blob
+        for marker in ("remove json", "drop json", "remove output schema", "drop output schema", "ignore schema")
+    ):
+        return False, "proposal attempted to remove a protected output-schema/safety rule"
     if any(marker in micro_rule.lower() for marker in ("remove json", "drop json", "do not return json", "ignore schema")):
         return False, "proposal attempted to remove a protected output-schema/safety rule"
     if mutation_type in RULE_ADDING_MUTATION_TYPES and not micro_rule:
@@ -649,8 +851,33 @@ def validate_advisor_proposal(
     if micro_rule and micro_rule.lower() in existing_rules:
         return False, "duplicates an existing micro-rule exactly"
     if not affected:
-        return False, "proposal missing affected_failure_families"
-    token_delta = int(raw.get("expected_token_delta") or 0)
+        if not is_compression:
+            return False, "proposal missing affected_failure_families"
+        raw["affected_failure_families"] = ["token_overbudget"]
+    # Reject no-op compression proposals before scheduling children.
+    # This prevents repeated tiny genome mutations; compression-ready generations can
+    # still trigger a stronger safe fallback after rejection.
+    if is_compression:
+        params = current_genome.get("params") or {}
+        block_params = current_genome.get("block_params") or {}
+        if mutation_type == "compress_candidate_strategies_to_minimal" and list(params.get("candidate_strategies") or []) == ["minimal"]:
+            return False, "no-op compression: candidate_strategies already minimal"
+        if mutation_type == "reduce_few_shot_count_to_zero":
+            target = block_params.get(block_id, {}) if block_id and block_id != "genome" else {}
+            if target and int(target.get("few_shot_count") or 0) <= 0:
+                return False, "no-op compression: few_shot_count already zero"
+        if mutation_type in {"reduce_few_shot_count", "reduce_few_shot_count_by_one"}:
+            target = block_params.get(block_id, {}) if block_id and block_id != "genome" else {}
+            if target and int(target.get("few_shot_count") or 0) <= int(raw.get("target_count") or 0):
+                return False, "no-op compression: few_shot_count already below target"
+        if mutation_type == "lower_output_max_tokens_aggressive" and int(params.get("max_tokens") or 768) <= 256:
+            return False, "no-op compression: max_tokens already at lower bound"
+        token_delta_key_present = "expected_token_delta" in raw or "total_expected_token_delta" in raw
+        if not token_delta_key_present:
+            return False, "compression proposal missing expected_token_delta"
+    token_delta = int(raw.get("expected_token_delta") or raw.get("total_expected_token_delta") or 0)
+    if is_compression and compression_level not in {"micro", ""} and abs(token_delta) < int(min_compression_token_delta):
+        return False, "compression expected_token_delta too small for block/global proposal"
     if token_delta > max_token_expansion and not affected:
         return False, "token expansion too high without accuracy justification"
     return True, ""
@@ -684,7 +911,8 @@ def apply_advisor_proposal(
             "advisor_proposal_id": mp.advisor_proposal_id,
             "advisor_batch_id": advisor_batch_id_value,
             "advisor_mutation_type": mp.operator,
-            "mutation_family": "advisor_guided",
+            "mutation_family": mp.mutation_family,
+            "mutation_operator": mp.operator,
         }
     )
     augmented = [{**diff, "advisor_batch_id": advisor_batch_id_value} for diff in diffs]
