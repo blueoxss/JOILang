@@ -2722,6 +2722,7 @@ def run_ga_search(args: argparse.Namespace) -> dict[str, Any]:
                 retries=args.retries,
                 seed=args.seed + generation,
             )
+            feedback = feedback or {}
             if feedback.get("improved"):
                 injected = feedback["best_genome"]
                 injected_eval = _evaluate_one(
