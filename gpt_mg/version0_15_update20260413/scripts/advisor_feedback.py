@@ -145,10 +145,13 @@ RETRIEVAL_MARKERS = (
     "retrieval",
     "top-k",
     "topk",
-    "service-context",
-    "service context",
     "premapping",
     "pre-mapping",
+)
+
+SERVICE_CONTEXT_BUDGET_MARKERS = (
+    "service-context",
+    "service context",
 )
 
 # Coarse mutation-family token (matches ga_mutation.FAMILY_RATIOS) per block family.
@@ -303,6 +306,14 @@ def build_category_diagnostics(
             failed_rows[:max_representative_failures_per_category],
             include_candidate_code=include_candidate_code,
         )
+        budget_command = ""
+        if failed_rows:
+            budget_command = str(failed_rows[0].get("command_eng", "") or "")
+        elif rows:
+            budget_command = str(rows[0].get("command_eng", "") or "")
+
+        budget = _reasoning_budget_for_category(category, budget_command)
+
         diagnostics.append(
             {
                 "generation": generation,
@@ -321,6 +332,7 @@ def build_category_diagnostics(
                 "suggested_target_block_family": guidance["suggested_target_block_family"],
                 "suggested_mutation_type": guidance["suggested_mutation_type"],
                 "representative_failures": representatives,
+                "reasoning_budget_hint": budget,
             }
         )
     return diagnostics
@@ -401,6 +413,10 @@ def _representative_payload(rows: list[dict[str, Any]], *, include_candidate_cod
             "diagnostic_summary": guidance["likely_prompt_issue"],
             "suggested_prompt_block": guidance["suggested_target_block"],
             "suggested_mutation_type": guidance["suggested_mutation_type"],
+            "reasoning_budget_hint": _reasoning_budget_for_category(
+                row.get("category", ""),
+                row.get("command_eng", ""),
+            ),
         }
         if include_candidate_code:
             entry["candidate_code"] = row.get("output", "")
@@ -610,6 +626,42 @@ def build_advisor_feedback_batch(
         "current_prompt_artifact": current_prompt_artifact,
         "prompt_token_breakdown": prompt_token_breakdown,
         "block_token_breakdown": block_token_breakdown,
+        "token_reduction_guidance": {
+            "reasoning_budget_router": [
+                {
+                    "task": "simple device command",
+                    "reasoning_budget": "none",
+                    "draft_items_max": 0,
+                    "instruction": "No reasoning. DSL-only.",
+                    "example": "Turn on the light => direct JOILang DSL.",
+                },
+                {
+                    "task": "single condition",
+                    "reasoning_budget": "cod_1",
+                    "draft_items_max": 1,
+                    "instruction": "One short intent/device slot only if needed.",
+                },
+                {
+                    "task": "temporal/delay/wait",
+                    "reasoning_budget": "cod_2",
+                    "draft_items_max": 2,
+                    "instruction": "Use intent + temporal/dataflow slots only.",
+                },
+                {
+                    "task": "loop/break/split+loop+delay",
+                    "reasoning_budget": "cod_4",
+                    "draft_items_max": 4,
+                    "instruction": "Use at most 4 short decision slots internally.",
+                },
+            ],
+            "compact_rule_cards": _compact_rule_cards(),
+            "token_reduction_method_cards": _token_reduction_method_cards(),
+            "output_policy": {
+                "final_output": "JOILang DSL/code only",
+                "forbid": ["markdown", "explanation", "analysis", "reasoning text"],
+                "stop_markers": ["Explanation:", "Notes:", "Reason:", "Analysis:"],
+            },
+        },
         "cloudless_feedback_summary": cloudless_feedback_summary,
         "advisor_request": {
             "goal": "Generate structured mutation proposals for the next generation.",
@@ -634,8 +686,132 @@ def build_advisor_feedback_batch(
                 "If compression is proposed, specify expected token reduction and regression risk.",
             ],
         },
+        "render_budget_hooks": {
+            "enabled": False,
+            "allowed_global_budget_operators": [],
+        },
     }
 
+def _reasoning_budget_for_category(category: Any, command: str = "") -> dict[str, Any]:
+    """Return a compact reasoning budget for JOILang generation.
+
+    This is a prompt-level approximation of Chain-of-Draft / TokenSkip.
+    It does not expose verbose CoT. It only tells the generator whether a
+    tiny draft is allowed and how many short decision slots may be used.
+    """
+    cat = str(category or "").strip()
+    command_l = str(command or "").lower()
+
+    temporal_markers = [
+        "after", "before", "until", "wait", "delay", "timer",
+        "분 후", "후에", "까지", "기다", "반복", "동안", "멈출",
+    ]
+    loop_markers = ["repeat", "loop", "while", "break", "반복", "동안", "중단", "멈출"]
+
+    has_temporal = any(x in command_l for x in temporal_markers)
+    has_loop = any(x in command_l for x in loop_markers)
+
+    if cat in {"1", "2"} and not has_temporal and not has_loop:
+        return {
+            "reasoning_budget": "none",
+            "draft_items_max": 0,
+            "policy": "No reasoning. Generate JOILang DSL only.",
+        }
+
+    if has_loop and has_temporal:
+        return {
+            "reasoning_budget": "cod_4",
+            "draft_items_max": 4,
+            "policy": "Use at most 4 short Chain-of-Draft slots internally: intent, device/function, temporal constraint, loop/break.",
+        }
+
+    if has_temporal or cat in {"3", "4", "5", "6"}:
+        return {
+            "reasoning_budget": "cod_2",
+            "draft_items_max": 2,
+            "policy": "Use at most 2 short Chain-of-Draft slots internally: intent and temporal/dataflow constraint.",
+        }
+
+    return {
+        "reasoning_budget": "cod_1",
+        "draft_items_max": 1,
+        "policy": "Use at most 1 short draft item only if needed.",
+    }
+
+
+def _compact_rule_cards() -> list[dict[str, str]]:
+    """Compact JOILang rule cards for schema-only prompting."""
+    return [
+        {"name": "OUTPUT", "card": "Return JOILang DSL/code only. No prose, no markdown."},
+        {"name": "DELAY", "card": "delay => (#Clock).clock_delay(ms)"},
+        {"name": "WAIT", "card": "wait => wait until <condition>"},
+        {"name": "BREAK", "card": "break valid only when period > 0"},
+        {"name": "VAR_DECL", "card": "var := only at block start"},
+        {"name": "FORBID", "card": "FORBID={while,sleep,inner:=,explanation,markdown}"},
+        {"name": "SCHEMA", "card": "Preserve required JOILang keys and output contract."},
+    ]
+
+
+def _token_reduction_method_cards() -> list[dict[str, Any]]:
+    """Advisor-facing cards that translate recent token-reduction ideas into safe prompt edits."""
+    return [
+        {
+            "method": "Chain of Draft",
+            "apply_to": "reasoning instructions / DET helper / temporal skeleton",
+            "rewrite_pattern": "Replace verbose CoT with <= 2~4 short decision slots. Never ask final model to output reasoning.",
+            "example_before": "Think step by step and explain how to map the user command to devices, services, arguments, temporal constraints, and final code.",
+            "example_after": "Draft only if needed: intent | device/function | temporal/loop. Then output JOILang DSL only.",
+            "safe_operators": ["compact_reasoning_skeleton", "compact_block_params"],
+        },
+        {
+            "method": "TokenSkip approximation",
+            "apply_to": "verbose natural-language rules",
+            "rewrite_pattern": "Remove restatement, tutorial prose, obvious reasoning, repeated warnings; keep only decision-critical tokens.",
+            "example_before": "You should carefully consider whether the user may be referring to a device and then decide the appropriate action.",
+            "example_after": "Map device→function→args. No unrelated action.",
+            "safe_operators": ["remove_redundant_hint_lines", "template_compress_rule_family"],
+        },
+        {
+            "method": "Skeleton-of-Thought pipeline",
+            "apply_to": "internal prompt organization",
+            "rewrite_pattern": "Use internal pipeline: classify→select rules/devices/examples→generate→validate→repair. Do not expose skeleton unless debug.",
+            "example_before": "Long explanation of all possible categories and procedures.",
+            "example_after": "PIPE={classify,select,generate,validate,repair}; output=DSL-only.",
+            "safe_operators": ["compact_reasoning_skeleton"],
+        },
+        {
+            "method": "Selective Context / LLMLingua-style",
+            "apply_to": "service context / device capabilities / examples",
+            "rewrite_pattern": "Keep only category-relevant devices, functions, enum values, temporal rules, and top examples.",
+            "example_before": "Render all device capabilities and all examples.",
+            "example_after": "Render only relevant device/function/value cards and top-1/top-2 examples.",
+            "safe_operators": [
+                "service_context_render_budget_down",
+                "compact_service_schema_fields",
+                "drop_unused_device_capabilities",
+            ],
+        },
+        {
+            "method": "Few-shot distillation",
+            "apply_to": "few-shot blocks",
+            "rewrite_pattern": "Replace many verbose examples with top-1/top-2 compact NL=>DSL prototypes.",
+            "example_before": "User command + explanation + notes + DSL for many categories.",
+            "example_after": "NL => DSL compact pair, selected by category.",
+            "safe_operators": [
+                "reduce_few_shot_count",
+                "reduce_few_shot_count_to_zero",
+                "reduce_few_shot_count_by_one",
+            ],
+        },
+        {
+            "method": "Schema-only compact prompting",
+            "apply_to": "rule-heavy blocks",
+            "rewrite_pattern": "Replace long natural-language rules with compact cards, sets, EBNF-like constraints.",
+            "example_before": "Do not use while. Do not use sleep. Do not declare variables inside nested scopes...",
+            "example_after": "FORBID={while,sleep,inner:=}; VAR_DECL=block-start only.",
+            "safe_operators": ["compact_block_params", "template_compress_rule_family"],
+        },
+    ]
 
 def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "normal") -> str:
     detail = str(detail or "normal").lower()
@@ -647,14 +823,35 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
         packet.pop("group_diagnostics", None)
     compression_policy = (batch.get("advisor_request") or {}).get("compression_policy") or {}
     compression_phase = str(compression_policy.get("compression_phase") or "ACCURACY_SEARCH")
+    generation_no = int(batch.get("generation", 0) or 0)
+
+    # Technique-trace fields are requested from the advisor so later artifacts can
+    # explain why a prompt became shorter, not only that it became shorter.
+    technique_trace_example = {
+        "token_reduction_methods": ["Chain of Draft", "TokenSkip approximation"],
+        "reasoning_budget_before": "verbose_or_unbounded",
+        "reasoning_budget_after": "cod_2",
+        "prompt_rewrite_before": "verbose instruction summary",
+        "prompt_rewrite_after": "compact instruction summary",
+        "rule_cards_added_or_kept": ["DELAY", "WAIT", "FORBID"],
+        "output_budget_policy": "DSL-only, no prose",
+    }
+
+    block_rewrite_trace_example = {
+        "block_rewrite_strategy": "schema_only_card | chain_of_draft | selective_context | few_shot_distillation",
+        "example_before": "Verbose prompt instructions, long few-shot examples, or repeated natural-language rules.",
+        "example_after": "Compact rule cards, CoD slots, selected context, or distilled NL=>DSL examples.",
+    }
+    
     required_schema = {
         "advisor_status": "accepted",
         "compression_policy": compression_policy,
         "prompt_token_breakdown_seen": True,
         "block_token_breakdown_seen": True,
+        
         "proposals": [
             {
-                "proposal_id": "g{:03d}_01".format(int(batch.get("generation", 0) or 0)),
+                "proposal_id": f"g{generation_no:03d}_01",
                 "target_block_id": "02",
                 "target_block_family": "Service_Mapping",
                 "mutation_family": "accuracy_repair",
@@ -669,9 +866,21 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
                 "expected_token_delta": 12,
                 "regression_risk": 0.2,
                 "apply_mode": "create_child",
+
+                # Optional for accuracy repair, but kept for uniform artifact analysis.
+                **{
+                    **technique_trace_example,
+                    "token_reduction_methods": [],
+                    "reasoning_budget_before": "",
+                    "reasoning_budget_after": "",
+                    "prompt_rewrite_before": "",
+                    "prompt_rewrite_after": "",
+                    "rule_cards_added_or_kept": [],
+                    "output_budget_policy": "",
+                },
             },
             {
-                "proposal_id": "g{:03d}_compress_01".format(int(batch.get("generation", 0) or 0)),
+                "proposal_id": f"g{generation_no:03d}_compress_01",
                 "target_block_id": "genome",
                 "target_block_family": "Compression",
                 "mutation_family": "compression",
@@ -686,11 +895,21 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
                 "expected_token_delta": -1000,
                 "regression_risk": 0.25,
                 "apply_mode": "create_child",
+                **{
+                    **technique_trace_example,
+                    "token_reduction_methods": ["TokenSkip approximation"],
+                    "reasoning_budget_before": "",
+                    "reasoning_budget_after": "",
+                    "prompt_rewrite_before": "verbose candidate strategy list",
+                    "prompt_rewrite_after": "minimal candidate strategy",
+                    "rule_cards_added_or_kept": [],
+                    "output_budget_policy": "unchanged",
+                },
             }
         ],
         "micro_compression_proposals": [
             {
-                "proposal_id": "g{:03d}_micro_01".format(int(batch.get("generation", 0) or 0)),
+                "proposal_id": f"g{generation_no:03d}_micro_01",
                 "mutation_family": "compression",
                 "compression_level": "micro",
                 "target_block_id": "genome",
@@ -698,13 +917,26 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
                 "mutation_type": "dedupe_duplicate_micro_rules",
                 "expected_token_delta": -80,
                 "regression_risk": 0.05,
+                **{
+                    **technique_trace_example,
+                    "token_reduction_methods": ["TokenSkip approximation"],
+                    "reasoning_budget_before": "",
+                    "reasoning_budget_after": "",
+                    "prompt_rewrite_before": "duplicate or redundant micro-rules",
+                    "prompt_rewrite_after": "deduplicated compact micro-rules",
+                    "rule_cards_added_or_kept": [],
+                    "output_budget_policy": "unchanged",
+                },
+                "affected_failure_families": ["token_overbudget"],
             }
         ],
         "block_compression_proposals": [
             {
-                "proposal_id": "g{:03d}_block_01".format(int(batch.get("generation", 0) or 0)),
+                "proposal_id": f"g{generation_no:03d}_block_01",
                 "mutation_family": "compression",
                 "compression_level": "block",
+                "target_block_id": "06",
+                "target_block_family": "DET_Helper",
                 "selected_block_id": "06",
                 "selected_block_family": "DET_Helper",
                 "exact_mutation_operator": "prune_micro_rules_to_top_k",
@@ -718,13 +950,22 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
                 "why_safe": "The selected block is non-core and keeps validator-critical constraints.",
                 "regression_risk": 0.2,
                 "validation_requirement": "strict DETPass gate",
+                "affected_failure_families": ["token_overbudget"],
+                
+                # These fields make before/after analysis explainable.
+                **technique_trace_example,
+                **block_rewrite_trace_example,
             }
         ],
         "multi_block_compression_proposals": [
             {
-                "proposal_id": "g{:03d}_multi_01".format(int(batch.get("generation", 0) or 0)),
+                "proposal_id": f"g{generation_no:03d}_multi_01",
                 "mutation_family": "compression",
                 "compression_level": "multi_block",
+                "target_block_id": "genome",
+                "target_block_family": "Compression",
+                "operator": "multi_block_compression_plan",
+                "mutation_type": "multi_block_compression_plan",
                 "selected_block_ids": ["05", "06"],
                 "exact_mutation_operator": "multi_block_compression_plan",
                 "steps": [
@@ -733,9 +974,57 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
                 ],
                 "total_expected_token_delta": -3300,
                 "regression_risk": 0.35,
+                "affected_failure_families": ["token_overbudget"],
+                
+                **{
+                    **technique_trace_example,
+                    "token_reduction_methods": [
+                        "Chain of Draft",
+                        "TokenSkip approximation",
+                        "Selective Context / LLMLingua-style",
+                    ],
+                    "reasoning_budget_before": "verbose_or_unbounded",
+                    "reasoning_budget_after": "cod_2_or_cod_4_by_category",
+                    "prompt_rewrite_before": "multiple verbose or redundant blocks",
+                    "prompt_rewrite_after": "compact CoD/rule-card/selective-context blocks",
+                    "rule_cards_added_or_kept": ["DELAY", "WAIT", "BREAK", "FORBID"],
+                    "output_budget_policy": "DSL-only, no prose",
+                },
+                **{
+                    **block_rewrite_trace_example,
+                    "block_rewrite_strategy": "multi_block: chain_of_draft + schema_only_card + selective_context",
+                    "example_before": "Block 05/06 contain repeated rules, verbose helper text, or many examples.",
+                    "example_after": "Block 05/06 keep only compact rule cards, top-k micro-rules, and DSL-only output contract.",
+                },
             }
         ],
-        "global_budget_compression_proposals": [],
+        "global_budget_compression_proposals": [
+            {
+                "proposal_id": f"g{generation_no:03d}_global_01",
+                "mutation_family": "compression",
+                "compression_level": "global_budget",
+                "exact_mutation_operator": "service_context_render_budget_down",
+                "operator": "service_context_render_budget_down",
+                "mutation_type": "service_context_render_budget_down",
+                "target_block_id": "genome",
+                "target_block_family": "Compression",
+                "expected_token_delta": -1500,
+                "regression_risk": 0.3,
+                "validation_requirement": "strict DETPass gate",
+                
+                "affected_failure_families": ["token_overbudget"],
+                **{
+                    **technique_trace_example,
+                    "token_reduction_methods": ["Selective Context / LLMLingua-style"],
+                    "reasoning_budget_before": "",
+                    "reasoning_budget_after": "",
+                    "prompt_rewrite_before": "full rendered service context",
+                    "prompt_rewrite_after": "category-relevant rendered service context only",
+                    "rule_cards_added_or_kept": [],
+                    "output_budget_policy": "unchanged",
+                },
+            }
+        ],
     }
     # The advisor prompt is phase-aware.
     # Below threshold it prioritizes correctness; after threshold it receives token/block
@@ -763,6 +1052,7 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
             "- Keep block compression active; multi-block/global proposals are additive.",
             "- Increase block compression quota/probability; add multi_block_compression_proposals when at least two safe block changes exist.",
             "- Add global_budget_compression_proposals only when render-budget hooks are enabled in the packet.",
+            "- Return global_budget_compression_proposals only when feedback_packet.render_budget_hooks.enabled=true.",
             "- Prioritize removal or zeroing of examples/rules in non-protected optional blocks.",
             "- Prioritize largest non-protected token components and avoid tiny deltas.",
             "- DETPass remains a hard validation gate.",
@@ -775,7 +1065,7 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
         "Rules:",
         "- Do not rewrite the whole prompt; propose compact, targeted prompt-block edits only.",
         "- Do not remove safety or output-schema constraints.",
-        "- Do not mutate retrieval / pre-mapping / service-context construction.",
+        "- Do not remove output schema, JSON-only rules, core blocks, service mapping, retrieval, pre-mapping, or service-context construction logic.",
         "- Every proposal must name target_block_id, target_block_family, and affected_failure_families.",
         "- Use only allowed_mutation_types from the packet.",
         *advisor_case_lines,
@@ -788,6 +1078,65 @@ def build_advisor_prompt_from_batch(batch: dict[str, Any], *, detail: str = "nor
         "- If block_token_breakdown shows compression_allowed=false or is_protected_block=true, do not target that block; explain the skip reason or choose another block.",
         "- Do not remove output schema, JSON-only rules, core blocks, service mapping, retrieval, pre-mapping, or service-context construction.",
         "",
+        "",
+        "TOKEN_REDUCTION_OBJECTIVE:",
+        "- Reduce total prompt + output tokens, not input tokens only.",
+        "- Preserve DETPass as a hard gate.",
+        "- Prefer meaningful block-level token delta over tiny genome-level changes.",
+        "- Do not propose no-op compression.",
+        "",
+        "REASONING_BUDGET_ROUTER:",
+        "- Simple device commands: reasoning_budget=none. Output JOILang DSL only.",
+        "- Single condition: reasoning_budget=cod_1. At most one short decision slot.",
+        "- Temporal/delay/wait: reasoning_budget=cod_2. Slots: intent, temporal/dataflow.",
+        "- Loop/break/split+delay: reasoning_budget=cod_4. Slots: intent, device/function, temporal, loop/break.",
+        "- Never ask the final generator to output verbose Chain-of-Thought.",
+        "",
+        "CHAIN_OF_DRAFT_POLICY:",
+        "- Replace verbose CoT instructions with short Chain-of-Draft slots.",
+        "- Draft is internal and optional; final output remains JOILang DSL/code only.",
+        "- Example before: 'Think step by step and explain mapping decisions.'",
+        "- Example after: 'Draft if needed: intent | temporal/loop | device/function. Then output DSL only.'",
+        "",
+        "TOKENSKIP_APPROX_POLICY:",
+        "- Approximate TokenSkip at prompt level.",
+        "- Remove repeated restatement, tutorial prose, obvious reasoning, filler, and duplicated warnings.",
+        "- Keep only decision-critical tokens: intent, device/function, temporal/loop constraint, output contract.",
+        "",
+        "SKELETON_OF_THOUGHT_PIPELINE:",
+        "- Use SoT as internal pipeline only: classify -> select rules/devices/examples -> generate -> validate -> repair.",
+        "- Do not expose verbose skeleton to the final model unless debug=True.",
+        "- Compress pipeline text into compact cards when possible.",
+        "",
+        "SELECTIVE_CONTEXT_POLICY:",
+        "- Do not render all devices, services, enum values, examples, or rules.",
+        "- Keep only category-relevant and command-relevant context.",
+        "- Compress rendered service context, not retrieval/pre-mapping logic.",
+        "",
+        "RULE_CARD_COMPRESSION_POLICY:",
+        "- Prefer compact rule cards over long prose.",
+        "- DELAY=(#Clock).clock_delay(ms)",
+        "- WAIT=wait until <cond>",
+        "- BREAK=period>0 only",
+        "- VAR_DECL=:= only at block start",
+        "- FORBID={while,sleep,inner:=,markdown,explanation}",
+        "",
+        "FEW_SHOT_BUDGET_POLICY:",
+        "- Simple categories: no-example or top-1 compact NL=>DSL example.",
+        "- Temporal/loop categories: top-1/top-2 category prototype examples.",
+        "- Remove explanation/notes from examples unless they contain required JOILang identifiers.",
+        "",
+        "VALIDATOR_HEAVY_REPAIR_POLICY:",
+        "- Do not resend full grammar in repair prompt.",
+        "- Repair prompt should contain: command, invalid output, compact validator error, minimal rule card, output contract.",
+        "- Escalate to fuller repair only after compact repair fails.",
+        "",
+        "BLOCK_LEVEL_REWRITE_EXAMPLES:",
+        "- Verbose reasoning block -> compact_reasoning_skeleton with CoD slots.",
+        "- Long negative rules -> schema-only FORBID card.",
+        "- Many examples -> reduce_few_shot_count or category_example_budget_down.",
+        "- Long service context -> service_context_render_budget_down or compact_service_schema_fields.",
+        "- Duplicate micro-rules -> dedupe_duplicate_micro_rules or prune_micro_rules_to_top_k.",
         "feedback_packet:",
         json.dumps(packet, ensure_ascii=False, indent=2),
         "",
@@ -828,8 +1177,31 @@ def validate_advisor_proposal(
     ]
 
     text_blob = json.dumps(raw, ensure_ascii=False).lower()
-    if any(marker in text_blob for marker in RETRIEVAL_MARKERS):
+    
+    service_context_budget_ops = {
+        "service_context_render_budget_down",
+        "compact_service_schema_fields",
+        "dedupe_service_value_enums",
+        "drop_unused_device_capabilities",
+    }
+
+    hard_forbidden_retrieval_markers = (
+        "retrieval",
+        "top-k",
+        "topk",
+        "premapping",
+        "pre-mapping",
+    )
+
+    if any(marker in text_blob for marker in hard_forbidden_retrieval_markers):
         return False, "attempts_to_modify_retrieval_or_premapping"
+
+    if (
+        any(marker in text_blob for marker in ("service-context", "service context"))
+        and mutation_type not in service_context_budget_ops
+    ):
+        return False, "attempts_to_modify_service_context_construction"
+    
     if not mutation_type:
         return False, "unsupported_operator"
     if mutation_type in PROTECTED_REMOVAL_OPERATORS or (
@@ -906,6 +1278,11 @@ def validate_advisor_proposal(
         return False, "expected_token_delta_too_small"
     if token_delta > max_token_expansion and not affected:
         return False, "token expansion too high without accuracy justification"
+    
+    if "token_reduction_methods" in raw and not isinstance(raw.get("token_reduction_methods"), list):
+        return False, "invalid_token_reduction_methods"
+    if "rule_cards_added_or_kept" in raw and not isinstance(raw.get("rule_cards_added_or_kept"), list):
+        return False, "invalid_rule_cards_added_or_kept"
     return True, ""
 
 
