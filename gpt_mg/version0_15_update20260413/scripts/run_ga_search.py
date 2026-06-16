@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from email import parser
 import json
 import math
 import random
@@ -277,6 +278,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--top-k", type=int, default=3)
     parser.add_argument("--llm-mutation-advisor", action="store_true", help="Use an optional LLM advisor to propose prompt-block mutations.")
     parser.add_argument("--advisor-model-key", default="gpt41_mini")
+    parser.add_argument("--advisor-llm-mode", choices=["openai", "mock", "worker"], default="openai", help="LLM backend for the mutation advisor. Keep separate from --llm-mode used by JOILang code generation.")
+    parser.add_argument("--advisor-llm-endpoint",default="",help="Optional endpoint for advisor LLM calls. Empty means default OpenAI SDK/client path.")
     parser.add_argument("--advisor-top-k", type=int, default=3)
     parser.add_argument("--advisor-bottom-k", type=int, default=3)
     parser.add_argument("--advisor-max-examples", type=int, default=5)
@@ -911,6 +914,61 @@ def _append_jsonl(path: Path, row: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+def _write_cloud_advisor_prompt_artifacts(
+    *,
+    output_root: Path,
+    generation: int,
+    prompt_text: str,
+    advisor_batch: dict[str, Any],
+    args: argparse.Namespace,
+) -> dict[str, str]:
+    """Write the exact final cloud-advisor prompt and its source packet.
+
+    This is analogous to config_loader.py's merged_system_prompt_*.md dump,
+    but advisor prompts are generation-dependent because they include DET
+    feedback, token breakdown, block breakdown, and staged compression state.
+    """
+    output_root = Path(output_root)
+    output_root.mkdir(parents=True, exist_ok=True)
+
+    gen = int(generation)
+
+    prompt_path = output_root / f"cloud_advisor_prompt_generation_{gen:03d}.md"
+    packet_path = output_root / f"cloud_advisor_feedback_packet_generation_{gen:03d}.json"
+    meta_path = output_root / f"cloud_advisor_prompt_meta_generation_{gen:03d}.json"
+
+    prompt_path.write_text(prompt_text, encoding="utf-8")
+
+    dump_json(packet_path, advisor_batch)
+
+    meta = {
+        "generation": gen,
+        "advisor_model_key": str(args.advisor_model_key),
+        "advisor_model": _advisor_model_name(str(args.advisor_model_key)),
+        "advisor_feedback_detail": str(args.advisor_feedback_detail),
+
+        "generation_llm_mode": str(args.llm_mode or ""),
+        "advisor_llm_mode": str(getattr(args, "advisor_llm_mode", "openai") or "openai"),
+        "advisor_llm_endpoint": str(getattr(args, "advisor_llm_endpoint", "") or ""),
+
+        "compression_ready": bool(getattr(args, "_compression_ready", False)),
+        "compression_phase": str(getattr(args, "_compression_phase", "")),
+        "generation_phase": str(getattr(args, "_generation_phase", "")),
+        "prompt_path": str(prompt_path),
+        "feedback_packet_path": str(packet_path),
+        "prompt_chars": len(prompt_text),
+        "prompt_est_tokens_char4": _estimate_prompt_tokens(prompt_text),
+        "written_at": datetime.now().isoformat(timespec="seconds"),
+    }
+
+    dump_json(meta_path, meta)
+
+    return {
+        "cloud_advisor_prompt_path": str(prompt_path),
+        "cloud_advisor_feedback_packet_path": str(packet_path),
+        "cloud_advisor_prompt_meta_path": str(meta_path),
+    }
 
 def _safe_read_json(path: Path, default: Any = None) -> Any:
     if not path.exists():
@@ -2264,13 +2322,26 @@ def _call_mutation_advisor(
         prompt_token_breakdown=getattr(args, "_prompt_token_breakdown", {}) or {},
         block_token_breakdown=getattr(args, "_block_token_breakdown", []) or [],
     )
+
     batch_path = output_root / "advisor_feedback_batches.jsonl"
     _append_jsonl(batch_path, advisor_batch)
     dump_json(output_root / f"advisor_feedback_batch_generation_{generation:03d}.json", advisor_batch)
+
     prompt_text = build_advisor_prompt_from_batch(advisor_batch, detail=args.advisor_feedback_detail)
     prompt_path.write_text(prompt_text, encoding="utf-8")
-    effective_mode = (args.llm_mode or "openai").strip().lower()
-    if effective_mode == "mock":
+
+    cloud_advisor_artifacts = _write_cloud_advisor_prompt_artifacts(
+        output_root=output_root,
+        generation=generation,
+        prompt_text=prompt_text,
+        advisor_batch=advisor_batch,
+        args=args,
+    )
+
+    advisor_mode = str(getattr(args, "advisor_llm_mode", "openai") or "openai").strip().lower()
+    advisor_endpoint = str(getattr(args, "advisor_llm_endpoint", "") or "").strip() or None
+
+    if advisor_mode == "mock":
         advisor_payload = _mock_advisor_response(
             generation,
             model_key,
@@ -2286,11 +2357,11 @@ def _call_mutation_advisor(
             response = call_llm(
                 "You are a prompt-block mutation advisor. Return valid JSON only.",
                 prompt_text,
-                mode=effective_mode,
-                endpoint=args.llm_endpoint,
                 model=_advisor_model_name(args.advisor_model_key),
+                mode=advisor_mode,
+                endpoint=advisor_endpoint,
                 temperature=args.advisor_temperature,
-                max_tokens=1024,
+                max_tokens=2048,
                 timeout_sec=args.timeout_sec,
                 retries=args.retries,
                 log_path=output_root / "logs" / f"advisor_generation_{generation:03d}.json",
@@ -2317,8 +2388,15 @@ def _call_mutation_advisor(
                             "rejection_reason": f"advisor call failed: {exc}",
                             "raw_response_path": str(raw_path),
                             "advisor_prompt_path": str(prompt_path),
+                            "advisor_llm_mode": advisor_mode,
+                            "advisor_model_key": args.advisor_model_key,
+                            "advisor_model": _advisor_model_name(args.advisor_model_key),
                         }
                     ],
+                    "advisor_llm_mode": advisor_mode,
+                    "advisor_model_key": args.advisor_model_key,
+                    "advisor_model": _advisor_model_name(args.advisor_model_key),
+                    **cloud_advisor_artifacts,
                 },
             )
             return [], [
@@ -2328,6 +2406,10 @@ def _call_mutation_advisor(
                     "proposal_state": PROPOSAL_STATE_REJECTED,
                     "rejection_reason": f"advisor call failed: {exc}",
                     "advisor_batch_id": advisor_batch.get("advisor_batch_id", ""),
+                    "advisor_llm_mode": advisor_mode,
+                    "advisor_model_key": args.advisor_model_key,
+                    "advisor_model": _advisor_model_name(args.advisor_model_key),
+                    **cloud_advisor_artifacts,
                 }
             ]
     raw_dir = output_root / "advisor_raw_responses"
@@ -2363,6 +2445,10 @@ def _call_mutation_advisor(
             "advisor_batch_id": advisor_batch.get("advisor_batch_id", ""),
             "accepted_proposals": safe,
             "rejected_proposals": rejected,
+            "advisor_llm_mode": advisor_mode,
+            "advisor_model_key": args.advisor_model_key,
+            "advisor_model": _advisor_model_name(args.advisor_model_key),
+            **cloud_advisor_artifacts,
         },
     )
     return safe, rejected
