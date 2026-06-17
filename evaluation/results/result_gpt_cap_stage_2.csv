@@ -1,0 +1,28 @@
+﻿index,model_name,command,gen_started_at,gen_ended_at,response_time,elapse_time,report_time,llm_prompt_tokens,llm_completion_tokens,llm_total_tokens,overall_final,overall_deterministic,syntax_schema,logic_rules,function_calls,semantic_intent_z3,overall_lang,equivalent_z3,overall_gpt,generated_candidate_json,ground_truth_json_list,syntax_errors,rule_violations,function_call_issues,z3_diff,ls_judge_reasoning,gpt_judge_reasoning
+,,,,,,,,,,,,,,,,,,,,,,,,,,,
+66,gpt_cap.stage_2,10초마다 관개기를 켰다가 5초 뒤에 꺼 줘. 관개기를 켤 때 끌 때 모두 확인해서 일조량이 500룩스 이상이면 관개기를 끄고 반복을 종료해 줘.,2025-11-06T11:06:31,2025-11-06T11:06:36,4.924,4.923933,,,,,0.7386666666666667,0.8,1.0,1.0,1.0,0.0,0.7333333333333334,False,0.19,"{'name': 'IrrigatorControl', 'cron': '', 'period': 10000, 'code': 'if ((#LightSensor).lightLevel_light >= 500) {\n    (#Irrigator).switch_off()\n    break\n}\n(#Irrigator).switch_on()\n(#Clock).clock_delay(5000)\nif ((#LightSensor).lightLevel_light >= 500) {\n    (#Irrigator).switch_off()\n    break\n}\n(#Irrigator).switch_off()'}","[""{\""name\"": \""Scenario1\"", \""cron\"": \""\"", \""period\"": 10000, \""code\"": \""\\nlux = (#LightSensor).lightLevel_light\\n\\nif (lux >= 500.0) {\\n\\n  (#Irrigator).switch_off()\\n\\n  break\\n}\\n\\n(#Irrigator).switch_on()\\n\\n(#Clock).clock_delay(5000)\\n\\nlux = (#LightSensor).lightLevel_light\\n\\nif (lux >= 500.0) {\\n  \\n(#Irrigator).switch_off()\\n\\n  break\\n\\n}\\n\\n(#Irrigator).switch_off()\""}"", ""{\""name\"": \""Scenario1\"", \""cron\"": \""\"", \""period\"": 10000, \""code\"": \""\\ntriggered := false\\nif (triggered == false) {\\n  (#Irrigator).switch_on()\\n  triggered = true\\n} else {\\n  (#Clock).clock_delay(5000)\\n  if ((#LightSensor).lightLevel_light >= 500) {\\n    (#Irrigator).switch_off()\\n    break\\n  } else {\\n    (#Irrigator).switch_off()\\n    triggered = false\\n  }\\n}\""}""]",[],[],[],"--- candidate
++++ ground_truth
+@@ -1,11 +1,15 @@
+-if ((#LightSensor).lightLevel_light >= 500) {
++
++triggered := false
++if (triggered == false) {
++  (#Irrigator).switch_on()
++  triggered = true
++} else {
++  (#Clock).clock_delay(5000)
++  if ((#LightSensor).lightLevel_light >= 500) {
+     (#Irrigator).switch_off()
+     break
++  } else {
++    (#Irrigator).switch_off()
++    triggered = false
++  }
+ }
+-(#Irrigator).switch_on()
+-(#Clock).clock_delay(5000)
+-if ((#LightSensor).lightLevel_light >= 500) {
+-    (#Irrigator).switch_off()
+-    break
+-}
+-(#Irrigator).switch_off()","{'semantic_intent': 'The prediction correctly captures the intent to turn the irrigator on and off based on light conditions.', 'time_period': 'The prediction does not explicitly implement the 10-second cycle; it only includes a 5-second delay.', 'device_service': 'The prediction correctly identifies and controls the irrigator device.', 'conditions': 'The conditions for checking light levels and turning off the irrigator are correctly implemented.'}","The generated code directly uses the sensor reading in the condition, while the ground truth assigns it to a variable 'lux' first. This is a minor difference in style, not affecting the logic."

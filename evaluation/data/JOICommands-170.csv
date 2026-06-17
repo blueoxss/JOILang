@@ -1,0 +1,2508 @@
+﻿index,category,test_no,command_kor,connected_devices,options,gt1,gt2,gt3,command_eng
+16,1,59,10을 3으로 나눈 나머지를 구해.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Calculator).calculator_mod(10,3)""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Calculator).calculator_mod(10, 3)""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': '(#Calculator).calculator_mod(10,3)'}",Find the remainder of 10 divided by 3.
+66,6,308,10초마다 관개기를 켰다가 5초 뒤에 꺼 줘. 관개기를 켤 때 끌 때 모두 확인해서 일조량이 500룩스 이상이면 관개기를 끄고 반복을 종료해 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 10000, ""code"": ""
+lux = (#LightSensor).lightLevel_light\n
+if (lux >= 500.0) {\n
+  (#Irrigator).switch_off()\n
+  break\n}\n
+(#Irrigator).switch_on()\n
+(#Clock).clock_delay(5000)\n
+lux = (#LightSensor).lightLevel_light\n
+if (lux >= 500.0) {\n  
+(#Irrigator).switch_off()\n
+  break\n
+}\n
+(#Irrigator).switch_off()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 10000, ""code"": ""
+triggered := false
+if (triggered == false) {
+  (#Irrigator).switch_on()
+  triggered = true
+} else {
+  (#Clock).clock_delay(5000)
+  if ((#LightSensor).lightLevel_light >= 500) {
+    (#Irrigator).switch_off()
+    break
+  } else {
+    (#Irrigator).switch_off()
+    triggered = false
+  }
+}""}","{'name': 'Scenario1', 'cron': '', 'period': 10000, 'code': '
+if ((#LightSensor).lightLevel_light >= 500) {\n
+    (#Irrigator).switch_off()\n
+    break\n
+}\n
+(#Irrigator).switch_on()\n
+(#Clock).clock_delay(5000)\n
+if ((#LightSensor).lightLevel_light >= 500) {\n
+    (#Irrigator).switch_off()\n
+    break\n
+}\n
+(#Irrigator).switch_off()'}","Every 10 seconds, turn on the irrigation system and turn it off 5 seconds later. Each time the irrigation system is turned on or off, check the light level, and if the light intensity is 500 lux or higher, turn off the irrigation system and stop repeating."
+95,6,338,10초마다 블라인드를 완전히 닫아 줘. 그 때마다 확인해서 TV가 켜져 있으면 즉시 반복을 종료해.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 10000, ""code"": ""
+(#Blind).blind_close()\n
+if ((#Television).switch_switch == \""on\"") {\n
+  break\n
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 10000, ""code"": ""
+ if ((#Television).switch_switch == \""on\"") {
+ break
+ } else {
+ (#Blind).blind_close()
+ }
+ ""}","{'name': 'Scenario', 'cron': '', 'period': 10000, 'code': ""if ((#Television).switch_switch == 'on') {\n    break\n}\n(#Blind).blind_close()""}","Every 10 seconds, close the blinds completely. Check each time and end the loop immediately if the TV is on."
+67,7,309,10초마다 알람과 사이렌을 껐다 켰다 반복해 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 10000, ""code"": ""
+alarm_state := true\n
+if (alarm_state == true) {\n
+  (#Alarm).alarm_off()\n
+  (#Siren).switch_off()\n
+  alarm_state = false\n
+} else {\n
+  (#Alarm).alarm_siren()\n
+  (#Siren).switch_on()\n
+  alarm_state = true\n
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 10000, ""code"": ""
+alarm_state := true\n
+if (alarm_state == true) {\n
+  (#Alarm).alarm_off()\n
+  (#Siren).switch_off()\n
+  alarm_state = false\n
+} else {\n
+  (#Alarm).alarm_siren()\n
+  (#Siren).switch_on()\n
+  alarm_state = true\n
+}""}","{'name': 'Scenario1', 'cron': '', 'period': 10000, 'code': 'alarm_state := true\nif (alarm_state == true) {\n    (#Alarm).alarm_off()\n    (#Siren).switch_off()\n    alarm_state = false\n} else {\n    (#Alarm).alarm_siren()\n    (#Siren).switch_on()\n    alarm_state = true\n}'}",Turn the alarm and siren off and on every 10 seconds.
+22,4,86,1시간 20분 30초 뒤에 알람의 사이렌을 울려줘,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Clock).clock_delay(4830000)\n(#Alarm).alarm_siren()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Clock).clock_delay(4830000)\n(#Alarm).alarm_siren()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': '(#Clock).clock_delay(4830000)\n(#Alarm).alarm_siren()'}","Sound the alarm's siren in 1 hour, 20 minutes, 30 seconds"
+147,3,436,"1월 1일에, 실시간으로 확인하여 조명이 꺼지면 3초 대기 후 펌프를 끄고, 5초 후 블라인드를 닫으며, 추가로 7초 후 조명을 다시 켠 다음 알람의 사이렌을 울려 줘.",,,"{""name"": ""Scenario1"", ""cron"": ""0 0 1 1 *"", ""period"": 100, ""code"": ""
+if (((#Clock).clock_month == 1) and ((#Clock).clock_day == 1)) {\n
+  if((#Light).switch_switch == \""off\"")\n
+  (#Clock).clock_delay(3000)\n
+  (#Pump).switch_off()\n
+  (#Clock).clock_delay(5000)\n
+  (#Blind).blind_close()\n
+  (#Clock).clock_delay(7000)\n
+  (#Light).switch_on()\n
+  (#Alarm).alarm_siren()\n
+  break
+} else{
+  break
+}""}","{""name"": ""Scenario1"", ""cron"": ""0 0 1 1 *"", ""period"": 100, ""code"": ""
+triggered := false
+if (triggered == false) {
+  if ((#Light).switch_switch == ""off"") {
+    (#Clock).clock_delay(3000)
+    (#Pump).switch_off()
+    (#Clock).clock_delay(5000)
+    (#Blind).blind_close()
+    (#Clock).clock_delay(7000)
+    (#Light).switch_on()
+    (#Alarm).alarm_siren()
+    triggered = true
+  }
+} else {
+  triggered = false
+}""}","{'name': 'Scenario', 'cron': '0 0 1 1 *', 'period': 100, 'code': ""
+if (((#Clock).clock_month != 1) or ((#Clock).clock_day != 1)) {\n
+    break\n
+}\n
+if ((#Light).switch_switch == 'off') {\n
+    (#Clock).clock_delay(3000)\n
+    (#Pump).switch_off()\n
+    (#Clock).clock_delay(5000)\n
+    (#Blind).blind_close()\n
+    (#Clock).clock_delay(7000)\n
+    (#Light).switch_on()\n
+    (#Alarm).alarm_siren()\n
+}""}","On January 1, check in real-time and when the lights turns off, wait 3 seconds, turn off the pump, close the blinds after 5 seconds, turn the lights back on after an additional 7 seconds, and sound the alarm's siren."
+102,7,345,1초마다 상태를 확인해서 온도가 35도를 초과할 때마다 환풍기를 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 1000, ""code"": ""triggered := false\nif ((#TemperatureSensor).temperatureMeasurement_temperature > 35.0) {\n  if (triggered == false) {\n    (#Fan).switch_on()\n    triggered = true\n  }\n} else {\n  triggered = false\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 1000, ""code"": ""
+ triggered := false
+ if ((#TemperatureSensor).temperatureMeasurement_temperature > 35.0) {
+ if (triggered == false) {
+ (#Fan).switch_on()
+ triggered = true
+ }
+ } else {
+ triggered = false
+ }
+ ""}","{'name': 'Scenario1', 'cron': '', 'period': 1000, 'code': 'triggered := false\nif ((#TemperatureSensor).temperatureMeasurement_temperature > 35) {\n    if (triggered == false) {\n        (#Fan).switch_on()\n        triggered = true\n    }\n} else {\n    triggered = false\n}'}",Check the status every 1 second and turn on the fan whenever the temperature exceeds 35 degrees.
+65,6,307,1초마다 선풍기의 전원을 켜고 끄는 토글 동작을 반복해 줘. 매번 동작 직전에 습도를 확인해서 80% 이상이면 반복을 즉시 중단해 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 1000, ""code"": ""
+humidity = (#AirQualityDetector).relativeHumidityMeasurement_humidity\n
+if (humidity >= 80.0) {\n
+  break\n}\n
+(#Fan).switch_toggle()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 1000, ""code"": ""stopped := false
+humidity = (#HumiditySensor).relativeHumidityMeasurement_humidity
+if (humidity >= 80.0) {
+stopped = true
+}
+if (stopped == false) {
+(#Fan).switch_toggle()
+} else {
+break
+}""}","{'name': 'Scenario1', 'cron': '', 'period': 1000, 'code': 'if ((#HumiditySensor).relativeHumidityMeasurement_humidity >= 80) {\n    break\n}\n(#Fan).switch_toggle()'}",Repeat the toggle action of powering the fan on and off every second. Check the humidity just before each action and stop the loop immediately if it's above 80%.
+116,7,374,1초마다 확인하여 관개 장치가 꺼졌다 켜진 횟수가 4번을 초과하고 펌프가 2번 이상 작동했으면 블라인드를 닫고 커튼을 내려 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 1000, ""code"": ""prev_irrigator_state := (#Irrigator).switch_switch\nirrigator_off_to_on_count := 0\nprev_pump_state := (#Pump).switch_switch\npump_on_count := 0\nirrigator_state = (#Irrigator).switch_switch\npump_state = (#Pump).switch_switch\nif ((prev_irrigator_state == \""off\"") and (irrigator_state == \""on\"")) {\n  irrigator_off_to_on_count = irrigator_off_to_on_count + 1\n}\nprev_irrigator_state = irrigator_state\nif ((pump_state == \""on\"") and (prev_pump_state != \""on\"")) {\n  pump_on_count = pump_on_count + 1\n}\nprev_pump_state = pump_state\nif ((irrigator_off_to_on_count > 4) and (pump_on_count >= 2)) {\n  (#Blind).blind_close()\n  (#Curtain).curtain_close()\n  break\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 1000, ""code"": ""
+ irrigatorOnCount := 0
+ pumpOnCount := 0
+ if ((#Irrigator).switch_switch == \""off\"") {
+ wait until ((#Irrigator).switch_switch == \""on\"")
+ irrigatorOnCount = irrigatorOnCount + 1
+ }
+ if ((#Pump).switch_switch == \""on\"") {
+ pumpOnCount = pumpOnCount + 1
+ }
+ if ((irrigatorOnCount > 4) and (pumpOnCount >= 2)) {
+ (#Blind).blind_close()
+ (#Curtain).curtain_close()
+ }
+ ""}","{'name': 'Scenario', 'cron': '', 'period': 1000, 'code': ""irrigator_count := 0\nprev_irrigator_state := (#Irrigator).switch_switch\nirrigator_state = (#Irrigator).switch_switch\npump_count := 0\nprev_pump_state := (#Pump).switch_switch\npump_state = (#Pump).switch_switch\nif ((prev_irrigator_state == 'off') and (irrigator_state == 'on')) {\n    irrigator_count = irrigator_count + 1\n}\nif ((prev_pump_state == 'off') and (pump_state == 'on')) {\n    pump_count = pump_count + 1\n}\nprev_irrigator_state = irrigator_state\nprev_pump_state = pump_state\nif ((irrigator_count > 4) and (pump_count >= 2)) {\n    (#Blind).blind_close()\n    (#Curtain).curtain_close()\n    break\n}""}",Check every second and close the blinds and lower the curtains if the number of times the irrigation has turned off and on exceeds 4 and the pump has run more than 2 times.
+135,6,408,1초마다 확인하여 온도가 30도 미만이면서 25도 이상일 때마다 에어컨을 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 2000, ""code"": ""(#Light).switch_toggle()\nlight_state = (#Light).switch_switch\nif (light_state == \""off\"") {\n  window_state = (#Window).windowControl_window\n  if (window_state == \""open\"") {\n      break\n  }\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 1000, ""code"": ""
+ if (((#TemperatureSensor).temperatureMeasurement_temperature < 30.0) and ((#TemperatureSensor).temperatureMeasurement_temperature >= 25.0)) {
+ (#AirConditioner).switch_on()
+ }
+ ""}","{'name': 'Scenario', 'cron': '', 'period': 1000, 'code': 'triggered := false\nif (((#TemperatureSensor).temperatureMeasurement_temperature < 30) and ((#TemperatureSensor).temperatureMeasurement_temperature >= 25)) {\n    if (triggered == false) {\n        (#AirConditioner).switch_on()\n        triggered = true\n    }\n} else {\n    triggered = false\n}'}",Check every second to turn on the air conditioner whenever the temperature is below 30 degrees but above 25 degrees.
+140,6,418,2초마다 거실 조명을 켰다 껐다 반복해 줘. 조명을 끌 때마다 확인해서 창문이 열려 있는 게 감지되면 반복을 즉시 중단해 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 2000, ""code"": ""
+(#Light).switch_toggle()\n
+light_state = (#Light).switch_switch\n
+if (light_state == \""off\"") {\n
+  window_state = (#Window).windowControl_window\n
+  if (window_state == \""open\"") {\n
+      break\n
+  }\n
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 2000, ""code"": ""
+ lightOn := false
+ if (lightOn == false) {
+ (#Light #LivingRoom).switch_on()
+ lightOn = true
+ } else {
+ (#Light #LivingRoom).switch_off()
+ lightOn = false
+ if ((#Window).windowControl_window == \""open\"") {
+ break
+ }
+ }
+ ""}","{'name': 'Scenario', 'cron': '', 'period': 2000, 'code': ""
+if ((#Light).switch_switch == 'on') {\n
+    (#Light).switch_off()\n
+    if ((#Window).windowControl_window == 'open') {\n
+        break\n
+    }\n
+} else {\n
+    (#Light).switch_on()\n
+}""}",Turn the living room light on and off every two seconds. Check each time it turns off the light and stop the loop immediately if it detects that a window is open.
+104,7,351,2초마다 상태를 확인해서 TV가 켜질 때마다 스피커도 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 2000, ""code"": ""triggered := false\nif ((#Television).switch_switch == \""on\"") {\n  if (triggered == false) {\n    (#Speaker).switch_on()\n    triggered = true\n  }\n} else {\n  triggered = false\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 2000, ""code"": ""triggered := false\nif ((#Television).switch_switch == \""on\"") {\n if (triggered == false) {\n (#Speaker).switch_on()\n triggered = true\n }\n} else {\n triggered = false\n}""}","{'name': 'Scenario', 'cron': '', 'period': 2000, 'code': ""triggered := false\nif ((#Television).switch_switch == 'on') {\n    if (triggered == false) {\n        (#Speaker).switch_on()\n        triggered = true\n    }\n} else {\n    triggered = false\n}""}",Check status every 2 seconds and turn on the speakers whenever the TV turns on.
+142,6,431,"2초마다 알람의 사이렌을 1초간 울렸다 꺼지게 하고, 알람의 사이렌을 울릴 때마다 창문이 닫혀 있는지 확인해서 닫혀 있으면 반복을 중단해 줘.",,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 2000, ""code"": ""(#Alarm).alarm_siren()\nstate = (#Window).windowControl_window\n(#Clock).clock_delay(1000)\n(#Alarm).alarm_off()\nif (state == \""closed\"") {\n  break\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 2000, ""code"": ""
+sirenOn := false\n
+if (sirenOn == false) {\n
+ (#Alarm).alarm_siren()\n
+ (#Clock).clock_delay(1000)\n
+ (#Alarm).alarm_off()\n
+ sirenOn = true\n}\n
+if ((#Alarm).alarm_alarm == \""siren\"") {\n
+ if ((#Window).windowControl_window == \""closed\"") {\n 
+break\n
+ }\n
+}""
+ }""}","{'name': 'Scenario', 'cron': '', 'period': 2000, 'code': ""    (#Alarm).alarm_siren()\n    if ((#Window).windowControl_window == 'closed') {\n        break\n    }\n    (#Clock).clock_delay(1000)\n    (#Alarm).alarm_off()""}","Every two seconds, turn the alarm siren on for 1 second, then turn it off, and every time it turn on the siren, make sure the window is closed and stop the loop if it is."
+145,7,434,"2초마다 체크해서 매일 오전 6시부터 9시 사이에 조명이 켜져 있는 누적 시간이 10분 이상이고, 관개 장치가 세 번 이상 꺼졌다 켜졌으면 스피커로 '관수 완료되었습니다'라고 말해 줘.",,,"{""name"": ""Scenario1"", ""cron"": ""0 6 * * *"", ""period"": 2000, ""code"": ""
+light_on_duration := 0\n
+irrigator_toggle_count := 0\n
+prev_irrigator := \""\""\n\n
+if ((#Clock).clock_hour < 9) {\n
+
+  if ((#Light).switch_switch == \""on\"") {\n
+    light_on_duration = light_on_duration + 2000\n
+  }\n\n
+  current_irrigator = (#Irrigator).switch_switch\n
+
+  if ((prev_irrigator == \""on\"") and (current_irrigator == \""off\"")) {\n
+    irrigator_toggle_count = irrigator_toggle_count + 1\n
+  }
+
+  prev_irrigator = current_irrigator
+
+  if ((light_on_duration >= 600000) and (irrigator_toggle_count >= 3)) {\n
+    (#Speaker).mediaPlayback_speak(\""관수 완료되었습니다\"")\n
+  }\n
+} else {\n
+  break\n
+}""}","{""name"": ""Scenario1"", ""cron"": ""0 6 * * *"", ""period"": 2000, ""code"": ""
+ lightOnTime := 0
+ irrigationToggleCount := 0
+ messageSpoken := false
+ 
+ if ((#Light).switch_switch == \""on\"") {
+ lightOnTime = lightOnTime + 2
+ }
+ 
+ if ((#Irrigator).switch_switch == \""off\"") {
+   wait until ((#Irrigator).switch_switch == \""on\"")
+   irrigationToggleCount = irrigationToggleCount + 1
+ }
+ 
+ if ((lightOnTime >= 600) and (irrigationToggleCount >= 3) and (messageSpoken == false)) {
+   (#Speaker).mediaPlayback_speak(\""관수 완료되었습니다\"")
+   messageSpoken = true
+ }
+ 
+ if ((#Clock).clock_hour >= 9) {
+   break
+ }
+ ""}","{'name': 'Scenario', 'cron': '0 6-8 * * *', 'period': 2000, 'code': ""on_time := 0\nprev_light_state := (#Light).switch_switch\nlight_state = (#Light).switch_switch\nif ((prev_light_state == 'off') and (light_state == 'on')) {\n    start_time := (#Clock).clock_timestamp\n}\nif ((prev_light_state == 'on') and (light_state == 'on')) {\n    on_time = on_time + 2\n}\nif ((prev_light_state == 'on') and (light_state == 'off')) {\n    on_time = on_time + ((#Clock).clock_timestamp - start_time) / 60\n}\nprev_light_state = light_state\n\nirrigator_count := 0\nprev_irrigator_state := (#Irrigator).switch_switch\nirrigator_state = (#Irrigator).switch_switch\nif ((prev_irrigator_state == 'on') and (irrigator_state == 'off')) {\n    irrigator_count = irrigator_count + 1\n}\nprev_irrigator_state = irrigator_state\n\nif ((#Clock).clock_hour == 9) {\n    break\n}\nif ((on_time >= 10) and (irrigator_count >= 3)) {\n    (#Speaker).mediaPlayback_speak('관수 완료되었습니다')\n    break\n}""}","Check every two seconds, and if the cumulative time the lights are on between 6 a.m. and 9 a.m. each day is 10 minutes or more, and the irrigator has been turned off and on three or more times during that same period, announce ""Watering complete"" via the speaker."
+92,6,335,3초 간격으로 조명을 10번 깜빡여 줘. 깜빡일 때마다 확인해서 비 감지 센서가 비를 감지하는 순간 반복을 중단해 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 3000, ""code"": ""count := 0\n\nif (count >= 10) {\n  break\n}\n(#Light).switch_toggle()\nrain = (#WeatherProvider).weatherProvider_weather\nif (rain == \""rain\"") {\n  break\n}\ncount = count + 1""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 1000, ""code"": ""blinkCount := 0
+ if ((#WeatherProvider).weatherProvider_weather != \""rain\"") {
+  if (blinkCount < 10) {
+  (#Light).switch_toggle()
+  blinkCount = blinkCount + 1
+  } else {break}
+  } 
+  else {break}""}","{'name': 'Scenario', 'cron': '', 'period': 3000, 'code': ""count := 0\nif (count < 10) {\n    (#Light).switch_toggle()\n    if ((#WeatherProvider).weatherProvider_weather == 'rain') {\n        break\n    }\n    count = count + 1\n} else {\n    break\n}""}",Blink the light 10 times in 3-second intervals. Check after each blink and stop the loop the moment the rain sensor detects rain.
+72,6,315,3초마다 텔레비전의 볼륨을 1씩 증가시켜서 5단계가 되면 초기값으로 되돌리는 동작을 반복해 줘. 초기값으로 되돌릴 때 확인해서 움직임이 감지되면 반복을 중단해 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 3000, ""code"": ""
+volume := 0\n
+if (volume >= 5) {\n
+  motion = (#MotionSensor).motionSensor_motion\n
+  if (motion == \""active\"") {\n
+      break\n
+  }\n
+  volume = 0\n
+} else {\n
+  volume = volume + 1\n
+}\n
+(#Television).audioVolume_setVolume(volume)""
+}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 3000, ""code"": ""
+volume := 0
+triggered := false
+currentVolume = (#Television).audioVolume_volume
+motionDetected = ((#MotionSensor).motionSensor_motion == ""active"")
+if (triggered == false) {
+  if (currentVolume < 5) {
+    volume = currentVolume + 1
+    (#Television).audioVolume_setVolume(volume)
+  } else {
+    (#Television).audioVolume_setVolume(0)
+    if (motionDetected == true) {
+      triggered = true
+    }
+  }
+}
+if (triggered == true) {
+  break
+}""}","{'name': 'Scenario', 'cron': '', 'period': 3000, 'code': ""volume := 0\nvolume = volume + 1\nif (volume > 5) {\n    volume = 0\n    if ((#MotionSensor).motionSensor_motion == 'active') {\n        break\n    }\n}\n(#Television).audioVolume_setVolume(volume)""}","Every 3 seconds, increase the television volume by 1 level. When it reaches level 5, reset it to the initial value. Repeat this cycle. If motion is detected at the moment of reset, stop the repetition."
+29,1,157,5의 속도로 조명의 밝기를 80으로 설정해줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Light).switchLevel_setLevel(80,5)""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Light).switchLevel_setLevel(80,5)""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': '(#Light).switchLevel_setLevel(80,5)'}",Set the brightness of the light to 80 with a speed of 5.
+96,6,339,5초마다 실내 공기청정기를 ‘자동’ 모드로 전환해 줘. 그 때마다 확인해서 창문이 열려 있으면 모든 반복을 종료해 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 5000, ""code"": ""(#AirPurifier).airPurifierFanMode_setAirPurifierFanMode(\""auto\"")\nstate = (#Window).windowControl_window\nif (state == \""open\"") {\n  break\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 5000, ""code"": ""if ((#Window).windowControl_window == ""open"") {
+ break
+ } else {
+ (#AirPurifier).airPurifierFanMode_setAirPurifierFanMode(""auto"")
+ }""}","{'name': 'Scenario', 'cron': '', 'period': 5000, 'code': ""if ((#Window).windowControl_window == 'open') {\n    break\n}\n(#AirPurifier).airPurifierFanMode_setAirPurifierFanMode('auto')""}","Every 5 seconds, switch the room air purifier to 'auto' mode. Check each time and stop the loop if a window is open."
+170,4,459,"5초마다 움직임을 감지하고, 감지되면 2초 대기 후 알람을 울려 줘.",,,"{""name"": ""MotionDetectedAlarm"", ""cron"": """", ""period"": 5000, ""code"": ""if ((#MotionSensor).motionSensor_motion == \""active\"") {\n  (#clock).delay(2000)\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 5000, ""code"": ""
+ if ((#MotionSensor).motionSensor_motion == \""active\"") {
+ (#Clock).clock_delay(2000)
+ (#Alarm).alarm_siren()
+ }
+ ""}","{'name': 'Scenario', 'cron': '', 'period': 5000, 'code': ""if ((#MotionSensor).motionSensor_motion == 'active') {\n    (#Clock).clock_delay(2000)\n    (#Alarm).alarm_siren()\n}""}","Every 5 seconds, check for motion, and if detected, wait 2 seconds and then sound the alarm."
+93,6,336,5초마다 토양 습도를 측정해서 30% 이하이면 급수기를 켜 줘. 만약 그 때 온도가 35도 이상이면 급수기를 끄고 반복도 종료해 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 5000, ""code"": ""soil = (#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity\ntemp = (#TemperatureSensor).temperatureMeasurement_temperature\nif (soil <= 30.0) {\n  (#Irrigator).switch_on()\n  if (temp >= 35.0) {\n      (#Irrigator).switch_off()\n      break\n  }\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 5000, ""code"": ""triggered := false
+ if ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 30.0) {
+ if (triggered == false) {
+ (#Irrigator).switch_on()
+ triggered = true
+ }
+ }
+ if ((#TemperatureSensor).temperatureMeasurement_temperature >= 35.0) {
+ (#Irrigator).switch_off()
+ break
+ }""}","{'name': 'Scenario', 'cron': '', 'period': 5000, 'code': 'if ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 30) {\n    (#Irrigator).switch_on()\n}\nif ((#TemperatureSensor).temperatureMeasurement_temperature >= 35) {\n    (#Irrigator).switch_off()\n    break\n}'}","Measure soil moisture every 5 seconds, and if it is below 30%, turn on the irrigator. If the temperature is above 35 degrees at that time, turn off the irrigator and stop the loop."
+94,6,337,5초마다 현재 상태에서 블라인드를 10퍼센트씩 닫아줘. 더 이상 못 내릴 때까지.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 5000, ""code"": ""current_level = (#Blind).blindLevel_blindLevel\nif (current_level <= 10) {\n  (#Blind).blindLevel_setBlindLevel(0)\n  break\n}\nnext_level = current_level - 10\n(#Blind).blindLevel_setBlindLevel(next_level)""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 5000, ""code"": ""
+ blindLevel := (#Blind).blindLevel_blindLevel
+ if (blindLevel > 0) {
+ newLevel = blindLevel - 10
+ if (newLevel < 0) {
+ newLevel = 0
+ }
+ (#Blind).blindLevel_setBlindLevel(newLevel)
+ } else {
+ break
+ }
+ ""}","{'name': 'Scenario', 'cron': '', 'period': 5000, 'code': 'if ((#Blind).blindLevel_blindLevel > 0) {\n    blind_level = (#Blind).blindLevel_blindLevel\n    new_level = 0\n    if ((blind_level - 10) >= 0) {\n        new_level = blind_level - 10\n    } else {\n        new_level = 0\n    }\n    (#Blind).blindLevel_setBlindLevel(new_level)\n} else {\n    break\n}'}","Every 5 seconds, lower the blinds by 10 percent from their current position, and continue until the blinds can no longer be lowered."
+88,4,331,7초 후에 조명을 끄고 5초 뒤 다시 켜 줘.,,,"{""name"": ""Scenario8"", ""cron"": """", ""period"": -1, ""code"": ""(#Clock).clock_delay(7000)\n
+(#Light).switch_off()\n
+(#Clock).clock_delay(5000)\n
+(#Light).switch_on()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Clock).clock_delay(7000)\n(#Light).switch_off()\n(#Clock).clock_delay(5000)\n(#Light).switch_on()""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': '(#Clock).clock_delay(7000)\n(#Light).switch_off()\n(#Clock).clock_delay(5000)\n(#Light).switch_on()'}",Turn off the light after 7 seconds and turn it back on after 5 seconds.
+25,3,127,가스 밸브가 열려 있으면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#GasValve).valve_valve == \""open\"") {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#GasValve).valve_valve == \""open\"") {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#GasValve).valve_valve == 'open') {\n    (#Alarm).alarm_siren()\n}""}",Sound the alarm's siren if the gas valve is open.
+18,9,64,"가장 최근 동영상을 첨부파일로 이메일을 'test@example.com' 주소, 제목 '동영상'과 내용 '동영상입니다.'로 보내줘",,"[
+  {
+  ""name"": ""me"",
+  ""contact"": ""010-1234-5678"",
+  ""email"": ""abcd1234@test.com"",
+  ""birthday"": ""1991-03-03""
+  },
+  {
+  ""name"": ""홍길동"",
+  ""contact"": ""010-9999-8888"",
+  ""email"": ""honggd@test.com"",
+  ""birthday"": ""1988-07-15"",
+  ""alternate_contact"": ""010-8888-7777""
+  },
+  {
+  ""name"": ""김무개"",
+  ""contact"": ""010-7777-6666"",
+  ""email"": ""kim@example.com"",
+  ""birthday"": ""1990-11-25""
+  },
+  {
+  ""name"": ""장보고"",
+  ""contact"": ""010-2222-3333"",
+  ""email"": ""jangbogo@naver.com"",
+  ""birthday"": ""1985-05-10"",
+  ""alternate_contact"": ""010-4444-5555""
+  }
+ ]","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""latest_video = (#Camera).camera_video\n(#EmailProvider).emailProvider_sendMailWithFile(\""test@example.com\"", \""동영상\"", \""동영상입니다.\"", latest_video)""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#EmailProvider).emailProvider_sendMailWithFile(\""test@example.com\"", \""동영상\"", \""동영상입니다.\"", (#Camera).camera_video)""}","{'name': 'SendLatestVideoEmail', 'cron': '', 'period': -1, 'code': ""latest_video = (#Camera).camera_video\n(#EmailProvider).emailProvider_sendMailWithFile('test@example.com','동영상','동영상입니다.', latest_video)""}","Send an email with the most recent video as an attachment to 'test@example.com' with the subject line ""Video"" and the content ""This is a video."
+154,9,443,가장 최근 동영상을 첨부파일로 장보고 이메일로 제목 '동영상'과 내용 '동영상입니다.'로 보내줘,,"[
+  {
+  ""name"": ""me"",
+  ""contact"": ""010-1234-5678"",
+  ""email"": ""abcd1234@test.com"",
+  ""birthday"": ""1991-03-03""
+  },
+  {
+  ""name"": ""홍길동"",
+  ""contact"": ""010-9999-8888"",
+  ""email"": ""honggd@test.com"",
+  ""birthday"": ""1988-07-15"",
+  ""alternate_contact"": ""010-8888-7777""
+  },
+  {
+  ""name"": ""김무개"",
+  ""contact"": ""010-7777-6666"",
+  ""email"": ""kim@example.com"",
+  ""birthday"": ""1990-11-25""
+  },
+  {
+  ""name"": ""장보고"",
+  ""contact"": ""010-2222-3333"",
+  ""email"": ""jangbogo@naver.com"",
+  ""birthday"": ""1985-05-10"",
+  ""alternate_contact"": ""010-4444-5555""
+  }
+ ]","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""latest_video = (#Camera).camera_video\n(#EmailProvider).emailProvider_sendMailWithFile(""jangbogo@naver.com"", ""동영상"", ""동영상입니다."", latest_video)""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#EmailProvider).emailProvider_sendMailWithFile(\""jangbogo@naver.com\"", \""동영상\"", \""동영상입니다.\"", (#Camera).camera_video)""}","{'name': 'SendLatestVideoToJangbogo', 'cron': '', 'period': -1, 'code': ""latest_video = (#Camera).camera_video\n(#EmailProvider).emailProvider_sendMailWithFile('jangbogo@naver.com','동영상','동영상입니다.', latest_video)""}","Send the most recent video as an attachment to Jang Bogo by email with the subject ""Video"" and the message ""This is a video""."
+17,9,63,"가장 최근에 찍은 사진을 첨부파일로 이메일을 'test@example.com' 주소, 제목 '사진'과 내용 '사진입니다.'로 보내줘.",,"[
+  {
+  ""name"": ""me"",
+  ""contact"": ""010-1234-5678"",
+  ""email"": ""abcd1234@test.com"",
+  ""birthday"": ""1991-03-03""
+  },
+  {
+  ""name"": ""홍길동"",
+  ""contact"": ""010-9999-8888"",
+  ""email"": ""honggd@test.com"",
+  ""birthday"": ""1988-07-15"",
+  ""alternate_contact"": ""010-8888-7777""
+  },
+  {
+  ""name"": ""김무개"",
+  ""contact"": ""010-7777-6666"",
+  ""email"": ""kim@example.com"",
+  ""birthday"": ""1990-11-25""
+  },
+  {
+  ""name"": ""장보고"",
+  ""contact"": ""010-2222-3333"",
+  ""email"": ""jangbogo@naver.com"",
+  ""birthday"": ""1985-05-10"",
+  ""alternate_contact"": ""010-4444-5555""
+  }
+ ]","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""latest_photo = (#Camera).camera_image\n(#EmailProvider).emailProvider_sendMailWithFile(\""test@example.com\"", \""사진\"", \""사진입니다.\"", latest_photo)""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#EmailProvider).emailProvider_sendMailWithFile(\""test@example.com\"", \""사진\"", \""사진입니다.\"", (#Camera).camera_image)""}","{'name': 'SendLatestPhotoByEmail', 'cron': '', 'period': -1, 'code': ""latest_photo = (#Camera).camera_image\n(#EmailProvider).emailProvider_sendMailWithFile('test@example.com','사진','사진입니다.', latest_photo)""}","Send an email with the most recent photo as an attachment to 'test@example.com' with the subject line ""Photo"" and the content ""This is a photo""."
+153,9,442,가장 최근에 찍은 사진을 홍길동 이메일로 제목 '사진'과 내용 '사진입니다.'로 보내줘.,,"[
+  {
+  ""name"": ""me"",
+  ""contact"": ""010-1234-5678"",
+  ""email"": ""abcd1234@test.com"",
+  ""birthday"": ""1991-03-03""
+  },
+  {
+  ""name"": ""홍길동"",
+  ""contact"": ""010-9999-8888"",
+  ""email"": ""honggd@test.com"",
+  ""birthday"": ""1988-07-15"",
+  ""alternate_contact"": ""010-8888-7777""
+  },
+  {
+  ""name"": ""김무개"",
+  ""contact"": ""010-7777-6666"",
+  ""email"": ""kim@example.com"",
+  ""birthday"": ""1990-11-25""
+  },
+  {
+  ""name"": ""장보고"",
+  ""contact"": ""010-2222-3333"",
+  ""email"": ""jangbogo@naver.com"",
+  ""birthday"": ""1985-05-10"",
+  ""alternate_contact"": ""010-4444-5555""
+  }
+ ]","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""latest_photo = (#Camera).camera_image\n(#EmailProvider).emailProvider_sendMailWithFile(\""honggd@test.com\"", \""Photo\"", \""This is a photo.\"", latest_photo)""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""image = (#Camera).camera_image\n(#EmailProvider).emailProvider_sendMailWithFile(\""honggd@test.com\"", \""사진\"", \""사진입니다.\"", image)""}","{'name': 'SendLatestPhotoToHong', 'cron': '', 'period': -1, 'code': ""latest_photo = (#Camera).camera_image\n(#EmailProvider).emailProvider_sendMailWithFile('honggd@test.com','사진','사진입니다.', latest_photo)""}","Send the most recent photo to Honggildong by email with the subject ""사진"" and the message ""사진입니다."""
+68,7,310,매일 30초마다 선풍기를 껐다 켰다 반복해 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 30000, ""code"": ""fan_on := true\nif (fan_on == true) {\n  (#Fan).switch_off()\n  fan_on = false\n} else {\n  (#Fan).switch_on()\n  fan_on = true\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 30000, ""code"": ""
+ fanOn := false
+ if (fanOn == false) {
+ (#Fan).switch_on()
+ fanOn = true
+ } else {
+ (#Fan).switch_off()
+ fanOn = false
+ }
+ ""}","{'name': 'Scenario1', 'cron': '* * * * *', 'period': 30000, 'code': 'fan_state := true\nif (fan_state == true) {\n    (#Fan).switch_off()\n    fan_state = false\n} else {\n    (#Fan).switch_on()\n    fan_state = true\n}'}",Turn the fan off and on every 30 seconds every day.
+3,1,3,경광등을 켜 줘.,"{ 'GreenhouseA_alarm_left': {'category': 'Alarm', 'tags': ['GreenhouseA', 'left', 'Alarm']}, 'GreenhouseA_alarm_center': {'category': 'Alarm', 'tags': ['GreenhouseA', 'center', 'Alarm']}, 'GreenhouseA_alarm_right': {'category': 'Alarm', 'tags': ['GreenhouseA', 'right', 'Alarm']}}",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Alarm).alarm_strobe()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Alarm).alarm_strobe()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': '(#Alarm).alarm_strobe()'}",Turn on the strobe.
+4,1,4,경광등을 켜 줘.,"{ 'GreenhouseA_alarm_left': {'category': 'Siren', 'tags': ['GreenhouseA', 'left', 'Siren']}, 'GreenhouseA_alarm_right': {'category': 'Siren', 'tags': ['GreenhouseA', 'right', 'Siren']}, 'GreenhouseA_alarm_center': {'category': 'Siren', 'tags': ['GreenhouseA', 'center', 'Siren']}, 'GreenhouseA_alarm_entrance': {'category': 'Siren', 'tags': ['GreenhouseA', 'entrance', 'Siren']}, 'GreenhouseA_alarm_exit': {'category': 'Siren', 'tags': ['GreenhouseA', 'exit', 'Siren']}}",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Siren).sirenMode_setSirenMode(\""strobe\"")""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Siren).sirenMode_setSirenMode(\""strobe\"")""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""(#Siren).sirenMode_setSirenMode('strobe')""}",Turn on the strobe.
+26,1,148,관개 장치의 급수를 시작해줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Irrigator).irrigatorOperatingState_startWatering()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Irrigator).irrigatorOperatingState_startWatering()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': '(#Irrigator).irrigatorOperatingState_startWatering()'}",Start watering the irrigator.
+85,4,328,관수를 시작하고 10초 기다렸다가 환풍기를 켜 줘.,,,"{""name"": ""Scenario5"", ""cron"": """", ""period"": -1, ""code"": ""(#Irrigator).irrigatorOperatingState_startWatering()\n(#Clock).clock_delay(10000)\n(#Fan).switch_on()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Irrigator).irrigatorOperatingState_startWatering()\n(#Clock).clock_delay(10000)\n(#Fan).switch_on()""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': '(#Irrigator).irrigatorOperatingState_startWatering()\n(#Clock).clock_delay(10000)\n(#Fan).switch_on()'}","Start irrigation, wait for 10 seconds, and then turn on the ventilation fan."
+100,7,343,매일 밤 10시에 하단부에 있는 창문이 열려 있고 짝수 태그가 붙은 조명이 켜져 있으면 사이렌을 울려 줘. 사이렌을 울렸다면 5초 후 블라인드를 닫아 줘. 사이렌을 울렸는지 상관 없이 5초 후부터는 실시간으로 확인해서 홀수 태그가 붙은 문이 두 번 열렸다 닫히면 커튼을 닫아 줘. 커튼을 닫은 후 문이 두 번 열린 총 시간만큼 알람의 경광등을 켰다가 꺼 줘.,,,"{""name"": ""Scenario1"", ""cron"": ""0 22 * * *"", ""period"": 100, ""code"": ""state := 0\nsiren_triggered := false\ndoor_open_flag := false\ndoor_open_count := 0\nfirst_open_start := 0\nfirst_open_end := 0\nsecond_open_start := 0\nsecond_open_end := 0\n\nif (state == 0) {\n  if ((#Window #Lower).windowControl_window == \""open\"" and (#Light #Even).switch_switch == \""on\"") {\n    (#Alarm).alarm_siren()\n    siren_triggered = true\n  }\n  (#Clock).clock_delay(5000)\n  state = 1\n}\n\nif (state == 1) {\n  if (siren_triggered == true) {\n    (#Blind).blind_close()\n  }\n  state = 2\n}\n\nif (state == 2 and door_open_count >= 2) {\n  (#Curtain).curtain_close()\n  total_time = (first_open_end - first_open_start) + (second_open_end - second_open_start)\n  total_time = total_time * 1000\n  (#Alarm).alarm_siren()\n  (#Clock).clock_delay(total_time)\n  (#Alarm).alarm_off()\n  break\n}\n\nif ((#DoorLock #Odd).doorControl_door == \""open\"" and door_open_flag == false) {\n  door_open_flag = true\n  now = (#Clock).clock_timestamp\n  door_open_count = door_open_count + 1\n  if (door_open_count == 1) {\n    first_open_start = now\n  } else if (door_open_count == 2) {\n    second_open_start = now\n  }\n}\nif ((#DoorLock #Odd).doorControl_door == \""closed\"" and door_open_flag == true) {\n  door_open_flag = false\n  now = (#Clock).clock_timestamp\n  if (door_open_count == 1) {\n    first_open_end = now\n  } else if (door_open_count == 2) {\n    second_open_end = now\n  }\n}""}","{""name"": ""Scenario1"", ""cron"": ""0 22 * * *"", ""period"": 100, ""code"": ""
+sirenTriggered := false\n
+oddDoorOpenCount := 0\n
+curtainClosed := false\n
+alarmDuration := 0\n
+if ((#Window #Lower).windowControl_window == \""open\"" and (#Light #Even).switch_switch == \""on\"") {\n
+  (#Siren).sirenMode_setSirenMode(\""siren\"")\n
+  sirenTriggered = true\n}\nif (sirenTriggered == true) {\n
+  (#Clock).clock_delay(5000)\n
+  (#Blind).blind_close()\n  sirenTriggered = false\n}\n
+
+if ((#Door #Odd).doorControl_door == \""open\"") {\n
+  wait until ((#Door #Odd).doorControl_door == \""closed\"")\n
+  oddDoorOpenCount = oddDoorOpenCount + 1\n
+}\n
+
+if (oddDoorOpenCount >= 2 and curtainClosed == false) {\n
+  (#Curtain).curtain_close()\n
+  curtainClosed = true\n
+  alarmDuration = oddDoorOpenCount * 1000\n
+}\n
+
+if (curtainClosed == true) {\n
+  (#Alarm).alarm_strobe()\n
+  (#Clock).clock_delay(alarmDuration)\n
+  (#Alarm).alarm_off()\n
+  oddDoorOpenCount = 0\n
+  curtainClosed = false\n
+  alarmDuration = 0\n}""
+ }""}","{'name': 'Scenario', 'cron': '0 22 * * *', 'period': 100, 'code': ""phase := 0\ndoor_count := 0\nprev_door_state := (#Odd #DoorLock).doorControl_door\nstart_time := 0\nend_time := 0\nif ((#Clock).clock_hour != 22) {\n    break\n}\nif (phase == 0) {\n    if (((#Lower #Window).windowControl_window == 'open') and ((#Even #Light).switch_switch == 'on')) {\n        (#Siren).sirenMode_setSirenMode('siren')\n        (#Clock).clock_delay(5000)\n        (#Blind).blind_close()\n        phase = 1\n        door_count = 0\n        prev_door_state = (#Odd #DoorLock).doorControl_door\n        start_time = (#Clock).clock_timestamp\n    }\n} else if (phase == 1) {\n    door_state := (#Odd #DoorLock).doorControl_door\n    if ((prev_door_state == 'open') and (door_state == 'closed')) {\n        door_count = door_count + 1\n    }\n    prev_door_state = door_state\n    if (door_count >= 2) {\n        (#Curtain).curtain_close()\n        end_time = (#Clock).clock_timestamp\n        duration := end_time - start_time\n        (#Alarm).alarm_strobe()\n        (#Clock).clock_delay(duration * 1000)\n        (#Alarm).alarm_off()\n        break\n    }\n}""}","Sound the siren every night at 10 p.m. if the window located at the bottom is open and a light with an even-numbered tag is on. If the siren is sounded, close the blinds after 5 seconds. Starting 5 seconds later, regardless of whether the siren was triggered, monitor in real-time: when a door with an odd-numbered tag has opened and closed twice in total, close the curtains. After closing the curtains, turn on the alarm's strobe for the total duration the door remained open across the two events, then turn it off."
+119,7,386,"매주 평일 오전 9시 창문이 닫혀 있고 이산화탄소 농도가 1000ppm 이상이며 기온이 30도 이상이면, 5초 후 창문을 열고, 팬이 꺼져 있으면 켜 줘. 
+그 후, 실시간으로 확인하여 1분 연속으로 미세먼지 농도가 50 이상으로 유지되면 창문을 다시 닫고, 팬도 꺼 줘. 만약 그 때 온실 내 습도가 40% 이하이면 가습기를 작동시켜 줘. 또한 마찬가지로 그 때 토양 습도가 25% 이하이고 관개 장치가 꺼져 있으면 물을 줘.",,,"{'name': 'Scenario1', 'cron': '0 9 * * 1-5', 'period': -1, 'code': '
+if ((#Window).windowControl_window == ""closed"" and (#AirQualityDetector).carbonDioxideMeasurement_carbonDioxide >= 1000.0 and (#AirQualityDetector).temperatureMeasurement_temperature >= 30.0) {\n
+  (#Clock).clock_delay(5000)\n
+  (#Window).windowControl_open()\n
+  if ((#Fan).switch_switch == ""off"") {\n
+    (#Fan).switch_on()\n
+  }\n
+}'}, 
+
+{'name': 'Scenario2', 'cron': '', 'period': 100, 'code': 'dustHighDuration = 0\n
+if (dustHighDuration < 60000) {\n
+  if ((#AirQualityDetector).dustSensor_dustLevel >= 50) {\n
+    dustHighDuration = dustHighDuration + 100\n
+  } else {\n
+    dustHighDuration = 0\n
+  }\n
+  (#Clock).clock_delay(100)\n
+}\n
+else {
+  (#Window).windowControl_close()\n
+  (#Fan).switch_off()\n
+  if ((#AirQualityDetector).relativeHumidityMeasurement_humidity <= 40.0) {\n
+    (#Humidifier).switch_on()\n
+  }\n
+  if ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 25.0 and (#Irrigator).switch_switch == ""off"") {\n
+    (#Irrigator).irrigatorOperatingState_startWatering()\n
+}'}","[{'name': 'Scenario1', 'cron': '0 9 * * 1-5', 'period': -1, 'code': '
+if ((#Window).windowControl_window == ""closed"" and (#AirQualityDetector).carbonDioxideMeasurement_carbonDioxide >= 1000 and (#TemperatureSensor).temperatureMeasurement_temperature >= 30.0) {\n
+ (#Clock).clock_delay(5000)\n (#Window).windowControl_open()\n
+ if ((#Fan).switch_switch == ""off"") {\n
+   (#Fan).switch_on()\n
+ }\n
+}'}, 
+
+{'name': 'Scenario2', 'cron': '', 'period': 1000, 'code': '
+dustHigh := false\n
+if ((#AirQualityDetector).dustSensor_dustLevel >= 50) {\n
+ if (dustHigh == false) {\n
+   dustHigh = true\n
+   startTime = (#Clock).clock_timestamp\n
+ }\n
+ if ((#Clock).clock_timestamp - startTime >= 60) {\n
+   (#Window).windowControl_close()\n
+   (#Fan).switch_off()\n
+   if ((#HumiditySensor).relativeHumidityMeasurement_humidity <= 40.0) {\n
+     (#Humidifier).switch_on()\n
+   }\n
+   if ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 25.0 and (#Irrigator).switch_switch == ""off"") {\n
+     (#Irrigator).irrigatorOperatingState_startWatering()\n
+   }\n
+   break\n
+ }
+\n} else {\n
+ dustHigh = false\n
+}'}]","{'name': 'Scenario', 'cron': '0 9 * * 1-5', 'period': 100, 'code': ""phase := false\nif (phase == false) {\n    if (((#Window).windowControl_window == 'closed') and ((#AirQualityDetector).carbonDioxideMeasurement_carbonDioxide >= 1000) and ((#TemperatureSensor).temperatureMeasurement_temperature >= 30)) {\n        (#Clock).clock_delay(5000)\n        (#Window).windowControl_open()\n        if ((#Fan).switch_switch == 'off') {\n            (#Fan).switch_on()\n        }\n        phase = true\n    } else {\n        break\n    }\n} else {\n    dust_duration := 0\n    if ((#AirQualityDetector).dustSensor_dustLevel >= 50) {\n        dust_duration = dust_duration + 100\n        if (dust_duration >= 60000) {\n            (#Window).windowControl_close()\n            (#Fan).switch_off()\n            if ((#HumiditySensor).relativeHumidityMeasurement_humidity <= 40) {\n                (#Humidifier).switch_on()\n            }\n            if (((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 25) and ((#Irrigator).switch_switch == 'off')) {\n                (#Irrigator).switch_on()\n            }\n            break\n        }\n    } else {\n        dust_duration = 0\n    }\n}""}","Every weekday at 9 a.m., if the window is closed, the CO₂ concentration is 1000 ppm or higher, and the temperature is 30°C or higher, then after 5 seconds, open the window and turn on the fan if it is off. After that, continuously monitor the conditions, and if the fine dust concentration remains at 50 or higher for one consecutive minute, close the window again and turn off the fan. At that time, if the greenhouse humidity is 40% or lower, turn on the humidifier. Also, if the soil moisture is 25% or lower and the irrigation system is off, start irrigation."
+118,7,377,실시간으로 확인하여 블라인드가 닫힌 상태에서 또 닫히면 전등을 켜 줘,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+triggered := false
+if ((#Blind).blind_blind == ""closed"") {
+  if (triggered == false) {
+    wait until ((#Blind).blind_blind == ""closed"")
+    (#Light).switch_on()
+    triggered = true
+  }
+} else {
+  triggered = false
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+triggered := false
+if ((#Blind).blind_blind == ""closed"") {
+  if (triggered == false) {
+    wait until ((#Blind).blind_blind == ""closed"")
+    (#Light).switch_on()
+    triggered = true
+  }
+} else {
+  triggered = false
+}""}","{'name': 'Scenario', 'cron': '', 'period': 100, 'code': ""prev_blind_state := (#Blind).blind_blind\nblind_state = (#Blind).blind_blind\nif ((prev_blind_state == 'closed') and (blind_state == 'closed')) {\n    (#Light).switch_on()\n}\nprev_blind_state = blind_state""}","Check in real-time, and turn on the light if the blinds are closed again while already closed."
+110,7,366,"실시간으로 확인하여 온도가 28도 이상이면 선풍기를 켜고, 습도가 80% 이상이면 제습기를 켜 줘.",,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""temperature = (#TemperatureSensor).temperatureMeasurement_temperature\nhumidity = (#HumiditySensor).relativeHumidityMeasurement_humidity\nif (temperature >= 28.0) {\n  (#Fan).switch_on()\n}\nif (humidity >= 80.0) {\n  (#Dehumidifier).switch_on()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+ if ((#TemperatureSensor).temperatureMeasurement_temperature >= 28.0) {
+ (#Fan).switch_on()
+ }
+ if ((#HumiditySensor).relativeHumidityMeasurement_humidity >= 80.0) {
+ (#Dehumidifier).switch_on()
+ }
+ ""}","{'name': 'Scenario', 'cron': '', 'period': 100, 'code': 'if ((#TemperatureSensor).temperatureMeasurement_temperature >= 28) {\n    (#Fan).switch_on()\n}\nif ((#HumiditySensor).relativeHumidityMeasurement_humidity >= 80) {\n    (#Dehumidifier).switch_on()\n}'}","Check in real time, turn on the fan if the temperature is above 28 degrees; and turn on the dehumidifier if the humidity is above 80%."
+155,9,444,김무개 메일로 제목 '알림'과 내용 '긴급 상황입니다.'로 보내줘.,,"[
+  {
+  ""name"": ""me"",
+  ""contact"": ""010-1234-5678"",
+  ""email"": ""abcd1234@test.com"",
+  ""birthday"": ""1991-03-03""
+  },
+  {
+  ""name"": ""홍길동"",
+  ""contact"": ""010-9999-8888"",
+  ""email"": ""honggd@test.com"",
+  ""birthday"": ""1988-07-15"",
+  ""alternate_contact"": ""010-8888-7777""
+  },
+  {
+  ""name"": ""김무개"",
+  ""contact"": ""010-7777-6666"",
+  ""email"": ""kim@example.com"",
+  ""birthday"": ""1990-11-25""
+  },
+  {
+  ""name"": ""장보고"",
+  ""contact"": ""010-2222-3333"",
+  ""email"": ""jangbogo@naver.com"",
+  ""birthday"": ""1985-05-10"",
+  ""alternate_contact"": ""010-4444-5555""
+  }
+ ]","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#EmailProvider).emailProvider_sendMail(\""kim@example.com\"", \""알림\"", \""긴급 상황입니다.\"")""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#EmailProvider).emailProvider_sendMail(\""kim@example.com\"" | \""알림\"" | \""긴급 상황입니다.\"")""
+ }""}","{'name': 'SendMailToKimMugae', 'cron': '', 'period': -1, 'code': ""(#EmailProvider).emailProvider_sendMail('kim@example.com','알림','긴급 상황입니다.')""}","Send an email to Kim Mugae with the subject ""Alert"" and the message ""This is an emergency.""."
+42,2,272,낙상 감지 센서에서 낙상이 감지된 상태이면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#FallDetector).fallDetection_fall == \""fall\"") {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#FallDetector).fallDetection_fall == \""fall\"") {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#FallDetector).fallDetection_fall == 'fall') {\n    (#Alarm).alarm_siren()\n}""}",Sound the alarm's siren if a fall is detected by the fall detection sensor.
+164,9,453,"낙상 감지 센서에서 낙상이 감지된 상태이면, 내 주변사람들에게 제목은 ""낙상 감지"", 내용은 ""제가 넘어졌습니다. 도와주세요""로 메일을 보내줘.",,"[
+  {
+  ""name"": ""me"",
+  ""contact"": ""010-1234-5678"",
+  ""email"": ""abcd1234@test.com"",
+  ""birthday"": ""1991-03-03""
+  },
+  {
+  ""name"": ""홍길동"",
+  ""contact"": ""010-9999-8888"",
+  ""email"": ""honggd@test.com"",
+  ""birthday"": ""1988-07-15"",
+  ""alternate_contact"": ""010-8888-7777""
+  },
+  {
+  ""name"": ""김무개"",
+  ""contact"": ""010-7777-6666"",
+  ""email"": ""kim@example.com"",
+  ""birthday"": ""1990-11-25""
+  },
+  {
+  ""name"": ""장보고"",
+  ""contact"": ""010-2222-3333"",
+  ""email"": ""jangbogo@naver.com"",
+  ""birthday"": ""1985-05-10"",
+  ""alternate_contact"": ""010-4444-5555""
+  }
+ ]","{""name"": ""AlertEmail"", ""cron"": """", ""period"": -1, ""code"": ""if((#FallSensor).fallDetection_fall == ""fall"")
+(#EmailProvider).emailProvider_sendMailWithFile(""honggd@test.com"", ""낙상 감지"", ""제가 넘어졌습니다. 도와주세요."")
+(#EmailProvider).emailProvider_sendMailWithFile(""kim@example.com"", ""낙상 감지"", ""제가 넘어졌습니다. 도와주세요."")
+(#EmailProvider).emailProvider_sendMailWithFile(""jangbogo@naver.com"", ""낙상 감지"", ""제가 넘어졌습니다. 도와주세요."")}""","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+if ((#FallDetector).fallDetection_fall == \""fall\"") {\n (#EmailProvider).emailProvider_sendMail(\""honggd@test.com\"", \""낙상 감지\"", \""제가 넘어졌습니다. 도와주세요\"")\n (#EmailProvider).emailProvider_sendMail(\""kim@example.com\"", \""낙상 감지\"", \""제가 넘어졌습니다. 도와주세요\"")\n (#EmailProvider).emailProvider_sendMail(\""jangbogo@naver.com\"", \""낙상 감지\"", \""제가 넘어졌습니다. 도와주세요\"")\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#FallDetector).fallDetection_fall == 'fall') {\n    (#EmailProvider).emailProvider_sendMail('010-1234-5678','낙상 감지','제가 넘어졌습니다. 도와주세요')\n    (#EmailProvider).emailProvider_sendMail('010-9999-8888','낙상 감지','제가 넘어졌습니다. 도와주세요')\n    (#EmailProvider).emailProvider_sendMail('010-7777-6666','낙상 감지','제가 넘어졌습니다. 도와주세요')\n    (#EmailProvider).emailProvider_sendMail('010-2222-3333','낙상 감지','제가 넘어졌습니다. 도와주세요')\n}""}","If a fall is detected by the fall detection sensor, send an email to my contacts with the subject ""Fall Detected"" and the message ""I have fallen. Please help me."""
+37,1,236,녹음기로 10초 동안 녹음해서 test.wav로 저장해줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Recorder).audioRecord_record(\""test.wav\"",10)""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Recorder).audioRecord_record(\""test.wav\"",10.0)""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""(#Recorder).audioRecord_record('test.wav', 10)""}",Record 10 seconds with a recorder and save it as test.wav.
+27,2,149,누수가 감지되면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until ((#LeakSensor).leakSensor_leakage == \""detected\"") {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until ((#LeakSensor).leakSensor_leakage == \""detected\"")\n(#Alarm).alarm_siren()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""wait until((#LeakSensor).leakSensor_leakage == 'detected')\n(#Alarm).alarm_siren()""}",Sound the alarm's siren if a leak is detected.
+162,9,451,"매년 내 생일이 되면 아침 9시에 ""생일 축하합니다""라고 말해줘.",,"[
+  {
+  ""name"": ""me"",
+  ""contact"": ""010-1234-5678"",
+  ""email"": ""abcd1234@test.com"",
+  ""birthday"": ""1991-03-03""
+  },
+  {
+  ""name"": ""홍길동"",
+  ""contact"": ""010-9999-8888"",
+  ""email"": ""honggd@test.com"",
+  ""birthday"": ""1988-07-15"",
+  ""alternate_contact"": ""010-8888-7777""
+  },
+  {
+  ""name"": ""김무개"",
+  ""contact"": ""010-7777-6666"",
+  ""email"": ""kim@example.com"",
+  ""birthday"": ""1990-11-25""
+  },
+  {
+  ""name"": ""장보고"",
+  ""contact"": ""010-2222-3333"",
+  ""email"": ""jangbogo@naver.com"",
+  ""birthday"": ""1985-05-10"",
+  ""alternate_contact"": ""010-4444-5555""
+  }
+ ]","{""name"": ""BirthdayGreeting"",
+  ""cron"": ""0 9 3 3 *"",
+  ""period"": 0,
+  ""code"": ""(#Speaker).mediaPlayback_speak(\""생일 축하합니다\"")""
+}","{""name"": ""BirthdayWish"", ""cron"": ""0 9 3 3 *"", ""period"": -1, ""code"": ""(#Speaker).mediaPlayback_speak(\""생일 축하합니다\"")""}","{'name': 'BirthdaySong', 'cron': '0 9 3 3 *', 'period': 0, 'code': ""(#Speaker).mediaPlayback_speak('생일 축하합니다')""}","Every year on my birthday at 9 AM, say ""생일 축하합니다""."
+112,7,369,"실시간으로 확인하여 움직임이 감지될 때마다 조명을 켜고, 선풍기 속도를 10 높여 줘.",,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""motion = (#MotionSensor).motionSensor_motion\nif (motion == \""active\"") {\n  (#Light).switch_on()\n  current_speed = (#Fan).fanControl_fanSpeed\n  new_speed = current_speed + 10\n  (#Fan).fanControl_setFanSpeed(new_speed)\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+ triggered := false
+ if ((#MotionSensor).motionSensor_motion == \""active\"") {
+ if (triggered == false) {
+ (#Light).switch_on()
+ currentSpeed = (#Fan).fanControl_fanSpeed
+ newSpeed = currentSpeed + 10
+ (#Fan).fanControl_setFanSpeed(newSpeed)
+ triggered = true
+ }
+ } else {
+ triggered = false
+ }
+ ""}","{'name': 'Scenario', 'cron': '', 'period': 100, 'code': ""triggered := false\nif ((#MotionSensor).motionSensor_motion == 'active') {\n    if (triggered == false) {\n        (#Light).switch_on()\n        fan_speed = (#Fan).fanControl_fanSpeed\n        fan_speed = fan_speed + 10\n        (#Fan).fanControl_setFanSpeed(fan_speed)\n        triggered = true\n    }\n} else {\n    triggered = false\n}""}",Check in real-time to turn on lights and increase fan speed by 10 whenever motion is detected.
+150,7,439,실시간으로 확인하여 재실 센서가 감지 상태일 때마다 10초 대기 후 조명의 밝기를 현재 밝기로 맞춰줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+ triggered := false
+ if ((#PresenceSensor).presenceSensor_presence == \""present\"") {
+   if (triggered == false) {
+     currentBrightness = (#Light).switchLevel_level
+     (#Clock).clock_delay(10000)
+     (#Light).switchLevel_setLevel(currentBrightness, 1)
+     triggered = true
+   }
+ } else {
+ triggered = false
+ }
+ ""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+ triggered := false
+ if ((#PresenceSensor).presenceSensor_presence == \""present\"") {
+   if (triggered == false) {
+     currentBrightness = (#Light).switchLevel_level
+     (#Clock).clock_delay(10000)
+     (#Light).switchLevel_setLevel(currentBrightness, 1)
+     triggered = true
+   }
+ } else {
+ triggered = false
+ }
+ ""}","{'name': 'Scenario', 'cron': '', 'period': 100, 'code': ""triggered := false\nif ((#PresenceSensor).presenceSensor_presence == 'present') {\n    if (triggered == false) {\n        (#Clock).clock_delay(10000)\n        current_level = (#Light).switchLevel_level\n        (#Light).switchLevel_setLevel(current_level, 0)\n        triggered = true\n    }\n} else {\n    triggered = false\n}""}",Check in real-time to adjust lights to their current brightness after a 10-second wait whenever an occupancy sensor is detected.
+115,6,373,매일 아침 8시에 스피커가 꺼져 있으면 스피커를 켜고 ‘오늘 날씨입니다’라고 말해 줘. 이후 조명이 꺼져 있으면 켜고 블라인드를 열어 줘.,,,"{""name"": ""Scenario1"", ""cron"": ""0 8 * * *"", ""period"": 0, ""code"": ""if ((#Speaker).switch_switch == \""off\"") {\n  (#Speaker).switch_on()\n  (#Speaker).mediaPlayback_speak(\""오늘 날씨입니다\"")\n  if ((#Light).switch_switch == \""off\"") {\n    (#Light).switch_on()\n    (#Blind).blind_open()\n  }\n}""}","{""name"": ""Scenario1"", ""cron"": ""0 8 * * *"", ""period"": -1, ""code"": ""if ((#Speaker).switch_switch == \""off\"") {\n (#Speaker).switch_on()\n (#Speaker).mediaPlayback_speak(\""오늘 날씨입니다\"")\n if ((#Light).switch_switch == \""off\"") {\n (#Light).switch_on()\n (#Blind).blind_open()\n }\n}""}","{'name': 'DailyMorningWeatherAnnouncement', 'cron': '0 8 * * *', 'period': 0, 'code': ""if ((#Speaker).switch_switch == 'off') {\n    (#Speaker).switch_on()\n    (#Speaker).mediaPlayback_speak('오늘 날씨입니다')\n}\nif ((#Light).switch_switch == 'off') {\n    (#Light).switch_on()\n}\n(#Blind).blind_open()""}","Every morning at 8am, if the speaker is off, turn it on and announce 'This is the weather today' via the speaker. Then, if the lights are off, turn them on and open the blinds."
+63,6,305,매일 아침 8시에 조명을 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": ""0 8 * * *"", ""period"": 0, ""code"": ""(#Light).switch_on()""}","{""name"": ""Scenario1"", ""cron"": ""0 8 * * *"", ""period"": 0, ""code"": ""(#Light).switch_on()""}","{'name': 'Scenario1', 'cron': '0 8 * * *', 'period': 0, 'code': '(#Light).switch_on()'}",Turn on the lights at 8am every morning.
+109,5,364,매일 오전 7시에 관개 장치가 꺼져 있고 창문이 닫혀 있으면 관개 장치를 켜고 창문을 열어 줘. 이후 관개 장치가 켜지면 블라인드를 닫아 줘.,,,"{""name:""Scenario1"", ""cron"":""0 7 * * *"", ""period"":0, ""code"":""if ((#Irrigator).switch_switch == \""off\"" and (#Window).windowControl_window == \""closed\"") {\n  (#Irrigator).switch_on()\n  (#Window).windowControl_open()\n  wait until((#Irrigator).switch_switch == \""on\"")\n  (#Blind).blind_close()\n}""}","{""name"": ""Scenario1"", ""cron"": ""0 7 * * *"", ""period"": -1, ""code"": ""if ((#Irrigator).switch_switch == \""off\"" and (#Window).windowControl_window == \""closed\"") {\n (#Irrigator).switch_on()\n (#Window).windowControl_open()\n wait until ((#Irrigator).switch_switch == \""on\"")\n (#Blind).blind_close()\n}""}","{'name': 'Scenario', 'cron': '0 7 * * *', 'period': 0, 'code': ""if (((#Irrigator).switch_switch == 'off') and ((#Window).windowControl_window == 'closed')) {\n    (#Irrigator).switch_on()\n    (#Window).windowControl_open()\n    wait until((#Irrigator).switch_switch == 'on')\n    (#Blind).blind_close()\n}""}","Every morning at 7 am, if the irrigation is off and the windows are closed, turn on the irrigation and open the windows. Then, when the irrigation turns on, close the blinds."
+60,6,301,매일 오후 6시부터 7시 사이에 15초마다 커튼을 닫았다 열었다 해 줘.,,,"{""name"": ""Scenario1"", ""cron"": ""0 18 * * *"", ""period"": 15000, ""code"": ""
+curtain_action := true\n
+if ((#Clock).clock_hour == 18) {\n
+  if (curtain_action == true) {\n
+    (#Curtain).curtain_close()\n
+    curtain_action = false\n
+  } else {\n
+    (#Curtain).curtain_open()\n
+    curtain_action = true\n
+  }\n
+} else {\n
+  break\n
+}""}","Candidate #1: {""name"": ""Scenario1"", ""cron"": ""0 18 * * *"", ""period"": 15000, ""code"": ""curtainOpen := true
+if (((#Clock).clock_hour >= 18) and ((#Clock).clock_hour < 19)) {
+if (curtainOpen == true) {
+(#Curtain).curtain_close()
+curtainOpen = false
+} else {
+(#Curtain).curtain_open()
+curtainOpen = true
+}
+} else {
+break
+}""}","{'name': 'Scenario1', 'cron': '0 18 * * *', 'period': 15000, 'code': ""
+if ((#Clock).clock_hour == 19) {\n
+    break\n
+}\n
+curtain_state = (#Curtain).curtain_curtain\n
+if (curtain_state == 'open') {\n
+    (#Curtain).curtain_close()\n
+} else {\n
+    (#Curtain).curtain_open()\n
+}""}",Close and open the curtains every 15 seconds between 6pm and 7pm every day.
+132,6,403,매일 자정 선풍기가 꺼져 있으면 선풍기를 꺼 줘. 또한 그 때마다 선풍기를 꺼 줘,,,"{""name"": ""Scenario1"", ""cron"": ""0 0 * * *"", ""period"": 0, ""code"": ""if ((#Fan).switch_switch == \""off\"") {\n  (#Fan).switch_off()\n  (#Fan).switch_off()\n}""}","{""name"": ""Scenario1"", ""cron"": ""0 0 * * *"", ""period"": -1, ""code"": ""if ((#Fan).switch_switch == \""off\"") {\n (#Fan).switch_off()\n}""}","{'name': 'Scenario', 'cron': '0 0 * * *', 'period': 100, 'code': ""if ((#Fan).switch_switch == 'off') {\n    (#Fan).switch_off()\n}""}","Every night at midnight, turn off the fan if it is off. Also, turn off the fan again at that time"
+69,6,311,매일 자정에 TV를 꺼 줘.,,,"{""name"": ""Scenario1"", ""cron"": ""0 0 * * *"", ""period"": 0, ""code"": ""(#Television).switch_off()""}","{""name"": ""Scenario1"", ""cron"": ""0 0 * * *"", ""period"": 0, ""code"": ""(#Television).switch_off()""}","{'name': 'Scenario1', 'cron': '0 0 * * *', 'period': 0, 'code': '(#Television).switch_off()'}",Turn off the TV at midnight every night.
+114,5,371,"매주 금요일 오후 6시에 조명이 켜져 있으면 밝기를 30으로 낮추고, TV가 꺼져 있으면 TV를 켜 줘. 선풍기가 꺼져 있으면 선풍기도 켜 줘.",,,"{""name"": ""Scenario1"", ""cron"": ""0 18 * * 5"", ""period"": 0, ""code"": ""
+if ((#Light).switch_switch == \""on\"") {\n
+  (#Light).switchLevel_setLevel(30, 0)\n
+}\n
+if ((#Television).switch_switch == \""off\"") {\n
+  (#Television).switch_on()\n
+}\n
+if ((#Fan).switch_switch == \""off\"") {\n
+  (#Fan).switch_on()\n
+}""}","{""name"": ""Scenario1"", ""cron"": ""0 18 * * 5"", ""period"": 0, ""code"": ""
+if ((#Light).switch_switch == \""on\"") {\n
+ (#Light).switchLevel_setLevel(30 , 0)\n
+}\n
+if ((#Television).switch_switch == \""off\"") {\n
+ (#Television).switch_on()\n
+}\n
+if ((#Fan).switch_switch == \""off\"") {\n
+ (#Fan).switch_on()\n
+}""}","{'name': 'Scenario', 'cron': '0 18 * * 5', 'period': 0, 'code': ""if ((#Light).switch_switch == 'on') {\n    (#Light).switchLevel_setLevel(30,0)\n}\nif ((#Television).switch_switch == 'off') {\n    (#Television).switch_on()\n}\nif ((#Fan).switch_switch == 'off') {\n    (#Fan).switch_on()\n}""}","Every Friday at 6pm, if the lights are on, turn them down to 30, and if the TV is off, turn it on. If the fan is off, turn it on."
+117,7,376,"실시간으로 확인하여 토양 습도 센서 값이 연속으로 3회 15 이하를 기록하고 그 중 두 번째 값이 가장 낮았다면 관개 장치를 켜고 블라인드를 닫아 줘. 단, 3월은 제외하고.",,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""h1 := 100\nh2 := 100\nh3 := 100\n\nif ((#Clock).clock_month != 3) {\n  h1 = h2\n  h2 = h3\n  h3 = (#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity\n\n  if ((h1 <= 15) and (h2 <= 15) and (h3 <= 15) and (h2 < h1) and (h2 < h3)) {\n    (#Irrigator).switch_on()\n    (#Blind).blind_close()\n  }\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+ count := 0
+ lowest := 100.0
+ secondLowest := 100.0
+ triggered := false
+ 
+ if ((#Clock).clock_month != 3) {
+ humidity = (#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity
+ if (humidity <= 15.0) {
+ count = count + 1
+ if (humidity < lowest) {
+ secondLowest = lowest
+ lowest = humidity
+ } else if (humidity < secondLowest) {
+ secondLowest = humidity
+ }
+ } else {
+ count = 0
+ lowest = 100.0
+ secondLowest = 100.0
+ }
+ 
+ if (count >= 3 and secondLowest == lowest) {
+ if (triggered == false) {
+ (#Irrigator).irrigatorOperatingState_startWatering()
+ (#Blind).blind_close()
+ triggered = true
+ }
+ } else {
+ triggered = false
+ }
+ }
+ ""}","{'name': 'Scenario', 'cron': '', 'period': 100, 'code': 'if ((#Clock).clock_month == 3) {\n    break\n}\nt1 := 0\nt2 := 0\nt3 := 0\nt1 = t2\nt2 = t3\nt3 = (#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity\nif ((t1 <= 15) and (t2 <= 15) and (t3 <= 15) and (t2 < t1) and (t2 < t3)) {\n    (#Irrigator).switch_on()\n    (#Blind).blind_close()\n    break\n}'}","Check in real time, and if the soil moisture sensor value is below 15 three times in a row, and the second value is the lowest, turn on the irrigation device and close the blinds. However, this does not apply to March."
+31,2,166,모션 센서가 활성 상태이면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#MotionSensor).motionSensor_motion == \""active\"") {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#MotionSensor).motionSensor_motion == \""active\"") {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#MotionSensor).motionSensor_motion == 'active') {\n    (#Alarm).alarm_siren()\n}""}",Sound the alarm's siren if the motion sensor is active.
+89,4,332,문이 닫혀 있는데 5초가 지나도 창문이 열려 있지 않으면 블라인드를 열어 줘.,,,"{""name"": ""Scenario9"", ""cron"": """", ""period"": -1, ""code"": ""if ((#DoorLock).doorControl_door == \""closed\"") {\n  (#Clock).clock_delay(5000)\n  if ((#Window).windowControl_window != \""open\"") {\n      (#Blind).blind_open()\n  }\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#DoorLock).doorControl_door == \""closed\"") {\n (#Clock).clock_delay(5000)\n if ((#Window).windowControl_window != \""open\"") {\n (#Blind).blind_open()\n }\n}""
+ }""}","{'name': 'Scenario', 'cron': '', 'period': 100, 'code': ""if ((#DoorLock).doorControl_door == 'closed') {\n    wait_time := 0\n    wait_time = wait_time + 100\n    if ((wait_time >= 5000) and ((#Window).windowControl_window != 'open')) {\n        (#Blind).blind_open()\n        break\n    }\n} else {\n    wait_time = 0\n}""}","If the door is closed and the window is not open after 5 seconds, open the blinds."
+74,3,317,문이 닫혔다 열리면 사진을 5초 단위로 찍어줘.,,,"{""name"": ""Scenario"",""cron"": """",""period"": 5000,""code"": ""
+phase := false\n
+if (phase == false) {\n
+    wait until((#DoorLock).doorControl_door == 'closed')\n
+    wait until((#DoorLock).doorControl_door == 'open')\n
+    phase = true\n
+} else {\n
+    (#Camera).camera_take()\n
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 5000, ""code"": ""
+if (triggered == false) {
+  wait until ((#DoorLock).doorControl_door == ""closed"")
+  wait until ((#DoorLock).doorControl_door == ""open"")
+  (#Camera).camera_take()
+  triggered = true
+} else {
+  if ((#DoorLock).doorControl_door == ""closed"") {
+  triggered = false
+}
+}""}","{'name': 'Scenario', 'cron': '', 'period': 5000, 'code': ""phase := false\nif (phase == false) {\n    wait until((#DoorLock).doorControl_door == 'closed')\n    wait until((#DoorLock).doorControl_door == 'open')\n    phase = true\n} else {\n    (#Camera).camera_take()\n}""}",Begin taking a photo every 5 seconds once the door opens.
+167,4,456,문이 열려 있고 10초 이상 그대로면 알림을 울려 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+doorPreviouslyOpen := 0
+if ((#DoorLock).doorControl_door == \""open\"") {
+doorPreviouslyOpen = doorPreviouslyOpen + 100
+if (doorPreviouslyOpen >= 10000) {
+(#Alarm).alarm_siren()
+}
+} else {
+doorPreviouslyOpen = 0
+}
+""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+doorStatus = (#DoorLock).doorControl_door
+if (doorStatus == ""open"") {
+  doorOpenDuration = doorOpenDuration + 100
+if (doorOpenDuration >= 10000) {
+  (#Alarm).alarm_siren()
+  doorOpenDuration = 0
+}
+} else {
+  doorOpenDuration = 0
+}""}","{'name': 'Scenario', 'cron': '', 'period': 100, 'code': ""if ((#DoorLock).doorControl_door == 'open') {\n    init_time := 0\n    init_time = init_time + 100\n    if (init_time >= 10000) {\n        (#Alarm).alarm_siren()\n        break\n    }\n} else {\n    init_time := 0\n}""}","If the door remains open for more than 10 seconds, sound the alarm."
+78,5,321,문이 열려 있고 알람이 꺼져 있으면 사이렌을 울리고 블라인드가 열려 있으면 닫아 줘. 에어컨이 꺼져 있고 온도가 30도 이상이면 냉방 모드로 설정하고 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+if (((#DoorLock).doorControl_door == \""open\"") and ((#Alarm).alarm_alarm == \""off\"")) {\n
+  (#Siren).sirenMode_setSirenMode(\""siren\"")\n
+  if ((#Blind).blind_blind == \""open\"") {\n
+    (#Blind).blind_close()\n
+  }\n
+}\n
+if (((#AirConditioner).switch_switch == \""off\"") and ((#TemperatureSensor).temperatureMeasurement_temperature >= 30.0)) {\n
+  (#AirConditioner).airConditionerMode_setAirConditionerMode(\""cool\"")\n
+  (#AirConditioner).switch_on()\n
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#DoorLock).doorControl_door == \""open\"" and (#Alarm).alarm_alarm == \""off\"") {\n
+ (#Alarm).alarm_siren()\n
+ if ((#Blind).blind_blind == \""open\"") {\n
+ (#Blind).blind_close()\n
+ }\n
+}\n
+if ((#AirConditioner).switch_switch == \""off\"" and (#TemperatureSensor).temperatureMeasurement_temperature >= 30.0) {\n
+ (#AirConditioner).airConditionerMode_setAirConditionerMode(\""cool\"")\n
+ (#AirConditioner).switch_on()
+\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#DoorLock).doorControl_door == 'open') and ((#Alarm).alarm_alarm == 'off')) {\n    (#Siren).sirenMode_setSirenMode('siren')\n}\nif ((#Blind).blind_blind == 'open') {\n    (#Blind).blind_close()\n}\nif (((#AirConditioner).switch_switch == 'off') and ((#TemperatureSensor).temperatureMeasurement_temperature >= 30)) {\n    (#AirConditioner).airConditionerMode_setAirConditionerMode('cool')\n    (#AirConditioner).switch_on()\n}""}","Sound the siren if the door is open and the alarm is turned off, and close the blinds if they are open. If the air conditioner is off and the temperature is above 30 degrees, set it to cool mode and turn it on."
+157,3,446,문이 열렸다 닫히면 알림을 울려줘.,,,"{""name"": ""DoorClosedAlert"", ""cron"": """", ""period"": -1, ""code"": ""wait until((#DoorLock).doorControl_door == \""open\"")\nwait until((#DoorLock).doorControl_door == \""closed\"")\n(#Alarm).alarm_siren()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+wait until ((#DoorLock).doorControl_door == \""open\"")\n
+wait until ((#DoorLock).doorControl_door == \""closed\"")\n
+(#Alarm).alarm_siren()""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""wait until((#DoorLock).doorControl_door == 'open')\nwait until((#DoorLock).doorControl_door == 'closed')\n(#Alarm).alarm_siren()""}",Send an alert when the door opens and then closes.
+39,3,262,바깥 습도가 80퍼센트 이상이면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#WeatherProvider).weatherProvider_humidityWeather >= 80) {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#WeatherProvider).weatherProvider_humidityWeather >= 80.0) {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if ((#WeatherProvider).weatherProvider_humidityWeather >= 80) {\n    (#Alarm).alarm_siren()\n}'}",Sound the alarm's siren if the humidity outside is above 80 percent.
+40,3,264,바깥의 초미세먼지 농도가 50 이상이면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#WeatherProvider).weatherProvider_pm25Weather >= 50) {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#WeatherProvider).weatherProvider_pm25Weather >= 50) {\n (#Alarm).alarm_siren()\n}""
+ }""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if ((#WeatherProvider).weatherProvider_pm25Weather >= 50) {\n    (#Alarm).alarm_siren()\n}'}",Sound the alarm's siren if the outside fine particulate matter concentration is above 50.
+15,2,54,버튼4가 위로 스와이프되었으면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Buttonx4).buttonx4_button4 == \""swipe_up\"") {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Buttonx4).buttonx4_button4 == \""swipe_up\"") {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#Buttonx4).buttonx4_button4 == 'swipe_up') {\n(#Alarm).alarm_siren()\n}""}",if button 4 is swiped up
+101,7,344,실시간으로 확인해서 토양 습도가 25% 이하로 떨어질 때마다 급수기를 켜고 '급수 시작'이라고 스피커로 출력해줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""triggered := false\nif ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 25.0) {\n  if (triggered == false) {\n    (#Irrigator).switch_on()\n    (#Speaker).mediaPlayback_speak(\""Start watering\"")\n    triggered = true\n  }\n} else {\n  triggered = false\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+ triggered := false
+ if ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 25.0) {
+ if (triggered == false) {
+ (#Irrigator).irrigatorOperatingState_startWatering()
+ (#Speaker).mediaPlayback_speak(\""급수 시작\"")
+ triggered = true
+ }
+ } else {
+ triggered = false
+ }
+ ""}","{'name': 'Scenario', 'cron': '', 'period': 100, 'code': ""triggered := false\nif ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 25) {\n    if (triggered == false) {\n        (#Irrigator).switch_on()\n        (#Speaker).mediaPlayback_speak('급수 시작')\n        triggered = true\n    }\n} else {\n    triggered = false\n}""}","Check in real-time and turn on the irrigator whenever the soil humidity drops below 25% and announce ""Start watering"" via the speaker."
+107,3,359,불이 30분 동안 켜져있으면 알림을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+lightOnTime := 0\n
+if ((#Light).switch_switch == \""on\"") {\n
+  lightOnTime = lightOnTime + 100\n
+  if (lightOnTime >= 1800000) {\n
+    (#Alarm).alarm_siren()\n
+  }\n
+} else {\n
+  lightOnTime = 0\n
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+triggered := false
+elapsedTime := 0
+if ((#Light).switch_switch == \""on\"") {
+  elapsedTime = elapsedTime + 100
+  if (elapsedTime >= 1800000) {
+    if (triggered == false) {
+      (#Alarm).alarm_siren()
+      triggered = true
+    }
+  }
+} else {
+  elapsedTime = 0
+  triggered = false
+}
+""}","{'name': 'Scenario', 'cron': '', 'period': 100, 'code': ""
+light_on_time := 0\n
+if ((#Light).switch_switch == 'on') {\n
+    light_on_time = light_on_time + 100\n
+} else {\n
+    light_on_time = 0\n
+}\n
+if (light_on_time >= 1800000) {\n
+    (#Alarm).alarm_siren()\n
+}""}",Turn on the alarm if the light stays on for 30 minutes.
+14,2,47,블라인드 움직임을 멈춰줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Blind).blind_pause()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Blind).blind_pause()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': '(#Blind).blind_pause()'}",Stop blind movement.
+76,3,319,블라인드가 닫히면 ‘블라인드가 닫혔습니다’라고 말해 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until((#Blind).blind_blind == \""closed\"")\n(#Speaker).mediaPlayback_speak(\""블라인드가 닫혔습니다\"")""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until ((#Blind).blind_blind == \""closed\"")\n(#Speaker).mediaPlayback_speak(\""블라인드가 닫혔습니다\"")""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""wait until((#Blind).blind_blind == 'closed')\n(#Speaker).mediaPlayback_speak('블라인드가 닫혔습니다')""}","When the blinds are closed, say 'Blinds are closed'."
+58,5,298,블라인드가 열려 있고 조명이 꺼져 있으며 습도가 80% 이상이면 블라인드를 닫고 조명을 켜 줘. 창문이 닫혀 있고 에어컨이 꺼져 있으면 창문을 열고 에어컨을 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#Blind).blind_blind == \""open\"") and ((#Light).switch_switch == \""off\"") and ((#HumiditySensor).relativeHumidityMeasurement_humidity >= 80.0)) {\n  (#Blind).blind_close()\n  (#Light).switch_on()\n}\nif (((#Window).windowControl_window == \""closed\"") and ((#AirConditioner).switch_switch == \""off\"")) {\n  (#Window).windowControl_open()\n  (#AirConditioner).switch_on()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if ((#Blind).blind_blind == ""open"" and (#Light).switch_switch == ""off"" and (#HumiditySensor).relativeHumidityMeasurement_humidity >= 80.0) {\n (#Blind).blind_close()\n (#Light).switch_on()\n}\nif ((#Window).windowControl_window == ""closed"" and (#AirConditioner).switch_switch == ""off"") {\n (#Window).windowControl_open()\n (#AirConditioner).switch_on()\n}'}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#Blind).blind_blind == 'open') and ((#Light).switch_switch == 'off') and ((#HumiditySensor).relativeHumidityMeasurement_humidity >= 80)) {\n(#Blind).blind_close()\n(#Light).switch_on()\n}\nif (((#Window).windowControl_window == 'closed') and ((#AirConditioner).switch_switch == 'off')) {\n(#Window).windowControl_open()\n(#AirConditioner).switch_on()\n}""}","If the blinds are open, the lights are off, and the humidity is above 80%, close the blinds and turn on the lights. If the windows are closed and the air conditioner is off, open the windows and turn on the air conditioner."
+13,1,44,블라인드를 70 퍼센트로 설정해줘.,"{ 'GreenhouseA_blind_top': {'category': 'Blind', 'tags': ['GreenhouseA', 'top', 'Blind']}, 'GreenhouseA_blind_side': {'category': 'Blind', 'tags': ['GreenhouseA', 'side', 'Blind']}, 'GreenhouseA_blind_back': {'category': 'Blind', 'tags': ['GreenhouseA', 'back', 'Blind']}}",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Blind).blindLevel_setBlindLevel(70)""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Blind).blindLevel_setBlindLevel(70)""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': '(#Blind).blindLevel_setBlindLevel(70)'}",Set the blinds to 70 percent.
+156,3,445,비가 오는데 창문이 열려있으면 창문을 닫아줘.,,,"{""name"": ""CloseWindowWhenRaining"",  ""cron"": """", ""period"": -1, ""code"": ""rain = (#WeatherProvider).weatherProvider_weather\nif (rain == \""rain\"") and ((#Window).windowControl_window == \""open\"") {\n  (#Window).windowControl_close()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#WeatherProvider).weatherProvider_weather == \""rain\"") and ((#Window).windowControl_window == \""open\"")) {\n (#Window).windowControl_close()\n}""}","{'name': 'Scenario', 'cron': '', 'period': 100, 'code': ""if (((#WeatherProvider).weatherProvider_weather == 'rain') and ((#Window).windowControl_window == 'open')) {\n(#Window).windowControl_close()\n}""}","If it is raining and the window is open, close the window."
+165,3,454,"비어있다가 누군가 감지되면 알림을 울려줘.
+",,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+wait until((#PresenceSensor).presenceSensor_presence == \""not present\"")\n
+wait until((#PresenceSensor).presenceSensor_presence == \""present\"")\n
+(#Alarm).alarm_siren()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+wait until((#PresenceSensor).presenceSensor_presence == \""not present\"")\n
+wait until((#PresenceSensor).presenceSensor_presence == \""present\"")\n
+(#Alarm).alarm_siren()""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""wait until((#PresenceSensor).presenceSensor_presence == 'not present')\nwait until((#PresenceSensor).presenceSensor_presence == 'present')\n(#Alarm).alarm_siren()""}","If the space was empty and someone shows up, sound the alarm."
+84,4,327,빛의 세기가 100룩스 이하면 5초 대기 후 LED 조명을 켜 줘.,,,"{""name"": ""Scenario4"", ""cron"": """", ""period"": -1, ""code"": ""if ((#LightSensor).lightLevel_light <= 100.0) {\n  (#Clock).clock_delay(5000)\n  (#Light).switch_on()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#LightSensor).lightLevel_light <= 100.0) {\n (#Clock).clock_delay(5000)\n (#Light).switch_on()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if ((#LightSensor).lightLevel_light <= 100) {\n(#Clock).clock_delay(5000)\n(#Light).switch_on()\n}'}","If the light intensity is below 100 lux, wait 5 seconds before turning on the LED light."
+5,1,5,사이렌과 경광등을 동시에 켜 줘,"{ 'GreenhouseA_alarm_left': {'category': 'Alarm', 'tags': ['GreenhouseA', 'left', 'Alarm']}, 'GreenhouseA_alarm_center': {'category': 'Alarm', 'tags': ['GreenhouseA', 'center', 'Alarm']}, 'GreenhouseA_alarm_right': {'category': 'Alarm', 'tags': ['GreenhouseA', 'right', 'Alarm']}}",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Alarm).alarm_both()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Alarm).alarm_both()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': '(#Alarm).alarm_both()'}",Turn on the siren and the strobe at the same time
+6,1,8,사이렌과 경광등을 둘 다 꺼 줘,"{ 'GreenhouseA_alarm_left': {'category': 'Siren', 'tags': ['GreenhouseA', 'left', 'Siren']}, 'GreenhouseA_alarm_right': {'category': 'Siren', 'tags': ['GreenhouseA', 'right', 'Siren']}, 'GreenhouseA_alarm_center': {'category': 'Siren', 'tags': ['GreenhouseA', 'center', 'Siren']}, 'GreenhouseA_alarm_entrance': {'category': 'Siren', 'tags': ['GreenhouseA', 'entrance', 'Siren']}, 'GreenhouseA_alarm_exit': {'category': 'Siren', 'tags': ['GreenhouseA', 'exit', 'Siren']}}",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Siren).sirenMode_setSirenMode(\""off\"")""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Siren).sirenMode_setSirenMode(\""off\"")""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""(#Siren).sirenMode_setSirenMode('off')""}",Turn off both the siren and the strobe
+1,1,1,사이렌을 울려줘.,"{
+ 'GreenhouseA_alarm_left': {
+  'category': 'Alarm',
+  'tags': ['GreenhouseA', 'left', 'Alarm']
+  },
+  'GreenhouseA_alarm_right': {
+  'category': 'Alarm',
+  'tags': ['GreenhouseA', 'right', 'Alarm']
+  },
+  'GreenhouseA_alarm_center': {
+  'category': 'Alarm',
+  'tags': ['GreenhouseA', 'center', 'Alarm']
+  },
+  'GreenhouseA_alarm_entrance': {
+  'category': 'Alarm',
+  'tags': ['GreenhouseA', 'entrance', 'Alarm']
+  },
+  'GreenhouseA_alarm_exit': {
+  'category': 'Alarm',
+  'tags': ['GreenhouseA', 'exit', 'Alarm']
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Alarm).alarm_siren()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Alarm).alarm_siren()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': '(#Alarm).alarm_siren()'}",Sound the siren.
+2,1,2,사이렌을 울려줘.,"{ 'GreenhouseA_alarm_left': {'category': 'Siren', 'tags': ['GreenhouseA', 'left', 'Siren']}, 'GreenhouseA_alarm_right': {'category': 'Siren', 'tags': ['GreenhouseA', 'right', 'Siren']}, 'GreenhouseA_alarm_center': {'category': 'Siren', 'tags': ['GreenhouseA', 'center', 'Siren']}, 'GreenhouseA_alarm_entrance': {'category': 'Siren', 'tags': ['GreenhouseA', 'entrance', 'Siren']}, 'GreenhouseA_alarm_exit': {'category': 'Siren', 'tags': ['GreenhouseA', 'exit', 'Siren']}}",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Siren).sirenMode_setSirenMode(\""siren\"")""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Siren).sirenMode_setSirenMode(\""siren\"")""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""(#Siren).sirenMode_setSirenMode('siren')""}",Sound the siren.
+73,7,316,"일조량이 200룩스 이하가 되면 4초마다 조명을 켜고, 2초 후에 꺼 주는 동작을 반복해 줘.",,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 4000, ""code"": ""
+active := False\n
+if (active == False) {\n
+  wait until((#LightSensor).lightLevel_light <= 200.0)\n
+  active = True\n
+}\n
+if (active == True) {\n
+  (#Light).switch_on()\n
+  (#Clock).clock_delay(2000)\n
+  (#Light).switch_off()\n
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 4000, ""code"": ""triggered := false
+if (triggered == false) {
+wait until((#LightSensor).lightLevel_light <= 200)
+(#Light).switch_on()
+(#Clock).clock_delay(2000)
+(#Light).switch_off()
+triggered = true
+} else {
+triggered = false
+}""}","{'name': 'Scenario', 'cron': '', 'period': 4000, 'code': 'phase := false\nif (phase == false) {\n    wait until((#LightSensor).lightLevel_light <= 200)\n    phase = true\n} else {\n    (#Light).switch_on()\n    (#Clock).clock_delay(2000)\n    (#Light).switch_off()\n}'}","When the sunlight is below 200 lux, turn on the light every 4 seconds and turn it off after 2 seconds."
+98,7,341,"조명이 켜지면 블라인드를 닫고, 이후 2초마다 커튼을 열었다 닫았다 반복해 줘.",,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 2000, ""code"": ""active := False\nif (active == False) {\n  wait until((#Light).switch_switch == \""on\"")\n  (#Blind).blind_close()\n  active = True\n}\nif (active == True) {\n  (#Curtain).curtain_open()\n  (#Clock).clock_delay(1000)\n  (#Curtain).curtain_close()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 2000, ""code"": ""
+ action := false
+ if (action == false) {
+ wait until ((#Light).switch_switch == \""on\"")
+ (#Blind).blind_close()
+ action = true
+ }
+ if (action == true) {
+ (#Curtain).curtain_open()
+ (#Clock).clock_delay(2000)
+ (#Curtain).curtain_close()
+ }
+ ""}","{'name': 'Scenario', 'cron': '', 'period': 2000, 'code': ""phase := false\nif (phase == false) {\n    if ((#Light).switch_switch == 'on') {\n        (#Blind).blind_close()\n        phase = true\n    }\n} else {\n    (#Curtain).curtain_close()\n    (#Clock).clock_delay(1000)\n    (#Curtain).curtain_open()\n}""}","Close the blinds when the lights come on, then open and close the curtains every two seconds thereafter."
+97,7,340,토양 습도가 25% 이하가 되면 급수기를 켜고 이후 3초마다 상태를 확인해서 습도가 30% 이상이 될 때까지 급수기를 껐다 켰다 반복해 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 3000, ""code"": ""
+active := False\n
+if (active == False) {\n
+  wait until((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 25.0)\n
+  (#Irrigator).switch_on()\n
+  active = True\n
+}\n
+if (active == True) {\n
+  if ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity >= 30.0) {\n
+      break\n
+  }\n
+  (#Irrigator).switch_toggle()\n
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 3000, ""code"": ""
+triggered := false
+toggle := false
+soilHumidity = (#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity
+if (triggered == false) {
+if (soilHumidity <= 25.0) {
+(#Irrigator).switch_on()
+triggered = true
+}
+} else {
+soilHumidity = (#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity
+if (soilHumidity < 30.0) {
+if (toggle == false) {
+(#Irrigator).switch_off()
+toggle = true
+} else {
+(#Irrigator).switch_on()
+toggle = false
+}
+} else {
+(#Irrigator).switch_off()
+break
+}
+}""}","{'name': 'Scenario', 'cron': '', 'period': 3000, 'code': ""phase := false\nif (phase == false) {\n    wait until((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 25)\n    (#Irrigator).switch_on()\n    phase = true\n} else {\n    if ((#Irrigator).switch_switch == 'on') {\n        (#Irrigator).switch_off()\n    } else {\n        (#Irrigator).switch_on()\n    }\n    wait until((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity >= 30)\n    break\n}""}","Turn on the irrigator when the soil humidity is below 25% and check the status every 3 seconds thereafter, cycling the irrigator off and on until the humidity is above 30%."
+108,7,363,"현관 문이 닫히면 즉시 조명을 끄고, 이후 3초마다 경광등을 켜 줘.",,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 3000, ""code"": ""active := False\nif (active == False) {\n  wait until((#DoorLock).doorControl_door == \""closed\"")\n  (#Light).switch_off()\n  active = True\n}\nif (active == True) {\n  (#Siren).sirenMode_setSirenMode(\""strobe\"")\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 3000, ""code"": ""action := false\nif (action == false) {\n wait until ((#DoorLock).doorControl_door == \""closed\"")\n (#Light).switch_off()\n action = true\n}\nif (action == true) {\n (#Alarm).alarm_strobe()\n}""}","{'name': 'Scenario', 'cron': '', 'period': 3000, 'code': ""phase := false\nif (phase == false) {\n    wait until((#DoorLock).doorControl_door == 'closed')\n    (#Light).switch_off()\n    phase = true\n} else {\n    (#Alarm).alarm_strobe()\n}""}","Turn off the lights as soon as the front door closes, and then every three seconds thereafter."
+103,7,348,현재 날씨에서 비가 감지될 때마다 관개 장치를 꺼 주고 '비가 감지되었습니다'라고 스피커로 출력해줘. 감지는 1분에 한번씩만 하자.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 60000, ""code"": ""
+triggered := false\n
+if ((#WeatherProvider).weatherProvider_weather == \""rain\"") {\n
+  if (triggered == false) {\n
+    (#Irrigator).switch_off()\n
+    (#Speaker).mediaPlayback_speak(\""비가 감지되었습니다\"")\n
+    triggered = true\n  }\n
+} else {\n
+  triggered = false\n
+}""}","triggered := false
+if ((#WeatherProvider).weatherProvider_weather == \""rain\"") {
+if (triggered == false) {
+(#Irrigator).switch_off()
+(#Speaker).mediaPlayback_speak(\""비가 감지되었습니다\"")
+triggered = true
+}
+} else {
+triggered = false
+}","{'name': 'Scenario', 'cron': '', 'period': 60000, 'code': ""triggered := false\nif ((#WeatherProvider).weatherProvider_weather == 'rain') {\n    if (triggered == false) {\n        (#Irrigator).switch_off()\n        (#Speaker).mediaPlayback_speak('비가 감지되었습니다')\n        triggered = true\n    }\n} else {\n    triggered = false\n}""}","Whenever rain is detected in the current weather, turn off the irrigator and announce ""Rain detected"" via the speaker. Let's detect only once a minutae."
+137,7,411,TV가 꺼져 있으면 10초 대기 후 다시 TV를 확인하여 켜져 있으면 TV를 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Television).switch_switch == \""off\"") {\n  (#Clock).clock_delay(10000)\n  if ((#Television).switch_switch == \""on\"") {\n    (#Television).switch_on()\n  }\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Television).switch_switch == \""off\"") {\n (#Clock).clock_delay(10000)\n if ((#Television).switch_switch == \""on\"") {\n (#Television).switch_on()\n }\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#Television).switch_switch == 'off') {\n    (#Clock).clock_delay(10000)\n    if ((#Television).switch_switch == 'on') {\n        (#Television).switch_on()\n    }\n}""}","If the TV is off, wait 10 seconds, then check the TV again and turn it on if it's on."
+159,8,448,거실 불을 모두 켜줘,"{
+  ""Livingroom_Light_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""Livingroom"", ""Left"", ""Light""]
+  },
+  ""Livingroom_Light_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""Livingroom"", ""Right"", ""Light""]
+  },
+  ""Livingroom_Light_Center"": {
+  ""category"": ""Light"",
+  ""tags"": [""Livingroom"", ""Center"", ""Light""]
+  },
+  ""Livingroom_Light_Upper_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""Livingroom"", ""Upper"", ""Left"", ""Light""]
+  },
+  ""Livingroom_Light_Upper_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""Livingroom"", ""Upper"", ""Right"", ""Light""]
+  },
+  ""Livingroom_Light_Lower_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""Livingroom"", ""Lower"", ""Left"", ""Light""]
+  },
+  ""Livingroom_Light_Lower_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""Livingroom"", ""Lower"", ""Right"", ""Light""]
+  },
+  ""Livingroom_Light_Upper_Center"": {
+  ""category"": ""Light"",
+  ""tags"": [""Livingroom"", ""Upper"", ""Center"", ""Light""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""all(#Livingroom #Light).switch_on()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""all(#Light #LivingRoom).switch_on()""}","{'name': 'TurnOnLivingroomLights', 'cron': '', 'period': -1, 'code': 'all(#Livingroom #Light).switch_on()'}",Turn on all the lights in the living room.
+149,8,438,그룹1번 태그 모두 꺼줘.,"{
+  ""Group1_Light_Upper_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""Group1"", ""Upper"", ""Left"", ""Light""]
+  },
+  ""Group1_Light_Upper_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""Group1"", ""Upper"", ""Right"", ""Light""]
+  },
+  ""Group1_Light_Lower_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""Group1"", ""Lower"", ""Left"", ""Light""]
+  },
+  ""Group1_Light_Lower_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""Group1"", ""Lower"", ""Right"", ""Light""]
+  },
+  ""Group1_Light_Upper_Center"": {
+  ""category"": ""Light"",
+  ""tags"": [""Group1"", ""Upper"", ""Center"", ""Light""]
+  },
+  ""Group1_Light_Lower_Center"": {
+  ""category"": ""Light"",
+  ""tags"": [""Group1"", ""Lower"", ""Center"", ""Light""]
+  },
+  ""Group1_Alarm_Upper_Left"": {
+  ""category"": ""Alarm"",
+  ""tags"": [""Group1"", ""Upper"", ""Left"", ""Alarm""]
+  },
+  ""Group1_Alarm_Upper_Right"": {
+  ""category"": ""Alarm"",
+  ""tags"": [""Group1"", ""Upper"", ""Right"", ""Alarm""]
+  },
+  ""Group1_Alarm_Lower_Left"": {
+  ""category"": ""Alarm"",
+  ""tags"": [""Group1"", ""Lower"", ""Left"", ""Alarm""]
+  },
+  ""Group1_Alarm_Lower_Right"": {
+  ""category"": ""Alarm"",
+  ""tags"": [""Group1"", ""Lower"", ""Right"", ""Alarm""]
+  },
+  ""Group2_Light_Upper_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""Group2"", ""Upper"", ""Left"", ""Light""]
+  },
+  ""Group2_Light_Upper_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""Group2"", ""Upper"", ""Right"", ""Light""]
+  },
+  ""Group2_Light_Lower_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""Group2"", ""Lower"", ""Left"", ""Light""]
+  },
+  ""Group2_Light_Lower_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""Group2"", ""Lower"", ""Right"", ""Light""]
+  },
+  ""Group2_Light_Upper_Center"": {
+  ""category"": ""Light"",
+  ""tags"": [""Group2"", ""Upper"", ""Center"", ""Light""]
+  },
+  ""Group2_Light_Lower_Center"": {
+  ""category"": ""Light"",
+  ""tags"": [""Group2"", ""Lower"", ""Center"", ""Light""]
+  },
+  ""Group2_Alarm_Upper_Left"": {
+  ""category"": ""Alarm"",
+  ""tags"": [""Group2"", ""Upper"", ""Left"", ""Alarm""]
+  },
+  ""Group2_Alarm_Lower_Right"": {
+  ""category"": ""Alarm"",
+  ""tags"": [""Group2"", ""Lower"", ""Right"", ""Alarm""]
+  }, 
+  ""Group1_Dehumidifier_Left"": {
+  ""category"": ""Dehumidifier"",
+  ""tags"": [""Group1"", ""Left"", ""Dehumidifier""]
+  },
+  ""Group1_Dehumidifier_Right"": {
+  ""category"": ""Dehumidifier"",
+  ""tags"": [""Group1"", ""Right"", ""Dehumidifier""]
+  },
+  ""Group1_Dehumidifier_Center"": {
+  ""category"": ""Dehumidifier"",
+  ""tags"": [""Group1"", ""Center"", ""Dehumidifier""]
+  },
+  ""Group1_Dehumidifier_Upper_Left"": {
+  ""category"": ""Dehumidifier"",
+  ""tags"": [""Group1"", ""Upper"", ""Left"", ""Dehumidifier""]
+  },
+  ""Group1_Dehumidifier_Upper_Right"": {
+  ""category"": ""Dehumidifier"",
+  ""tags"": [""Group1"", ""Upper"", ""Right"", ""Dehumidifier""]
+  },
+  ""Group1_Dehumidifier_Lower_Left"": {
+  ""category"": ""Dehumidifier"",
+  ""tags"": [""Group1"", ""Lower"", ""Left"", ""Dehumidifier""]
+  },
+  ""Group1_Dehumidifier_Lower_Right"": {
+  ""category"": ""Dehumidifier"",
+  ""tags"": [""Group1"", ""Lower"", ""Right"", ""Dehumidifier""]
+  },
+  ""Group1_Dehumidifier_Upper_Center"": {
+  ""category"": ""Dehumidifier"",
+  ""tags"": [""Group1"", ""Upper"", ""Center"", ""Dehumidifier""]
+  },
+  ""Group1_Dehumidifier_Lower_Center"": {
+  ""category"": ""Dehumidifier"",
+  ""tags"": [""Group1"", ""Lower"", ""Center"", ""Dehumidifier""]
+  },
+  ""Group1_Dehumidifier_Back"": {
+  ""category"": ""Dehumidifier"",
+  ""tags"": [""Group1"", ""Back"", ""Dehumidifier""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""all(#Group1).switch_off()\n
+all(#Group1).alarm_off()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+all(#Group1).switch_off()\n
+ all(#Group1).alarm_off()""}","{'name': 'TurnOffGroup1', 'cron': '', 'period': -1, 'code': 'all(#Group1 #Light).switch_off()\nall(#Group1 #Alarm).alarm_off()\nall(#Group1 #Dehumidifier).switch_off()'}",Turn off everything with Group 1’s tag.
+36,1,229,스피커에서 music.mp3를 재생해줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Speaker).mediaPlayback_play(\""music.mp3\"")""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Speaker).mediaPlayback_play(\""music.mp3\"")""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""(#Speaker).mediaPlayback_play('music.mp3')""}",Play 'music.mp3' on the speaker.
+168,4,457,습도가 30% 이하로 떨어진 뒤 5초가 지나면 가습기를 켜 줘.,,,"{""name"": ""HumidityLowThenHumidifier"",
+  ""cron"": """", ""period"": -1, ""code"": ""wait until((#HumiditySensor).relativeHumidityMeasurement_humidity <=30)\n(#Clock).clock_delay(5000)\n(#Humidifier).switch_on()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until ((#HumiditySensor).relativeHumidityMeasurement_humidity <= 30.0)\n(#Clock).clock_delay(5000)\n(#Humidifier).switch_on()""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': 'wait until((#HumiditySensor).relativeHumidityMeasurement_humidity <= 30)\n(#Clock).clock_delay(5000)\n(#Humidifier).switch_on()'}","When the humidity drops below 30%, turn on the humidifier after 5 seconds."
+136,3,410,습도가 80% 이상이 되면 블라인드를 내려 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until((#HumiditySensor).relativeHumidityMeasurement_humidity >= 80.0)\n(#Blind).blind_close()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until((#HumiditySensor).relativeHumidityMeasurement_humidity >= 80.0)\n(#Blind).blind_close()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'wait until((#HumiditySensor).relativeHumidityMeasurement_humidity >= 80)\n(#Blind).blind_close()'}",Lower the blinds when the humidity is above 80%.
+83,4,326,"습도가 80% 이상이면 3초 뒤 제습기를 켜고, 7초 더 지난 후 창문을 닫아 줘.",,,"{""name"": ""Scenario3"", ""cron"": """", ""period"": -1, ""code"": ""if ((#HumiditySensor).relativeHumidityMeasurement_humidity >= 80.0) {\n  (#Clock).clock_delay(3000)\n  (#Dehumidifier).switch_on()\n  (#Clock).clock_delay(7000)\n  (#Window).windowControl_close()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#HumiditySensor).relativeHumidityMeasurement_humidity >= 80.0) {\n (#Clock).clock_delay(3000)\n (#Dehumidifier).switch_on()\n (#Clock).clock_delay(7000)\n (#Window).windowControl_close()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if ((#HumiditySensor).relativeHumidityMeasurement_humidity >= 80) {\n(#Clock).clock_delay(3000)\n(#Dehumidifier).switch_on()\n(#Clock).clock_delay(7000)\n(#Window).windowControl_close()\n}'}","If the humidity is above 80%, turn on the dehumidifier after 3 seconds and close the window after another 7 seconds."
+151,8,440,그룹1번의 습도가 하나라도 30미만이 되면 그룹1번의 관개장치를 켜줘.,"{
+  ""Group1_HumiditySensor_Left"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group1"", ""Left"", ""HumiditySensor""]
+  },
+  ""Group2_HumiditySensor_Right"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group2"", ""Right"", ""HumiditySensor""]
+  },
+  ""Group1_HumiditySensor_Center"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group1"", ""Center"", ""HumiditySensor""]
+  },
+  ""Group2_HumiditySensor_Center"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group2"", ""Center"", ""HumiditySensor""]
+  },
+  ""Group1_Irrigator_Left"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group1"", ""Left"", ""Irrigator""]
+  },
+  ""Group2_Irrigator_Right"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group2"", ""Right"", ""Irrigator""]
+  },
+  ""Group1_Irrigator_Row1"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group1"", ""Row1"", ""Irrigator""]
+  },
+  ""Group2_Irrigator_Row2"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group2"", ""Row2"", ""Irrigator""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until(any(#Group1 #HumiditySensor).relativeHumidityMeasurement_humidity<30))\n (#Group1 #Irrigator).irrigatorOperatingState_startWatering()""
+}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until(any(#Group1 #HumiditySensor).relativeHumidityMeasurement_humidity<30))\n (#Group1 #Irrigator).irrigatorOperatingState_startWatering()""
+}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': 'wait until(any(#Group1 #HumiditySensor).relativeHumidityMeasurement_humidity < 30)\n(#Group1 #Irrigator).switch_on()'}",Turn on Group 1’s irrigator if any of the humidity levels go below 30.
+158,8,447,그룹2번의 습도가 모두 80을 초과하면 관개장치를 꺼 줘.,"{
+  ""Group1_HumiditySensor_Left"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group1"", ""Left"", ""HumiditySensor""]
+  },
+  ""Group1_HumiditySensor_Right"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group1"", ""Right"", ""HumiditySensor""]
+  },
+  ""Group1_HumiditySensor_Center"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group1"", ""Center"", ""HumiditySensor""]
+  },
+  ""Group1_Irrigator_Left"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group1"", ""Left"", ""Irrigator""]
+  },
+  ""Group1_Irrigator_Right"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group1"", ""Right"", ""Irrigator""]
+  },
+  ""Group1_Irrigator_Center"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group1"", ""Center"", ""Irrigator""]
+  },
+ 
+  ""Group2_HumiditySensor_Upper"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group2"", ""Upper"", ""HumiditySensor""]
+  },
+  ""Group2_HumiditySensor_Lower"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group2"", ""Lower"", ""HumiditySensor""]
+  },
+  ""Group2_HumiditySensor_Center"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group2"", ""Center"", ""HumiditySensor""]
+  },
+  ""Group2_Irrigator_Upper"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group2"", ""Upper"", ""Irrigator""]
+  },
+  ""Group2_Irrigator_Lower"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group2"", ""Lower"", ""Irrigator""]
+  },
+  ""Group2_Irrigator_Center"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group2"", ""Center"", ""Irrigator""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+wait until(all(#Group2 #HumiditySensor).relativeHumidityMeasurement_humidity > 80) {\n
+  (#Irrigator).switch_off()\n
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (all(#HumiditySensor #Group2).relativeHumidityMeasurement_humidity > 80.0) {\n (#Irrigator).switch_off()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': 'wait until(all(#Group2 #HumiditySensor).relativeHumidityMeasurement_humidity > 80)\n(#Irrigator).switch_off()'}",Turn off the irrigator if all humidity levels in Group 2 exceed 80.
+99,4,342,"실시간으로 확인하여 움직임이 감지되면 5초 대기 후 조명을 켜고, 10초 후 커튼을 열고, 15초 후 펌프가 꺼져 있으면 펌프를 켜 줘.",,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until((#MotionSensor).motionSensor_motion == \""active\"")\n(#Clock).clock_delay(5000)\n(#Light).switch_on()\n(#Clock).clock_delay(10000)\n(#Curtain).curtain_open()\n(#Clock).clock_delay(15000)\nif ((#Pump).switch_switch == \""off\"") {\n  (#Pump).switch_on()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+ if ((#MotionSensor).motionSensor_motion == \""active\"") {
+ (#Clock).clock_delay(5000)
+ (#Light).switch_on()
+ (#Clock).clock_delay(10000)
+ (#Curtain).curtain_open()
+ (#Clock).clock_delay(15000)
+ if ((#Pump).switch_switch == \""off\"") {
+ (#Pump).switch_on()
+ }
+ }
+ ""}","{'name': 'Scenario', 'cron': '', 'period': 100, 'code': ""if ((#MotionSensor).motionSensor_motion == 'active') {\n(#Clock).clock_delay(5000)\n(#Light).switch_on()\n(#Clock).clock_delay(10000)\n(#Curtain).curtain_open()\nif ((#Pump).pump_pump == 'closed') {\n(#Pump).switch_on()\n}\n}""}","Check in real-time and turn on the lights after 5 seconds if motion is detected, open the curtains after 10 seconds, turn on the pump if it's off after 15 seconds."
+106,8,357,그룹2번이 하나라도 80을 초과하면 그룹2번은 꺼줘.,"{
+  ""Group1_TemperatureSensor_Left"": {
+  ""category"": ""TemperatureSensor"",
+  ""tags"": [""Group1"", ""Left"", ""TemperatureSensor""]
+  },
+  ""Group1_TemperatureSensor_Right"": {
+  ""category"": ""TemperatureSensor"",
+  ""tags"": [""Group1"", ""Right"", ""TemperatureSensor""]
+  },
+  ""Group1_TemperatureSensor_Center"": {
+  ""category"": ""TemperatureSensor"",
+  ""tags"": [""Group1"", ""Center"", ""TemperatureSensor""]
+  },
+  ""Group1_TemperatureSensor_Upper_Left"": {
+  ""category"": ""TemperatureSensor"",
+  ""tags"": [""Group1"", ""Upper"", ""Left"", ""TemperatureSensor""]
+  },
+  ""Group1_TemperatureSensor_Lower_Right"": {
+  ""category"": ""TemperatureSensor"",
+  ""tags"": [""Group1"", ""Lower"", ""Right"", ""TemperatureSensor""]
+  },
+ 
+  ""Group2_HumiditySensor_Left"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group2"", ""Left"", ""HumiditySensor""]
+  },
+  ""Group2_HumiditySensor_Right"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group2"", ""Right"", ""HumiditySensor""]
+  },
+  ""Group2_HumiditySensor_Center"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group2"", ""Center"", ""HumiditySensor""]
+  },
+  ""Group2_HumiditySensor_Upper_Left"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group2"", ""Upper"", ""Left"", ""HumiditySensor""]
+  },
+  ""Group2_HumiditySensor_Lower_Right"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group2"", ""Lower"", ""Right"", ""HumiditySensor""]
+  },
+ 
+  ""Group2_Irrigator_Left"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group2"", ""Left"", ""Irrigator""]
+  },
+  ""Group2_Irrigator_Right"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group2"", ""Right"", ""Irrigator""]
+  },
+  ""Group2_Irrigator_Center"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group2"", ""Center"", ""Irrigator""]
+  },
+  ""Group2_Irrigator_Upper_Center"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group2"", ""Upper"", ""Center"", ""Irrigator""]
+  },
+  ""Group2_Irrigator_Lower_Left"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group2"", ""Lower"", ""Left"", ""Irrigator""]
+  },
+  ""Group3_TemperatureSensor_Center"": {
+  ""category"": ""TemperatureSensor"",
+  ""tags"": [""Group3"", ""Center"", ""TemperatureSensor""]
+  },
+  ""Group3_HumiditySensor_Upper_Right"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group3"", ""Upper"", ""Right"", ""HumiditySensor""]
+  },
+  ""Group3_Irrigator_Lower_Right"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group3"", ""Lower"", ""Right"", ""Irrigator""]
+  },
+  ""Group3_HumiditySensor_Lower_Left"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group3"", ""Lower"", ""Left"", ""HumiditySensor""]
+  },
+  ""Group3_Irrigator_Upper_Left"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Group3"", ""Upper"", ""Left"", ""Irrigator""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until(any(#Group2).relativeHumidityMeasurement_humidity > 80) {\n  (#Group2).switch_off()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if(any(#Group2).relativeHumidityMeasurement_humidity > 80) {\n (#Group2).switch_off()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': 'wait until(any(#Group2 #HumiditySensor).relativeHumidityMeasurement_humidity > 80)\nall(#Group2 #Irrigator).switch_off()'}","If any sensor in Group 2 goes over 80, turn off Group 2."
+130,8,401,벽에 있는 홀수 태그가 붙은 모든 블라인드가 열려 있으면 조명을 꺼 줘.,"{
+  ""SectorA_Fan_Odd_Left"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorA"", ""Odd"", ""Left"", ""Fan""]
+  },
+  ""SectorA_Fan_Even_Right"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorA"", ""Even"", ""Right"", ""Fan""]
+  },
+  ""SectorB_Window_Odd_Left"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorB"", ""Odd"", ""Left"", ""Window""]
+  },
+  ""SectorB_Window_Even_Right"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorB"", ""Even"", ""Right"", ""Window""]
+  },
+  ""SectorC_Curtain_Left"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""SectorC"", ""Left"", ""Curtain""]
+  },
+  ""SectorC_Curtain_Right"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""SectorC"", ""Right"", ""Curtain""]
+  },
+  ""Group1_HumiditySensor_Left"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group1"", ""Left"", ""HumiditySensor""]
+  },
+  ""Group2_HumiditySensor_Right"": {
+  ""category"": ""HumiditySensor"",
+  ""tags"": [""Group2"", ""Right"", ""HumiditySensor""]
+  },
+  ""SectorA_Light_Upper"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorA"", ""Upper"", ""Light""]
+  },
+  ""SectorB_Light_Lower"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorB"", ""Lower"", ""Light""]
+  },
+  ""Room1_Blind_Wall_Odd"": {
+  ""category"": ""Blind"",
+  ""tags"": [""Room1"", ""Wall"", ""Odd"", ""Blind""]
+  },
+  ""Room1_Blind_Wall_Even"": {
+  ""category"": ""Blind"",
+  ""tags"": [""Room1"", ""Wall"", ""Even"", ""Blind""]
+  },
+  ""SectorA_Blind_Left_Odd"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorA"", ""Left"", ""Odd"", ""Blind""]
+  },
+  ""SectorA_Blind_Right_Even"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorA"", ""Right"", ""Even"", ""Blind""]
+  },
+  ""SectorB_Blind_Wall_Even"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorB"", ""Wall"", ""Even"", ""Blind""]
+  },
+  ""SectorC_Blind_Wall_Odd"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorC"", ""Wall"", ""Odd"", ""Blind""]
+  },
+  ""SectorC_Blind_Center_Odd"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorC"", ""Center"", ""Odd"", ""Blind""]
+  },
+  ""SectorB_Blind_Center_Even"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorB"", ""Center"", ""Even"", ""Blind""]
+  },
+  ""SectorA_Speaker_Even_Left"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""SectorA"", ""Even"", ""Left"", ""Speaker""]
+  },
+  ""SectorB_Speaker_Odd_Right"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""SectorB"", ""Odd"", ""Right"", ""Speaker""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (all(#Wall #Odd #Blind).blind_blind == \""open\"") {\n  (#Light).switch_off()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (all(#Blind #Odd).blind_blind == \""open\"") {\n (#Light).switch_off()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if (all(#Odd #Wall #Blind).blind_blind == 'open') {\n(#Light).switch_off()\n}""}","If all odd-tagged blinds on the wall are open, turn off the lights."
+113,5,370,"실시간으로 확인하여 창문이 열려 있으면 블라인드를 닫고, 창문이 닫혀 있으면 커튼을 열어 줘. 또한 실시간으로 확인하여 알람의 사이렌이 울리고 있지 않다면 즉시 알람의 사이렌을 울려 줘.",,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""window_status = (#Window).windowControl_window\nif (window_status == \""open\"") {\n  (#Blind).blind_close()\n} else if (window_status == \""closed\"") {\n  (#Curtain).curtain_open()\n}\nalarm_status = (#Alarm).alarm_alarm\nif ((alarm_status != \""siren\"") and (alarm_status != \""both\"")) {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+ if ((#Window).windowControl_window == \""open\"") {
+ (#Blind).blind_close()
+ } else if ((#Window).windowControl_window == \""closed\"") {
+ (#Curtain).curtain_open()
+ }
+ if ((#Alarm).alarm_alarm != \""siren\"") {
+ (#Alarm).alarm_siren()
+ }
+ ""}","{'name': 'Scenario', 'cron': '', 'period': 100, 'code': ""if ((#Window).windowControl_window == 'open') {\n(#Blind).blind_close()\n} else if ((#Window).windowControl_window == 'closed') {\n(#Curtain).curtain_open()\n}\nif ((#Alarm).alarm_alarm != 'siren') {\n(#Alarm).alarm_siren()\n}""}","Check in real time. if the window is open, close the blinds. if it is closed, open the curtains. Also, if the alarm's siren is not sounding, sound it immediately."
+163,8,452,상단부가 모두 꺼져있거나 닫혀있으면 모두 꺼줘.,"{
+  ""Light_Upper_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""Upper"", ""Left"", ""Light""]
+  },
+  ""Light_Upper_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""Upper"", ""Right"", ""Light""]
+  },
+  ""Light_Upper_Center"": {
+  ""category"": ""Light"",
+  ""tags"": [""Upper"", ""Center"", ""Light""]
+  },
+  ""Light_Lower_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""Lower"", ""Left"", ""Light""]
+  },
+  ""Light_Lower_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""Lower"", ""Right"", ""Light""]
+  },
+  ""Light_Lower_Center"": {
+  ""category"": ""Light"",
+  ""tags"": [""Lower"", ""Center"", ""Light""]
+  },
+  ""Curtain_Upper_Left"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""Upper"", ""Left"", ""Curtain""]
+  },
+  ""Curtain_Upper_Right"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""Upper"", ""Right"", ""Curtain""]
+  },
+  ""Curtain_Upper_Center"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""Upper"", ""Center"", ""Curtain""]
+  },
+  ""Curtain_Lower_Left"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""Lower"", ""Left"", ""Curtain""]
+  },
+  ""Curtain_Lower_Right"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""Lower"", ""Right"", ""Curtain""]
+  },
+  ""Curtain_Lower_Center"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""Lower"", ""Center"", ""Curtain""]
+  },
+  ""Speaker_Upper_Left"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""Upper"", ""Left"", ""Speaker""]
+  },
+  ""Speaker_Upper_Right"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""Upper"", ""Right"", ""Speaker""]
+  },
+  ""Speaker_Upper_Center"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""Upper"", ""Center"", ""Speaker""]
+  },
+  ""Speaker_Lower_Left"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""Lower"", ""Left"", ""Speaker""]
+  },
+  ""Speaker_Lower_Right"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""Lower"", ""Right"", ""Speaker""]
+  },
+  ""Speaker_Lower_Center"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""Lower"", ""Center"", ""Speaker""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((all(#Upper).switch_switch == \""off\"") and (all(#Upper).curtain_curtain == \""closed\"")) {\n  (#Upper).switch_off()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (all(#Upper).switch_switch == \""off\"" or all(#Upper).windowControl_window == \""closed\"") {\n all(#Upper).switch_off()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if ((all(#Upper #Light).switch_switch == 'off') or (all(#Upper #Curtain).curtain_curtain == 'closed')) {\n    all(#Upper #Light).switch_off()\n    all(#Upper #Curtain).curtain_close()\n    all(#Upper #Speaker).switch_off()\n}""}","If everything in the upper area is either off or closed, turn off everything in the upper area."
+131,8,402,상단부에 있거나 섹터 에이에 있는 조명 중 하나가 켜져 있으면 선풍기를 모두 켜 줘.,"{
+  ""SectorA_Light_Upper_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorA"", ""Upper"", ""Left"", ""Light""]
+  },
+  ""SectorA_Light_Upper_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorA"", ""Upper"", ""Right"", ""Light""]
+  },
+  ""SectorA_Light_Lower_Center"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorA"", ""Lower"", ""Center"", ""Light""]
+  },
+  ""SectorB_Light_Upper_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorB"", ""Upper"", ""Left"", ""Light""]
+  },
+  ""SectorB_Light_Upper_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorB"", ""Upper"", ""Right"", ""Light""]
+  },
+  ""SectorB_Light_Lower_Center"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorB"", ""Lower"", ""Center"", ""Light""]
+  },
+  ""SectorA_Fan_Upper_Left"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorA"", ""Upper"", ""Left"", ""Fan""]
+  },
+  ""SectorA_Fan_Upper_Right"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorA"", ""Upper"", ""Right"", ""Fan""]
+  },
+  ""SectorA_Fan_Lower_Center"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorA"", ""Lower"", ""Center"", ""Fan""]
+  },
+  ""SectorB_Fan_Upper_Left"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorB"", ""Upper"", ""Left"", ""Fan""]
+  },
+  ""SectorB_Fan_Upper_Right"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorB"", ""Upper"", ""Right"", ""Fan""]
+  },
+  ""SectorB_Fan_Lower_Center"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorB"", ""Lower"", ""Center"", ""Fan""]
+  },
+  ""SectorA_Light_Lower_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorA"", ""Lower"", ""Left"", ""Light""]
+  },
+  ""SectorB_Light_Lower_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorB"", ""Lower"", ""Right"", ""Light""]
+  },
+  ""SectorA_Fan_Lower_Right"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorA"", ""Lower"", ""Right"", ""Fan""]
+  },
+  ""SectorB_Fan_Lower_Left"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorB"", ""Lower"", ""Left"", ""Fan""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((any(#Upper #Light).switch_switch == \""on\"") or (any(#SectorA #Light).switch_switch == \""on\"")) {\n  all(#Fan).switch_on()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((any(#Top).switch_switch == \""on\"") or (any(#SectorA).switch_switch == \""on\"")) {\n all(#Fan).switch_on()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if (((any(#Upper #Light).switch_switch == 'on') or (any(#SectorA #Light).switch_switch == 'on'))) {\n    all(#Fan).switch_on()\n}""}","If any of the lights at the top or in sector A are on, turn on all the fans."
+152,1,441,알람과 사이렌의 알람과 경광등을 모두 꺼줘.,"{
+  ""sector1_alarm_left"": {
+  ""category"": ""Alarm"",
+  ""tags"": [""sector1"", ""left"", ""Alarm""]
+  },
+  ""sector1_alarm_right"": {
+  ""category"": ""Siren"",
+  ""tags"": [""sector1"", ""right"", ""Siren""]
+  },
+  ""sector1_alarm_center"": {
+  ""category"": ""Alarm"",
+  ""tags"": [""sector1"", ""center"", ""Alarm""]
+  },
+  ""sector2_alarm_entrance"": {
+  ""category"": ""Siren"",
+  ""tags"": [""sector2"", ""entrance"", ""Siren""]
+  },
+  ""sector2_alarm_exit"": {
+  ""category"": ""Alarm"",
+  ""tags"": [""sector2"", ""exit"", ""Alarm""]
+  },
+  ""sector2_alarm_top"": {
+  ""category"": ""Siren"",
+  ""tags"": [""sector2"", ""top"", ""Siren""]
+  },
+  ""sector3_alarm_left"": {
+  ""category"": ""Siren"",
+  ""tags"": [""sector3"", ""left"", ""Siren""]
+  },
+  ""sector3_alarm_right"": {
+  ""category"": ""Alarm"",
+  ""tags"": [""sector3"", ""right"", ""Alarm""]
+  },
+  ""sector3_alarm_center"": {
+  ""category"": ""Siren"",
+  ""tags"": [""sector3"", ""center"", ""Siren""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Alarm).alarm_off()\n(#Alarm).alarm_strobe()\n(#Siren).sirenMode_setSirenMode(\""off\"")""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Alarm).alarm_off()\n(#Alarm).alarm_strobe()\n
+(#Siren).sirenMode_setSirenMode(\""off\"")""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': '(#Alarm).alarm_both()'}",Turn off the alarms and warning lights of both the alarm device and the siren.
+12,1,38,알람을 꺼줘.,"{ 'GreenhouseA_alarm_exit': {'category': 'Alarm', 'tags': ['GreenhouseA', 'exit', 'Alarm']}, 'GreenhouseA_alarm_center': {'category': 'Alarm', 'tags': ['GreenhouseA', 'center', 'Alarm']}}",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Alarm).alarm_off()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Alarm).alarm_off()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': '(#Alarm).alarm_off()'}",Turn off the alarm.
+52,5,291,알람이 꺼져 있고 조명이 꺼져 있으며 커튼이 열려 있으면 사이렌을 울리고 조명을 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#Alarm).alarm_alarm == \""off\"") and ((#Light).switch_switch == \""off\"") and ((#Curtain).curtain_curtain == \""open\"")) {\n  (#Alarm).alarm_siren()\n  (#Light).switch_on()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Alarm).alarm_alarm == \""off\"" and (#Light).switch_switch == \""off\"" and (#Curtain).curtain_curtain == \""open\"") {\n  (#Alarm).alarm_siren()\n  (#Light).switch_on()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#Alarm).alarm_alarm == 'off') and ((#Light).switch_switch == 'off') and ((#Curtain).curtain_curtain == 'open')) {\n    (#Siren).sirenMode_setSirenMode('siren')\n    (#Light).switch_on()\n}""}","If the alarm is off, the lights are off, and the curtains are open, sound the siren and turn on the lights."
+75,9,318,"알림이 울리면, 나와 홍길동에게 제목은 알림 발생, 내용은 알림이 울렸습니다라고 작성해서 메일을 보내줘. ",,"[
+  {
+  ""name"": ""me"",
+  ""contact"": ""010-1234-5678"",
+  ""email"": ""abcd1234@test.com"",
+  ""birthday"": ""1991-03-03""
+  },
+  {
+  ""name"": ""홍길동"",
+  ""contact"": ""010-9999-8888"",
+  ""email"": ""honggd@test.com"",
+  ""birthday"": ""1988-07-15"",
+  ""alternate_contact"": ""010-8888-7777""
+  },
+  {
+  ""name"": ""김무개"",
+  ""contact"": ""010-7777-6666"",
+  ""email"": ""kim@example.com"",
+  ""birthday"": ""1990-11-25""
+  },
+  {
+  ""name"": ""장보고"",
+  ""contact"": ""010-2222-3333"",
+  ""email"": ""jangbogo@naver.com"",
+  ""birthday"": ""1985-05-10"",
+  ""alternate_contact"": ""010-4444-5555""
+  }
+ ]","{""name"": ""AlarmAlertEmail"", ""cron"": """", ""period"": -1, ""code"": ""wait until((#Alarm).alarm_alarm == ""siren"")\n(#EmailProvider).emailProvider_sendMailWithFile(""abcd1234@test.com"", ""알림 발생"", ""알림이 울렸습니다."")\n(#EmailProvider).emailProvider_sendMailWithFile(""honggd@test.com"", ""알림 발생"", ""알림이 울렸습니다."")""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+ wait until ((#Alarm).alarm_alarm == \""siren\"")
+ (#EmailProvider).emailProvider_sendMail(\""abcd1234@test.com\"" | \""알림 발생\"" | \""알림이 울렸습니다\"")
+ (#EmailProvider).emailProvider_sendMail(\""honggd@test.com\"" | \""알림 발생\"" | \""알림이 울렸습니다\"")
+ ""}","{'name': 'Scenario1', 'cron': '', 'period': 100, 'code': ""wait until((#Alarm).alarm_alarm != 'off')\n(#EmailProvider).emailProvider_sendMail('abcd1234@test.com','알림 발생','알림이 울렸습니다')\n(#EmailProvider).emailProvider_sendMail('honggd@test.com','알림 발생','알림이 울렸습니다')""}","When the alarm turns on, send an email to me and Hong Gil-dong with the subject ""Alert Triggered"" and the message ""The alarm has turned on."""
+11,1,18,에어컨을 자동 모드로 설정해줘.,"{ 'GreenhouseA_ac_left': {'category': 'AirConditioner', 'tags': ['GreenhouseA', 'left', 'AirConditioner']}, 'GreenhouseA_ac_right': {'category': 'AirConditioner', 'tags': ['GreenhouseA', 'right', 'AirConditioner']}, 'GreenhouseA_ac_center': {'category': 'AirConditioner', 'tags': ['GreenhouseA', 'center', 'AirConditioner']}}",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#AirConditioner).airConditionerMode_setAirConditionerMode(\""auto\"")""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#AirConditioner).airConditionerMode_setAirConditionerMode(\""auto\"")""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""(#AirConditioner).airConditionerMode_setAirConditionerMode('auto')""}",Set the air conditioner to auto mode.
+9,2,12,에어컨의 모드가 냉방 모드면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#AirConditioner).airConditionerMode_airConditionerMode == \""cool\"") {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#AirConditioner).airConditionerMode_airConditionerMode == \""cool\"") {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#AirConditioner).airConditionerMode_airConditionerMode == 'cool') {\n    (#Alarm).alarm_siren()\n}""}",Sound the alarm's siren if the air conditioner is in cooling mode.
+10,2,13,에어컨의 목표 온도가 30도면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#AirConditioner).airConditionerMode_targetTemperature == 30) {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#AirConditioner).airConditionerMode_targetTemperature == 30.0) {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if ((#AirConditioner).airConditionerMode_targetTemperature == 30) {\n    (#Alarm).alarm_siren()\n}'}",Sound the alarm's siren if the air conditioner's target temperature is 30 degrees.
+56,5,296,에어컨이 꺼져 있고 온도가 29도 이상이며 습도가 70% 이상이면 제습기를 제습 모드로 설정하고 켜 줘. 커튼이 열려 있고 조명이 꺼져 있으면 커튼을 닫고 조명을 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#AirConditioner).switch_switch == \""off\"") and ((#TemperatureSensor).temperatureMeasurement_temperature >= 29.0) and ((#HumiditySensor).relativeHumidityMeasurement_humidity >= 70.0)) {\n  
+(#Dehumidifier).dehumidifierMode_setDehumidifierMode(\""dehumidifying\"")\n
+  (#Dehumidifier).switch_on()\n}\nif (((#Curtain).curtain_curtain == \""open\"") and ((#Light).switch_switch == \""off\"")) {\n
+  (#Curtain).curtain_close()\n
+  (#Light).switch_on()\n
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#AirConditioner).switch_switch == \""off\"") and ((#TemperatureSensor).temperatureMeasurement_temperature >= 29.0) and ((#HumiditySensor).relativeHumidityMeasurement_humidity >= 70.0)) {\n (#Dehumidifier).dehumidifierMode_setDehumidifierMode(\""dehumidifying\"")\n (#Dehumidifier).switch_on()\n}\nif (((#Curtain).curtain_curtain == \""open\"") and ((#Light).switch_switch == \""off\"")) {\n (#Curtain).curtain_close()\n (#Light).switch_on()\n}"" }""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#AirConditioner).switch_switch == 'off') and ((#TemperatureSensor).temperatureMeasurement_temperature >= 29) and ((#HumiditySensor).relativeHumidityMeasurement_humidity >= 70)) {\n    (#Dehumidifier).dehumidifierMode_setDehumidifierMode('dehumidifying')\n    (#Dehumidifier).switch_on()\n}\nif (((#Curtain).curtain_curtain == 'open') and ((#Light).switch_switch == 'off')) {\n    (#Curtain).curtain_close()\n    (#Light).switch_on()\n}""}","If the air conditioner is off, the temperature is above 29 degrees, and the humidity is above 70%, set the dehumidifier to dehumidify mode and turn it on. If the curtains are open and the lights are off, close the curtains and turn on the lights."
+53,5,292,에어컨이 꺼져 있고 커튼이 닫혀 있으면 에어컨을 켜고 커튼을 열어 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#AirConditioner).switch_switch == \""off\"") and ((#Curtain).curtain_curtain == \""closed\"")) {\n  (#AirConditioner).switch_on()\n  (#Curtain).curtain_open()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#AirConditioner).switch_switch == \""off\"" and (#Curtain).curtain_curtain == \""closed\"") {\n (#AirConditioner).switch_on()\n (#Curtain).curtain_open()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#AirConditioner).switch_switch == 'off') and ((#Curtain).curtain_curtain == 'closed')) {\n(#AirConditioner).switch_on()\n(#Curtain).curtain_open()\n}""}","If the air conditioner is off and the curtains are closed, turn on the air conditioner and open the curtains."
+121,4,391,"에어컨이 켜지면 5초 후 블라인드를 닫고, 5초 더 기다린 후 커튼이 열려 있으면 커튼을 닫고, 이후 10초 후 조명 밝기를 10퍼센트로 낮춰 줘.",,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+wait until((#AirConditioner).switch_switch == \""on\"")\n
+(#Clock).clock_delay(5000)\n
+(#Blind).blind_close()\n
+(#Clock).clock_delay(5000)\n
+
+if ((#Curtain).curtain_curtain == \""open\"") {\n
+  (#Curtain).curtain_close()\n
+}\n
+(#Clock).clock_delay(10000)\n
+(#Light).switchLevel_setLevel(10, 1)""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until ((#AirConditioner).switch_switch == \""on\"")\n(#Clock).clock_delay(5000)\n(#Blind).blind_close()\n(#Clock).clock_delay(5000)\nif ((#Curtain).curtain_curtain == \""open\"") {\n (#Curtain).curtain_close()\n}\n(#Clock).clock_delay(10000)\n(#Light).switchLevel_setLevel(10, 0)""
+ }""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""wait until((#AirConditioner).switch_switch == 'on')\n(#Clock).clock_delay(5000)\n(#Blind).blind_close()\n(#Clock).clock_delay(5000)\nif ((#Curtain).curtain_curtain == 'open') {\n    (#Curtain).curtain_close()\n}\n(#Clock).clock_delay(10000)\n(#Light).switchLevel_setLevel(10,0)""}","When the air conditioner turns on, close the blinds after five seconds, wait another five seconds and close the curtains if they're open, and then turn the lights down to 10 percent brightness after 10 seconds."
+35,2,215,연기 감지기에서 연기가 감지되면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until ((#SmokeDetector).smokeDetector_smoke == \""detected\"")\n  (#Alarm).alarm_siren()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until ((#SmokeDetector).smokeDetector_smoke == \""detected\"")\n(#Alarm).alarm_siren()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""wait until((#SmokeDetector).smokeDetector_smoke == 'detected')\n(#Alarm).alarm_siren()""}",Sound the alarm's siren if smoke is detected by the smoke detector.
+48,5,287,온도가 29도 이상이고 습도가 80% 이상이며 조명이 꺼져 있으면 에어컨을 켜고 조명을 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#TemperatureSensor).temperatureMeasurement_temperature >= 29.0) and ((#HumiditySensor).relativeHumidityMeasurement_humidity >= 80.0) and ((#Light).switch_switch == \""off\"")) {\n  (#AirConditioner).switch_on()\n  (#Light).switch_on()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#TemperatureSensor).temperatureMeasurement_temperature >= 29.0) and ((#HumiditySensor).relativeHumidityMeasurement_humidity >= 80.0) and ((#Light).switch_switch == \""off\"")) {\n (#AirConditioner).switch_on()\n (#Light).switch_on()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#TemperatureSensor).temperatureMeasurement_temperature >= 29) and ((#HumiditySensor).relativeHumidityMeasurement_humidity >= 80) and ((#Light).switch_switch == 'off')) {\n(#AirConditioner).switch_on()\n(#Light).switch_on()\n}""}","If the temperature is above 29 degrees, the humidity is above 80%, and the lights are off, turn on the air conditioner and turn on the lights."
+46,2,285,온도가 33도 이상이면 제습기를 켜고 커튼을 닫아 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#TemperatureSensor).temperatureMeasurement_temperature >= 33.0) {\n  (#Dehumidifier).switch_on()\n  (#Curtain).curtain_close()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#TemperatureSensor).temperatureMeasurement_temperature >= 33.0) {\n (#Dehumidifier).switch_on()\n (#Curtain).curtain_close()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if ((#TemperatureSensor).temperatureMeasurement_temperature >= 33) {\n    (#Dehumidifier).switch_on()\n    (#Curtain).curtain_close()\n}'}","If the temperature is above 33 degrees, turn on the dehumidifier and close the curtains."
+134,3,405,온도가 35도 이상이 되면 에어컨을 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until((#TemperatureSensor).temperatureMeasurement_temperature >= 35.0)\n(#AirConditioner).switch_on()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until((#TemperatureSensor).temperatureMeasurement_temperature >= 35.0)\n(#AirConditioner).switch_on()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'wait until((#TemperatureSensor).temperatureMeasurement_temperature >= 35)\n(#AirConditioner).switch_on()'}",Turn on the air conditioner when the temperature is above 35 degrees.
+21,2,85,올해가 2025년이면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Clock).clock_year == 2025) {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Clock).clock_year == 2025) {\n (#Alarm).alarm_siren()\n}""
+ }""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if ((#Clock).clock_year == 2025) {\n    (#Alarm).alarm_siren()\n}'}","If the year is 2025, sound the alarm siren."
+32,2,167,움직임이 감지되고 있으면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#MotionSensor).motionSensor_motion == \""active\"") {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#MotionSensor).motionSensor_motion == \""active\"") {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#MotionSensor).motionSensor_motion == 'active') {\n    (#Alarm).alarm_siren()\n}""}",Sound the alarm's siren if motion is detected.
+133,3,404,움직임이 감지되면 최대 3번까지 조명을 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+motion_count := 0\n
+prev_motion := \""inactive\""\n
+current = (#MotionSensor).motionSensor_motion\n
+
+if (current == \""active\"") and (prev_motion == \""inactive\"") {\n
+  if (motion_count < 3) {\n
+      (#Light).switch_on()\n
+      motion_count = motion_count + 1\n
+  }\n
+}\n
+prev_motion = current
+}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+triggered := false\n
+count := 0\n
+if (triggered == false) {\n
+  wait until ((#MotionSensor).motionSensor_motion == \""active\"")\n
+  if (count < 3) {\n
+    (#Light).switch_on()\n
+    count = count + 1\n
+  }\n
+  triggered = true\n
+} else {\n
+  if ((#MotionSensor).motionSensor_motion != \""active\"") {\n
+    triggered = false\n
+  }\n
+}""}","{'name': 'Scenario1', 'cron': '', 'period': 100, 'code': ""motion_count := 0\nprev_motion_state := (#MotionSensor).motionSensor_motion\nmotion_state = (#MotionSensor).motionSensor_motion\nif ((prev_motion_state == 'inactive') and (motion_state == 'active')) {\n    motion_count = motion_count + 1\n    (#Light).switch_on()\n}\nprev_motion_state = motion_state\nif (motion_count >= 3) {\n    break\n}""}",Turn on the light up to 3 times when motion is detected.
+138,3,412,"월, 수, 금에 실시간으로 확인하여 창문이 열려 있지 않으면 창문을 닫아 줘.",,,"{""name"": ""Scenario1"", ""cron"": ""0 0 * * 1,3,5"", ""period"": 100, ""code"": ""
+if ((#Window).windowControl_window != \""open\"") {\n
+  (#Window).windowControl_close()\n
+}""}","{""name"": ""Scenario1"", ""cron"": ""0 * * * 1,3,5"", ""period"": 100, ""code"": ""
+if ((#Window).windowControl_window != \""open\"") {\n
+ (#Window).windowControl_close()\n
+}","{'name': 'Scenario', 'cron': '0 0 * * 1,3,5', 'period': 100, 'code': ""
+weekday = (#Clock).clock_weekday\n
+if ((weekday != 'monday') and (weekday != 'wednesday') and (weekday != 'friday')) {\n
+    break\n
+}\n
+if ((#Window).windowControl_window != 'open') {\n
+    (#Window).windowControl_close()\n
+}""}","Check in real-time on Mon, Wed, Fri and close the window if it's not open."
+24,9,108,이메일을 'test@example.com' 주소로 제목 '알림'과 내용 '긴급 상황입니다.'로 보내줘.,,"[
+  {
+  ""name"": ""me"",
+  ""contact"": ""010-1234-5678"",
+  ""email"": ""abcd1234@test.com"",
+  ""birthday"": ""1991-03-03""
+  },
+  {
+  ""name"": ""홍길동"",
+  ""contact"": ""010-9999-8888"",
+  ""email"": ""honggd@test.com"",
+  ""birthday"": ""1988-07-15"",
+  ""alternate_contact"": ""010-8888-7777""
+  },
+  {
+  ""name"": ""김무개"",
+  ""contact"": ""010-7777-6666"",
+  ""email"": ""kim@example.com"",
+  ""birthday"": ""1990-11-25""
+  },
+  {
+  ""name"": ""장보고"",
+  ""contact"": ""010-2222-3333"",
+  ""email"": ""jangbogo@naver.com"",
+  ""birthday"": ""1985-05-10"",
+  ""alternate_contact"": ""010-4444-5555""
+  }
+ ]","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#EmailProvider).emailProvider_sendMail(\""test@example.com\"", \""알림\"", \""긴급 상황입니다.\"")""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#EmailProvider).emailProvider_sendMail(\""test@example.com\"" , \""알림\"" , \""긴급 상황입니다.\"")""}","{'name': 'SendEmail', 'cron': '', 'period': -1, 'code': ""(#EmailProvider).emailProvider_sendMail('test@example.com','알림','긴급 상황입니다.')""}","Send an email to 'test@example.com' with the subject line ""Alert"" and the content ""This is an emergency.""."
+47,5,286,이산화탄소가 1000ppm 이상이고 블라인드가 열려 있으면 환풍기를 켜고 블라인드를 닫아 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#AirQualityDetector).carbonDioxideMeasurement_carbonDioxide >= 1000.0) and ((#Blind).blind_blind == \""open\"")) {\n  (#Fan).switch_on()\n  (#Blind).blind_close()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#AirQualityDetector).carbonDioxideMeasurement_carbonDioxide >= 1000) and ((#Blind).blind_blind == \""open\"")) {\n (#Fan).switch_on()\n (#Blind).blind_close()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#AirQualityDetector).carbonDioxideMeasurement_carbonDioxide >= 1000) and ((#Blind).blind_blind == 'open')) {\n(#Fan).switch_on()\n(#Blind).blind_close()\n}""}","If the carbon dioxide is above 1000 ppm and the blinds are open, turn on the fan and close the blinds."
+144,8,433,상단부에 있는 조명과 커튼이 모두 꺼져 있으면 스피커를 켜 줘.,"{
+  ""SectorA_Light_Upper_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorA"", ""Upper"", ""Left"", ""Light""]
+  },
+  ""SectorB_Light_Lower_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorB"", ""Lower"", ""Right"", ""Light""]
+  },
+  ""SectorA_Light_Upper_Center"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorA"", ""Upper"", ""Center"", ""Light""]
+  },
+  ""SectorB_Light_Lower_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorB"", ""Lower"", ""Left"", ""Light""]
+  },
+ 
+  ""SectorA_Curtain_Upper_Left"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""SectorA"", ""Upper"", ""Left"", ""Curtain""]
+  },
+  ""SectorB_Curtain_Lower_Right"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""SectorB"", ""Lower"", ""Right"", ""Curtain""]
+  },
+  ""SectorA_Curtain_Upper_Center"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""SectorA"", ""Upper"", ""Center"", ""Curtain""]
+  },
+  ""SectorB_Curtain_Lower_Left"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""SectorB"", ""Lower"", ""Left"", ""Curtain""]
+  },
+ 
+  ""SectorA_Speaker_Lower_Left"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""SectorA"", ""Lower"", ""Left"", ""Speaker""]
+  },
+  ""SectorB_Speaker_Upper_Right"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""SectorB"", ""Upper"", ""Right"", ""Speaker""]
+  },
+  ""SectorA_Speaker_Lower_Center"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""SectorA"", ""Lower"", ""Center"", ""Speaker""]
+  },
+  ""SectorB_Speaker_Upper_Left"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""SectorB"", ""Upper"", ""Left"", ""Speaker""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((all(#Upper #Light).switch_switch == \""off\"") and (all(#Curtain).curtain_curtain == \""closed\"")) {\n  (#Speaker).switch_on()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Light #Top).switch_switch == \""off\"" and (#Curtain #Top).curtain_curtain == \""closed\"") {\n (#Speaker).switch_on()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if ((all(#Upper #Light).switch_switch == 'off') and (all(#Upper #Curtain).curtain_curtain == 'closed')) {\n(#Upper #Speaker).switch_on()\n}""}","If all the top lights and curtains are off, turn on the speaker."
+7,2,9,재실 센서가 감지 상태이면 알람의 사이렌을 울려줘.,"{
+  ""SectorA_OccupancySensor_1"": {
+  ""category"": ""OccupancySensor"",
+  ""tags"": [""SectorA"", ""OccupancySensor""]
+  },
+  ""SectorA_OccupancySensor_2"": {
+  ""category"": ""OccupancySensor"",
+  ""tags"": [""SectorA"", ""OccupancySensor""]
+  },
+  ""SectorA_OccupancySensor_3"": {
+  ""category"": ""OccupancySensor"",
+  ""tags"": [""SectorB"", ""OccupancySensor""] 
+  },
+  ""SectorA_OccupancySensor_4"": {
+  ""category"": ""OccupancySensor"",
+  ""tags"": [""SectorB"", ""OccupancySensor""] 
+  }, 
+  ""Alarm"": {
+  ""category"": ""Alarm"",
+  ""tags"": [""Alarm""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#OccupancySensor).presenceSensor_presence == \""present\"") {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#OccupancySensor).presenceSensor_presence == \""present\"") {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#OccupancySensor).presenceSensor_presence == 'present') {\n    (#Alarm).alarm_siren()\n}""}",Sound the alarm's siren if the occupancy sensor is detected.
+8,2,10,재실 센서가 감지 상태이면 알람의 사이렌을 울려줘.,"{
+  ""SectorA_PresenceSensor_1"": {
+  ""category"": ""PresenceSensor"",
+  ""tags"": [""SectorA"", ""PresenceSensor""]
+  },
+  ""SectorA_PresenceSensor_2"": {
+  ""category"": ""PresenceSensor"",
+  ""tags"": [""SectorA"", ""PresenceSensor""]
+  },
+  ""SectorA_PresenceSensor_3"": {
+  ""category"": ""PresenceSensor"",
+  ""tags"": [""SectorB"", ""PresenceSensor""] 
+  },
+  ""SectorA_PresenceSensor_4"": {
+  ""category"": ""PresenceSensor"",
+  ""tags"": [""SectorB"", ""PresenceSensor""] 
+  }, 
+  ""Alarm"": {
+  ""category"": ""Alarm"",
+  ""tags"": [""Alarm""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#PresenceSensor).presenceSensor_presence == \""present\"") {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#PresenceSensor).presenceSensor_presence == \""present\"") {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#PresenceSensor).presenceSensor_presence == 'present') {\n    (#Alarm).alarm_siren()\n}""}",Sound the alarm's siren if the occupancy sensor is detected.
+80,4,323,재실 센서에서 더 이상 감지가 안 되면 ‘문이 열렸습니다’라고 말해 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until((#PresenceSensor).presenceSensor_presence == \""not present\"")\n(#Speaker).mediaPlayback_speak(\""문이 열렸습니다\"")""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until ((#PresenceSensor).presenceSensor_presence == \""not present\"")\n(#Speaker).mediaPlayback_speak(\""문이 열렸습니다\"")""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""wait until((#PresenceSensor).presenceSensor_presence == 'not present')\n(#Speaker).mediaPlayback_speak('문이 열렸습니다')""}","When the occupancy sensor no longer detects it, say 'Door is open'."
+43,2,273,점유 센서가 감지 상태이면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#OccupancySensor).presenceSensor_presence == \""present\"") {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#OccupancySensor).presenceSensor_presence == \""present\"") {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#OccupancySensor).presenceSensor_presence == 'present') {\n    (#Alarm).alarm_siren()\n}""}",Sound the alarm's siren if an occupancy sensor is detected.
+23,2,87,접촉 센서가 접촉되어 있으면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#ContactSensor).contactSensor_contact == \""closed\"") {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#ContactSensor).contactSensor_contact == \""closed\"") {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#ContactSensor).contactSensor_contact == 'closed') {\n    (#Alarm).alarm_siren()\n}""}",Sound the alarm's siren if the contact sensor is in contact.
+64,4,306,제습기가 꺼지면 다시 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until((#Dehumidifier).switch_switch == \""off\"")\n(#Dehumidifier).switch_on()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until ((#Dehumidifier).switch_switch == \""off\"")\n(#Dehumidifier).switch_on()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""wait until((#Dehumidifier).switch_switch == 'off')\n(#Dehumidifier).switch_on()""}",Turn the dehumidifier back on when it turns off.
+28,1,154,조명을 빨간색으로 설정해줘.,"{ 'GreenhouseA_light_left_top_1': {'category': 'Light', 'tags': ['GreenhouseA', 'left_top', 'Light']}, 'GreenhouseA_light_center_1': {'category': 'Light', 'tags': ['GreenhouseA', 'center', 'Light']}}",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Light).colorControl_setColor(\""255|0|0\"")""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Light).colorControl_setColor(\""255|0|0\"")""
+ }""}","{'name': 'SetLightRed', 'cron': '', 'period': -1, 'code': ""(#Light).colorControl_setColor('255|0|0')""}",Set the light to red.
+30,1,161,조명의 전원을 토글해줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Light).switch_toggle()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Light).switch_toggle()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': '(#Light).switch_toggle()'}",Toggle the power of the light.
+166,4,455,조명이 꺼져 있고 사람이 감지되면 3초 후 조명을 켜 줘.,,,"{""name"": ""LightOnIfPersonDetected"",
+  ""cron"": """", ""period"": -1, ""code"": ""if ((#Light).switch_switch == \""off\"") and ((#PresenceSensor).presenceSensor_presence == \""present\"") {\n  (#clock).delay(3000)\n  (#Light).switch_on()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Light).switch_switch == \""off\"") {\n wait until ((#PresenceSensor).presenceSensor_presence == \""present\"")\n (#Clock).clock_delay(3000)\n (#Light).switch_on()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if (((#Light).switch_switch == 'off') and ((#PresenceSensor).presenceSensor_presence == 'present')) {\n    (#Clock).clock_delay(3000)\n    (#Light).switch_on()\n}""}","If the light is off and someone is detected, turn on the light after 3 seconds."
+57,5,297,조명이 꺼져 있고 움직임이 감지되지 않으며 커튼이 열려 있으면 조명을 켜고 커튼을 닫아 줘. 관수기가 꺼져 있고 창문이 닫혀 있으면 관수기를 켜고 창문을 열어 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#Light).switch_switch == \""off\"") and ((#MotionSensor).motionSensor_motion == \""inactive\"") and ((#Curtain).curtain_curtain == \""open\"")) {\n  (#Light).switch_on()\n  (#Curtain).curtain_close()\n}\nif (((#Irrigator).switch_switch == \""off\"") and ((#Window).windowControl_window == \""closed\"")) {\n  (#Irrigator).switch_on()\n  (#Window).windowControl_open()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if ((#Light).switch_switch == ""off"" and (#MotionSensor).motionSensor_motion == ""inactive"" and (#Curtain).curtain_curtain == ""open"") {\n (#Light).switch_on()\n (#Curtain).curtain_close()\n}\nif ((#Irrigator).switch_switch == ""off"" and (#Window).windowControl_window == ""closed"") {\n (#Irrigator).switch_on()\n (#Window).windowControl_open()\n}'}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if (((#Light).switch_switch == 'off') and ((#MotionSensor).motionSensor_motion == 'inactive') and ((#Curtain).curtain_curtain == 'open')) {\n(#Light).switch_on()\n(#Curtain).curtain_close()\n}\nif (((#Irrigator).switch_switch == 'off') and ((#Window).windowControl_window == 'closed')) {\n(#Irrigator).switch_on()\n(#Window).windowControl_open()\n}""}","If the lights are off, no motion is detected, and the curtains are open, turn on the lights and close the curtains. If the irrigator is off and the windows are closed, turn on the irrigator and open the windows."
+51,5,290,조명이 켜져 있고 블라인드가 열려 있으며 움직임이 감지되면 조명을 끄고 블라인드를 닫아 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Light).switch_switch == \""on\"" and (#Blind).blind_blind == \""open\"") {\n  wait until ((#MotionSensor).motionSensor_motion == \""active\"")\n  (#Light).switch_off()\n  (#Blind).blind_close()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Light).switch_switch == \""on\"" and (#Blind).blind_blind == \""open\"") {\n  wait until ((#MotionSensor).motionSensor_motion == \""active\"")\n  (#Light).switch_off()\n  (#Blind).blind_close()\n}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if (((#Light).switch_switch == 'on') and ((#Blind).blind_blind == 'open') and ((#MotionSensor).motionSensor_motion == 'active')) {\n(#Light).switch_off()\n(#Blind).blind_close()\n}""}","If the lights are on, the blinds are open, and motion is detected, turn off the lights and close the blinds."
+49,5,288,조명이 켜져 있고 창문이 닫혀 있으면 커튼을 열고 환풍기를 꺼 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#Light).switch_switch == \""on\"") and ((#Window).windowControl_window == \""closed\"")) {\n  (#Curtain).curtain_open()\n  (#Fan).switch_off()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Light).switch_switch == \""on\"" and (#Window).windowControl_window == \""closed\"") {\n (#Curtain).curtain_open()\n (#Fan).switch_off()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#Light).switch_switch == 'on') and ((#Window).windowControl_window == 'closed')) {\n(#Curtain).curtain_open()\n(#Fan).switch_off()\n}""}","If the lights are on and the windows are closed, open the curtains and turn off the fan."
+87,4,330,조명이 켜져 있으면 3초 대기 후 조명을 껐다가 3초 뒤 다시 켜 줘.,,,"{""name"": ""Scenario7"", ""cron"": """", ""period"": -1, ""code"": ""
+if ((#Light).switch_switch == \""on\"") {\n
+  (#Clock).clock_delay(3000)\n
+  (#Light).switch_off()\n
+  (#Clock).clock_delay(3000)\n
+  (#Light).switch_on()\n
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+if ((#Light).switch_switch == \""on\"") {\n
+ (#Clock).clock_delay(3000)\n
+ (#Light).switch_off()\n
+ (#Clock).clock_delay(3000)\n
+ (#Light).switch_on()\n
+}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if ((#Light).switch_switch == 'on') {\n(#Clock).clock_delay(3000)\n(#Light).switch_off()\n(#Clock).clock_delay(3000)\n(#Light).switch_on()\n}""}","If the light is on, wait 3 seconds, turn off the light, and then turn it back on after 3 seconds."
+128,8,399,"상단부에 있는 조명이 모두 꺼져 있으면, 홀수 태그가 붙은 모든 창문을 열어 줘.","{
+  ""SectorA_Light_Upper_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorA"", ""Upper"", ""Left"", ""Light""]
+  },
+  ""SectorB_Light_Upper_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorB"", ""Upper"", ""Right"", ""Light""]
+  },
+  ""SectorC_Light_Upper_Center"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorC"", ""Upper"", ""Center"", ""Light""]
+  },
+  ""SectorA_Light_Upper"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorA"", ""Upper"", ""Light""]
+  },
+  ""SectorA_Window_Odd_Left"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorA"", ""Odd"", ""Left"", ""Window""]
+  },
+  ""SectorB_Window_Odd_Right"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorB"", ""Odd"", ""Right"", ""Window""]
+  },
+  ""SectorC_Window_Odd_Center"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorC"", ""Odd"", ""Center"", ""Window""]
+  },
+  ""SectorA_Window_Odd"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorA"", ""Odd"", ""Window""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (all(#Upper #Light).switch_switch == \""off\"") {\n  all(#Odd #Window).windowControl_open()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (all(#Light #Top).switch_switch == \""off\"") {\n all(#Window #Odd).windowControl_open()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if (all(#Upper #Light).switch_switch == 'off') {\n    all(#Odd #Window).windowControl_open()\n}""}","If all the lights at the top are off, open all the windows tagged with odd numbers."
+33,2,168,존재 감지 센서가 감지 상태이면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#PresenceSensor).presenceSensor_presence == \""present\"") {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#PresenceSensor).presenceSensor_presence == \""present\"") {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#PresenceSensor).presenceSensor_presence == 'present') {\n    (#Alarm).alarm_siren()\n}""}",Sound the alarm's siren if a presence sensor is detected.
+79,6,322,주말 오후 10시부터 11시까지 3분마다 블라인드를 닫아 줘.,,,"{""name"": ""Scenario1"", ""cron"": ""0 22 * * 6,0"", ""period"": 180000, ""code"": ""if ((#Clock).clock_hour == 22) {\n  (#Blind).blind_close()\n} else {\n  break\n}""}","{""name"": ""Scenario1"", ""cron"": ""0 22 * * 6,0"", ""period"": 180000, ""code"": ""
+ if (((#Clock).clock_hour >= 22) and ((#Clock).clock_hour < 23)) {
+ (#Blind).blind_close()
+ } else {
+ break
+ }
+ ""}","{'name': 'Scenario1', 'cron': '0 22 * * 0,6', 'period': 180000, 'code': 'if ((#Clock).clock_hour == 23) {\n    break\n}\n(#Blind).blind_close()'}",Close the blinds every 3 minutes from 10pm to 11pm on weekends.
+62,6,303,주말 오후 10시부터 11시까지 3초마다 물을 줘.,,,"{""name"": ""Scenario1"", ""cron"": ""0 22 * * 6,0"", ""period"": 3000, ""code"": ""if ((#Clock).clock_hour < 23) {\n  (#Irrigator).irrigatorOperatingState_startWatering()\n} else {\n  break\n}""}","{""name"": ""Scenario1"", ""cron"": ""0 22 * * 6,0"", ""period"": 3000, ""code"": ""
+ if (((#Clock).clock_hour >= 22) and ((#Clock).clock_hour < 23)) {
+ (#Irrigator).irrigatorOperatingState_startWatering()
+ } else {
+ break
+ }
+ ""}","{'name': 'Scenario1', 'cron': '0 22 * * 0,6', 'period': 3000, 'code': 'if ((#Clock).clock_hour == 23) {\n    break\n}\n(#Dehumidifier).switch_on()'}",Water every 3 seconds from 10pm to 11pm on weekends.
+111,6,368,"주말에는 5초마다 펌프가 꺼져 있으면 켜고, 켜져 있으면 꺼 주고, 선풍기 속도를 10으로 설정해 줘.",,,"{""name"": ""Scenario1"", ""cron"": ""* * * * 6,0"", ""period"": 5000, ""code"": ""
+if ((#Pump).switch_switch == \""off\"") {
+(#Pump).switch_on()
+} else {
+(#Pump).switch_off()
+}
+(#Fan).fanControl_setFanSpeed(10)
+""}","{""name"": ""Scenario1"",
+  ""cron"": ""* * * * 6,0"",
+  ""period"": 5000,
+  ""code"": ""
+pumpOn := false\n
+if ((#Pump).switch_switch == \""off\"") {\n
+  (#Pump).switch_on()\n
+  pumpOn = true\n
+} 
+else if ((#Pump).switch_switch == \""on\"") {\n
+  (#Pump).switch_off()\n
+  pumpOn = false\n
+}\n
+(#Fan).fanControl_setFanSpeed(10)""
+}","{'name': 'Scenario', 'cron': '0 0 * * 0,6', 'period': 5000, 'code': ""
+weekday = (#Clock).clock_weekday\n
+if ((weekday != 'saturday') and (weekday != 'sunday')) {\n
+    break\n
+}\n
+if ((#Pump).switch_switch == 'off') {\n
+    (#Pump).switch_on()\n
+} else if ((#Pump).switch_switch == 'on') {\n
+    (#Pump).switch_off()\n
+}\n
+(#Fan).fanControl_setFanSpeed(10)""}","On weekends, every 5 seconds, turn the pump on if it's off, off if it's on, and set the fan speed to 10."
+148,4,437,주말에는 관개 장치가 꺼지면 관개 장치를 꺼 줘.,,,"{""name"": ""Scenario1"", ""cron"": ""0 0 * * 6,0"", ""period"": 0, ""code"": ""
+wait until((#Irrigator).switch_switch == \""off\"")\n
+(#Irrigator).switch_off()""}","{""name"": ""Scenario1"", ""cron"": ""0 0 * * 6,0"", ""period"": -1, ""code"": ""
+if ((#Irrigator).switch_switch == \""off\"") {\n
+  (#Irrigator).switch_off()\n
+}""}","{'name': 'Scenario', 'cron': '0 0 * * 0,6', 'period': 0, 'code': ""wait until((#Irrigator).switch_switch == 'off')\n(#Irrigator).switch_off()""}","On weekends, turn off the irrigation when it turns off."
+161,9,450,"주소록에서 나를 제외한 모든 사람에게 이메일로 내 생일을 알려주는 내용으로 메일을 보내줘. 제목은 ""생일 알림"", 내용은 ""제 생일은 ~입니다""로 보내줘.",,"[
+  {
+  ""name"": ""me"",
+  ""contact"": ""010-1234-5678"",
+  ""email"": ""abcd1234@test.com"",
+  ""birthday"": ""1991-03-03""
+  },
+  {
+  ""name"": ""홍길동"",
+  ""contact"": ""010-9999-8888"",
+  ""email"": ""honggd@test.com"",
+  ""birthday"": ""1988-07-15"",
+  ""alternate_contact"": ""010-8888-7777""
+  },
+  {
+  ""name"": ""김무개"",
+  ""contact"": ""010-7777-6666"",
+  ""email"": ""kim@example.com"",
+  ""birthday"": ""1990-11-25""
+  },
+  {
+  ""name"": ""장보고"",
+  ""contact"": ""010-2222-3333"",
+  ""email"": ""jangbogo@naver.com"",
+  ""birthday"": ""1985-05-10"",
+  ""alternate_contact"": ""010-4444-5555""
+  }
+ ]","{""name"": ""BirthdayNotification"", ""cron"": """", ""period"": -1, ""code"": ""
+(#EmailProvider).emailProvider_sendMail(\""honggd@test.com\"", \""생일 알림\"", \""내 생일은 1991-03-03입니다\"")\n
+(#EmailProvider).emailProvider_sendMail(\""kim@example.com\"", \""생일 알림\"", \""내 생일은 1991-03-03입니다\"")\n
+(#EmailProvider).emailProvider_sendMail(\""jangbogo@naver.com\"", \""생일 알림\"", \""내 생일은 1991-03-03입니다\"")""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+ emailSubject = \""생일 알림\""
+ emailContent = \""제 생일은 1991-03-03입니다\""
+ (#EmailProvider).emailProvider_sendMail(\""honggd@test.com\"", emailSubject, emailContent)
+ (#EmailProvider).emailProvider_sendMail(\""kim@example.com\"", emailSubject, emailContent)
+ (#EmailProvider).emailProvider_sendMail(\""jangbogo@naver.com\"", emailSubject, emailContent)
+ ""}","{'name': 'SendBirthdayEmail', 'cron': '', 'period': -1, 'code': ""(#EmailProvider).emailProvider_sendMail('010-9999-8888','생일 알림','제 생일은 1991-03-03입니다')\n(#EmailProvider).emailProvider_sendMail('010-7777-6666','생일 알림','제 생일은 1991-03-03입니다')\n(#EmailProvider).emailProvider_sendMail('010-2222-3333','생일 알림','제 생일은 1991-03-03입니다')""}",Send an email to everyone in the contact list except myself to notify them of my birthday.
+20,2,82,지금이 오후 3시 15분이면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Clock).clock_time == 1515) {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Clock).clock_time == 1515) {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if ((#Clock).clock_time == 1515) {\n    (#Alarm).alarm_siren()\n}'}","If it's 3:15pm, blare the siren on the alarm."
+127,8,398,상단부에 있는 짝수 태그가 붙은 창문이 열려 있으면 커튼을 닫아 줘.,"{
+  ""GreenhouseA_Window_Top_2"": {
+  ""category"": ""Window"",
+  ""tags"": [""GreenhouseA"", ""Upper"", ""Even"", ""Window""]
+  },
+  ""GreenhouseA_Window_Top_4"": {
+  ""category"": ""Window"",
+  ""tags"": [""GreenhouseA"", ""Upper"", ""Even"", ""Window""]
+  },
+  ""ZoneB_Window_Upper_Left"": {
+  ""category"": ""Window"",
+  ""tags"": [""ZoneB"", ""Upper"", ""Even"", ""Left"", ""Window""]
+  },
+  ""ZoneB_Window_Upper_Right"": {
+  ""category"": ""Window"",
+  ""tags"": [""ZoneB"", ""Upper"", ""Odd"", ""Right"", ""Window""]
+  },
+  ""Sector1_Curtain_Left"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""Sector1"", ""Curtain"", ""Left""]
+  },
+  ""Sector1_Curtain_Right"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""Sector1"", ""Curtain"", ""Right""]
+  },
+  ""ZoneC_Curtain_Main"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""ZoneC"", ""Curtain""]
+  },
+  ""GreenhouseA_Curtain_Back"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""GreenhouseA"", ""Curtain"", ""Back""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Upper #Even #Window).windowControl_window == \""open\"") {\n  (#Curtain).curtain_close()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Window #Even).windowControl_window == \""open\"") {\n (#Curtain).curtain_close()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if ((#Upper #Even #Window).windowControl_window == 'open') {\n    (#Curtain).curtain_close()\n}""}","If the even-tagged windows at the top are open, close the curtains."
+126,8,397,섹터 비에 있는 홀수 태그가 붙은 관개 장치를 모두 꺼 줘.,"{
+  ""Greenhouse_Irrigator_1"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""SectorA"", ""Lower"", ""Odd"", ""Irrigator""]
+  },
+  ""Greenhouse_Irrigator_2"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""SectorA"", ""Lower"", ""Even"", ""Irrigator""]
+  },
+  ""ZoneB_Irrigator_Upper_Left"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""SectorB"", ""Upper"", ""Odd"", ""Irrigator""]
+  },
+  ""ZoneB_Irrigator_Upper_Right"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""SectorB"", ""Upper"", ""Even"", ""Irrigator""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""all(#SectorB #Odd #Irrigator).switch_off()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""all(#Irrigator #SectorB #Odd).switch_off()""}","{'name': 'Turn off odd tagged irrigators in SectorB', 'cron': '', 'period': -1, 'code': 'all(#SectorB #Odd #Irrigator).switch_off()'}",Turn off all odd-tagged irrigator in the sector B.
+160,3,449,창문이 닫혀있다가 열리면 알림을 울려줘.,,,"{""name"": ""WindowIsClosedThenOpens"",  ""cron"": """",  ""period"": -1, ""code"": ""
+if ((#Window).windowControl_window == \""closed\"") {\n
+  wait until((#Window).windowControl_window == \""open\"")\n
+  (#Alarm).alarm_siren()\n
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+wait until ((#Window).windowControl_window == ""closed"")
+wait until ((#Window).windowControl_window == ""open"")
+(#Alarm).alarm_siren()
+""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""
+wait until((#Window).windowControl_window == 'closed')\n
+wait until((#Window).windowControl_window == 'open')\n
+(#Alarm).alarm_siren()""}","If the window is closed, then sound the alarm when it opens."
+82,3,325,창문이 열려 있고 온도가 35도 이상이면 10초 대기 후 블라인드를 내려 줘.,,,"{""name"": ""Scenario2"", ""cron"": """", ""period"": -1, ""code"": ""if (((#Window).windowControl_window == \""open\"") and ((#TemperatureSensor).temperatureMeasurement_temperature >= 35.0)) {\n  (#Clock).clock_delay(10000)\n  (#Blind).blind_close()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Window).windowControl_window == \""open\"" and (#TemperatureSensor).temperatureMeasurement_temperature >= 35.0) {\n (#Clock).clock_delay(10000)\n (#Blind).blind_close()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if (((#Window).windowControl_window == 'open') and ((#TemperatureSensor).temperatureMeasurement_temperature >= 35)) {\n(#Clock).clock_delay(10000)\n(#Blind).blind_close()\n}""}","If a window is open and the temperature is above 35 degrees, wait 10 seconds before lowering the blinds."
+54,5,294,창문이 열려 있고 조명이 꺼져 있으며 커튼이 닫혀 있으면 조명을 켜고 커튼을 열어 줘. 또한 관수기가 꺼져 있고 토양 수분이 40% 이하이면 관수기로 물을 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#Window).windowControl_window == \""open\"") and ((#Light).switch_switch == \""off\"") and ((#Curtain).curtain_curtain == \""closed\"")) {\n  (#Light).switch_on()\n  (#Curtain).curtain_open()\n}\n
+
+if (((#Irrigator).switch_switch == \""off\"") and ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 40.0)) {\n  (#Irrigator).irrigatorOperatingState_startWatering()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if ((#Window).windowControl_window == ""open"" and (#Light).switch_switch == ""off"" and (#Curtain).curtain_curtain == ""closed"") {\n (#Light).switch_on()\n (#Curtain).curtain_open()\n}\nif ((#Irrigator).switch_switch == ""off"" and (#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 40.0) {\n (#Irrigator).irrigatorOperatingState_startWatering()\n}'}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#Window).windowControl_window == 'open') and ((#Light).switch_switch == 'off') and ((#Curtain).curtain_curtain == 'closed')) {\n    (#Light).switch_on()\n    (#Curtain).curtain_open()\n}\nif (((#Irrigator).switch_switch == 'off') and ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 40)) {\n    (#Irrigator).switch_on()\n}""}","If the window is open, the lights are off, and the curtains are closed, then turn on the lights and open the curtains. Also, if the irrigation system is off and the soil moisture is 40% or lower, water the plants using the irrigation system."
+86,4,329,"창문이 열려 있으면 5초 후 커튼을 닫고, 10초 더 지난 뒤 블라인드를 닫아 줘.",,,"{""name"": ""Scenario6"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Window).windowControl_window == \""open\"") {\n  (#Clock).clock_delay(5000)\n  (#Curtain).curtain_close()\n  (#Clock).clock_delay(10000)\n  (#Blind).blind_close()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Window).windowControl_window == \""open\"") {\n (#Clock).clock_delay(5000)\n (#Curtain).curtain_close()\n (#Clock).clock_delay(10000)\n (#Blind).blind_close()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if ((#Window).windowControl_window == 'open') {\n    (#Clock).clock_delay(5000)\n    (#Curtain).curtain_close()\n    (#Clock).clock_delay(10000)\n    (#Blind).blind_close()\n}""}","If the window is open, close the curtains after 5 seconds, and close the blinds after another 10 seconds."
+71,4,314,창문이 열리면 알람의 사이렌을 울려 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until((#Window).windowControl_window == \""open\"")\n(#Alarm).alarm_siren()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until ((#Window).windowControl_window == \""open\"")\n(#Alarm).alarm_siren()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""wait until ((#Window).windowControl_window == 'open')\n(#Alarm).alarm_siren()""}",Sound the alarm's siren when the window opens.
+41,3,269,창문이 열린 상태이면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Window).windowControl_window == \""open\"") {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Window).windowControl_window == \""open\"") {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#Window).windowControl_window == 'open') {\n    (#Alarm).alarm_siren()\n}""}",Sound the alarm's siren if a window is open.
+169,4,458,창문이 열린 후 5초 내에 조명이 켜져 있으면 조명을 켜 줘.,,,"{""name"": ""WindowOpenThenLight"",
+  ""cron"": """", ""period"": -1, ""code"": ""
+wait until((#Window).windowControl_window == \""open\"")\n
+(#Clock).clock_delay(5000)\n
+if ((#Light).switch_switch == \""on\"") {\n
+ (#Light).switch_on()\n
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": 
+wait until ((#Window).windowControl_window == ""open"")
+startTime = (#Clock).clock_timestamp
+wait until (((#Clock).clock_timestamp - startTime) <= 5 and (#Light).switch_switch == ""on"")
+(#Light).switch_on()","{'name': 'Scenario', 'cron': '', 'period': 100, 'code': ""phase := false\nif (phase == false) {\n    wait until((#Window).windowControl_window == 'open')\n    init_time := 0\n    phase = true\n} else {\n    init_time = init_time + 100\n    if (init_time <= 5000) {\n        if ((#Light).switch_switch == 'on') {\n            (#Light).switch_on()\n            break\n        }\n    } else {\n        break\n    }\n}""}","If the window is opened and the light is on within 5 seconds, turn on the light."
+19,1,69,카메라로 10초 동안 속도 2로 타임랩스 영상을 촬영해줘.,"{ 'GreenhouseA_cam_front': {'category': 'Camera', 'tags': ['GreenhouseA', 'front', 'Camera']}, 'GreenhouseA_cam_back': {'category': 'Camera', 'tags': ['GreenhouseA', 'back', 'Camera']}}",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Camera).camera_takeTimelapse(10,2)""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Camera).camera_takeTimelapse(10,2)""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': '(#Camera).camera_takeTimelapse(10,2)'}",Take a time-lapse video with the camera at speed 2 for 10 seconds.
+91,3,334,커튼이 3번 열렸다 닫히면 조명을 꺼 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+openCount := 0\n
+ wait until ((#Curtain).curtain_curtain == \""open\"")\n
+ wait until ((#Curtain).curtain_curtain == \""closed\"")\n
+ openCount = openCount + 1\n
+ if (openCount == 3) {\n
+   (#Light).switch_off()\n
+ }""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+count := 0
+lastStateOpen := false
+if ((#Curtain).curtain_curtain == ""open"") {
+if (lastStateOpen == false) {
+  count = count + 1
+  lastStateOpen = true
+}
+} else {
+  lastStateOpen = false
+}
+if (count >= 3) {
+  (#Light).switch_off()
+  count = 0
+}""}","{'name': 'Scenario', 'cron': '', 'period': 100, 'code': ""curtain_count := 0\nprev_curtain_state := (#Curtain).curtain_curtain\ncurtain_state = (#Curtain).curtain_curtain\nif ((prev_curtain_state == 'open') and (curtain_state == 'closed')) {\n    curtain_count = curtain_count + 1\n}\nprev_curtain_state = curtain_state\nif (curtain_count >= 3) {\n    (#Light).switch_off()\n    break\n}""}",Turn off the light when the curtain opens and closes 3 times.
+139,4,413,"커튼이 열린 상태라면 2초 뒤 조명을 50으로 낮추고, 다시 4초 기다려서 꺼 줘.",,,"{""name"": ""Scenario10"", ""cron"": """", ""period"": -1, ""code"": ""
+if ((#Curtain).curtain_curtain == \""open\"") {\n
+  (#Clock).clock_delay(2000)\n
+  (#Light).switchLevel_setLevel(50, 0)\n
+  (#Clock).clock_delay(4000)\n
+  (#Light).switch_off()\n
+}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+if ((#Curtain).curtain_curtain == \""open\"") {\n
+ (#Clock).clock_delay(2000)\n
+ (#Light).switchLevel_setLevel(50, 0)\n
+ (#Clock).clock_delay(4000)\n
+ (#Light).switch_off()\n
+}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if ((#Curtain).curtain_curtain == 'open') {\n    (#Clock).clock_delay(2000)\n    (#Light).switchLevel_setLevel(50,0)\n    (#Clock).clock_delay(4000)\n    (#Light).switch_off()\n}""}","If the curtains are open, turn the lights down to 50 after 2 seconds, then wait another 4 seconds to turn them off."
+44,1,278,테스트 타이머라는 이름의 60초 길이의 타이머를 추가해줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Timer).timer_add(\""테스트 타이머\"", 60)""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Timer).timer_add(\""테스트 타이머\"", 60.0)""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""(#Timer).timer_add('테스트 타이머', 60)""}",Add a 60-second timer named Test Timer.
+90,3,333,토양 수분이 20% 이상이었다가 이하가 되면 관개 장치로 물을 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+if((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity >= 20.0)\n{
+  wait until((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity < 20.0)\n
+}
+(#Irrigator).irrigatorOperatingState_startWatering()""
+}","{""name"": ""Scenario1"", ""cron"": """", ""period"": 100, ""code"": ""
+phase := false
+if (phase == false) {
+wait until ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity >= 20.0)
+wait until ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 20.0)
+phase = true
+} else {
+(#Irrigator).irrigatorOperatingState_startWatering()
+}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': '
+wait until ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity >= 20) 
+wait until ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity < 20) 
+(#Irrigator).switch_on()'}","When the soil moisture drops from 20% or higher to below 20%, water the plants using the irrigation system."
+45,5,284,토양 수분이 30% 이하이고 조명이 꺼져 있으면 관개 장치를 작동시키고 조명을 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 30.0) and ((#Light).switch_switch == \""off\"")) {\n  (#Irrigator).irrigatorOperatingState_startWatering()\n  (#Light).switch_on()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 30.0) and ((#Light).switch_switch == \""off\"")) {\n (#Irrigator).irrigatorOperatingState_startWatering()\n (#Light).switch_on()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity <= 30) and ((#Light).switch_switch == 'off')) {\n(#Irrigator).switch_on()\n(#Light).switch_on()\n}""}","If the soil moisture is below 30% and the lights are off, turn on the irrigator and the light."
+123,8,394,섹터 비와 섹터 에이에 있는 선풍기가 모두 켜져 있으면 홀수 태그가 붙은 블라인드 중 하나를 닫아 줘.,"{
+  ""sectorA_fan_2"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorA"", ""even"", ""Fan""]
+  },
+  ""sectorA_fan_4"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorA"", ""even"", ""Fan""]
+  },
+  ""sectorB_fan_1"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorB"", ""odd"", ""Fan""]
+  },
+  ""sectorB_fan_3"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorB"", ""odd"", ""Fan""]
+  },
+  ""sectorC_fan_5"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorC"", ""odd"", ""Fan""]
+  },
+  ""sectorC_fan_7"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorC"", ""odd"", ""Fan""]
+  },
+  ""wall_blind_1"": {
+  ""category"": ""Blind"",
+  ""tags"": [""Wall"", ""odd"", ""Blind""]
+  },
+  ""wall_blind_3"": {
+  ""category"": ""Blind"",
+  ""tags"": [""Wall"", ""odd"", ""Blind""]
+  },
+  ""wall_blind_2"": {
+  ""category"": ""Blind"",
+  ""tags"": [""Wall"", ""even"", ""Blind""]
+  },
+  ""wall_blind_4"": {
+  ""category"": ""Blind"",
+  ""tags"": [""Wall"", ""even"", ""Blind""]
+  },
+  ""center_blind_main"": {
+  ""category"": ""Blind"",
+  ""tags"": [""Center"", ""Blind""]
+  },
+  ""center_blind_aux"": {
+  ""category"": ""Blind"",
+  ""tags"": [""Center"", ""Blind""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+if ((all(#Fan #SectorA).switch_switch == \""on\"") and (all(#Fan #SectorB).switch_switch == \""on\"")) {\n
+  (#Odd #Blind).blind_close()
+\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((all(#SectorB #Fan).switch_switch == \""on\"") and (all(#SectorA #Fan).switch_switch == \""on\"")) {\n any(#Odd #Blind).blind_close()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if ((all(#SectorB #Fan).switch_switch == 'on') and (all(#SectorA #Fan).switch_switch == 'on')) {\n    (#Odd #Blind).blind_close()\n}""}","If the fans in Sector B and Sector A are both on, close one of the odd-tagged blinds."
+81,2,324,토양 습도가 30% 미만이면 5초 후 급수기를 작동해 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity < 30.0) {\n  (#Clock).clock_delay(5000)\n  (#Irrigator).irrigatorOperatingState_startWatering()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity < 30.0) {\n (#Clock).clock_delay(5000)\n (#Irrigator).irrigatorOperatingState_startWatering()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if ((#SoilMoistureSensor).soilHumidityMeasurement_soilHumidity < 30) {\n(#Clock).clock_delay(5000)\n(#Irrigator).irrigatorOperatingState_startWatering()\n}'}","If the soil humidity is below 30%, wait 5 seconds before activating the waterer."
+141,1,430,팔을 위로 들어.,,,{},{},"{""name"":""Scenario1"",""cron"":"""",""period"":-1,""code"":""""}",Raise your arm up.
+34,2,173,펌프가 열려있으면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Pump).pump_pump == \""open\"") {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Pump).pump_pump == \""open\"") {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if ((#Pump).pump_pump == 'open') {\n    (#Alarm).alarm_siren()\n}""}",Sound the alarm's siren if the pump is open.
+70,6,313,평일 오전 8시부터 자정까지 한 시간마다 조명을 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": ""0 8-23 * * 1-5"", ""period"": 0, ""code"": ""(#Light).switch_on()""}","{""name"": ""Scenario1"", ""cron"": ""0 8 * * 1-5"", ""period"": 3600000, ""code"": ""
+ if (((#Clock).clock_hour >= 8) and ((#Clock).clock_hour < 24)) {
+ (#Light).switch_on()
+ } else {
+ break
+ }
+ ""}","{'name': 'Scenario1', 'cron': '0 8-23 * * 1-5', 'period': 0, 'code': '(#Light).switch_on()'}",Turn on the lights every hour on the hour from 8am to midnight on weekdays.
+122,8,393,섹터 에이에 있는 선풍기를 꺼 줘.,"{
+  ""sectorA_fan_2"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorA"", ""even"", ""Fan""]
+  },
+  ""sectorA_fan_4"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorA"", ""even"", ""Fan""]
+  },
+  ""sectorB_fan_1"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorB"", ""odd"", ""Fan""]
+  },
+  ""sectorB_fan_3"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorB"", ""odd"", ""Fan""]
+  },
+  ""sectorC_fan_1"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorC"", ""odd"", ""Fan""]
+  },
+  ""sectorC_fan_5"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorC"", ""odd"", ""Fan""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#SectorA #Fan).switch_off()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""(#Fan #SectorA).switch_off()""}","{'name': 'Turn off fans in SectorA', 'cron': '', 'period': -1, 'code': '(#SectorA #Fan).switch_off()'}",Turn off the fan in sector A.
+129,8,400,짝수 태그가 붙은 스피커 중 하나라도 켜져 있으면 섹터 비에 있는 조명을 모두 꺼 줘.,"{
+  ""SectorA_Speaker_Odd_Left"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""SectorA"", ""Odd"", ""Left"", ""Speaker""]
+  },
+  ""SectorB_Speaker_Odd_Right"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""SectorB"", ""Odd"", ""Right"", ""Speaker""]
+  },
+  ""SectorC_Speaker_Even_Left"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""SectorC"", ""Even"", ""Left"", ""Speaker""]
+  },
+  ""SectorB_Speaker_Even_Right"": {
+  ""category"": ""Speaker"",
+  ""tags"": [""SectorB"", ""Even"", ""Right"", ""Speaker""]
+  },
+  ""SectorB_Light_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorB"", ""Left"", ""Light""]
+  },
+  ""SectorB_Light_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorB"", ""Right"", ""Light""]
+  },
+  ""SectorB_Light_Center"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorB"", ""Center"", ""Light""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (any(#Even #Speaker).switch_switch == \""on\"") {\n  all(#SectorB #Light).switch_off()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (any(#Speaker #Even).switch_switch == \""on\"") {\n all(#Light #SectorB).switch_off()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if ((any(#Even #Speaker).switch_switch == 'on')) {\n    all(#SectorB #Light).switch_off()\n}""}","If any of the even-tagged speakers are on, turn off all lights in the sector B."
+125,8,396,짝수 태그가 붙은 창문이 열려 있으면 섹터 에이에 있는 선풍기를 꺼 줘.,"{
+  ""SectorA_Fan_1"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorA"", ""Odd"", ""Fan""]
+  },
+  ""SectorA_Fan_2"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorA"", ""Even"", ""Fan""]
+  },
+  ""SectorA_Fan_3"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorA"", ""Odd"", ""Fan""]
+  },
+  ""SectorA_Fan_4"": {
+  ""category"": ""Fan"",
+  ""tags"": [""SectorA"", ""Even"", ""Fan""]
+  },
+  ""SectorB_Window_1"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorB"", ""Odd"", ""Window""]
+  },
+  ""SectorB_Window_2"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorB"", ""Even"", ""Window""]
+  },
+  ""ZoneC_Window_Left"": {
+  ""category"": ""Window"",
+  ""tags"": [""ZoneC"", ""Odd"", ""Left"", ""Window""]
+  },
+  ""ZoneC_Window_Right"": {
+  ""category"": ""Window"",
+  ""tags"": [""ZoneC"", ""Even"", ""Right"", ""Window""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Even #Window).windowControl_window == \""open\"") {\n  (#SectorA #Fan).switch_off()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Window #Even).windowControl_window == \""open\"") {\n (#Fan #SectorA).switch_off()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if ((#Even #Window).windowControl_window == 'open') {\n(#SectorA #Fan).switch_off()\n}""}",Turn off the fan in Sector A if an even-tagged window is open.
+38,2,258,현재 실내 온도가 25도 이상이면 알람의 사이렌을 울려줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#TemperatureSensor).temperatureMeasurement_temperature >= 25) {\n  (#Alarm).alarm_siren()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#TemperatureSensor).temperatureMeasurement_temperature >= 25.0) {\n (#Alarm).alarm_siren()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if ((#TemperatureSensor).temperatureMeasurement_temperature >= 25) {\n    (#Alarm).alarm_siren()\n}'}",Sound the alarm's siren if the current room temperature is above 25 degrees.
+105,8,354,하우스A 모두 닫아줘.,"{ 
+  ""s_blind_1"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorA"", ""odd"", ""Blind""]
+  },
+  ""s_blind_3"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorA"", ""odd"", ""Blind""]
+  },
+  ""s_blind_2"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorB"", ""even"", ""Blind""]
+  },
+  ""s_blind_4"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorB"", ""even"", ""Blind""]
+  },
+  ""center_blind_main"": {
+  ""category"": ""Blind"",
+  ""tags"": [""Center"", ""Blind""]
+  },
+  ""center_blind_aux"": {
+  ""category"": ""Blind"",
+  ""tags"": [""Center"", ""Blind""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""all(#SectorA).blind_close()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""all(#SectorA).blind_close()""""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'all(#SectorA #Blind).blind_close()'}",Close everything in House A.
+124,8,395,"홀수 태그가 붙은 선풍기 중 하나라도 켜져 있으면, 하단부에 있는 모든 관개 장치를 꺼 줘.","{
+  ""ZoneA_Fan_1"": {
+  ""category"": ""Fan"",
+  ""tags"": [""ZoneA"", ""Odd"", ""Fan""]
+  },
+  ""ZoneA_Fan_2"": {
+  ""category"": ""Fan"",
+  ""tags"": [""ZoneA"", ""Even"", ""Fan""]
+  },
+  ""Sector1_Fan_Upper"": {
+  ""category"": ""Fan"",
+  ""tags"": [""Sector1"", ""Upper"", ""Odd"", ""Fan""]
+  },
+  ""Sector1_Fan_Lower"": {
+  ""category"": ""Fan"",
+  ""tags"": [""Sector1"", ""Lower"", ""Even"", ""Fan""]
+  },
+  ""Greenhouse_Irrigator_1"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Greenhouse"", ""Lower"", ""Odd"", ""Irrigator""]
+  },
+  ""Greenhouse_Irrigator_2"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""Greenhouse"", ""Lower"", ""Even"", ""Irrigator""]
+  },
+  ""ZoneB_Irrigator_Upper_Left"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""ZoneB"", ""Upper"", ""Odd"", ""Irrigator""]
+  },
+  ""ZoneB_Irrigator_Upper_Right"": {
+  ""category"": ""Irrigator"",
+  ""tags"": [""ZoneB"", ""Upper"", ""Even"", ""Irrigator""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (any(#Odd #Fan).switch_switch == \""on\"") {\n  all(#Lower #Irrigator).switch_off()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (any(#Fan #Odd).switch_switch == \""on\"") {\n all(#Irrigator #Bottom).switch_off()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if ((any(#Odd #Fan).switch_switch == 'on')) {\n    all(#Lower #Irrigator).switch_off()\n}""}","If any of the odd-tagged fans are on, turn off all the irrigator at the bottom."
+143,8,432,홀수 태그가 붙은 창문이 하나라도 열려 있으면 홀수 블라인드를 닫아 줘.,"{
+  ""SectorA_Window_Left_Odd"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorA"", ""Left"", ""Odd"", ""Window""]
+  },
+  ""SectorB_Window_Right_Odd"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorB"", ""Right"", ""Odd"", ""Window""]
+  },
+  ""SectorA_Window_Wall_Odd"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorA"", ""Wall"", ""Odd"", ""Window""]
+  },
+  ""SectorB_Window_Center_Odd"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorB"", ""Center"", ""Odd"", ""Window""]
+  },
+  ""SectorA_Blind_Left_Odd"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorA"", ""Left"", ""Odd"", ""Blind""]
+  },
+  ""SectorB_Blind_Right_Odd"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorB"", ""Right"", ""Odd"", ""Blind""]
+  },
+  ""SectorA_Blind_Wall_Odd"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorA"", ""Wall"", ""Odd"", ""Blind""]
+  },
+  ""SectorB_Blind_Center_Odd"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorB"", ""Center"", ""Odd"", ""Blind""]
+  },
+  ""SectorA_Window_Left_Even"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorA"", ""Left"", ""Even"", ""Window""]
+  },
+  ""SectorB_Window_Right_Even"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorB"", ""Right"", ""Even"", ""Window""]
+  },
+  ""SectorA_Window_Wall_Even"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorA"", ""Wall"", ""Even"", ""Window""]
+  },
+  ""SectorB_Window_Center_Even"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorB"", ""Center"", ""Even"", ""Window""]
+  },
+  ""SectorA_Blind_Left_Even"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorA"", ""Left"", ""Even"", ""Blind""]
+  },
+  ""SectorB_Blind_Right_Even"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorB"", ""Right"", ""Even"", ""Blind""]
+  },
+  ""SectorA_Blind_Wall_Even"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorA"", ""Wall"", ""Even"", ""Blind""]
+  },
+  ""SectorB_Blind_Center_Even"": {
+  ""category"": ""Blind"",
+  ""tags"": [""SectorB"", ""Center"", ""Even"", ""Blind""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (any(#Odd #Window).windowControl_window == \""open\"") {\n  (#Odd #Blind).blind_close()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (any(#Window #Odd).windowControl_window == \""open\"") {\n (#Blind #Odd).blind_close()\n}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if (any(#Odd #Window).windowControl_window == 'open') {\n(#Odd #Blind).blind_close()\n}""}","If any of the odd-tagged windows are open, close the odd blinds."
+55,5,295,환풍기가 꺼져 있고 이산화탄소 수치가 1000 이상이며 커튼이 닫혀 있으면 환풍기를 켜고 커튼을 열어 줘. 조명이 꺼져 있고 온도가 27도 이상이면 조명을 켜고 블라인드를 닫아 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#Fan).switch_switch == \""off\"") and ((#AirQualityDetector).carbonDioxideMeasurement_carbonDioxide >= 1000.0) and ((#Curtain).curtain_curtain == \""closed\"")) {\n  (#Fan).switch_on()\n  (#Curtain).curtain_open()\n}\nif (((#Light).switch_switch == \""off\"") and ((#TemperatureSensor).temperatureMeasurement_temperature >= 27.0)) {\n  (#Light).switch_on()\n  (#Blind).blind_close()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if ((#Fan).switch_switch == ""off"" and (#AirQualityDetector).carbonDioxideMeasurement_carbonDioxide >= 1000 and (#Curtain).curtain_curtain == ""closed"") {\n (#Fan).switch_on()\n (#Curtain).curtain_open()\n}\nif ((#Light).switch_switch == ""off"" and (#TemperatureSensor).temperatureMeasurement_temperature >= 27.0) {\n (#Light).switch_on()\n (#Blind).blind_close()\n}'}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#Fan).switch_switch == 'off') and ((#AirQualityDetector).carbonDioxideMeasurement_carbonDioxide >= 1000) and ((#Curtain).curtain_curtain == 'closed')) {\n    (#Fan).switch_on()\n    (#Curtain).curtain_open()\n}\nif (((#Light).switch_switch == 'off') and ((#TemperatureSensor).temperatureMeasurement_temperature >= 27)) {\n    (#Light).switch_on()\n    (#Blind).blind_close()\n}""}","If the fan is off, the carbon dioxide level is above 1000, and the curtains are closed, turn on the fan and open the curtains. If the lights are off and the temperature is above 27 degrees, turn on the lights and close the blinds."
+59,5,299,TV가 꺼져 있고 블라인드가 닫혀 있으며 커튼이 열려 있으면 TV를 켜고 블라인드를 열어 줘. 에어컨이 자동 모드가 아니고 꺼져 있으면 자동 모드로 설정하고 전원을 켜 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#Television).switch_switch == \""off\"") and ((#Blind).blind_blind == \""closed\"") and ((#Curtain).curtain_curtain == \""open\"")) {\n  (#Television).switch_on()\n  (#Blind).blind_open()\n}\nif (((#AirConditioner).airConditionerMode_airConditionerMode != \""auto\"") and ((#AirConditioner).switch_switch == \""off\"")) {\n  (#AirConditioner).airConditionerMode_setAirConditionerMode(\""auto\"")\n  (#AirConditioner).switch_on()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Television).switch_switch == \""off\"" and (#Blind).blind_blind == \""closed\"" and (#Curtain).curtain_curtain == \""open\"") {\n (#Television).switch_on()\n (#Blind).blind_open()\n}\nif ((#AirConditioner).airConditionerMode_airConditionerMode != \""auto\"" and (#AirConditioner).switch_switch == \""off\"") {\n (#AirConditioner).airConditionerMode_setAirConditionerMode(\""auto\"")\n (#AirConditioner).switch_on()\n}""
+ }""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#Television).switch_switch == 'off') and ((#Blind).blind_blind == 'closed') and ((#Curtain).curtain_curtain == 'open')) {\n    (#Television).switch_on()\n    (#Blind).blind_open()\n}\nif (((#AirConditioner).airConditionerMode_airConditionerMode != 'auto') and ((#AirConditioner).switch_switch == 'off')) {\n    (#AirConditioner).airConditionerMode_setAirConditionerMode('auto')\n    (#AirConditioner).switch_on()\n}""}","If the TV is off, the blinds are closed, and the curtains are open, turn on the TV and open the blinds. If the air conditioner is not in auto mode and is off, set it to auto mode and turn it on."
+50,5,289,TV가 꺼져 있고 스피커가 재생 중이면 TV를 켜고 스피커를 꺼 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#Television).switch_switch == \""off\"") and ((#Speaker).mediaPlayback_playbackStatus == \""playing\"")) {\n  (#Television).switch_on()\n  (#Speaker).switch_off()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Television).switch_switch == \""off\"" and (#Speaker).mediaPlayback_playbackStatus == \""playing\"") {\n (#Television).switch_on()\n (#Speaker).switch_off()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#Television).switch_switch == 'off') and ((#Speaker).mediaPlayback_playbackStatus == 'playing')) {\n(#Television).switch_on()\n(#Speaker).switch_off()\n}""}","If the TV is off and the speaker is playing, turn on the TV and turn off the speaker."
+61,5,302,TV가 꺼져 있고 커튼이 닫혀 있으며 선풍기가 꺼져 있으면 TV를 켜고 커튼을 열어 줘. 스피커가 재생 중이고 조명이 꺼져 있으면 조명을 켜고 블라인드를 닫아 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#Television).switch_switch == \""off\"") and ((#Curtain).curtain_curtain == \""closed\"") and ((#Fan).switch_switch == \""off\"")) {\n  (#Television).switch_on()\n  (#Curtain).curtain_open()\n}\nif (((#Speaker).mediaPlayback_playbackStatus == \""playing\"") and ((#Light).switch_switch == \""off\"")) {\n  (#Light).switch_on()\n  (#Blind).blind_close()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#Television).switch_switch == \""off\"") and ((#Curtain).curtain_curtain == \""closed\"") and ((#Fan).switch_switch == \""off\"")) {\n (#Television).switch_on()\n (#Curtain).curtain_open()\n}\nif (((#Speaker).mediaPlayback_playbackStatus == \""playing\"") and ((#Light).switch_switch == \""off\"")) {\n (#Light).switch_on()\n (#Blind).blind_close()\n}""
+ }""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#Television).switch_switch == 'off') and ((#Curtain).curtain_curtain == 'closed') and ((#Fan).switch_switch == 'off')) {\n(#Television).switch_on()\n(#Curtain).curtain_open()\n}\nif (((#Speaker).mediaPlayback_playbackStatus == 'playing') and ((#Light).switch_switch == 'off')) {\n(#Light).switch_on()\n(#Blind).blind_close()\n}""}","If the TV is off, the curtains are closed, and the fan is off, turn on the TV and open the curtains. If the speakers are playing and the lights are off, turn on the lights and close the blinds."
+146,8,435,홀수 태그의 커튼이 열려 있고 상단부 조명이 꺼져 있으면 창문을 열어 줘.,"{
+  ""SectorA_Curtain_Odd"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""SectorA"", ""Odd"", ""Curtain""]
+  },
+  ""SectorB_Curtain_Even"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""SectorB"", ""Even"", ""Curtain""]
+  },
+  ""SectorA_Light_Upper_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorA"", ""Upper"", ""Left"", ""Light""]
+  },
+  ""SectorB_Light_Upper_Right"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorB"", ""Upper"", ""Right"", ""Light""]
+  },
+  ""SectorA_Light_Lower_Center"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorA"", ""Lower"", ""Center"", ""Light""]
+  },
+  ""SectorB_Light_Lower_Left"": {
+  ""category"": ""Light"",
+  ""tags"": [""SectorB"", ""Lower"", ""Left"", ""Light""]
+  },
+  ""SectorA_Window_Left_Odd"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorA"", ""Left"", ""Odd"", ""Window""]
+  },
+  ""SectorB_Window_Right_Even"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorB"", ""Right"", ""Even"", ""Window""]
+  },
+  ""SectorA_Window_Center_Odd"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorA"", ""Center"", ""Odd"", ""Window""]
+  },
+  ""SectorB_Window_Left_Even"": {
+  ""category"": ""Window"",
+  ""tags"": [""SectorB"", ""Left"", ""Even"", ""Window""]
+  },
+  ""SectorA_Curtain_Even"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""SectorA"", ""Even"", ""Curtain""]
+  },
+  ""SectorB_Curtain_Odd"": {
+  ""category"": ""Curtain"",
+  ""tags"": [""SectorB"", ""Odd"", ""Curtain""]
+  }
+ }",,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if ((#Odd #Curtain).curtain_curtain == \""open\"") and ((#Upper #Light).switch_switch == \""off\"")) {\n  (#Window).windowControl_open()\n}""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""
+if ((#Curtain #Odd).curtain_curtain == \""open\"" and (#Light #Top).switch_switch == \""off\"") {\n
+ (#Window).windowControl_open()\n
+}""}","{'name': 'Scenario', 'cron': '', 'period': -1, 'code': ""if (((#Odd #Curtain).curtain_curtain == 'open') and ((#Upper #Light).switch_switch == 'off')) {\n(#Window).windowControl_open()\n}""}","If the odd-tagged curtains are open and the upper lights are off, open the window."
+77,3,320,TV가 꺼지면 스피커를 꺼 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until((#Television).switch_switch == \""off\"")\n(#Speaker).switch_off()""}","{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""wait until ((#Television).switch_switch == \""off\"")\n(#Speaker).switch_off()""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""wait until((#Television).switch_switch == 'off')\n(#Speaker).switch_off()""}",Turn off the speakers when the TV is turned off.
+120,5,387,TV가 켜져 있고 스피커가 꺼져 있으며 조명이 꺼져 있으면 스피커를 켜고 조명을 켜 줘. 에어컨이 난방 모드이고 온도가 21도 이상이면 에어컨을 끄고 블라인드를 닫아 줘.,,,"{""name"": ""Scenario1"", ""cron"": """", ""period"": -1, ""code"": ""if (((#Television).switch_switch == \""on\"") and ((#Speaker).switch_switch == \""off\"") and ((#Light).switch_switch == \""off\"")) {\n  (#Speaker).switch_on()\n  (#Light).switch_on()\n}\nif (((#AirConditioner).airConditionerMode_airConditionerMode == \""heat\"") and ((#TemperatureSensor).temperatureMeasurement_temperature >= 21.0)) {\n  (#AirConditioner).switch_off()\n  (#Blind).blind_close()\n}""}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': 'if (((#Television).switch_switch == \""on\"") and ((#Speaker).switch_switch == \""off\"") and ((#Light).switch_switch == \""off\"")) {\n (#Speaker).switch_on()\n (#Light).switch_on()\n}\nif (((#AirConditioner).airConditionerMode_airConditionerMode == \""heat\"") and ((#AirConditioner).airConditionerMode_targetTemperature >= 21.0)) {\n (#AirConditioner).switch_off()\n (#Blind).blind_close()\n}'}","{'name': 'Scenario1', 'cron': '', 'period': -1, 'code': ""if (((#Television).switch_switch == 'on') and ((#Speaker).switch_switch == 'off') and ((#Light).switch_switch == 'off')) {\n    (#Speaker).switch_on()\n    (#Light).switch_on()\n}\nif (((#AirConditioner).airConditionerMode_airConditionerMode == 'heat') and ((#TemperatureSensor).temperatureMeasurement_temperature >= 21)) {\n    (#AirConditioner).switch_off()\n    (#Blind).blind_close()\n}""}","If the TV is on, the speakers are off, and the lights are off, turn on the speakers and turn on the lights. If the air conditioner is in heating mode and the temperature is above 21 degrees, turn off the air conditioner and close the blinds."
