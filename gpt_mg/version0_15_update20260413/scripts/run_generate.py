@@ -152,7 +152,12 @@ def _llm_settings(
 
 
 def _system_prompt() -> str:
-    return "You are a deterministic JOILang generation engine. Follow the user instructions exactly and return only the requested JSON object."
+    return (
+        "You are a deterministic JOILang generation engine. "
+        "The natural-language command may be written in English or Korean. "
+        "If it is Korean, translate it internally to the closest intent-preserving English meaning before reasoning. "
+        "Follow the user instructions exactly and return only the requested JSON object."
+    )
 
 
 def _error_type_from_exception(exc: Exception) -> str:

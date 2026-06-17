@@ -1,0 +1,35 @@
+{
+  "model_name": "gen_baseline_cot",
+  "device_name": "qwen2.5-Coder-7B-Instruct",
+  "model_version": "0.13",
+  "model_description": "Baseline-CoT full-context JOILang prompting profile for single-call gpt_mg execution. Uses full grammar and full service catalogs, requires hidden step-by-step reasoning, and returns JSON-only for parser compatibility.",
+  "model_create": "2026-03-27",
+  "author": {
+    "first_name": "Mingi",
+    "last_name": "Jeong"
+  },
+  "model_input": {
+    "model": "qwen2.5-Coder-7B-Instruct",
+    "backend": "local_qwen",
+    "local_model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "local_python": "/home/mgjeong/miniconda3/envs/nas_new/bin/python",
+    "local_worker": "/home/mgjeong/Desktop/llm/ModelMagementApp/gpt_mg/version0_13/qwen_local_worker.py",
+    "temperature": 0.0,
+    "local_device": "cuda:1",
+    "local_dtype": "bf16",
+    "local_max_new_tokens": 256,
+    "local_files_only": true,
+    "local_trust_remote_code": false,
+    "local_load_in_4bit": false,
+    "messages": [
+      {
+        "role": "system",
+        "content": "system_prompt"
+      },
+      {
+        "role": "user",
+        "content": "sentence"
+      }
+    ]
+  }
+}

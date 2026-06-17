@@ -2455,12 +2455,24 @@ def render_prompt_bundle(
         )
 
     rendered_prompt, manifest = render_blocks_for_genome(genome, values=values)
+
     suffix = return_suffix if return_suffix is not None else (
-        "Return the repaired JSON object now." if str(phase).strip().lower() == "repair" else "Return the final JSON object now."
+        "Return the repaired JSON object now."
+        if str(phase).strip().lower() == "repair"
+        else "Return the final JSON object now."
     )
-    user_prompt = rendered_prompt.rstrip()
+
+    language_bridge = (
+        "Language handling rule:\n"
+        "- The command may be English or Korean.\n"
+        "- If it is Korean, translate it internally to the closest English command intent first.\n"
+        "- Do not output the translation. Output only the final JOI JSON object.\n"
+    )
+
+    user_prompt = language_bridge + "\n" + rendered_prompt.rstrip()
     if suffix:
         user_prompt = user_prompt + "\n\n" + suffix
+        
     system_prompt = default_system_prompt or (
         "You are a deterministic JOILang repair engine. Return exactly one repaired JSON object only."
         if str(phase).strip().lower() == "repair"

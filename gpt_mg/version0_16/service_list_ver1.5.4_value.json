@@ -1,0 +1,1799 @@
+[
+  {
+    "device": "AirConditioner",
+    "service": "airConditionerMode_airConditionerMode",
+    "descriptor": "Allows for the control of the air conditioner.",
+    "return_descriptor": "Current mode of the air conditioner",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• auto - auto",
+      "• cool - cool",
+      "• heat - heat"
+    ]
+  },
+  {
+    "device": "AirConditioner",
+    "service": "airConditionerMode_targetTemperature",
+    "descriptor": "Allows for the control of the air conditioner.",
+    "return_descriptor": "Current temperature status of the air conditioner",
+    "return_type": "DOUBLE",
+    "enums_descriptor": [
+      "• auto - auto",
+      "• cool - cool",
+      "• heat - heat"
+    ]
+  },
+  {
+    "device": "AirConditioner",
+    "service": "airConditionerMode_supportedAcModes",
+    "descriptor": "Allows for the control of the air conditioner.",
+    "return_descriptor": "Supported states for this air conditioner to be in: \"str|...\"",
+    "return_type": "LIST",
+    "enums_descriptor": [
+      "• auto - auto",
+      "• cool - cool",
+      "• heat - heat"
+    ]
+  },
+  {
+    "device": "AirConditioner",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "AirPurifier",
+    "service": "airPurifierFanMode_airPurifierFanMode",
+    "descriptor": "Maintains and sets the state of an air purifier's fan",
+    "return_descriptor": "The current mode of the air purifier fan, an enum of auto, low, medium, high, sleep, quiet or windFree",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• auto - The fan is on auto",
+      "• sleep - The fan is in sleep mode to reduce noise",
+      "• low - The fan is on low",
+      "• medium - The fan is on medium",
+      "• high - The fan is on high",
+      "• quiet - The fan is on quiet mode to reduce noise",
+      "• windFree - The fan is on wind free mode to reduce the feeling of cold air",
+      "• off - The fan is off"
+    ]
+  },
+  {
+    "device": "AirPurifier",
+    "service": "airPurifierFanMode_supportedAirPurifierFanModes",
+    "descriptor": "Maintains and sets the state of an air purifier's fan",
+    "return_descriptor": "Supported states for this air purifier fan to be in: \"str|...\"",
+    "return_type": "LIST",
+    "enums_descriptor": [
+      "• auto - The fan is on auto",
+      "• sleep - The fan is in sleep mode to reduce noise",
+      "• low - The fan is on low",
+      "• medium - The fan is on medium",
+      "• high - The fan is on high",
+      "• quiet - The fan is on quiet mode to reduce noise",
+      "• windFree - The fan is on wind free mode to reduce the feeling of cold air",
+      "• off - The fan is off"
+    ]
+  },
+  {
+    "device": "AirPurifier",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "AirQualityDetector",
+    "service": "carbonDioxideMeasurement_carbonDioxide",
+    "descriptor": "Measure carbon dioxide levels",
+    "return_descriptor": "The level of carbon dioxide detected",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "AirQualityDetector",
+    "service": "dustSensor_dustLevel",
+    "descriptor": "Gets the reading of the dust sensor.",
+    "return_descriptor": "Current dust level -- also refered to as PM10, measured in micrograms per cubic meter",
+    "return_type": "INTEGER"
+  },
+  {
+    "device": "AirQualityDetector",
+    "service": "dustSensor_fineDustLevel",
+    "descriptor": "Gets the reading of the dust sensor.",
+    "return_descriptor": "Current level of fine dust -- also refered to as PM2.5, measured in micrograms per cubic meter",
+    "return_type": "INTEGER"
+  },
+  {
+    "device": "AirQualityDetector",
+    "service": "dustSensor_veryFineDustLevel",
+    "descriptor": "Gets the reading of the dust sensor.",
+    "return_descriptor": "Current level of fine dust -- also refered to as PM1.0, measured in micrograms per cubic meter",
+    "return_type": "INTEGER"
+  },
+  {
+    "device": "AirQualityDetector",
+    "service": "temperatureMeasurement_temperature",
+    "descriptor": "Get the temperature from a Device that reports current temperature",
+    "return_descriptor": "A number that usually represents the current temperature",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "AirQualityDetector",
+    "service": "temperatureMeasurement_temperatureRange",
+    "descriptor": "Get the temperature from a Device that reports current temperature",
+    "return_descriptor": "Constraints on the temperature value:\"min|max\", example:\"-20|50\"",
+    "return_type": "DICT"
+  },
+  {
+    "device": "AirQualityDetector",
+    "service": "tvocMeasurement_tvocLevel",
+    "descriptor": "Measure total volatile organic compound levels",
+    "return_descriptor": "The level of total volatile organic compounds detected",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "AirQualityDetector",
+    "service": "relativeHumidityMeasurement_humidity",
+    "descriptor": "Allow reading the relative humidity from devices that support it",
+    "return_descriptor": "A numerical representation of the relative humidity measurement taken by the device",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "Alarm",
+    "service": "battery_battery",
+    "descriptor": "Defines that the device has a battery",
+    "return_descriptor": "An indication of the status of the battery",
+    "return_type": "INTEGER"
+  },
+  {
+    "device": "Alarm",
+    "service": "alarm_alarm",
+    "descriptor": "The Alarm skill allows for interacting with devices that serve as alarms",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "# alarm",
+      "• both - if the alarm is strobing and sounding the alarm",
+      "• off - if the alarm is turned off",
+      "• siren - if the alarm is sounding the siren",
+      "• strobe - if the alarm is strobing",
+      "",
+      "# alarmVolume",
+      "• mute - ",
+      "• low - ",
+      "• medium - ",
+      "• high -"
+    ]
+  },
+  {
+    "device": "Alarm",
+    "service": "alarm_alarmVolume",
+    "descriptor": "The Alarm skill allows for interacting with devices that serve as alarms",
+    "return_descriptor": "A string representation of the volume of the alarm",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "# alarm",
+      "• both - if the alarm is strobing and sounding the alarm",
+      "• off - if the alarm is turned off",
+      "• siren - if the alarm is sounding the siren",
+      "• strobe - if the alarm is strobing",
+      "",
+      "# alarmVolume",
+      "• mute - ",
+      "• low - ",
+      "• medium - ",
+      "• high -"
+    ]
+  },
+  {
+    "device": "Blind",
+    "service": "blindLevel_blindLevel",
+    "descriptor": "Allows for the control of the level of a blind.",
+    "return_descriptor": "A number that represents the current level as a function of being open, ``0-100`` in percent; 0 representing completely closed, and 100 representing completely open.",
+    "return_type": "INTEGER"
+  },
+  {
+    "device": "Blind",
+    "service": "blind_blind",
+    "descriptor": "Allows for the control of the blind.",
+    "return_descriptor": "A string representation of whether the blind is open or closed",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• closed - closed",
+      "• closing - closing…",
+      "• open - open",
+      "• opening - opening…",
+      "• partially open - partially open",
+      "• paused -",
+      "• unknown - unknown"
+    ]
+  },
+  {
+    "device": "Button",
+    "service": "button_button",
+    "descriptor": "A device with one or more buttons",
+    "return_descriptor": "The state of the buttons",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• pushed - The value if the button is pushed",
+      "• held - The value if the button is held",
+      "• double - The value if the button is pushed twice",
+      "• pushed_2x - The value if the button is pushed twice",
+      "• pushed_3x - The value if the button is pushed three times",
+      "• pushed_4x - The value if the button is pushed four times",
+      "• pushed_5x - The value if the button is pushed five times",
+      "• pushed_6x - The value if the button is pushed six times",
+      "• down - The value if the button is clicked down",
+      "• down_2x - The value if the button is clicked down twice",
+      "• down_3x - The value if the button is clicked down three times",
+      "• down_4x - The value if the button is clicked down four times",
+      "• down_5x - The value if the button is clicked down five times",
+      "• down_6x - The value if the button is clicked down six times",
+      "• down_hold - The value if the button is clicked down and held",
+      "• up - The value if the button is clicked up",
+      "• up_2x - The value if the button is clicked up twice",
+      "• up_3x - The value if the button is clicked up three times",
+      "• up_4x - The value if the button is clicked up four times",
+      "• up_5x - The value if the button is clicked up five times",
+      "• up_6x - The value if the button is clicked up six times",
+      "• up_hold - The value if the button is clicked up and held",
+      "• swipe_up - The value if the button is swiped up from botton to top",
+      "• swipe_down - The value if the button is swiped down from top to bottom",
+      "• swipe_left - The value if the button is swiped from right to left",
+      "• swipe_right - The value if the button is swiped from left to right"
+    ]
+  },
+  {
+    "device": "Button",
+    "service": "button_numberOfButtons",
+    "descriptor": "A device with one or more buttons",
+    "return_descriptor": "The number of buttons on the device",
+    "return_type": "INTEGER",
+    "enums_descriptor": [
+      "• pushed - The value if the button is pushed",
+      "• held - The value if the button is held",
+      "• double - The value if the button is pushed twice",
+      "• pushed_2x - The value if the button is pushed twice",
+      "• pushed_3x - The value if the button is pushed three times",
+      "• pushed_4x - The value if the button is pushed four times",
+      "• pushed_5x - The value if the button is pushed five times",
+      "• pushed_6x - The value if the button is pushed six times",
+      "• down - The value if the button is clicked down",
+      "• down_2x - The value if the button is clicked down twice",
+      "• down_3x - The value if the button is clicked down three times",
+      "• down_4x - The value if the button is clicked down four times",
+      "• down_5x - The value if the button is clicked down five times",
+      "• down_6x - The value if the button is clicked down six times",
+      "• down_hold - The value if the button is clicked down and held",
+      "• up - The value if the button is clicked up",
+      "• up_2x - The value if the button is clicked up twice",
+      "• up_3x - The value if the button is clicked up three times",
+      "• up_4x - The value if the button is clicked up four times",
+      "• up_5x - The value if the button is clicked up five times",
+      "• up_6x - The value if the button is clicked up six times",
+      "• up_hold - The value if the button is clicked up and held",
+      "• swipe_up - The value if the button is swiped up from botton to top",
+      "• swipe_down - The value if the button is swiped down from top to bottom",
+      "• swipe_left - The value if the button is swiped from right to left",
+      "• swipe_right - The value if the button is swiped from left to right"
+    ]
+  },
+  {
+    "device": "Button",
+    "service": "button_supportedButtonValues",
+    "descriptor": "A device with one or more buttons",
+    "return_descriptor": "List of valid button attribute values: \"str|...\"",
+    "return_type": "LIST",
+    "enums_descriptor": [
+      "• pushed - The value if the button is pushed",
+      "• held - The value if the button is held",
+      "• double - The value if the button is pushed twice",
+      "• pushed_2x - The value if the button is pushed twice",
+      "• pushed_3x - The value if the button is pushed three times",
+      "• pushed_4x - The value if the button is pushed four times",
+      "• pushed_5x - The value if the button is pushed five times",
+      "• pushed_6x - The value if the button is pushed six times",
+      "• down - The value if the button is clicked down",
+      "• down_2x - The value if the button is clicked down twice",
+      "• down_3x - The value if the button is clicked down three times",
+      "• down_4x - The value if the button is clicked down four times",
+      "• down_5x - The value if the button is clicked down five times",
+      "• down_6x - The value if the button is clicked down six times",
+      "• down_hold - The value if the button is clicked down and held",
+      "• up - The value if the button is clicked up",
+      "• up_2x - The value if the button is clicked up twice",
+      "• up_3x - The value if the button is clicked up three times",
+      "• up_4x - The value if the button is clicked up four times",
+      "• up_5x - The value if the button is clicked up five times",
+      "• up_6x - The value if the button is clicked up six times",
+      "• up_hold - The value if the button is clicked up and held",
+      "• swipe_up - The value if the button is swiped up from botton to top",
+      "• swipe_down - The value if the button is swiped down from top to bottom",
+      "• swipe_left - The value if the button is swiped from right to left",
+      "• swipe_right - The value if the button is swiped from left to right"
+    ]
+  },
+  {
+    "device": "Buttonx4",
+    "service": "buttonx4_button1",
+    "descriptor": "A device with four buttons",
+    "return_descriptor": "The state of the button1",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• pushed - The value if the button is pushed",
+      "• held - The value if the button is held",
+      "• double - The value if the button is pushed twice",
+      "• pushed_2x - The value if the button is pushed twice",
+      "• pushed_3x - The value if the button is pushed three times",
+      "• pushed_4x - The value if the button is pushed four times",
+      "• pushed_5x - The value if the button is pushed five times",
+      "• pushed_6x - The value if the button is pushed six times",
+      "• down - The value if the button is clicked down",
+      "• down_2x - The value if the button is clicked down twice",
+      "• down_3x - The value if the button is clicked down three times",
+      "• down_4x - The value if the button is clicked down four times",
+      "• down_5x - The value if the button is clicked down five times",
+      "• down_6x - The value if the button is clicked down six times",
+      "• down_hold - The value if the button is clicked down and held",
+      "• up - The value if the button is clicked up",
+      "• up_2x - The value if the button is clicked up twice",
+      "• up_3x - The value if the button is clicked up three times",
+      "• up_4x - The value if the button is clicked up four times",
+      "• up_5x - The value if the button is clicked up five times",
+      "• up_6x - The value if the button is clicked up six times",
+      "• up_hold - The value if the button is clicked up and held",
+      "• swipe_up - The value if the button is swiped up from botton to top",
+      "• swipe_down - The value if the button is swiped down from top to bottom",
+      "• swipe_left - The value if the button is swiped from right to left",
+      "• swipe_right - The value if the button is swiped from left to right"
+    ]
+  },
+  {
+    "device": "Buttonx4",
+    "service": "buttonx4_button2",
+    "descriptor": "A device with four buttons",
+    "return_descriptor": "The state of the button2",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• pushed - The value if the button is pushed",
+      "• held - The value if the button is held",
+      "• double - The value if the button is pushed twice",
+      "• pushed_2x - The value if the button is pushed twice",
+      "• pushed_3x - The value if the button is pushed three times",
+      "• pushed_4x - The value if the button is pushed four times",
+      "• pushed_5x - The value if the button is pushed five times",
+      "• pushed_6x - The value if the button is pushed six times",
+      "• down - The value if the button is clicked down",
+      "• down_2x - The value if the button is clicked down twice",
+      "• down_3x - The value if the button is clicked down three times",
+      "• down_4x - The value if the button is clicked down four times",
+      "• down_5x - The value if the button is clicked down five times",
+      "• down_6x - The value if the button is clicked down six times",
+      "• down_hold - The value if the button is clicked down and held",
+      "• up - The value if the button is clicked up",
+      "• up_2x - The value if the button is clicked up twice",
+      "• up_3x - The value if the button is clicked up three times",
+      "• up_4x - The value if the button is clicked up four times",
+      "• up_5x - The value if the button is clicked up five times",
+      "• up_6x - The value if the button is clicked up six times",
+      "• up_hold - The value if the button is clicked up and held",
+      "• swipe_up - The value if the button is swiped up from botton to top",
+      "• swipe_down - The value if the button is swiped down from top to bottom",
+      "• swipe_left - The value if the button is swiped from right to left",
+      "• swipe_right - The value if the button is swiped from left to right"
+    ]
+  },
+  {
+    "device": "Buttonx4",
+    "service": "buttonx4_button3",
+    "descriptor": "A device with four buttons",
+    "return_descriptor": "The state of the button3",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• pushed - The value if the button is pushed",
+      "• held - The value if the button is held",
+      "• double - The value if the button is pushed twice",
+      "• pushed_2x - The value if the button is pushed twice",
+      "• pushed_3x - The value if the button is pushed three times",
+      "• pushed_4x - The value if the button is pushed four times",
+      "• pushed_5x - The value if the button is pushed five times",
+      "• pushed_6x - The value if the button is pushed six times",
+      "• down - The value if the button is clicked down",
+      "• down_2x - The value if the button is clicked down twice",
+      "• down_3x - The value if the button is clicked down three times",
+      "• down_4x - The value if the button is clicked down four times",
+      "• down_5x - The value if the button is clicked down five times",
+      "• down_6x - The value if the button is clicked down six times",
+      "• down_hold - The value if the button is clicked down and held",
+      "• up - The value if the button is clicked up",
+      "• up_2x - The value if the button is clicked up twice",
+      "• up_3x - The value if the button is clicked up three times",
+      "• up_4x - The value if the button is clicked up four times",
+      "• up_5x - The value if the button is clicked up five times",
+      "• up_6x - The value if the button is clicked up six times",
+      "• up_hold - The value if the button is clicked up and held",
+      "• swipe_up - The value if the button is swiped up from botton to top",
+      "• swipe_down - The value if the button is swiped down from top to bottom",
+      "• swipe_left - The value if the button is swiped from right to left",
+      "• swipe_right - The value if the button is swiped from left to right"
+    ]
+  },
+  {
+    "device": "Buttonx4",
+    "service": "buttonx4_button4",
+    "descriptor": "A device with four buttons",
+    "return_descriptor": "The state of the button4",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• pushed - The value if the button is pushed",
+      "• held - The value if the button is held",
+      "• double - The value if the button is pushed twice",
+      "• pushed_2x - The value if the button is pushed twice",
+      "• pushed_3x - The value if the button is pushed three times",
+      "• pushed_4x - The value if the button is pushed four times",
+      "• pushed_5x - The value if the button is pushed five times",
+      "• pushed_6x - The value if the button is pushed six times",
+      "• down - The value if the button is clicked down",
+      "• down_2x - The value if the button is clicked down twice",
+      "• down_3x - The value if the button is clicked down three times",
+      "• down_4x - The value if the button is clicked down four times",
+      "• down_5x - The value if the button is clicked down five times",
+      "• down_6x - The value if the button is clicked down six times",
+      "• down_hold - The value if the button is clicked down and held",
+      "• up - The value if the button is clicked up",
+      "• up_2x - The value if the button is clicked up twice",
+      "• up_3x - The value if the button is clicked up three times",
+      "• up_4x - The value if the button is clicked up four times",
+      "• up_5x - The value if the button is clicked up five times",
+      "• up_6x - The value if the button is clicked up six times",
+      "• up_hold - The value if the button is clicked up and held",
+      "• swipe_up - The value if the button is swiped up from botton to top",
+      "• swipe_down - The value if the button is swiped down from top to bottom",
+      "• swipe_left - The value if the button is swiped from right to left",
+      "• swipe_right - The value if the button is swiped from left to right"
+    ]
+  },
+  {
+    "device": "Buttonx4",
+    "service": "buttonx4_numberOfButtons",
+    "descriptor": "A device with four buttons",
+    "return_descriptor": "The number of buttons on the device",
+    "return_type": "INTEGER",
+    "enums_descriptor": [
+      "• pushed - The value if the button is pushed",
+      "• held - The value if the button is held",
+      "• double - The value if the button is pushed twice",
+      "• pushed_2x - The value if the button is pushed twice",
+      "• pushed_3x - The value if the button is pushed three times",
+      "• pushed_4x - The value if the button is pushed four times",
+      "• pushed_5x - The value if the button is pushed five times",
+      "• pushed_6x - The value if the button is pushed six times",
+      "• down - The value if the button is clicked down",
+      "• down_2x - The value if the button is clicked down twice",
+      "• down_3x - The value if the button is clicked down three times",
+      "• down_4x - The value if the button is clicked down four times",
+      "• down_5x - The value if the button is clicked down five times",
+      "• down_6x - The value if the button is clicked down six times",
+      "• down_hold - The value if the button is clicked down and held",
+      "• up - The value if the button is clicked up",
+      "• up_2x - The value if the button is clicked up twice",
+      "• up_3x - The value if the button is clicked up three times",
+      "• up_4x - The value if the button is clicked up four times",
+      "• up_5x - The value if the button is clicked up five times",
+      "• up_6x - The value if the button is clicked up six times",
+      "• up_hold - The value if the button is clicked up and held",
+      "• swipe_up - The value if the button is swiped up from botton to top",
+      "• swipe_down - The value if the button is swiped down from top to bottom",
+      "• swipe_left - The value if the button is swiped from right to left",
+      "• swipe_right - The value if the button is swiped from left to right"
+    ]
+  },
+  {
+    "device": "Buttonx4",
+    "service": "buttonx4_supportedButtonValues",
+    "descriptor": "A device with four buttons",
+    "return_descriptor": "List of valid button attribute values: \"str|...\"",
+    "return_type": "LIST",
+    "enums_descriptor": [
+      "• pushed - The value if the button is pushed",
+      "• held - The value if the button is held",
+      "• double - The value if the button is pushed twice",
+      "• pushed_2x - The value if the button is pushed twice",
+      "• pushed_3x - The value if the button is pushed three times",
+      "• pushed_4x - The value if the button is pushed four times",
+      "• pushed_5x - The value if the button is pushed five times",
+      "• pushed_6x - The value if the button is pushed six times",
+      "• down - The value if the button is clicked down",
+      "• down_2x - The value if the button is clicked down twice",
+      "• down_3x - The value if the button is clicked down three times",
+      "• down_4x - The value if the button is clicked down four times",
+      "• down_5x - The value if the button is clicked down five times",
+      "• down_6x - The value if the button is clicked down six times",
+      "• down_hold - The value if the button is clicked down and held",
+      "• up - The value if the button is clicked up",
+      "• up_2x - The value if the button is clicked up twice",
+      "• up_3x - The value if the button is clicked up three times",
+      "• up_4x - The value if the button is clicked up four times",
+      "• up_5x - The value if the button is clicked up five times",
+      "• up_6x - The value if the button is clicked up six times",
+      "• up_hold - The value if the button is clicked up and held",
+      "• swipe_up - The value if the button is swiped up from botton to top",
+      "• swipe_down - The value if the button is swiped down from top to bottom",
+      "• swipe_left - The value if the button is swiped from right to left",
+      "• swipe_right - The value if the button is swiped from left to right"
+    ]
+  },
+  {
+    "device": "Camera",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "Camera",
+    "service": "camera_image",
+    "descriptor": "Allows for the control of a camera device",
+    "return_descriptor": "The latest image captured by the camera",
+    "return_type": "BINARY"
+  },
+  {
+    "device": "Camera",
+    "service": "camera_video",
+    "descriptor": "Allows for the control of a camera device",
+    "return_descriptor": "The latest video captured by the camera",
+    "return_type": "BINARY"
+  },
+  {
+    "device": "Charger",
+    "service": "chargingState_chargingState",
+    "descriptor": "The current status of battery charging",
+    "return_descriptor": "The current charging state of the device",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• charging - charging",
+      "• discharging - discharging",
+      "• stopped - stopped",
+      "• fullyCharged - fully charged",
+      "• error - error"
+    ]
+  },
+  {
+    "device": "Charger",
+    "service": "chargingState_supportedChargingStates",
+    "descriptor": "The current status of battery charging",
+    "return_descriptor": "The list of charging states that the device supports. Optional, defaults to all states if not set.: \"str|...\"",
+    "return_type": "LIST",
+    "enums_descriptor": [
+      "• charging - charging",
+      "• discharging - discharging",
+      "• stopped - stopped",
+      "• fullyCharged - fully charged",
+      "• error - error"
+    ]
+  },
+  {
+    "device": "Charger",
+    "service": "currentMeasurement_current",
+    "descriptor": "Get the value of electrical current measured from a device.",
+    "return_descriptor": "A number representing the current measured.",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "Charger",
+    "service": "voltageMeasurement_voltage",
+    "descriptor": "Get the value of voltage measured from devices that support it",
+    "return_descriptor": "A number representing the current voltage measured",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "Clock",
+    "service": "clock_year",
+    "descriptor": "Provide current date and time",
+    "return_descriptor": "Current year",
+    "return_type": "INTEGER",
+    "enums_descriptor": [
+      "• monday",
+      "• tuesday",
+      "• wednesday",
+      "• thursday",
+      "• friday",
+      "• saturday",
+      "• sunday"
+    ]
+  },
+  {
+    "device": "Clock",
+    "service": "clock_month",
+    "descriptor": "Provide current date and time",
+    "return_descriptor": "Current month",
+    "return_type": "INTEGER",
+    "enums_descriptor": [
+      "• monday",
+      "• tuesday",
+      "• wednesday",
+      "• thursday",
+      "• friday",
+      "• saturday",
+      "• sunday"
+    ]
+  },
+  {
+    "device": "Clock",
+    "service": "clock_day",
+    "descriptor": "Provide current date and time",
+    "return_descriptor": "Current day",
+    "return_type": "INTEGER",
+    "enums_descriptor": [
+      "• monday",
+      "• tuesday",
+      "• wednesday",
+      "• thursday",
+      "• friday",
+      "• saturday",
+      "• sunday"
+    ]
+  },
+  {
+    "device": "Clock",
+    "service": "clock_weekday",
+    "descriptor": "Provide current date and time",
+    "return_descriptor": "Current weekday",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• monday",
+      "• tuesday",
+      "• wednesday",
+      "• thursday",
+      "• friday",
+      "• saturday",
+      "• sunday"
+    ]
+  },
+  {
+    "device": "Clock",
+    "service": "clock_hour",
+    "descriptor": "Provide current date and time",
+    "return_descriptor": "Current hour",
+    "return_type": "INTEGER",
+    "enums_descriptor": [
+      "• monday",
+      "• tuesday",
+      "• wednesday",
+      "• thursday",
+      "• friday",
+      "• saturday",
+      "• sunday"
+    ]
+  },
+  {
+    "device": "Clock",
+    "service": "clock_minute",
+    "descriptor": "Provide current date and time",
+    "return_descriptor": "Current minute",
+    "return_type": "INTEGER",
+    "enums_descriptor": [
+      "• monday",
+      "• tuesday",
+      "• wednesday",
+      "• thursday",
+      "• friday",
+      "• saturday",
+      "• sunday"
+    ]
+  },
+  {
+    "device": "Clock",
+    "service": "clock_second",
+    "descriptor": "Provide current date and time",
+    "return_descriptor": "Current second",
+    "return_type": "INTEGER",
+    "enums_descriptor": [
+      "• monday",
+      "• tuesday",
+      "• wednesday",
+      "• thursday",
+      "• friday",
+      "• saturday",
+      "• sunday"
+    ]
+  },
+  {
+    "device": "Clock",
+    "service": "clock_timestamp",
+    "descriptor": "Provide current date and time",
+    "return_descriptor": "Current timestamp (return current unix time - unit: seconds with floating point)",
+    "return_type": "DOUBLE",
+    "enums_descriptor": [
+      "• monday",
+      "• tuesday",
+      "• wednesday",
+      "• thursday",
+      "• friday",
+      "• saturday",
+      "• sunday"
+    ]
+  },
+  {
+    "device": "Clock",
+    "service": "clock_datetime",
+    "descriptor": "Provide current date and time",
+    "return_descriptor": "Current date and time as double number - format: YYYYMMddhhmm",
+    "return_type": "DOUBLE",
+    "enums_descriptor": [
+      "• monday",
+      "• tuesday",
+      "• wednesday",
+      "• thursday",
+      "• friday",
+      "• saturday",
+      "• sunday"
+    ]
+  },
+  {
+    "device": "Clock",
+    "service": "clock_date",
+    "descriptor": "Provide current date and time",
+    "return_descriptor": "Current date as double number - format: YYYYMMdd",
+    "return_type": "DOUBLE",
+    "enums_descriptor": [
+      "• monday",
+      "• tuesday",
+      "• wednesday",
+      "• thursday",
+      "• friday",
+      "• saturday",
+      "• sunday"
+    ]
+  },
+  {
+    "device": "Clock",
+    "service": "clock_time",
+    "descriptor": "Provide current date and time",
+    "return_descriptor": "Current time as double number - format: hhmm",
+    "return_type": "DOUBLE",
+    "enums_descriptor": [
+      "• monday",
+      "• tuesday",
+      "• wednesday",
+      "• thursday",
+      "• friday",
+      "• saturday",
+      "• sunday"
+    ]
+  },
+  {
+    "device": "Clock",
+    "service": "clock_isHoliday",
+    "descriptor": "Provide current date and time",
+    "return_descriptor": "today is holiday or not",
+    "return_type": "BOOL",
+    "enums_descriptor": [
+      "• monday",
+      "• tuesday",
+      "• wednesday",
+      "• thursday",
+      "• friday",
+      "• saturday",
+      "• sunday"
+    ]
+  },
+  {
+    "device": "ContactSensor",
+    "service": "contactSensor_contact",
+    "descriptor": "Allows reading the value of a contact sensor device",
+    "return_descriptor": "The current state of the contact sensor",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• closed - The value if closed",
+      "• open - The value if open"
+    ]
+  },
+  {
+    "device": "Curtain",
+    "service": "curtain_curtain",
+    "descriptor": "Allows for the control of the curtain.",
+    "return_descriptor": "A string representation of whether the curtain is open or closed",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• closed - closed",
+      "• closing - closing…",
+      "• open - open",
+      "• opening - opening…",
+      "• partially open - partially open",
+      "• paused -",
+      "• unknown - unknown"
+    ]
+  },
+  {
+    "device": "Curtain",
+    "service": "curtain_supportedCurtainCommands",
+    "descriptor": "Allows for the control of the curtain.",
+    "return_descriptor": "Curtain commands supported by this instance of Curtain: \"str|...\"",
+    "return_type": "LIST",
+    "enums_descriptor": [
+      "• closed - closed",
+      "• closing - closing…",
+      "• open - open",
+      "• opening - opening…",
+      "• partially open - partially open",
+      "• paused -",
+      "• unknown - unknown"
+    ]
+  },
+  {
+    "device": "Dehumidifier",
+    "service": "dehumidifierMode_dehumidifierMode",
+    "descriptor": "Allows for the control of the dehumidifier mode.",
+    "return_descriptor": "Current mode of the dehumidifier",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• cooling",
+      "• delayWash",
+      "• drying",
+      "• finished",
+      "• refreshing",
+      "• weightSensing",
+      "• wrinklePrevent",
+      "• dehumidifying",
+      "• AIDrying",
+      "• sanitizing",
+      "• internalCare",
+      "• freezeProtection",
+      "• continuousDehumidifying",
+      "• thawingFrozenInside"
+    ]
+  },
+  {
+    "device": "Dehumidifier",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "Dishwasher",
+    "service": "dishwasherMode_dishwasherMode",
+    "descriptor": "Allows for the control of the dishwasher mode.",
+    "return_descriptor": "Current mode of the dishwasher",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• eco - The dishwasher is in \"eco\" mode",
+      "• intense - The dishwasher is in \"intense\" mode",
+      "• auto - The dishwasher is in \"auto\" mode",
+      "• quick - The dishwasher is in \"quick\" mode",
+      "• rinse - The dishwasher is in \"rinse\" mode",
+      "• dry - The dishwasher is in \"dry\" mode"
+    ]
+  },
+  {
+    "device": "Dishwasher",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "DoorLock",
+    "service": "doorControl_door",
+    "descriptor": "Allow for the control of a door",
+    "return_descriptor": "The current state of the door",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• closed - The door is closed",
+      "• closing - The door is closing",
+      "• open - The door is open",
+      "• opening - The door is opening",
+      "• unknown - The current state of the door is unknown"
+    ]
+  },
+  {
+    "device": "Fan",
+    "service": "fanControl_fanSpeed",
+    "descriptor": "Allows for the control of the fan.",
+    "return_descriptor": "The current fan speed represented as a integer value. - unit: RPM",
+    "return_type": "INTEGER"
+  },
+  {
+    "device": "Fan",
+    "service": "fanControl_percent",
+    "descriptor": "Allows for the control of the fan.",
+    "return_descriptor": "The current fan speed represented as a percent value.",
+    "return_type": "INTEGER"
+  },
+  {
+    "device": "Fan",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "Feeder",
+    "service": "feederOperatingState_feederOperatingState",
+    "descriptor": "Allows for the control of a feeder device.",
+    "return_descriptor": "The current state of the feeder.",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• idle - idle",
+      "• feeding - feeding",
+      "• error - error"
+    ]
+  },
+  {
+    "device": "Feeder",
+    "service": "feederPortion_feedPortion",
+    "descriptor": "Allows for the portion control of a feeder device.",
+    "return_descriptor": "A number that represents the portion (in grams, pounds, ounces, or servings) that will dispense.",
+    "return_type": "DOUBLE",
+    "enums_descriptor": [
+      "• grams",
+      "• pounds",
+      "• ounces",
+      "• servings"
+    ]
+  },
+  {
+    "device": "Feeder",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "GasMeter",
+    "service": "gasMeter_gasMeter",
+    "descriptor": "Read the gas consumption of an energy metering device",
+    "return_descriptor": "the gas energy reported by the metering device. unit: kWh",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "GasMeter",
+    "service": "gasMeter_gasMeterCalorific",
+    "descriptor": "Read the gas consumption of an energy metering device",
+    "return_descriptor": "a measure of the available heat energy, used as part of the calculation to convert gas volume to gas energy. - unit: kcal",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "GasMeter",
+    "service": "gasMeter_gasMeterTime",
+    "descriptor": "Read the gas consumption of an energy metering device",
+    "return_descriptor": "The cumulative gas use time reported by the metering device. - unit: seconds",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "GasMeter",
+    "service": "gasMeter_gasMeterVolume",
+    "descriptor": "Read the gas consumption of an energy metering device",
+    "return_descriptor": "the cumulative gas volume reported by the metering device. - unit: cubic meters",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "GasValve",
+    "service": "gasMeter_gasMeter",
+    "descriptor": "Read the gas consumption of an energy metering device",
+    "return_descriptor": "the gas energy reported by the metering device. unit: kWh",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "GasValve",
+    "service": "gasMeter_gasMeterCalorific",
+    "descriptor": "Read the gas consumption of an energy metering device",
+    "return_descriptor": "a measure of the available heat energy, used as part of the calculation to convert gas volume to gas energy. - unit: kcal",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "GasValve",
+    "service": "gasMeter_gasMeterTime",
+    "descriptor": "Read the gas consumption of an energy metering device",
+    "return_descriptor": "The cumulative gas use time reported by the metering device. - unit: seconds",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "GasValve",
+    "service": "gasMeter_gasMeterVolume",
+    "descriptor": "Read the gas consumption of an energy metering device",
+    "return_descriptor": "the cumulative gas volume reported by the metering device. - unit: cubic meters",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "GasValve",
+    "service": "valve_valve",
+    "descriptor": "Allows for the control of a valve device",
+    "return_descriptor": "A string representation of whether the valve is open or closed",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• closed - The value of the ``valve`` attribute if the valve is closed",
+      "• open - The value of the ``valve`` attribute if the valve is open"
+    ]
+  },
+  {
+    "device": "Humidifier",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "Humidifier",
+    "service": "humidifierMode_humidifierMode",
+    "descriptor": "Maintains and sets the state of an humidifier",
+    "return_descriptor": "Current mode of the humidifier",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• auto -",
+      "• low -",
+      "• medium -",
+      "• high -"
+    ]
+  },
+  {
+    "device": "HumiditySensor",
+    "service": "relativeHumidityMeasurement_humidity",
+    "descriptor": "Allow reading the relative humidity from devices that support it",
+    "return_descriptor": "A numerical representation of the relative humidity measurement taken by the device",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "Irrigator",
+    "service": "irrigatorOperatingState_irrigatorOperatingState",
+    "descriptor": "Allows for the control of a irrigator device.",
+    "return_descriptor": "The current state of the irrigator.",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• idle - idle",
+      "• watering - watering",
+      "• error - error"
+    ]
+  },
+  {
+    "device": "Irrigator",
+    "service": "irrigatorPortion_waterPortion",
+    "descriptor": "Allows for the portion control of a irrigator device.",
+    "return_descriptor": "A number that represents the portion (in liters, milliliters, gallons, or ounces) that will dispense.",
+    "return_type": "DOUBLE",
+    "enums_descriptor": [
+      "• liters",
+      "• milliliters",
+      "• gallons",
+      "• ounces"
+    ]
+  },
+  {
+    "device": "Irrigator",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "LeakSensor",
+    "service": "leakSensor_leakage",
+    "descriptor": "A Device that senses water leakage",
+    "return_descriptor": "Whether or not water leakage was detected by the Device",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• detected - water leak is detected",
+      "• not detected - no leak"
+    ]
+  },
+  {
+    "device": "Light",
+    "service": "colorControl_color",
+    "descriptor": "Allows for control of a color changing device by setting its hue, saturation, and color values",
+    "return_descriptor": "``{\"hue\":\"0-100 (percent)\", \"saturation\":\"0-100 (percent)\"}``",
+    "return_type": "STRING"
+  },
+  {
+    "device": "Light",
+    "service": "colorControl_hue",
+    "descriptor": "Allows for control of a color changing device by setting its hue, saturation, and color values",
+    "return_descriptor": "``0-100`` (percent)",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "Light",
+    "service": "colorControl_saturation",
+    "descriptor": "Allows for control of a color changing device by setting its hue, saturation, and color values",
+    "return_descriptor": "``0-100`` (percent)",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "Light",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "Light",
+    "service": "switchLevel_level",
+    "descriptor": "Allows for the control of the level of a device like a light or a dimmer switch.",
+    "return_descriptor": "A number that represents the current level, usually ``0-100`` in percent",
+    "return_type": "INTEGER"
+  },
+  {
+    "device": "Light",
+    "service": "switchLevel_levelRange",
+    "descriptor": "Allows for the control of the level of a device like a light or a dimmer switch.",
+    "return_descriptor": "Constraints on the level value:\"min|max\",example:\"30|60\"",
+    "return_type": "DICT"
+  },
+  {
+    "device": "LightSensor",
+    "service": "lightLevel_light",
+    "descriptor": "A numerical representation of the brightness intensity",
+    "return_descriptor": "brightness intensity (Unit: lux)",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "MotionSensor",
+    "service": "motionSensor_motion",
+    "descriptor": "• active - The value when motion is detected\n                • inactive - The value when no motion is detected",
+    "return_descriptor": "The current state of the motion sensor",
+    "return_type": "ENUM"
+  },
+  {
+    "device": "PresenceSensor",
+    "service": "presenceSensor_presence",
+    "descriptor": "The ability to see the current status of a presence sensor device",
+    "return_descriptor": "The current state of the presence sensor",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• present - The device is present",
+      "• not present - left"
+    ]
+  },
+  {
+    "device": "Pump",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "Pump",
+    "service": "pump_pump",
+    "descriptor": "Allows for the control of a pump device",
+    "return_descriptor": "A string representation of whether the pump is open or closed",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• closed - The value of the ``pump`` attribute if the pump is closed",
+      "• open - The value of the ``pump`` attribute if the pump is open"
+    ]
+  },
+  {
+    "device": "Pump",
+    "service": "pumpOperationMode_currentOperationMode",
+    "descriptor": "Allows for setting the operation mode on a pump.",
+    "return_descriptor": "The current effective operation mode of the pump",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• normal - The pump is controlled by a setpoint.",
+      "• minimum - This value sets the pump to run at the minimum possible speed it can without being stopped.",
+      "• maximum - This value sets the pump to run at its maximum possible speed.",
+      "• localSetting - This value sets the pump to run with the local settings of the pump."
+    ]
+  },
+  {
+    "device": "Pump",
+    "service": "pumpOperationMode_operationMode",
+    "descriptor": "Allows for setting the operation mode on a pump.",
+    "return_descriptor": "The operation mode of the pump",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• normal - The pump is controlled by a setpoint.",
+      "• minimum - This value sets the pump to run at the minimum possible speed it can without being stopped.",
+      "• maximum - This value sets the pump to run at its maximum possible speed.",
+      "• localSetting - This value sets the pump to run with the local settings of the pump."
+    ]
+  },
+  {
+    "device": "Pump",
+    "service": "pumpOperationMode_supportedOperationModes",
+    "descriptor": "Allows for setting the operation mode on a pump.",
+    "return_descriptor": "Supported operation modes for this device to be in: \"str|...\"",
+    "return_type": "LIST",
+    "enums_descriptor": [
+      "• normal - The pump is controlled by a setpoint.",
+      "• minimum - This value sets the pump to run at the minimum possible speed it can without being stopped.",
+      "• maximum - This value sets the pump to run at its maximum possible speed.",
+      "• localSetting - This value sets the pump to run with the local settings of the pump."
+    ]
+  },
+  {
+    "device": "Refrigerator",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "Refrigerator",
+    "service": "refrigeration_defrost",
+    "descriptor": "Allows for the control of the refrigeration.",
+    "return_descriptor": "Status of the defrost",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``defrost``, ``rapidCooling``, ``rapidFreezing`` attribute if the defrost, rapidCooling, rapidFreezing is on",
+      "• off - The value of the ``defrost``, ``rapidCooling``, ``rapidFreezing`` attribute if the defrost, rapidCooling, rapidFreezing is off"
+    ]
+  },
+  {
+    "device": "Refrigerator",
+    "service": "refrigeration_rapidCooling",
+    "descriptor": "Allows for the control of the refrigeration.",
+    "return_descriptor": "Status of the rapid cooling",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``defrost``, ``rapidCooling``, ``rapidFreezing`` attribute if the defrost, rapidCooling, rapidFreezing is on",
+      "• off - The value of the ``defrost``, ``rapidCooling``, ``rapidFreezing`` attribute if the defrost, rapidCooling, rapidFreezing is off"
+    ]
+  },
+  {
+    "device": "Refrigerator",
+    "service": "refrigeration_rapidFreezing",
+    "descriptor": "Allows for the control of the refrigeration.",
+    "return_descriptor": "Status of the rapid freezing",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``defrost``, ``rapidCooling``, ``rapidFreezing`` attribute if the defrost, rapidCooling, rapidFreezing is on",
+      "• off - The value of the ``defrost``, ``rapidCooling``, ``rapidFreezing`` attribute if the defrost, rapidCooling, rapidFreezing is off"
+    ]
+  },
+  {
+    "device": "RobotCleaner",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "RobotCleaner",
+    "service": "robotCleanerCleaningMode_robotCleanerCleaningMode",
+    "descriptor": "Allows for the control of the robot cleaner cleaning mode.",
+    "return_descriptor": "Current status of the robot cleaner cleaning mode",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• auto - The robot cleaner cleaning mode is in \"auto\" mode",
+      "• part - The robot cleaner cleaning mode is in \"part\" mode",
+      "• repeat - The robot cleaner cleaning mode is in \"repeat\" mode",
+      "• manual - The robot cleaner cleaning mode is in \"manual\" mode",
+      "• stop - The robot cleaner cleaning mode is in \"stop\" mode",
+      "• map - The robot cleaner cleaning mode is in \"map\" mode"
+    ]
+  },
+  {
+    "device": "Shade",
+    "service": "windowShadeLevel_shadeLevel",
+    "descriptor": "Allows for the control of the level of a window shade.",
+    "return_descriptor": "A number that represents the current level as a function of being open, ``0-100`` in percent; 0 representing completely closed, and 100 representing completely open.",
+    "return_type": "INTEGER"
+  },
+  {
+    "device": "Shade",
+    "service": "windowShade_windowShade",
+    "descriptor": "Allows for the control of the window shade.",
+    "return_descriptor": "A string representation of whether the window shade is open or closed",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• closed - closed",
+      "• closing - closing…",
+      "• open - open",
+      "• opening - opening…",
+      "• partially open - partially open",
+      "• paused -",
+      "• unknown - unknown"
+    ]
+  },
+  {
+    "device": "Shade",
+    "service": "windowShade_supportedWindowShadeCommands",
+    "descriptor": "Allows for the control of the window shade.",
+    "return_descriptor": "Window shade commands supported by this instance of Window Shade: \"str|...\"",
+    "return_type": "LIST",
+    "enums_descriptor": [
+      "• closed - closed",
+      "• closing - closing…",
+      "• open - open",
+      "• opening - opening…",
+      "• partially open - partially open",
+      "• paused -",
+      "• unknown - unknown"
+    ]
+  },
+  {
+    "device": "Siren",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "Siren",
+    "service": "sirenMode_sirenMode",
+    "descriptor": "Allows for the control of the siren.",
+    "return_descriptor": "Current mode of the siren",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• both - ",
+      "• off - ",
+      "• siren - ",
+      "• strobe -"
+    ]
+  },
+  {
+    "device": "SmartPlug",
+    "service": "currentMeasurement_current",
+    "descriptor": "Get the value of electrical current measured from a device.",
+    "return_descriptor": "A number representing the current measured.",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "SmartPlug",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "SmartPlug",
+    "service": "voltageMeasurement_voltage",
+    "descriptor": "Get the value of voltage measured from devices that support it",
+    "return_descriptor": "A number representing the current voltage measured",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "SmartPlug",
+    "service": "powerMeter_power",
+    "descriptor": "Allows for reading the power consumption from devices that report it",
+    "return_descriptor": "A number representing the current power consumption. Check the device documentation for how this value is reported - unit: Watts",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "SmartPlug",
+    "service": "powerMeter_powerConsumption",
+    "descriptor": "Allows for reading the power consumption from devices that report it",
+    "return_descriptor": "energy and power consumption during specific time period:\"unit|Wh\", example:\"kWh|30\"",
+    "return_type": "DICT"
+  },
+  {
+    "device": "SmokeDetector",
+    "service": "smokeDetector_smoke",
+    "descriptor": "A device that detects the presence or absence of smoke.",
+    "return_descriptor": "The state of the smoke detection device",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• clear - No smoke detected",
+      "    • detected - Smoke detected",
+      "    • tested - Smoke detector test button was activated"
+    ]
+  },
+  {
+    "device": "SoilMoistureSensor",
+    "service": "soilHumidityMeasurement_soilHumidity",
+    "descriptor": "Allow reading the soil humidity from devices that support it",
+    "return_descriptor": "A numerical representation of the soil humidity measurement taken by the device",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "SoundSensor",
+    "service": "soundSensor_sound",
+    "descriptor": "A Device that senses sound",
+    "return_descriptor": "Whether or not sound was detected by the Device",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• detected - Sound is detected",
+      "• not detected - no sound"
+    ]
+  },
+  {
+    "device": "SoundSensor",
+    "service": "soundPressureLevel_soundPressureLevel",
+    "descriptor": "Gets the value of the sound pressure level.",
+    "return_descriptor": "Level of the sound pressure",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "Speaker",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "Speaker",
+    "service": "mediaPlayback_playbackStatus",
+    "descriptor": "Allows for the control of the media playback.",
+    "return_descriptor": "Status of the media playback",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• paused - Media playback is in a \"paused\" state",
+      "• playing - Media playback is in a \"playing\" state",
+      "• stopped - Media playback is in a \"stopped\" state",
+      "• fast forwarding - Media playback is in a \"fast forwarding\" state",
+      "• rewinding - Media playback is in a \"rewinding\" state",
+      "• buffering - Media playback is in a \"buffering\" state"
+    ]
+  },
+  {
+    "device": "Speaker",
+    "service": "mediaPlayback_supportedPlaybackCommands",
+    "descriptor": "Allows for the control of the media playback.",
+    "return_descriptor": "Media playback commands which are supported: \"str|...\"",
+    "return_type": "LIST",
+    "enums_descriptor": [
+      "• paused - Media playback is in a \"paused\" state",
+      "• playing - Media playback is in a \"playing\" state",
+      "• stopped - Media playback is in a \"stopped\" state",
+      "• fast forwarding - Media playback is in a \"fast forwarding\" state",
+      "• rewinding - Media playback is in a \"rewinding\" state",
+      "• buffering - Media playback is in a \"buffering\" state"
+    ]
+  },
+  {
+    "device": "Recorder",
+    "service": "audioRecord_recordStatus",
+    "descriptor": "Record audio",
+    "return_descriptor": "The current status of the audio recorder",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• idle - The audio recorder is idle",
+      "• recording - The audio recorder is recording"
+    ]
+  },
+  {
+    "device": "Recorder",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "Switch",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "Television",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  },
+  {
+    "device": "Television",
+    "service": "tvChannel_tvChannel",
+    "descriptor": "Allows for the control of the TV channel.",
+    "return_descriptor": "Current status of the TV channel",
+    "return_type": "INTEGER"
+  },
+  {
+    "device": "Television",
+    "service": "tvChannel_tvChannelName",
+    "descriptor": "Allows for the control of the TV channel.",
+    "return_descriptor": "Current status of the TV channel name",
+    "return_type": "STRING"
+  },
+  {
+    "device": "Television",
+    "service": "audioMute_muteStatus",
+    "descriptor": "Allows for the control of audio mute.",
+    "return_descriptor": "Current status of the audio mute",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• muted - The audio is in \"muted\" state",
+      "• unmuted - The audio is in \"unmuted\" state"
+    ]
+  },
+  {
+    "device": "Television",
+    "service": "audioVolume_volume",
+    "descriptor": "Allows for the control of audio volume.",
+    "return_descriptor": "The current volume setting of the audio",
+    "return_type": "INTEGER"
+  },
+  {
+    "device": "TemperatureSensor",
+    "service": "temperatureMeasurement_temperature",
+    "descriptor": "Get the temperature from a Device that reports current temperature",
+    "return_descriptor": "A number that usually represents the current temperature",
+    "return_type": "DOUBLE"
+  },
+  {
+    "device": "TemperatureSensor",
+    "service": "temperatureMeasurement_temperatureRange",
+    "descriptor": "Get the temperature from a Device that reports current temperature",
+    "return_descriptor": "Constraints on the temperature value:\"min|max\", example:\"-20|50\"",
+    "return_type": "DICT"
+  },
+  {
+    "device": "TestDevice",
+    "service": "testSkill_testSkillValue",
+    "descriptor": "testSkill",
+    "return_descriptor": "testSkillValue",
+    "return_type": "STRING",
+    "enums_descriptor": [
+      "testSkill Enums"
+    ]
+  },
+  {
+    "device": "Valve",
+    "service": "valve_valve",
+    "descriptor": "Allows for the control of a valve device",
+    "return_descriptor": "A string representation of whether the valve is open or closed",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• closed - The value of the ``valve`` attribute if the valve is closed",
+      "• open - The value of the ``valve`` attribute if the valve is open"
+    ]
+  },
+  {
+    "device": "WeatherProvider",
+    "service": "weatherProvider_temperatureWeather",
+    "descriptor": "Provides weather information",
+    "return_descriptor": "Current temperature level",
+    "return_type": "DOUBLE",
+    "enums_descriptor": [
+      "• thunderstorm - thunderstorm",
+      "• drizzle - drizzle",
+      "• rain - rain",
+      "• snow - snow",
+      "• mist - mist",
+      "• smoke - smoke",
+      "• haze - haze",
+      "• dust - dust",
+      "• fog - fog",
+      "• sand - sand",
+      "• ash - ash",
+      "• squall - squall",
+      "• tornado - tornado",
+      "• clear - clear",
+      "• clouds - clouds"
+    ]
+  },
+  {
+    "device": "WeatherProvider",
+    "service": "weatherProvider_humidityWeather",
+    "descriptor": "Provides weather information",
+    "return_descriptor": "Current humidity level",
+    "return_type": "DOUBLE",
+    "enums_descriptor": [
+      "• thunderstorm - thunderstorm",
+      "• drizzle - drizzle",
+      "• rain - rain",
+      "• snow - snow",
+      "• mist - mist",
+      "• smoke - smoke",
+      "• haze - haze",
+      "• dust - dust",
+      "• fog - fog",
+      "• sand - sand",
+      "• ash - ash",
+      "• squall - squall",
+      "• tornado - tornado",
+      "• clear - clear",
+      "• clouds - clouds"
+    ]
+  },
+  {
+    "device": "WeatherProvider",
+    "service": "weatherProvider_pressureWeather",
+    "descriptor": "Provides weather information",
+    "return_descriptor": "Current pressure level",
+    "return_type": "DOUBLE",
+    "enums_descriptor": [
+      "• thunderstorm - thunderstorm",
+      "• drizzle - drizzle",
+      "• rain - rain",
+      "• snow - snow",
+      "• mist - mist",
+      "• smoke - smoke",
+      "• haze - haze",
+      "• dust - dust",
+      "• fog - fog",
+      "• sand - sand",
+      "• ash - ash",
+      "• squall - squall",
+      "• tornado - tornado",
+      "• clear - clear",
+      "• clouds - clouds"
+    ]
+  },
+  {
+    "device": "WeatherProvider",
+    "service": "weatherProvider_pm25Weather",
+    "descriptor": "Provides weather information",
+    "return_descriptor": "Current pm25 level",
+    "return_type": "DOUBLE",
+    "enums_descriptor": [
+      "• thunderstorm - thunderstorm",
+      "• drizzle - drizzle",
+      "• rain - rain",
+      "• snow - snow",
+      "• mist - mist",
+      "• smoke - smoke",
+      "• haze - haze",
+      "• dust - dust",
+      "• fog - fog",
+      "• sand - sand",
+      "• ash - ash",
+      "• squall - squall",
+      "• tornado - tornado",
+      "• clear - clear",
+      "• clouds - clouds"
+    ]
+  },
+  {
+    "device": "WeatherProvider",
+    "service": "weatherProvider_pm10Weather",
+    "descriptor": "Provides weather information",
+    "return_descriptor": "Current pm10 level",
+    "return_type": "DOUBLE",
+    "enums_descriptor": [
+      "• thunderstorm - thunderstorm",
+      "• drizzle - drizzle",
+      "• rain - rain",
+      "• snow - snow",
+      "• mist - mist",
+      "• smoke - smoke",
+      "• haze - haze",
+      "• dust - dust",
+      "• fog - fog",
+      "• sand - sand",
+      "• ash - ash",
+      "• squall - squall",
+      "• tornado - tornado",
+      "• clear - clear",
+      "• clouds - clouds"
+    ]
+  },
+  {
+    "device": "WeatherProvider",
+    "service": "weatherProvider_weather",
+    "descriptor": "Provides weather information",
+    "return_descriptor": "Current weather condition",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• thunderstorm - thunderstorm",
+      "• drizzle - drizzle",
+      "• rain - rain",
+      "• snow - snow",
+      "• mist - mist",
+      "• smoke - smoke",
+      "• haze - haze",
+      "• dust - dust",
+      "• fog - fog",
+      "• sand - sand",
+      "• ash - ash",
+      "• squall - squall",
+      "• tornado - tornado",
+      "• clear - clear",
+      "• clouds - clouds"
+    ]
+  },
+  {
+    "device": "Window",
+    "service": "windowControl_window",
+    "descriptor": "Allows for the control of the window shade.",
+    "return_descriptor": "A string representation of whether the window is open or closed",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• closed - closed",
+      "• open - open",
+      "• unknown - unknown"
+    ]
+  },
+  {
+    "device": "FallDetector",
+    "service": "fallDetection_fall",
+    "descriptor": "Detects if a fall has occurred",
+    "return_descriptor": "Whether or not a fall was detected",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• fall - fall detected",
+      "• normal - no fall detected"
+    ]
+  },
+  {
+    "device": "OccupancySensor",
+    "service": "presenceSensor_presence",
+    "descriptor": "The ability to see the current status of a presence sensor device",
+    "return_descriptor": "The current state of the presence sensor",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• present - The device is present",
+      "• not present - left"
+    ]
+  },
+  {
+    "device": "Relay",
+    "service": "switch_switch",
+    "descriptor": "Allows for the control of a switch device",
+    "return_descriptor": "A string representation of whether the switch is on or off",
+    "return_type": "ENUM",
+    "enums_descriptor": [
+      "• on - The value of the ``switch`` attribute if the switch is on",
+      "• off - The value of the ``switch`` attribute if the switch is off"
+    ]
+  }
+]
