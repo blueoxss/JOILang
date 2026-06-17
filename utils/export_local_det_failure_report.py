@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import argparse
 import csv
+import difflib
 import json
+import re
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -117,6 +119,17 @@ DET_SCORE_KEYS = [
     "det_enum_grounding",
 ]
 
+SERVICE_CALL_RE = re.compile(r"\((#[^)]+)\)\.([A-Za-z_][A-Za-z0-9_]*)\s*(\(|=|==|!=|>=|<=|>|<)?")
+COMPARISON_RE = re.compile(
+    r"(?P<lhs>\([^)]+\)\.[A-Za-z_][A-Za-z0-9_]*|[A-Za-z_][A-Za-z0-9_]*)\s*"
+    r"(?P<op>==|!=|>=|<=|>|<)\s*"
+    r"(?P<rhs>\"[^\"]*\"|'[^']*'|true|false|-?\d+(?:\.\d+)?|[A-Za-z_][A-Za-z0-9_]*)"
+)
+ASSIGNMENT_RE = re.compile(r"(?P<lhs>\([^)]+\)\.[A-Za-z_][A-Za-z0-9_]*|[A-Za-z_][A-Za-z0-9_]*)\s*=\s*(?P<rhs>[^=][^\n;}]*)")
+DELAY_RE = re.compile(r"delay\s*\(([^)]*)\)", re.IGNORECASE)
+WAIT_UNTIL_RE = re.compile(r"wait\s+until\s*\((.*?)\)", re.IGNORECASE | re.DOTALL)
+IF_RE = re.compile(r"\bif\s*\((.*?)\)\s*\{", re.IGNORECASE | re.DOTALL)
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -184,6 +197,20 @@ def shorten(value: Any, limit: int = 3000) -> str:
     return text if len(text) <= limit else text[:limit] + "\n... <truncated>"
 
 
+def normalize_token(value: Any) -> str:
+    return re.sub(r"\s+", "", str(value or "").strip().lower())
+
+
+def normalize_member(value: Any) -> str:
+    text = str(value or "").strip().lower()
+    text = re.sub(r"[^a-z0-9_]", "", text)
+    return text
+
+
+def canonical_to_member(canonical: str) -> str:
+    return normalize_member(canonical)
+
+
 def load_rerank_by_row(path: Path) -> dict[str, dict[str, str]]:
     if not path.exists():
         return {}
@@ -201,6 +228,216 @@ def infer_reasons(row: dict[str, str], model_key: str, rerank_row: dict[str, str
 
 def collect_scores(row: dict[str, str], model_key: str) -> dict[str, str]:
     return {key: model_get(row, model_key, key) for key in DET_SCORE_KEYS}
+
+
+def parse_services_from_code(code: str) -> list[dict[str, str]]:
+    out: list[dict[str, str]] = []
+    for match in SERVICE_CALL_RE.finditer(str(code or "")):
+        receiver, member, usage = match.groups()
+        out.append(
+            {
+                "receiver": receiver.strip(),
+                "member": member.strip(),
+                "member_norm": normalize_member(member),
+                "usage": "call" if usage == "(" else ("assignment" if usage == "=" else "value_or_compare"),
+                "text": match.group(0).strip(),
+            }
+        )
+    return out
+
+
+def parse_comparisons(code: str) -> list[dict[str, str]]:
+    out: list[dict[str, str]] = []
+    for match in COMPARISON_RE.finditer(str(code or "")):
+        lhs = match.group("lhs").strip()
+        op = match.group("op").strip()
+        rhs = match.group("rhs").strip()
+        out.append(
+            {
+                "lhs": lhs,
+                "lhs_norm": normalize_token(lhs),
+                "member_norm": normalize_member(lhs.split(".")[-1]),
+                "op": op,
+                "rhs": rhs,
+                "rhs_norm": normalize_token(rhs),
+                "text": match.group(0).strip(),
+            }
+        )
+    return out
+
+
+def parse_assignments(code: str) -> list[dict[str, str]]:
+    out: list[dict[str, str]] = []
+    for match in ASSIGNMENT_RE.finditer(str(code or "")):
+        full = match.group(0)
+        if any(op in full for op in ["==", "!=", ">=", "<="]):
+            continue
+        lhs = match.group("lhs").strip()
+        rhs = match.group("rhs").strip()
+        out.append({"lhs": lhs, "lhs_norm": normalize_token(lhs), "rhs": rhs, "text": full.strip()})
+    return out
+
+
+def parse_delays(code: str) -> list[str]:
+    return [m.group(1).strip() for m in DELAY_RE.finditer(str(code or ""))]
+
+
+def parse_wait_until(code: str) -> list[str]:
+    return [re.sub(r"\s+", " ", m.group(1).strip()) for m in WAIT_UNTIL_RE.finditer(str(code or ""))]
+
+
+def parse_if_conditions(code: str) -> list[str]:
+    return [re.sub(r"\s+", " ", m.group(1).strip()) for m in IF_RE.finditer(str(code or ""))]
+
+
+def parse_resolved_services(rerank_row: dict[str, str] | None) -> list[dict[str, Any]]:
+    if not rerank_row:
+        return []
+    parsed = safe_json_loads(rerank_row.get("det_resolved_services", ""), [])
+    return parsed if isinstance(parsed, list) else []
+
+
+def service_label(service: dict[str, Any]) -> str:
+    canonical = str(service.get("canonical_name") or "")
+    if canonical:
+        return canonical
+    device = str(service.get("device") or "")
+    name = str(service.get("service") or "")
+    return f"{device}_{name}" if device or name else ""
+
+
+def nearest_service_name(name: str, candidates: list[str]) -> str:
+    if not candidates:
+        return ""
+    matches = difflib.get_close_matches(name, candidates, n=1, cutoff=0.45)
+    return matches[0] if matches else ""
+
+
+def build_concrete_diagnostics(
+    row: dict[str, str],
+    *,
+    model_key: str,
+    reasons: list[str],
+    rerank_row: dict[str, str] | None,
+) -> list[str]:
+    diagnostics: list[str] = []
+    gt_code = str(row.get("gt_code", "") or "")
+    output_code = model_get(row, model_key, "output_code")
+    gt_cron = str(row.get("gt_cron", "") or "")
+    gt_period = str(row.get("gt_period", "") or "")
+    out_cron = model_get(row, model_key, "output_cron")
+    out_period = model_get(row, model_key, "output_period")
+
+    gt_services = parse_services_from_code(gt_code)
+    out_services = parse_services_from_code(output_code)
+    resolved_services = parse_resolved_services(rerank_row)
+    resolved_names = [service_label(s) for s in resolved_services if service_label(s)]
+    resolved_members = {canonical_to_member(name) for name in resolved_names}
+    gt_members = {s["member_norm"] for s in gt_services}
+    out_members = {s["member_norm"] for s in out_services}
+
+    # Schedule-only differences; emit only when actually different or when schedule is encoded in code redundantly.
+    if gt_cron != out_cron:
+        if gt_cron and not out_cron and out_period and out_period not in {"0", "-1"}:
+            diagnostics.append(
+                f"Schedule mismatch: GT는 cron `{gt_cron}`로 실행 시점을 표현하지만 output은 cron을 비우고 period `{out_period}`와 코드 내부 Clock guard로 표현했습니다. cron 기반 schedule은 JSON의 cron 필드에 두고 코드 내부 시간 guard는 제거해야 합니다."
+            )
+        else:
+            diagnostics.append(f"Schedule mismatch: cron이 다릅니다. GT=`{gt_cron}` vs output=`{out_cron}`.")
+    if str(gt_period) != str(out_period):
+        diagnostics.append(f"Schedule mismatch: period가 다릅니다. GT=`{gt_period}` vs output=`{out_period}`.")
+    if gt_cron and "clock_" in output_code.lower() and "clock_" not in gt_code.lower():
+        diagnostics.append(
+            "Extraneous temporal guard: GT는 cron 필드로 시간 범위를 이미 표현하므로 output code 안의 `#Clock` 조건은 중복/불필요한 guard일 가능성이 큽니다."
+        )
+
+    # Service coverage and unknown services.
+    missing_members = sorted(gt_members - out_members - resolved_members)
+    extra_members = sorted(out_members - gt_members - resolved_members)
+    if missing_members:
+        diagnostics.append(
+            "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: "
+            + ", ".join(f"`{m}`" for m in missing_members)
+            + "."
+        )
+    if extra_members:
+        diagnostics.append(
+            "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: "
+            + ", ".join(f"`{m}`" for m in extra_members)
+            + "."
+        )
+    for reason in reasons:
+        if reason.startswith("unknown_service:"):
+            unknown = reason.split(":", 1)[1]
+            nearest = nearest_service_name(unknown, [s["member"] for s in gt_services] + resolved_names)
+            if nearest:
+                diagnostics.append(
+                    f"Unknown service detail: `{unknown}`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `{nearest}`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+                )
+            else:
+                diagnostics.append(f"Unknown service detail: `{unknown}`는 schema에 없는 member입니다. service_list에서 대응 canonical service를 다시 선택해야 합니다.")
+
+    # Operator/value differences for comparable conditions.
+    gt_comparisons = parse_comparisons(gt_code)
+    out_comparisons = parse_comparisons(output_code)
+    matched_out_indexes: set[int] = set()
+    for gt_cmp in gt_comparisons:
+        candidates = [
+            (idx, out_cmp)
+            for idx, out_cmp in enumerate(out_comparisons)
+            if out_cmp["member_norm"] == gt_cmp["member_norm"] or out_cmp["lhs_norm"] == gt_cmp["lhs_norm"]
+        ]
+        if not candidates:
+            diagnostics.append(f"Missing condition: GT condition `{gt_cmp['text']}`에 대응되는 output condition을 찾지 못했습니다.")
+            continue
+        idx, out_cmp = candidates[0]
+        matched_out_indexes.add(idx)
+        if gt_cmp["op"] != out_cmp["op"] or gt_cmp["rhs_norm"] != out_cmp["rhs_norm"]:
+            parts: list[str] = []
+            if gt_cmp["op"] != out_cmp["op"]:
+                parts.append(f"operator GT `{gt_cmp['op']}` vs output `{out_cmp['op']}`")
+            if gt_cmp["rhs_norm"] != out_cmp["rhs_norm"]:
+                parts.append(f"value GT `{gt_cmp['rhs']}` vs output `{out_cmp['rhs']}`")
+            diagnostics.append(
+                f"Condition mismatch: `{gt_cmp['lhs']}` 비교식이 다릅니다 ({'; '.join(parts)}). GT condition `{gt_cmp['text']}` vs output condition `{out_cmp['text']}`."
+            )
+    for idx, out_cmp in enumerate(out_comparisons):
+        if idx in matched_out_indexes:
+            continue
+        # Clock guards are already reported as schedule issues when cron exists.
+        if gt_cron and "clock" in out_cmp["lhs_norm"]:
+            continue
+        diagnostics.append(f"Extra condition: output에 GT에서 요구하지 않은 조건 `{out_cmp['text']}`가 추가되었습니다.")
+
+    # Delay and control-flow skeleton differences.
+    gt_delays = parse_delays(gt_code)
+    out_delays = parse_delays(output_code)
+    if gt_delays != out_delays:
+        diagnostics.append(f"Delay mismatch: GT delay={gt_delays} vs output delay={out_delays}.")
+    gt_waits = parse_wait_until(gt_code)
+    out_waits = parse_wait_until(output_code)
+    if gt_waits != out_waits:
+        if gt_waits and not out_waits:
+            diagnostics.append(f"Missing wait-until trigger: GT는 `wait until ({gt_waits[0]})` 구조를 사용하지만 output에는 대응 wait-until이 없습니다.")
+        elif out_waits and not gt_waits:
+            diagnostics.append(f"Unexpected wait-until trigger: output에 GT에 없는 `wait until ({out_waits[0]})`가 있습니다.")
+        else:
+            diagnostics.append(f"Wait-until condition mismatch: GT={gt_waits} vs output={out_waits}.")
+
+    # Direct assignment to service values instead of action functions.
+    assignments = parse_assignments(output_code)
+    for assignment in assignments:
+        if ")." in assignment["lhs"]:
+            diagnostics.append(
+                f"Service value assignment: output이 service/value `{assignment['lhs']}`에 직접 `{assignment['rhs']}`를 대입합니다. GT가 action function을 요구하는 경우에는 상태값 대입 대신 schema function call을 사용해야 합니다."
+            )
+
+    # If no concrete diff was captured, do not repeat generic pass details.
+    if not diagnostics and reasons:
+        diagnostics.append(
+            "Concrete diff extractor did not isolate a token-level mismatch. Use GT/output code and DET component scores above to inspect the remaining semantic difference."
+        )
+    return diagnostics
 
 
 def explain_reason(reason: str, row: dict[str, str], model_key: str, rerank_row: dict[str, str] | None) -> str:
@@ -294,6 +531,7 @@ def build_report_rows(
         if not reasons and not include_pass:
             continue
         resolved_services = str(rerank_row.get("det_resolved_services", "") or "")
+        concrete_diagnostics = build_concrete_diagnostics(row, model_key=model_key, reasons=reasons, rerank_row=rerank_row)
         report_rows.append(
             {
                 "row_no": row_no,
@@ -311,6 +549,7 @@ def build_report_rows(
                 "output_period": model_get(row, model_key, "output_period"),
                 "output_code": model_get(row, model_key, "output_code"),
                 "resolved_services": safe_json_loads(resolved_services, resolved_services),
+                "concrete_diagnostics": concrete_diagnostics,
                 "automatic_explanations": [explain_reason(reason, row, model_key, rerank_row) for reason in reasons],
                 "recommended_mutations": recommend_for_reasons(reasons),
             }
@@ -370,6 +609,13 @@ def render_markdown(results_dir: Path, model_key: str, report_rows: list[dict[st
             lines.append(f"- command_kor: {item['command_kor']}")
         lines.append(f"- failure_reasons: {reasons}")
         lines.append("")
+        lines.append("#### Concrete mismatch diagnostics")
+        if item.get("concrete_diagnostics"):
+            for diagnostic in item["concrete_diagnostics"]:
+                lines.append(f"- {diagnostic}")
+        else:
+            lines.append("- No concrete mismatch was extracted beyond the DET labels.")
+        lines.append("")
         lines.append("#### DET component scores")
         lines.append("")
         lines.append("| metric | value |")
@@ -397,7 +643,7 @@ def render_markdown(results_dir: Path, model_key: str, report_rows: list[dict[st
         lines.append(json.dumps(item.get("resolved_services", ""), ensure_ascii=False, indent=2))
         lines.append("```")
         lines.append("")
-        lines.append("#### Automatic explanation")
+        lines.append("#### Failure-label explanation")
         for explanation in item["automatic_explanations"]:
             lines.append(f"- {explanation}")
         lines.append("")
@@ -435,6 +681,7 @@ def flatten_for_csv(report_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "command_eng": item["command_eng"],
                 "command_kor": item["command_kor"],
                 "failure_reasons": json.dumps(item["failure_reasons"], ensure_ascii=False),
+                "concrete_diagnostics": "\n".join(item.get("concrete_diagnostics") or []),
                 "det_score": scores.get("det_score", ""),
                 "det_gt_similarity": scores.get("det_gt_similarity", ""),
                 "det_gt_service_coverage": scores.get("det_gt_service_coverage", ""),
