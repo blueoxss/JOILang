@@ -239,3 +239,15 @@ gpt_mg/version0_15_update20260413/notebooks/Untitled.ipynb
 .ipynb_checkpoints/
 __pycache__/
 *.pyc
+
+# Cloud semantic judge generated artifacts
+utils/evaluation_cloud/result_*.csv
+utils/evaluation_cloud/results/
+utils/evaluation_cloud/artifacts/
+utils/evaluation_cloud/*.png
+utils/evaluation_cloud/*.txt
+utils/evaluation_cloud/**/__pycache__/
+utils/evaluation_cloud/**/.ipynb_checkpoints/
+*.pyc
+artifacts/hybrid_strict_cloud*/
+artifacts/evaluation_cloud/

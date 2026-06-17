@@ -231,7 +231,7 @@ DEFAULT_GLOBAL_GUIDANCE += (
 def get_single_criteria_judge(criteria_prompt: Union[str, Dict[str, str]]):
     """단일 점수 산출 Judge 빌더 (criteria_prompt가 dict면 텍스트로 정규화)."""
     try:
-        from langchain_openai import ChatOpenAI
+        from langchain_openai import ChatOpenAI  # noqa: F401
     except Exception as e:
         print(f"⚠️ LLM Judge 초기화 실패 (langchain_openai 미설치): {e}")
         return None
@@ -247,7 +247,11 @@ def get_single_criteria_judge(criteria_prompt: Union[str, Dict[str, str]]):
             "Use the REFERENCE code as guidance if provided. Return JSON with 'score' in [0,1] and 'reasoning'."
         )
 
-    llm = ChatOpenAI(model=LS_JUDGE_MODEL, temperature=0)
+    llm = config.build_chat_openai(
+        model=LS_JUDGE_MODEL,
+        temperature=0,
+        context="Lang semantic judge",
+    )
 
     class _Judge:
         def __init__(self, llm, crit_text):
@@ -331,14 +335,18 @@ Respond ONLY with a JSON object:
 def get_multi_criteria_judge(criteria: Dict[str, str], guidance_prompt: str = ""):
     """다중 기준 Judge (여러 스코어 + 근거). guidance_prompt는 'Optional Global Guidance'로 주입."""
     try:
-        from langchain_openai import ChatOpenAI
+        from langchain_openai import ChatOpenAI  # noqa: F401
     except Exception as e:
         print(f"⚠️ LLM Multi Judge 초기화 실패: {e}")
         return None
     if not isinstance(criteria, dict) or not criteria:
         return None
 
-    llm = ChatOpenAI(model=LS_JUDGE_MODEL, temperature=0)
+    llm = config.build_chat_openai(
+        model=LS_JUDGE_MODEL,
+        temperature=0,
+        context="Lang multi-criteria semantic judge",
+    )
 
     class _MultiJudge:
         def __init__(self, llm, criteria, guidance):

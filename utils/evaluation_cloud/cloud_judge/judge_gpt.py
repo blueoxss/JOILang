@@ -59,6 +59,15 @@ except Exception as _e:
         def __init__(self, *args, **kwargs):
             raise RuntimeError("OpenAI client unavailable (openai package not installed)")
 
+
+def _build_openai_client(context: str):
+    api_key = config.require_openai_api_key(context)
+    kwargs = {"api_key": api_key}
+    base_url = getattr(config, "get_openai_base_url", lambda: os.environ.get("OPENAI_BASE_URL"))()
+    if base_url:
+        kwargs["base_url"] = base_url
+    return _OpenAIClient(**kwargs)
+
 def _clamp01(x) -> float:
     try: v = float(x)
     except Exception: return 0.0
@@ -235,7 +244,9 @@ def reverse_translate_code_to_korean(
         }
 
     try:
-        client = _OpenAIClient()
+        client = _build_openai_client("Custom GPT reconversion translator")
+    except RuntimeError:
+        raise
     except Exception as e:
         return {
             "translated_sentence": "",
@@ -293,7 +304,9 @@ def judge_reconverted_sentence_equivalence(
         return {"score": 0.0, "same": False, "comment": "skipped (openai library not available)"}
 
     try:
-        client = _OpenAIClient()
+        client = _build_openai_client("Custom GPT reconverted equivalence judge")
+    except RuntimeError:
+        raise
     except Exception as e:
         return {"score": 0.0, "same": False, "comment": f"skipped (openai init failed: {e})"}
 
@@ -414,7 +427,9 @@ def run_custom_gpt_judge(candidate_code: str, ground_truth_code: str, command: s
         return {"score": 0.0, "comment": "skipped (openai library not available)"}
 
     try:
-        client = _OpenAIClient()
+        client = _build_openai_client("Custom GPT semantic judge")
+    except RuntimeError:
+        raise
     except Exception as e:
         return {"score": 0.0, "comment": f"skipped (openai init failed: {e})"}
 

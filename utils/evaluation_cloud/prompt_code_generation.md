@@ -68,12 +68,12 @@ from langchain.evaluation import Criteria
 
 # --- 1. LangSmith & LLM API Keys ---
 # (스크립트 실행 시 환경 변수에서 읽어옵니다)
-# LangSmith 추적을 활성화합니다.
-os.environ["LANGCHAIN_TRACING_V2"] = "true" 
-# LangSmith API 키 설정 (필수)
-os.environ["LANGCHAIN_API_KEY"] = os.environ.get("LANGSMITH_API_KEY", "YOUR_LANGSMITH_API_KEY")
-# LangSmith 내장 Judge가 사용할 LLM의 API 키 (예: OpenAI)
-os.environ["OPENAI_API_KEY"] = os.environ.get("OPENAI_API_KEY", "YOUR_OPENAI_API_KEY")
+# LangSmith tracing is optional. Keep it disabled unless explicitly needed.
+os.environ.setdefault("LANGSMITH_TRACING", "false")
+os.environ.setdefault("LANGCHAIN_TRACING_V2", "false")
+os.environ["LANGCHAIN_API_KEY"] = os.environ.get("LANGSMITH_API_KEY") or os.environ.get("LANGCHAIN_API_KEY", "")
+# OpenAI-compatible judges read keys only from runtime environment variables.
+os.environ["OPENAI_API_KEY"] = os.environ.get("OPENAI_API_KEY") or os.environ.get("JOI_V15_OPENAI_API_KEY", "")
 
 # --- 2. Project Configuration ---
 # LangSmith UI에 표시될 프로젝트 및 데이터셋 이름
@@ -509,4 +509,3 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-

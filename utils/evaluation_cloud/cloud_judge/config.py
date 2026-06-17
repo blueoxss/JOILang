@@ -1,14 +1,84 @@
 # /joi_lang_evaluation/config.py
-"""
-joi_lang_evaluation 프로젝트의 모든 설정을 관리합니다.
-API 키, 프로젝트 이름, 평가 가중치, 데이터 경로, LLM-as-a-Judge 기준.
-"""
 import os
 
-# --- 1. LangSmith & LLM API Keys ---
-os.environ["LANGCHAIN_TRACING_V2"] = "true" 
-os.environ["LANGCHAIN_API_KEY"] = os.environ.get("LANGSMITH_API_KEY")
-os.environ["OPENAI_API_KEY"] = os.environ.get("OPENAI_API_KEY")
+"""
+Cloud semantic judge configuration.
+
+This module intentionally reads API credentials only from the runtime
+environment. It does not enable LangSmith/LangChain tracing by default and
+does not provide placeholder or fallback secrets.
+"""
+
+
+def get_openai_api_key():
+    return (
+        os.environ.get("OPENAI_API_KEY")
+        or os.environ.get("JOI_EVAL_OPENAI_API_KEY")
+        or os.environ.get("JOI_V15_OPENAI_API_KEY")
+    )
+
+
+def get_optional_langsmith_api_key():
+    return (
+        os.environ.get("LANGSMITH_API_KEY")
+        or os.environ.get("LANGCHAIN_API_KEY")
+    )
+
+
+def get_openai_base_url():
+    return os.environ.get("OPENAI_BASE_URL")
+
+
+def _env_truthy(name: str) -> bool:
+    return str(os.environ.get(name, "")).strip().lower() in {"1", "true", "yes", "on"}
+
+
+def langsmith_tracing_enabled() -> bool:
+    return _env_truthy("LANGSMITH_TRACING") or _env_truthy("LANGCHAIN_TRACING_V2")
+
+
+def configure_optional_langsmith_environment() -> None:
+    os.environ.setdefault("LANGSMITH_TRACING", "false")
+    os.environ.setdefault("LANGCHAIN_TRACING_V2", "false")
+    if langsmith_tracing_enabled():
+        key = get_optional_langsmith_api_key()
+        if key and not os.environ.get("LANGCHAIN_API_KEY"):
+            os.environ["LANGCHAIN_API_KEY"] = key
+
+
+def require_openai_api_key(context: str = "OpenAI judge") -> str:
+    key = get_openai_api_key()
+    if not key:
+        raise RuntimeError(
+            f"{context} requires OPENAI_API_KEY, JOI_EVAL_OPENAI_API_KEY, "
+            "or JOI_V15_OPENAI_API_KEY in the environment."
+        )
+    return key
+
+
+def build_chat_openai(model: str, temperature: float = 0.0, context: str = "OpenAI judge"):
+    from langchain_openai import ChatOpenAI
+
+    configure_optional_langsmith_environment()
+    api_key = require_openai_api_key(context)
+    base_url = get_openai_base_url()
+    kwargs = {"model": model, "temperature": temperature, "api_key": api_key}
+    if base_url:
+        kwargs["base_url"] = base_url
+    try:
+        return ChatOpenAI(**kwargs)
+    except TypeError:
+        legacy_kwargs = {
+            "model": model,
+            "temperature": temperature,
+            "openai_api_key": api_key,
+        }
+        if base_url:
+            legacy_kwargs["openai_api_base"] = base_url
+        return ChatOpenAI(**legacy_kwargs)
+
+
+configure_optional_langsmith_environment()
 
 # --- 2. Project Configuration ---
 LANGSMITH_PROJECT_NAME = "JOI-Lang-Hybrid-Evaluation-v5-DynamicGT"

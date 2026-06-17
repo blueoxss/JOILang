@@ -1,17 +1,25 @@
 """
-JOI Lang 하이브리드 평가 파이프라인 (다중 모드 지원 + 모델 가족 selector)
+JOI Lang cloud semantic evaluator.
 
-실행 모드:
-1) 기본 (배치 하이브리드): `python main_evaluator.py`
-   - CSV 모든 라인에 대해 hybrid(DET+LANG+GPT) 수행
-   - 환경변수 EVAL_LIMIT 로 상위 N개만 제한 가능(예: EVAL_LIMIT=50)
+Modes:
+- det: legacy local deterministic evaluator for debugging/backward compatibility.
+- lang: local CLI multi-criteria semantic judge via ChatOpenAI/LangChain.
+- gpt: custom GPT holistic semantic similarity judge with optional reconverted
+  Korean fallback when GT code is unavailable.
+- hybrid: legacy hybrid mode that expands to det+lang+gpt. This is separate
+  from the official strict DET benchmark.
 
-2) 로컬 단일 행:
-   `python main_evaluator.py [모드들] [family] {row_index} [model_version_path]`
-   - [모드들]: det | lang | gpt | hybrid | det lang | det gpt | lang gpt | det lang gpt
-   - [family]: joi | joi_cod |cap (선택, 기본 joi)
-   - {row_index}: 0-based 행 번호
-   - [model_version_path]: 버전명(선택). 기본값: joi→config.DEFAULT_MODEL_VERSION_PATH, cap→"files"
+Official benchmark metrics come from
+gpt_mg/version0_15_update20260413/scripts/run_benchmark.py and its strict DET
+reports. Official rich feedback is produced by
+utils/merge_strict_det_with_cloud_judges.py, which merges strict DET reports
+with this module's lang/gpt result CSV.
+
+CLI:
+  python main_evaluator.py [modes] [family] {row_index} [model_version_path]
+  python main_evaluator.py [modes] [family] [model_version_path] [--out-dir DIR]
+
+Supported families: joi, cap, qwen.
 """
 import pandas as pd
 import numpy as np
@@ -35,11 +43,15 @@ if str(PARENT_DIR) not in sys.path:
 if str(CURRENT_FILE_DIR) not in sys.path:
     sys.path.insert(0, str(CURRENT_FILE_DIR))
 
-from eval_tools import config
+try:
+    from cloud_judge import config
+except ImportError:
+    from eval_tools import config
 
 def _label_overall_final(score: Any) -> str:
     """overall_final 점수로 최종 라벨(fail/partial/pass) 반환."""
-    from eval_tools.config import OVERALL_FINAL_FAIL_LT, OVERALL_FINAL_PARTIAL_LT
+    OVERALL_FINAL_FAIL_LT = getattr(config, "OVERALL_FINAL_FAIL_LT", 0.5)
+    OVERALL_FINAL_PARTIAL_LT = getattr(config, "OVERALL_FINAL_PARTIAL_LT", 0.85)
     try:
         s = float(score)
     except Exception:
@@ -684,7 +696,7 @@ def run_deterministic_evaluation(candidate_json: dict, gt_json_list: List[dict],
 # --- (C) LangSmith Judge (원본 유지) ---
 def build_llm_semantic_judge(criteria_prompt):
     try:
-        from langchain_openai import ChatOpenAI
+        from langchain_openai import ChatOpenAI  # noqa: F401
     except Exception as e:
         print(f"⚠️ LLM Judge 초기화 실패 (langchain_openai 미설치): {e}")
         return None
@@ -700,7 +712,11 @@ def build_llm_semantic_judge(criteria_prompt):
             "'score' in [0,1] and concise 'reasoning'."
         )
 
-    llm = ChatOpenAI(model="gpt-4o", temperature=0)
+    llm = config.build_chat_openai(
+        model=getattr(config, "LS_JUDGE_MODEL", "gpt-4o"),
+        temperature=0,
+        context="Lang semantic judge",
+    )
 
     class _Judge:
         def __init__(self, llm, crit_text):
@@ -782,7 +798,7 @@ Respond ONLY with a JSON object:
 
 def build_llm_multi_criteria_judge(criteria: Dict[str, str]):
     try:
-        from langchain_openai import ChatOpenAI
+        from langchain_openai import ChatOpenAI  # noqa: F401
     except Exception as e:
         print(f"⚠️ LLM Multi Judge 초기화 실패: {e}")
         return None
@@ -790,7 +806,11 @@ def build_llm_multi_criteria_judge(criteria: Dict[str, str]):
     if not isinstance(criteria, dict) or not criteria:
         return None
 
-    llm = ChatOpenAI(model="gpt-4o", temperature=0)
+    llm = config.build_chat_openai(
+        model=getattr(config, "LS_JUDGE_MODEL", "gpt-4o"),
+        temperature=0,
+        context="Lang multi-criteria semantic judge",
+    )
 
     class _MultiJudge:
         def __init__(self, llm, criteria):
@@ -853,7 +873,14 @@ Respond ONLY with a JSON object:
     return _MultiJudge(llm, criteria)
 
 # --- (D) 로컬 테스트 함수 (모든 모드 통합) ---
-def run_local_test(modes: List[str], row_index: int, model_version_path: str, family_token: str = "joi", batch_context: bool = False):
+def run_local_test(
+    modes: List[str],
+    row_index: int,
+    model_version_path: str,
+    family_token: str = "joi",
+    batch_context: bool = False,
+    output_dir: str = ".",
+):
     """ 로컬 테스트 모드 실행을 위한 통합 로직 """
     valid_modes = {"det", "lang", "gpt", "hybrid"}
     requested_modes = [m for m in modes if m in valid_modes]
@@ -880,7 +907,9 @@ def run_local_test(modes: List[str], row_index: int, model_version_path: str, fa
     full_model_name = f"{family_module}.{model_version}"
     print(f"--- 🚀 Running {mode_str} Local Test for Row Index: {row_index} using Model: {full_model_name} ---")
     safe_model_path_name_for_file = re.sub(r"[^\w\-]+", "_", full_model_name)
-    output_filename = f"result_{safe_model_path_name_for_file}.csv"
+    output_path = Path(output_dir or ".") / f"result_{safe_model_path_name_for_file}.csv"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_filename = str(output_path)
     print(f"   (Results will be appended/updated in: {output_filename})")
 
     # 2. 데이터 로드
@@ -963,15 +992,15 @@ def run_local_test(modes: List[str], row_index: int, model_version_path: str, fa
         if not isinstance(resp, dict):
             print(f"❌ GPT 모델 함수 반환 타입 오류: {type(resp)}")
             return
-        from eval_tools.registry import build_policy_hints_from_service_lists
-        # 네 환경 기준 경로 예시 (cap/joi 모두 사용 시 합쳐서 넘겨도 됨)
-        service_files = [
-            str((PARENT_DIR / "gpt_cap" / "files" / "service_list_ver1.5.3.json").resolve()),
-            # 필요하면 value/function 분리본, 다른 버전도 추가
-            # str((PARENT_DIR / "gpt_mg" / "version0_6" / "service_list_ver1.5.4_function.json").resolve()),
-            # str((PARENT_DIR / "gpt_mg" / "version0_6" / "service_list_ver1.5.4_value.json").resolve()),
-        ]
-        policy_hints = build_policy_hints_from_service_lists(service_files)
+        try:
+            from eval_tools.registry import build_policy_hints_from_service_lists
+            service_files = [
+                str((PARENT_DIR / "gpt_cap" / "files" / "service_list_ver1.5.3.json").resolve()),
+            ]
+            policy_hints = build_policy_hints_from_service_lists(service_files)
+        except Exception as e:
+            policy_hints = {}
+            print(f"⚠️ policy hints skipped (legacy eval_tools registry unavailable: {e})")
 
     except TypeError as te:
         print(f"❌ GPT 모델 호출 인자 오류: {te}")
@@ -1249,7 +1278,8 @@ def run_local_test(modes: List[str], row_index: int, model_version_path: str, fa
     det_score = float(final_scores.get("overall_deterministic") or 0.0)
 
     # LS: 세부 항목 가중합 (있으면 세부항목만 사용, 없으면 fallback으로 semantic_intent_ls 사용)
-    from eval_tools.config import LS_CRITERIA_WEIGHTS, GPT_SCORE_WEIGHT as _W_GPT
+    LS_CRITERIA_WEIGHTS = dict(getattr(config, "LS_CRITERIA_WEIGHTS", {}))
+    _W_GPT = getattr(config, "GPT_SCORE_WEIGHT", 0.2)
     import re as _re
 
     ls_weighted = None
@@ -1344,6 +1374,16 @@ def run_local_test(modes: List[str], row_index: int, model_version_path: str, fa
     }
     for k, v in (ls_multi_scores or {}).items():
         output_data[f"ls_{k}"] = v
+    if isinstance(output_data.get("ls_judge_reasoning"), (dict, list)):
+        output_data["ls_judge_reasoning"] = json.dumps(
+            output_data["ls_judge_reasoning"],
+            ensure_ascii=False,
+        )
+    if isinstance(output_data.get("gpt_judge_reasoning"), (dict, list)):
+        output_data["gpt_judge_reasoning"] = json.dumps(
+            output_data["gpt_judge_reasoning"],
+            ensure_ascii=False,
+        )
 
     try:
         ordered_columns = [
@@ -1409,6 +1449,21 @@ def run_local_test(modes: List[str], row_index: int, model_version_path: str, fa
             "category",
         ]
 
+        for col in [
+            "ls_semantic_intent",
+            "ls_conditions",
+            "ls_time_period",
+            "ls_device_service",
+        ]:
+            if col not in ordered_columns:
+                ordered_columns.append(col)
+            if col not in numeric_cols:
+                numeric_cols.append(col)
+
+        for col in output_data.keys():
+            if col not in ordered_columns:
+                ordered_columns.append(col)
+
         # (1) 결과 파일 로드 or 빈 DF 생성
         if os.path.exists(output_filename):
             try:
@@ -1420,6 +1475,9 @@ def run_local_test(modes: List[str], row_index: int, model_version_path: str, fa
                 existing_df = pd.DataFrame(columns=ordered_columns)
         else:
             existing_df = pd.DataFrame(columns=ordered_columns)
+        for col in existing_df.columns:
+            if col not in ordered_columns:
+                ordered_columns.append(col)
         if "final_status" in existing_df.columns and existing_df["final_status"].dtype != "object":
             try:
                 existing_df["final_status"] = existing_df["final_status"].astype("object")
@@ -1730,7 +1788,7 @@ def load_candidate_from_dataset(inputs: dict) -> Dict[str, Any]:
 def setup_langsmith_dataset(client: Any, csv_path: str, dataset_name: str) -> str:
     return dataset_name  # 필요 시 실제 구현
 
-def main_langsmith(selected_cats=None):
+def main_langsmith(selected_cats=None, output_dir: str = "."):
     """기본 실행: 데이터셋 전체에 대해 hybrid 수행 (EVAL_LIMIT 로 제한 가능).
        selected_cats: Set[int] | None
     """
@@ -1758,8 +1816,9 @@ def main_langsmith(selected_cats=None):
     for pos in tqdm(positions, desc="Batch Hybrid"):
         try:
             # 기본: joi 가족, 기존 기본 버전            
-            run_local_test(["hybrid"], pos, config.DEFAULT_MODEL_VERSION_PATH,
-                           family_token="joi", batch_context=True)
+            default_version = getattr(config, "DEFAULT_MODEL_VERSION_PATH", config.DEFAULT_MODEL_VERSION)
+            run_local_test(["hybrid"], pos, default_version,
+                           family_token="joi", batch_context=True, output_dir=output_dir)
         except Exception as e:
             print(f"[row {pos}] 오류: {e}")
 
@@ -1770,6 +1829,7 @@ if __name__ == "__main__":
     row_idx_str = None
     model_ver = None
     family_token = "joi"  # 기본 'joi'
+    output_dir = os.getenv("JOI_EVAL_OUTPUT_DIR", ".")
     selected_cats = set()  # 선택된 카테고리 (정수)
     valid_modes = {"det", "lang", "gpt", "hybrid"}
     family_tokens = {"joi", "cap", "qwen"}
@@ -1808,6 +1868,17 @@ if __name__ == "__main__":
             cat_spec = " ".join(parts)
             selected_cats.update(_parse_cat_values(cat_spec))
             i = j
+            continue
+        elif low == "--out-dir":
+            if i + 1 >= len(args):
+                print("오류: --out-dir 다음에 출력 디렉터리가 필요합니다.")
+                sys.exit(1)
+            output_dir = args[i + 1]
+            i += 2
+            continue
+        elif low.startswith("--out-dir="):
+            output_dir = arg.split("=", 1)[1] or "."
+            i += 1
             continue
         elif arg.isdigit() and row_idx_str is None:
             row_idx_str = arg
@@ -1853,7 +1924,7 @@ if __name__ == "__main__":
         from tqdm import tqdm
         for pos in tqdm(positions, desc="Batch"):
             try:
-                run_local_test(modes, pos, model_ver, family_token=family_token, batch_context=True)
+                run_local_test(modes, pos, model_ver, family_token=family_token, batch_context=True, output_dir=output_dir)
             except Exception as e:
                 print(f"[row {pos}] 오류: {e}")
         sys.exit(0)
@@ -1868,13 +1939,13 @@ if __name__ == "__main__":
             if not _row_matches_selected_cats(row_idx, selected_cats):
                 print(f"⚠️ Row {row_idx} is not in selected categories {sorted(selected_cats)}. Skipped.")
                 sys.exit(0)
-            run_local_test(modes, row_idx, model_ver, family_token=family_token)
+            run_local_test(modes, row_idx, model_ver, family_token=family_token, output_dir=output_dir)
         except Exception as e:
             print(f"❌ 로컬 테스트 오류: {e}")
             import traceback; traceback.print_exc()
     elif not modes and len(args) == 0:
         # 기본 하이브리드 배치 (카테고리 반영)
-        main_langsmith(selected_cats)
+        main_langsmith(selected_cats, output_dir=output_dir)
     else:
         # Help message
         if not row_idx_str and modes:
@@ -1883,11 +1954,12 @@ if __name__ == "__main__":
             print("오류: row_index 지정 시 모드가 필요합니다.")
         print("\n사용법:")
         print("  python main_evaluator.py                            (전체 데이터 hybrid 배치 평가)")
-        print("  python main_evaluator.py [모드들] [family] {row_index} [model_ver]")
+        print("  python main_evaluator.py [모드들] [family] {row_index} [model_ver] [--out-dir DIR]")
         print("    [모드들]: det | lang | gpt | hybrid | det lang | det gpt | lang gpt | det lang gpt")
-        print("    [family]: joi | joi_cod | cap | qwen (선택, 기본: joi)")
+        print("    [family]: joi | cap | qwen (선택, 기본: joi)")
         print("    {row_index}: CSV의 0-based 행 번호")
         print("    [model_ver]: 모델 버전 (예: version0_6, files; 기본값: family 별 기본)")
+        print("    [--out-dir DIR]: result_<model>.csv 저장 디렉터리 (기본: 현재 디렉터리)")
         print("\n예시:")
         print("  python main_evaluator.py hybrid 20")
         print("  python main_evaluator.py hybrid cap 20")
