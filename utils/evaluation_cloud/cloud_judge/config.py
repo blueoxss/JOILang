@@ -83,7 +83,7 @@ configure_optional_langsmith_environment()
 # --- 2. Project Configuration ---
 LANGSMITH_PROJECT_NAME = "JOI-Lang-Hybrid-Evaluation-v5-DynamicGT"
 LANGSMITH_DATASET_NAME = "JOI-Lang-Dataset-v1-DynamicGT"
-DATA_FILE_PATH = "data/JOICommands-170.csv"
+DATA_FILE_PATH = "../../datasets/JOICommands-280.csv"
 
 # --- 3. Model Families (NEW) ---
 # family => module + default version

@@ -1,0 +1,45 @@
+{
+  "blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ],
+  "params": {},
+  "block_params": {
+    "03": {
+      "micro_rules": [
+        "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+      ]
+    }
+  },
+  "seed": 0,
+  "id": "cand_002_output_schema",
+  "advisor_metadata": {
+    "candidate_id": "cand_002_output_schema",
+    "mutation_intent": "minimality_repair",
+    "source_patch_ids": [
+      "patch_002_output_schema"
+    ],
+    "active_blocks": [
+      "01",
+      "02",
+      "03",
+      "06"
+    ],
+    "dynamic_core_families": [
+      "Output_Schema"
+    ],
+    "optional_families": [],
+    "suppressed_families": [],
+    "target_block_families": [
+      "Output_Schema"
+    ],
+    "micro_rule_count": 1,
+    "estimated_token_cost": "medium",
+    "expected_effect": "Improve future rows affected by Output_Schema without changing whole prompt blocks.",
+    "regression_risk": "medium",
+    "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+    "low_confidence": false
+  }
+}

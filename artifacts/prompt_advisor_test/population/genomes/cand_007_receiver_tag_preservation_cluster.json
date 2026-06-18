@@ -1,0 +1,45 @@
+{
+  "blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ],
+  "params": {},
+  "block_params": {
+    "02": {
+      "micro_rules": [
+        "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+      ]
+    }
+  },
+  "seed": 0,
+  "id": "cand_007_receiver_tag_preservation_cluster",
+  "advisor_metadata": {
+    "candidate_id": "cand_007_receiver_tag_preservation_cluster",
+    "mutation_intent": "receiver_repair",
+    "source_patch_ids": [
+      "patch_007_receiver_tag_preservation"
+    ],
+    "active_blocks": [
+      "01",
+      "02",
+      "03",
+      "06"
+    ],
+    "dynamic_core_families": [],
+    "optional_families": [
+      "Receiver_Tag_Preservation"
+    ],
+    "suppressed_families": [],
+    "target_block_families": [
+      "Receiver_Tag_Preservation"
+    ],
+    "micro_rule_count": 1,
+    "estimated_token_cost": "medium",
+    "expected_effect": "Improve future rows affected by Receiver_Tag_Preservation without changing whole prompt blocks.",
+    "regression_risk": "low",
+    "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+    "low_confidence": false
+  }
+}

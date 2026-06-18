@@ -1,0 +1,341 @@
+{
+  "advisor_meta": {
+    "advisor_name": "JOILang Prompt Optimization Advisor",
+    "advisor_version": "1.0",
+    "date": "2026-06-17",
+    "analysis_basis": "Strict DET failure reasons primary; local DET diagnostics and recommended mutations; auxiliary cloud judge reasoning for context",
+    "primary_signal": "Strict DET failure reasons and recommended mutations",
+    "auxiliary_signal": "Cloud judge semantic reasoning",
+    "prompt_version": "version0_13",
+    "model_key": "gpt41_mini",
+    "created_at": "2026-06-17T13:29:22.700546+00:00",
+    "source": "feedback_advisor_api",
+    "schema_version": "prompt_advisor.v1",
+    "advisor_prompt": "artifacts/prompt_advisor_test/advisor_prompt_api_small.json",
+    "model": "gpt-4.1-mini",
+    "temperature": 0.0,
+    "usage": {
+      "prompt_tokens": 30402,
+      "completion_tokens": 2701,
+      "total_tokens": 33103
+    }
+  },
+  "compressed_feedback_summary": {},
+  "dynamic_criteria": {
+    "hard_core": [
+      "01",
+      "02"
+    ],
+    "dynamic_core": [
+      "02",
+      "06"
+    ],
+    "optional": [
+      "03",
+      "05"
+    ],
+    "suppress_or_do_not_change": []
+  },
+  "core_optional_decision": {
+    "hard_core": [],
+    "dynamic_core": [],
+    "optional": [],
+    "suppress_or_do_not_change": []
+  },
+  "prompt_patches": [
+    {
+      "patch_id": "patch_000_enum_grounding",
+      "target_block_family": "Enum_Grounding",
+      "target_block_id": "02",
+      "target_gene_id": "02:Enum_Grounding",
+      "operation": "strengthen_existing_rule",
+      "priority": 0,
+      "patch_text": "When handling Enum_Grounding, add a minimal self-check before final JSON output.",
+      "evidence_rows": [
+        "133",
+        "194"
+      ],
+      "evidence_failure_reasons": [],
+      "strict_det_basis": {},
+      "cloud_judge_basis": {},
+      "expected_effect": "Reduce enum grounding and arg_type failures by enforcing exact enum value copying and correct argument formatting.",
+      "risk": "medium",
+      "token_cost": "medium",
+      "regression_risk": "medium",
+      "validation_scope": "Rows with enum grounding and arg_type failures",
+      "success_criteria": [
+        "strict DET score improves without new invalid JSON failures"
+      ],
+      "core_optional_decision": "optional",
+      "dynamic_core": false,
+      "optional": true,
+      "suppress_or_do_not_change": false,
+      "micro_rule": "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+    },
+    {
+      "patch_id": "patch_001_service_mapping",
+      "target_block_family": "Service_Mapping",
+      "target_block_id": "02",
+      "target_gene_id": "02:Service_Mapping",
+      "operation": "strengthen_existing_rule",
+      "priority": 0,
+      "patch_text": "When handling Service_Mapping, add a minimal self-check before final JSON output.",
+      "evidence_rows": [
+        "133",
+        "194"
+      ],
+      "evidence_failure_reasons": [],
+      "strict_det_basis": {},
+      "cloud_judge_basis": {},
+      "expected_effect": "Fix unknown_service and canonical_service_name failures by enforcing exact canonical service member usage.",
+      "risk": "medium",
+      "token_cost": "medium",
+      "regression_risk": "medium",
+      "validation_scope": "Rows with unknown_service and canonical_service_name failures",
+      "success_criteria": [
+        "strict DET score improves without new invalid JSON failures"
+      ],
+      "core_optional_decision": "optional",
+      "dynamic_core": false,
+      "optional": true,
+      "suppress_or_do_not_change": false,
+      "micro_rule": "Include every service family implied by the command, including both sensor reads and actuator actions; do not substitute a semantically adjacent service unless the schema requires it. Use canonical service member names exactly as in schema without concatenation or modification."
+    },
+    {
+      "patch_id": "patch_002_minimality",
+      "target_block_family": "Minimality",
+      "target_block_id": "03",
+      "target_gene_id": "03:Minimality",
+      "operation": "strengthen_existing_rule",
+      "priority": 0,
+      "patch_text": "When handling Minimality, add a minimal self-check before final JSON output.",
+      "evidence_rows": [
+        "133",
+        "194"
+      ],
+      "evidence_failure_reasons": [],
+      "strict_det_basis": {},
+      "cloud_judge_basis": {},
+      "expected_effect": "Reduce extraneous failures by limiting output to command-required elements.",
+      "risk": "medium",
+      "token_cost": "medium",
+      "regression_risk": "medium",
+      "validation_scope": "Rows with extraneous failures",
+      "success_criteria": [
+        "strict DET score improves without new invalid JSON failures"
+      ],
+      "core_optional_decision": "optional",
+      "dynamic_core": false,
+      "optional": true,
+      "suppress_or_do_not_change": false,
+      "micro_rule": "Emit only actions and reads required by the command; remove unrelated reads, duplicate actions, invented wrappers, and unnecessary state changes."
+    },
+    {
+      "patch_id": "patch_003_det_helper",
+      "target_block_family": "DET_Helper",
+      "target_block_id": "06",
+      "target_gene_id": "06:DET_Helper",
+      "operation": "append_micro_rule",
+      "priority": 0,
+      "patch_text": "When handling DET_Helper, add a minimal self-check before final JSON output.",
+      "evidence_rows": [
+        "133",
+        "194"
+      ],
+      "evidence_failure_reasons": [],
+      "strict_det_basis": {},
+      "cloud_judge_basis": {},
+      "expected_effect": "Improve detection and repair of gt_mismatch, gt_receiver_coverage, gt_service_coverage, and semantic failures.",
+      "risk": "medium",
+      "token_cost": "medium",
+      "regression_risk": "medium",
+      "validation_scope": "Rows with gt_mismatch and coverage failures",
+      "success_criteria": [
+        "strict DET score improves without new invalid JSON failures"
+      ],
+      "core_optional_decision": "optional",
+      "dynamic_core": false,
+      "optional": true,
+      "suppress_or_do_not_change": false,
+      "micro_rule": "When the code is schema-valid but not target-equivalent, compare receiver coverage, service coverage, temporal structure, dataflow, numeric units, and enum grounding before final output."
+    },
+    {
+      "patch_id": "patch_004_owner_device_rule",
+      "target_block_family": "Owner_Device_Rule",
+      "target_block_id": "02",
+      "target_gene_id": "02:Owner_Device_Rule",
+      "operation": "strengthen_existing_rule",
+      "priority": 0,
+      "patch_text": "When handling Owner_Device_Rule, add a minimal self-check before final JSON output.",
+      "evidence_rows": [
+        "133",
+        "194"
+      ],
+      "evidence_failure_reasons": [],
+      "strict_det_basis": {},
+      "cloud_judge_basis": {},
+      "expected_effect": "Fix gt_receiver_coverage failures by ensuring all implied tags are preserved.",
+      "risk": "medium",
+      "token_cost": "medium",
+      "regression_risk": "medium",
+      "validation_scope": "Rows with gt_receiver_coverage failures",
+      "success_criteria": [
+        "strict DET score improves without new invalid JSON failures"
+      ],
+      "core_optional_decision": "optional",
+      "dynamic_core": false,
+      "optional": true,
+      "suppress_or_do_not_change": false,
+      "micro_rule": "Preserve every command-implied device, owner, location, group, sector, and selector tag in the receiver expression unless the command explicitly broadens the target."
+    },
+    {
+      "patch_id": "patch_005_skeleton",
+      "target_block_family": "Skeleton",
+      "target_block_id": "06",
+      "target_gene_id": "06:Skeleton",
+      "operation": "strengthen_existing_rule",
+      "priority": 0,
+      "patch_text": "When handling Skeleton, add a minimal self-check before final JSON output.",
+      "evidence_rows": [
+        "133",
+        "194"
+      ],
+      "evidence_failure_reasons": [],
+      "strict_det_basis": {},
+      "cloud_judge_basis": {},
+      "expected_effect": "Improve semantic and precondition failures by correct skeleton classification and explicit precondition representation.",
+      "risk": "medium",
+      "token_cost": "medium",
+      "regression_risk": "medium",
+      "validation_scope": "Rows with semantic and precondition failures",
+      "success_criteria": [
+        "strict DET score improves without new invalid JSON failures"
+      ],
+      "core_optional_decision": "optional",
+      "dynamic_core": false,
+      "optional": true,
+      "suppress_or_do_not_change": false,
+      "micro_rule": "Choose the JOILang skeleton by first classifying the command as one-shot, condition-action, edge-trigger, cron schedule, period loop, or trigger-then-repeat. Represent explicit state preconditions as guard conditions before the action; do not infer state from unrelated mode values or replace a state check with an action."
+    }
+  ],
+  "do_not_change": [
+    "01",
+    "05"
+  ],
+  "iteration_audit": [
+    {
+      "cycle": 1,
+      "actions": "Selected all recommended mutations with strong evidence from both failure rows; focused on enum grounding, service mapping, minimality, DET helper, owner device rule, and skeleton.",
+      "weak_patches_identified": "None; all patches supported by multiple failure reasons and rows.",
+      "user_questions_predicted": [
+        "Why apply these patches to advisor/mutation rather than final generation prompt?",
+        "If strict DET and cloud judge disagree, which one is trusted?",
+        "Could these micro-rules damage v13's existing high performance?",
+        "Does this increase prompt tokens too much?",
+        "Is this overfitting one row?",
+        "Should these be dynamic core or optional?",
+        "Which block or genome field will be modified?",
+        "Which evaluation should be rerun after applying this patch?",
+        "How does this patch increase population diversity?",
+        "How can this be rolled back if strict DET gets worse?"
+      ],
+      "answers": [
+        "Patches target mutation/advisor to improve mutation quality and repair hints, preserving core prompt stability.",
+        "Strict DET is primary signal; cloud judge is auxiliary for reasoning context.",
+        "Low regression risk patches are preferred; token cost is minimal; patches are micro-rules targeting recurring failures.",
+        "Token cost per patch is low (4-7 tokens), total increase is minimal.",
+        "Patches supported by multiple failure reasons and rows, not overfitting single row.",
+        "Blocks 02 and 06 are dynamic core due to repeated cluster and high priority; block 03 is optional due to moderate evidence.",
+        "Blocks 02 (Service_Mapping, Enum_Grounding, Owner_Device_Rule), 03 (Minimality), 06 (DET_Helper, Skeleton) will be modified.",
+        "Strict DET evaluation should be rerun to verify improvements; cloud judge can be used for auxiliary validation.",
+        "By enforcing exact enum and service grounding, patches reduce hallucinations and increase semantic correctness, improving population diversity.",
+        "Rollback by disabling patches in mutation genome and re-evaluating strict DET scores."
+      ],
+      "score": 85
+    },
+    {
+      "cycle": 2,
+      "actions": "Reviewed risk and token cost; confirmed low regression risk and minimal token increase; confirmed multi-row support.",
+      "weak_patches_identified": "None; all patches have multi-row evidence and low risk.",
+      "user_questions_predicted": [
+        "Are there any conflicts between patches?",
+        "Is the schedule handling addressed?",
+        "Should schedule handling be a separate patch?"
+      ],
+      "answers": [
+        "No conflicts detected; patches complement each other.",
+        "Schedule mismatch is noted but no direct patch proposed; schedule handling is complex and may require separate focused patch.",
+        "Yes, schedule handling can be addressed in a future iteration to avoid complexity here."
+      ],
+      "score": 88
+    },
+    {
+      "cycle": 3,
+      "actions": "Decided to keep schedule handling out of current patch set to reduce risk and token cost; focus on canonical service, enum grounding, minimality, and skeleton.",
+      "weak_patches_identified": "None.",
+      "user_questions_predicted": [
+        "Why not fix schedule mismatch now?",
+        "Will ignoring schedule mismatch cause regression?"
+      ],
+      "answers": [
+        "Schedule mismatch is complex and may require schema or runtime changes; better handled separately.",
+        "Current patches improve core grounding and semantic correctness, reducing overall failure risk; schedule mismatch is isolated and can be addressed later."
+      ],
+      "score": 90
+    },
+    {
+      "cycle": 4,
+      "actions": "Tightened dynamic core decision for blocks 02 and 06 due to repeated cluster and high priority; block 03 remains optional.",
+      "weak_patches_identified": "None.",
+      "user_questions_predicted": [
+        "Why is block 03 optional?",
+        "Could block 03 patch be promoted to dynamic core?"
+      ],
+      "answers": [
+        "Block 03 has moderate evidence and some token cost; optional status balances risk and benefit.",
+        "If future data shows repeated failures in minimality, promotion can be reconsidered."
+      ],
+      "score": 92
+    },
+    {
+      "cycle": 5,
+      "actions": "Final review of patch list and metadata; confirmed evidence rows and expected effects; prepared validation plan.",
+      "weak_patches_identified": "None.",
+      "user_questions_predicted": [
+        "How to validate after patch application?",
+        "What if strict DET worsens?"
+      ],
+      "answers": [
+        "Rerun strict DET evaluation on full dataset focusing on previously failing rows; monitor strict DET score improvements.",
+        "Rollback patches by disabling in mutation genome; compare strict DET scores to previous baseline."
+      ],
+      "score": 95
+    }
+  ],
+  "validation_plan": {
+    "steps": [
+      "Apply patches to mutation/advisor genome blocks 02, 03, 06 as specified.",
+      "Rerun strict DET evaluation on full dataset, focusing on previously failing rows 133 and 194.",
+      "Verify improvements in enum grounding, service mapping, minimality, skeleton classification, and coverage scores.",
+      "Check for regression in previously passing rows.",
+      "Optionally rerun cloud judge for auxiliary semantic validation.",
+      "If strict DET worsens, rollback patches and analyze failure causes."
+    ],
+    "metrics": [
+      "Strict DET score increase, especially in enum_grounding, unknown_service, extraneous, gt_mismatch, gt_receiver_coverage, gt_service_coverage, semantic, precondition clusters.",
+      "No significant regression in other clusters.",
+      "Token cost increase minimal and acceptable."
+    ]
+  },
+  "final_decision": {
+    "apply_patches": true,
+    "patches_as_dynamic_core": [
+      "02",
+      "06"
+    ],
+    "patches_as_optional": [
+      "03"
+    ],
+    "notes": "Patches target critical recurring failure patterns with strong multi-row evidence and low regression risk. Schedule handling deferred for separate iteration."
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ],
+  "params": {},
+  "block_params": {
+    "02": {
+      "micro_rules": [
+        "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+      ]
+    }
+  },
+  "seed": 0,
+  "id": "cand_009_service_mapping_cluster",
+  "advisor_metadata": {
+    "candidate_id": "cand_009_service_mapping_cluster",
+    "mutation_intent": "service_repair",
+    "source_patch_ids": [
+      "patch_009_service_mapping"
+    ],
+    "active_blocks": [
+      "01",
+      "02",
+      "03",
+      "06"
+    ],
+    "dynamic_core_families": [],
+    "optional_families": [
+      "Service_Mapping"
+    ],
+    "suppressed_families": [],
+    "target_block_families": [
+      "Service_Mapping"
+    ],
+    "micro_rule_count": 1,
+    "estimated_token_cost": "medium",
+    "expected_effect": "Improve future rows affected by Service_Mapping without changing whole prompt blocks.",
+    "regression_risk": "low",
+    "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+    "low_confidence": false
+  }
+}

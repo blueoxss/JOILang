@@ -1,0 +1,1841 @@
+{
+  "advisor_meta": {
+    "created_at": "2026-06-17T13:28:17.022036+00:00",
+    "source": "dry_run_deterministic",
+    "schema_version": "prompt_advisor.v1",
+    "dry_run": true,
+    "advisor_prompt": "artifacts/prompt_advisor_test/advisor_prompt.json"
+  },
+  "compressed_feedback_summary": {
+    "source_summary": {
+      "mean_strict_det_score": 95.864366,
+      "strict_det_failed_rows": 9,
+      "mean_overall_lang": 0.691046,
+      "mean_overall_gpt": 0.167918,
+      "top_failure_reasons": [
+        {
+          "failure_reason": "gt_mismatch",
+          "count": 112
+        },
+        {
+          "failure_reason": "semantic",
+          "count": 60
+        },
+        {
+          "failure_reason": "extraneous",
+          "count": 39
+        },
+        {
+          "failure_reason": "numeric_grounding",
+          "count": 17
+        },
+        {
+          "failure_reason": "precondition",
+          "count": 12
+        },
+        {
+          "failure_reason": "arg_type",
+          "count": 9
+        },
+        {
+          "failure_reason": "enum_grounding",
+          "count": 9
+        },
+        {
+          "failure_reason": "gt_receiver_coverage",
+          "count": 9
+        },
+        {
+          "failure_reason": "gt_service_coverage",
+          "count": 9
+        },
+        {
+          "failure_reason": "service_match",
+          "count": 5
+        },
+        {
+          "failure_reason": "dataflow",
+          "count": 3
+        },
+        {
+          "failure_reason": "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode",
+          "count": 3
+        },
+        {
+          "failure_reason": "unknown_service:laundrydryer_setlaundrydryermodemode",
+          "count": 1
+        },
+        {
+          "failure_reason": "unknown_service:pump_setpumpmodenormal",
+          "count": 1
+        },
+        {
+          "failure_reason": "unknown_service:robotvacuumcleaner_robotvacuumcleanermodemode",
+          "count": 1
+        }
+      ],
+      "top_mutation_blocks": [
+        {
+          "mutation_block": "Service_Mapping",
+          "count": 19
+        },
+        {
+          "mutation_block": "Enum_Grounding",
+          "count": 12
+        },
+        {
+          "mutation_block": "DET_Helper",
+          "count": 9
+        },
+        {
+          "mutation_block": "Owner_Device_Rule",
+          "count": 9
+        },
+        {
+          "mutation_block": "Skeleton",
+          "count": 8
+        },
+        {
+          "mutation_block": "Minimality",
+          "count": 6
+        },
+        {
+          "mutation_block": "Dataflow",
+          "count": 3
+        }
+      ]
+    },
+    "selected_row_count": 9,
+    "selected_mean_det_score": 45.708656,
+    "selected_failure_reason_counts": {
+      "gt_mismatch": 9,
+      "gt_receiver_coverage": 9,
+      "gt_service_coverage": 9,
+      "arg_type": 6,
+      "enum_grounding": 6,
+      "extraneous": 6,
+      "semantic": 6,
+      "unknown_service": 6,
+      "service_match": 5,
+      "dataflow": 3,
+      "precondition": 2
+    },
+    "selected_cluster_counts": {
+      "Skeleton": 9,
+      "DET_Helper": 9,
+      "Receiver_Tag_Preservation": 9,
+      "Owner_Device_Rule": 9,
+      "Service_Mapping": 9,
+      "Enum_Grounding": 7,
+      "Minimality": 6,
+      "Output_Schema": 6,
+      "Canonical_Service_Name": 5,
+      "Dataflow": 3
+    },
+    "selection_policy": {
+      "primary": "strict DET failed rows with high/medium advisor priority, concrete diagnostics, and recommended mutations",
+      "auxiliary_boost": "low lang sub-scores or low GPT score increase selection priority only as diagnostic context"
+    }
+  },
+  "dynamic_criteria": {
+    "primary_signal": "strict DET",
+    "auxiliary_signal": "cloud semantic judge reasoning",
+    "micro_rule_policy": "minimal targeted mutations only"
+  },
+  "core_optional_decision": {
+    "hard_core": [
+      "Core_System",
+      "Service_Mapping",
+      "Output_Schema"
+    ],
+    "dynamic_core": [
+      "DET_Helper",
+      "Service_Mapping",
+      "Skeleton"
+    ],
+    "optional": [
+      "Canonical_Service_Name",
+      "Dataflow",
+      "Enum_Grounding",
+      "Minimality",
+      "Output_Schema",
+      "Owner_Device_Rule",
+      "Receiver_Tag_Preservation"
+    ],
+    "suppress_or_do_not_change": []
+  },
+  "prompt_patches": [
+    {
+      "patch_id": "patch_000_canonical_service_name",
+      "target_block_family": "Canonical_Service_Name",
+      "target_block_id": "02",
+      "target_gene_id": "02:Canonical_Service_Name",
+      "operation": "strengthen_existing_rule",
+      "priority": 90,
+      "patch_text": "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema.",
+      "evidence_rows": [
+        "133",
+        "194",
+        "24",
+        "186",
+        "71"
+      ],
+      "evidence_failure_reasons": [
+        "unknown_service",
+        "arg_type",
+        "enum_grounding",
+        "gt_mismatch",
+        "gt_receiver_coverage",
+        "gt_service_coverage",
+        "service_match",
+        "extraneous",
+        "semantic",
+        "dataflow",
+        "precondition"
+      ],
+      "strict_det_basis": {
+        "cluster": "Canonical_Service_Name",
+        "failure_reason_counts": {
+          "unknown_service": 6,
+          "arg_type": 5,
+          "enum_grounding": 5,
+          "gt_mismatch": 5,
+          "gt_receiver_coverage": 5,
+          "gt_service_coverage": 5,
+          "service_match": 5,
+          "extraneous": 4,
+          "semantic": 4,
+          "dataflow": 3,
+          "precondition": 2
+        },
+        "representative_diagnostics": [
+          {
+            "row_no": "133",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`.",
+              "Unknown service detail: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `robotvacuumcleaner_setrobotvacuumcleanermodemode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          },
+          {
+            "row_no": "194",
+            "failure_reasons": [
+              "arg_type",
+              "dataflow",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_robotvacuumcleanermodemode",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Schedule mismatch: GT는 cron `0,30 19-21 * * *`로 실행 시점을 표현하지만 output은 cron을 비우고 period `1800000`와 코드 내부 Clock guard로 표현했습니다. cron 기반 schedule은 JSON의 cron 필드에 두고 코드 내부 시간 guard는 제거해야 합니다.",
+              "Schedule mismatch: period가 다릅니다. GT=`0` vs output=`1800000`.",
+              "Extraneous temporal guard: GT는 cron 필드로 시간 범위를 이미 표현하므로 output code 안의 `#Clock` 조건은 중복/불필요한 guard일 가능성이 큽니다."
+            ]
+          },
+          {
+            "row_no": "24",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:pump_setpumpmodenormal"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `pump_setpumpmode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `pump_setpumpmodenormal`.",
+              "Unknown service detail: `pump_setpumpmodenormal`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `pump_setpumpmode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          }
+        ]
+      },
+      "cloud_judge_basis": {
+        "auxiliary_only": true,
+        "representative_scores": [
+          {
+            "row_no": "133",
+            "lang_scores": {
+              "overall_lang": 0.6622222222222223,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.12
+          },
+          {
+            "row_no": "194",
+            "lang_scores": {
+              "overall_lang": null,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": null
+          },
+          {
+            "row_no": "24",
+            "lang_scores": {
+              "overall_lang": 0.7555555555555556,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.2
+          }
+        ]
+      },
+      "expected_effect": "Improve future rows affected by Canonical_Service_Name without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "regression_risk": "low",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "success_criteria": [
+        "strict DET pass rate improves on evidence rows",
+        "no increase in invalid_json or unknown_service failures"
+      ],
+      "core_optional_decision": "dynamic_core",
+      "dynamic_core": true,
+      "optional": false,
+      "suppress_or_do_not_change": false
+    },
+    {
+      "patch_id": "patch_001_minimality",
+      "target_block_family": "Minimality",
+      "target_block_id": "03",
+      "target_gene_id": "03:Minimality",
+      "operation": "append_micro_rule",
+      "priority": 86,
+      "patch_text": "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema.",
+      "evidence_rows": [
+        "133",
+        "194",
+        "24",
+        "186",
+        "234",
+        "129"
+      ],
+      "evidence_failure_reasons": [
+        "extraneous",
+        "gt_mismatch",
+        "gt_receiver_coverage",
+        "gt_service_coverage",
+        "semantic",
+        "unknown_service",
+        "arg_type",
+        "enum_grounding",
+        "service_match",
+        "precondition",
+        "dataflow"
+      ],
+      "strict_det_basis": {
+        "cluster": "Minimality",
+        "failure_reason_counts": {
+          "extraneous": 6,
+          "gt_mismatch": 6,
+          "gt_receiver_coverage": 6,
+          "gt_service_coverage": 6,
+          "semantic": 5,
+          "unknown_service": 5,
+          "arg_type": 4,
+          "enum_grounding": 4,
+          "service_match": 4,
+          "precondition": 2,
+          "dataflow": 2
+        },
+        "representative_diagnostics": [
+          {
+            "row_no": "133",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`.",
+              "Unknown service detail: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `robotvacuumcleaner_setrobotvacuumcleanermodemode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          },
+          {
+            "row_no": "194",
+            "failure_reasons": [
+              "arg_type",
+              "dataflow",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_robotvacuumcleanermodemode",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Schedule mismatch: GT는 cron `0,30 19-21 * * *`로 실행 시점을 표현하지만 output은 cron을 비우고 period `1800000`와 코드 내부 Clock guard로 표현했습니다. cron 기반 schedule은 JSON의 cron 필드에 두고 코드 내부 시간 guard는 제거해야 합니다.",
+              "Schedule mismatch: period가 다릅니다. GT=`0` vs output=`1800000`.",
+              "Extraneous temporal guard: GT는 cron 필드로 시간 범위를 이미 표현하므로 output code 안의 `#Clock` 조건은 중복/불필요한 guard일 가능성이 큽니다."
+            ]
+          },
+          {
+            "row_no": "24",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:pump_setpumpmodenormal"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `pump_setpumpmode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `pump_setpumpmodenormal`.",
+              "Unknown service detail: `pump_setpumpmodenormal`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `pump_setpumpmode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          }
+        ]
+      },
+      "cloud_judge_basis": {
+        "auxiliary_only": true,
+        "representative_scores": [
+          {
+            "row_no": "133",
+            "lang_scores": {
+              "overall_lang": 0.6622222222222223,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.12
+          },
+          {
+            "row_no": "194",
+            "lang_scores": {
+              "overall_lang": null,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": null
+          },
+          {
+            "row_no": "24",
+            "lang_scores": {
+              "overall_lang": 0.7555555555555556,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.2
+          }
+        ]
+      },
+      "expected_effect": "Improve future rows affected by Minimality without changing whole prompt blocks.",
+      "risk": "medium",
+      "token_cost": "medium",
+      "regression_risk": "medium",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "success_criteria": [
+        "strict DET pass rate improves on evidence rows",
+        "no increase in invalid_json or unknown_service failures"
+      ],
+      "core_optional_decision": "dynamic_core",
+      "dynamic_core": true,
+      "optional": false,
+      "suppress_or_do_not_change": false
+    },
+    {
+      "patch_id": "patch_002_output_schema",
+      "target_block_family": "Output_Schema",
+      "target_block_id": "03",
+      "target_gene_id": "03:Output_Schema",
+      "operation": "append_micro_rule",
+      "priority": 82,
+      "patch_text": "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema.",
+      "evidence_rows": [
+        "133",
+        "194",
+        "24",
+        "186",
+        "234",
+        "129"
+      ],
+      "evidence_failure_reasons": [
+        "extraneous",
+        "gt_mismatch",
+        "gt_receiver_coverage",
+        "gt_service_coverage",
+        "semantic",
+        "unknown_service",
+        "arg_type",
+        "enum_grounding",
+        "service_match",
+        "precondition",
+        "dataflow"
+      ],
+      "strict_det_basis": {
+        "cluster": "Output_Schema",
+        "failure_reason_counts": {
+          "extraneous": 6,
+          "gt_mismatch": 6,
+          "gt_receiver_coverage": 6,
+          "gt_service_coverage": 6,
+          "semantic": 5,
+          "unknown_service": 5,
+          "arg_type": 4,
+          "enum_grounding": 4,
+          "service_match": 4,
+          "precondition": 2,
+          "dataflow": 2
+        },
+        "representative_diagnostics": [
+          {
+            "row_no": "133",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`.",
+              "Unknown service detail: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `robotvacuumcleaner_setrobotvacuumcleanermodemode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          },
+          {
+            "row_no": "194",
+            "failure_reasons": [
+              "arg_type",
+              "dataflow",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_robotvacuumcleanermodemode",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Schedule mismatch: GT는 cron `0,30 19-21 * * *`로 실행 시점을 표현하지만 output은 cron을 비우고 period `1800000`와 코드 내부 Clock guard로 표현했습니다. cron 기반 schedule은 JSON의 cron 필드에 두고 코드 내부 시간 guard는 제거해야 합니다.",
+              "Schedule mismatch: period가 다릅니다. GT=`0` vs output=`1800000`.",
+              "Extraneous temporal guard: GT는 cron 필드로 시간 범위를 이미 표현하므로 output code 안의 `#Clock` 조건은 중복/불필요한 guard일 가능성이 큽니다."
+            ]
+          },
+          {
+            "row_no": "24",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:pump_setpumpmodenormal"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `pump_setpumpmode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `pump_setpumpmodenormal`.",
+              "Unknown service detail: `pump_setpumpmodenormal`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `pump_setpumpmode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          }
+        ]
+      },
+      "cloud_judge_basis": {
+        "auxiliary_only": true,
+        "representative_scores": [
+          {
+            "row_no": "133",
+            "lang_scores": {
+              "overall_lang": 0.6622222222222223,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.12
+          },
+          {
+            "row_no": "194",
+            "lang_scores": {
+              "overall_lang": null,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": null
+          },
+          {
+            "row_no": "24",
+            "lang_scores": {
+              "overall_lang": 0.7555555555555556,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.2
+          }
+        ]
+      },
+      "expected_effect": "Improve future rows affected by Output_Schema without changing whole prompt blocks.",
+      "risk": "medium",
+      "token_cost": "medium",
+      "regression_risk": "medium",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "success_criteria": [
+        "strict DET pass rate improves on evidence rows",
+        "no increase in invalid_json or unknown_service failures"
+      ],
+      "core_optional_decision": "dynamic_core",
+      "dynamic_core": true,
+      "optional": false,
+      "suppress_or_do_not_change": false
+    },
+    {
+      "patch_id": "patch_003_enum_grounding",
+      "target_block_family": "Enum_Grounding",
+      "target_block_id": "02",
+      "target_gene_id": "02:Enum_Grounding",
+      "operation": "strengthen_existing_rule",
+      "priority": 78,
+      "patch_text": "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema.",
+      "evidence_rows": [
+        "133",
+        "194",
+        "24",
+        "25",
+        "186",
+        "71",
+        "28"
+      ],
+      "evidence_failure_reasons": [
+        "gt_mismatch",
+        "gt_receiver_coverage",
+        "gt_service_coverage",
+        "arg_type",
+        "enum_grounding",
+        "unknown_service",
+        "semantic",
+        "service_match",
+        "extraneous",
+        "dataflow",
+        "precondition"
+      ],
+      "strict_det_basis": {
+        "cluster": "Enum_Grounding",
+        "failure_reason_counts": {
+          "gt_mismatch": 7,
+          "gt_receiver_coverage": 7,
+          "gt_service_coverage": 7,
+          "arg_type": 6,
+          "enum_grounding": 6,
+          "unknown_service": 6,
+          "semantic": 5,
+          "service_match": 5,
+          "extraneous": 4,
+          "dataflow": 3,
+          "precondition": 2
+        },
+        "representative_diagnostics": [
+          {
+            "row_no": "133",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`.",
+              "Unknown service detail: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `robotvacuumcleaner_setrobotvacuumcleanermodemode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          },
+          {
+            "row_no": "194",
+            "failure_reasons": [
+              "arg_type",
+              "dataflow",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_robotvacuumcleanermodemode",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Schedule mismatch: GT는 cron `0,30 19-21 * * *`로 실행 시점을 표현하지만 output은 cron을 비우고 period `1800000`와 코드 내부 Clock guard로 표현했습니다. cron 기반 schedule은 JSON의 cron 필드에 두고 코드 내부 시간 guard는 제거해야 합니다.",
+              "Schedule mismatch: period가 다릅니다. GT=`0` vs output=`1800000`.",
+              "Extraneous temporal guard: GT는 cron 필드로 시간 범위를 이미 표현하므로 output code 안의 `#Clock` 조건은 중복/불필요한 guard일 가능성이 큽니다."
+            ]
+          },
+          {
+            "row_no": "24",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:pump_setpumpmodenormal"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `pump_setpumpmode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `pump_setpumpmodenormal`.",
+              "Unknown service detail: `pump_setpumpmodenormal`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `pump_setpumpmode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          }
+        ]
+      },
+      "cloud_judge_basis": {
+        "auxiliary_only": true,
+        "representative_scores": [
+          {
+            "row_no": "133",
+            "lang_scores": {
+              "overall_lang": 0.6622222222222223,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.12
+          },
+          {
+            "row_no": "194",
+            "lang_scores": {
+              "overall_lang": null,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": null
+          },
+          {
+            "row_no": "24",
+            "lang_scores": {
+              "overall_lang": 0.7555555555555556,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.2
+          }
+        ]
+      },
+      "expected_effect": "Improve future rows affected by Enum_Grounding without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "regression_risk": "low",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "success_criteria": [
+        "strict DET pass rate improves on evidence rows",
+        "no increase in invalid_json or unknown_service failures"
+      ],
+      "core_optional_decision": "dynamic_core",
+      "dynamic_core": true,
+      "optional": false,
+      "suppress_or_do_not_change": false
+    },
+    {
+      "patch_id": "patch_004_dataflow",
+      "target_block_family": "Dataflow",
+      "target_block_id": "06",
+      "target_gene_id": "06:Dataflow",
+      "operation": "append_micro_rule",
+      "priority": 74,
+      "patch_text": "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema.",
+      "evidence_rows": [
+        "194",
+        "186",
+        "71"
+      ],
+      "evidence_failure_reasons": [
+        "unknown_service",
+        "arg_type",
+        "dataflow",
+        "enum_grounding",
+        "gt_mismatch",
+        "gt_receiver_coverage",
+        "gt_service_coverage",
+        "service_match",
+        "extraneous",
+        "semantic"
+      ],
+      "strict_det_basis": {
+        "cluster": "Dataflow",
+        "failure_reason_counts": {
+          "unknown_service": 4,
+          "arg_type": 3,
+          "dataflow": 3,
+          "enum_grounding": 3,
+          "gt_mismatch": 3,
+          "gt_receiver_coverage": 3,
+          "gt_service_coverage": 3,
+          "service_match": 3,
+          "extraneous": 2,
+          "semantic": 2
+        },
+        "representative_diagnostics": [
+          {
+            "row_no": "194",
+            "failure_reasons": [
+              "arg_type",
+              "dataflow",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_robotvacuumcleanermodemode",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Schedule mismatch: GT는 cron `0,30 19-21 * * *`로 실행 시점을 표현하지만 output은 cron을 비우고 period `1800000`와 코드 내부 Clock guard로 표현했습니다. cron 기반 schedule은 JSON의 cron 필드에 두고 코드 내부 시간 guard는 제거해야 합니다.",
+              "Schedule mismatch: period가 다릅니다. GT=`0` vs output=`1800000`.",
+              "Extraneous temporal guard: GT는 cron 필드로 시간 범위를 이미 표현하므로 output code 안의 `#Clock` 조건은 중복/불필요한 guard일 가능성이 큽니다."
+            ]
+          },
+          {
+            "row_no": "186",
+            "failure_reasons": [
+              "arg_type",
+              "dataflow",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`.",
+              "Unknown service detail: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `robotvacuumcleaner_setrobotvacuumcleanermodemode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          },
+          {
+            "row_no": "71",
+            "failure_reasons": [
+              "arg_type",
+              "dataflow",
+              "enum_grounding",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "service_match",
+              "unknown_service:laundrydryer_setlaundrydryermodemode"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `laundrydryer_setlaundrydryermode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `laundrydryer_setlaundrydryermodemode`.",
+              "Unknown service detail: `laundrydryer_setlaundrydryermodemode`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `laundrydryer_setlaundrydryermode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          }
+        ]
+      },
+      "cloud_judge_basis": {
+        "auxiliary_only": true,
+        "representative_scores": [
+          {
+            "row_no": "194",
+            "lang_scores": {
+              "overall_lang": null,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": null
+          },
+          {
+            "row_no": "186",
+            "lang_scores": {
+              "overall_lang": null,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": null
+          },
+          {
+            "row_no": "71",
+            "lang_scores": {
+              "overall_lang": 0.8,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.2
+          }
+        ]
+      },
+      "expected_effect": "Improve future rows affected by Dataflow without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "regression_risk": "low",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "success_criteria": [
+        "strict DET pass rate improves on evidence rows",
+        "no increase in invalid_json or unknown_service failures"
+      ],
+      "core_optional_decision": "optional",
+      "dynamic_core": false,
+      "optional": true,
+      "suppress_or_do_not_change": false
+    },
+    {
+      "patch_id": "patch_005_skeleton",
+      "target_block_family": "Skeleton",
+      "target_block_id": "06",
+      "target_gene_id": "06:Skeleton",
+      "operation": "append_micro_rule",
+      "priority": 70,
+      "patch_text": "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema.",
+      "evidence_rows": [
+        "133",
+        "194",
+        "24",
+        "25",
+        "186",
+        "71",
+        "234",
+        "28"
+      ],
+      "evidence_failure_reasons": [
+        "gt_mismatch",
+        "gt_receiver_coverage",
+        "gt_service_coverage",
+        "arg_type",
+        "enum_grounding",
+        "extraneous",
+        "semantic",
+        "unknown_service",
+        "service_match",
+        "dataflow",
+        "precondition"
+      ],
+      "strict_det_basis": {
+        "cluster": "Skeleton",
+        "failure_reason_counts": {
+          "gt_mismatch": 9,
+          "gt_receiver_coverage": 9,
+          "gt_service_coverage": 9,
+          "arg_type": 6,
+          "enum_grounding": 6,
+          "extraneous": 6,
+          "semantic": 6,
+          "unknown_service": 6,
+          "service_match": 5,
+          "dataflow": 3,
+          "precondition": 2
+        },
+        "representative_diagnostics": [
+          {
+            "row_no": "133",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`.",
+              "Unknown service detail: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `robotvacuumcleaner_setrobotvacuumcleanermodemode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          },
+          {
+            "row_no": "194",
+            "failure_reasons": [
+              "arg_type",
+              "dataflow",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_robotvacuumcleanermodemode",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Schedule mismatch: GT는 cron `0,30 19-21 * * *`로 실행 시점을 표현하지만 output은 cron을 비우고 period `1800000`와 코드 내부 Clock guard로 표현했습니다. cron 기반 schedule은 JSON의 cron 필드에 두고 코드 내부 시간 guard는 제거해야 합니다.",
+              "Schedule mismatch: period가 다릅니다. GT=`0` vs output=`1800000`.",
+              "Extraneous temporal guard: GT는 cron 필드로 시간 범위를 이미 표현하므로 output code 안의 `#Clock` 조건은 중복/불필요한 guard일 가능성이 큽니다."
+            ]
+          },
+          {
+            "row_no": "24",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:pump_setpumpmodenormal"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `pump_setpumpmode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `pump_setpumpmodenormal`.",
+              "Unknown service detail: `pump_setpumpmodenormal`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `pump_setpumpmode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          }
+        ]
+      },
+      "cloud_judge_basis": {
+        "auxiliary_only": true,
+        "representative_scores": [
+          {
+            "row_no": "133",
+            "lang_scores": {
+              "overall_lang": 0.6622222222222223,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.12
+          },
+          {
+            "row_no": "194",
+            "lang_scores": {
+              "overall_lang": null,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": null
+          },
+          {
+            "row_no": "24",
+            "lang_scores": {
+              "overall_lang": 0.7555555555555556,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.2
+          }
+        ]
+      },
+      "expected_effect": "Improve future rows affected by Skeleton without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "regression_risk": "low",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "success_criteria": [
+        "strict DET pass rate improves on evidence rows",
+        "no increase in invalid_json or unknown_service failures"
+      ],
+      "core_optional_decision": "optional",
+      "dynamic_core": false,
+      "optional": true,
+      "suppress_or_do_not_change": false
+    },
+    {
+      "patch_id": "patch_006_det_helper",
+      "target_block_family": "DET_Helper",
+      "target_block_id": "06",
+      "target_gene_id": "06:DET_Helper",
+      "operation": "append_micro_rule",
+      "priority": 66,
+      "patch_text": "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema.",
+      "evidence_rows": [
+        "133",
+        "194",
+        "24",
+        "25",
+        "186",
+        "71",
+        "234",
+        "28"
+      ],
+      "evidence_failure_reasons": [
+        "gt_mismatch",
+        "gt_receiver_coverage",
+        "gt_service_coverage",
+        "arg_type",
+        "enum_grounding",
+        "extraneous",
+        "semantic",
+        "unknown_service",
+        "service_match",
+        "dataflow",
+        "precondition"
+      ],
+      "strict_det_basis": {
+        "cluster": "DET_Helper",
+        "failure_reason_counts": {
+          "gt_mismatch": 9,
+          "gt_receiver_coverage": 9,
+          "gt_service_coverage": 9,
+          "arg_type": 6,
+          "enum_grounding": 6,
+          "extraneous": 6,
+          "semantic": 6,
+          "unknown_service": 6,
+          "service_match": 5,
+          "dataflow": 3,
+          "precondition": 2
+        },
+        "representative_diagnostics": [
+          {
+            "row_no": "133",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`.",
+              "Unknown service detail: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `robotvacuumcleaner_setrobotvacuumcleanermodemode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          },
+          {
+            "row_no": "194",
+            "failure_reasons": [
+              "arg_type",
+              "dataflow",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_robotvacuumcleanermodemode",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Schedule mismatch: GT는 cron `0,30 19-21 * * *`로 실행 시점을 표현하지만 output은 cron을 비우고 period `1800000`와 코드 내부 Clock guard로 표현했습니다. cron 기반 schedule은 JSON의 cron 필드에 두고 코드 내부 시간 guard는 제거해야 합니다.",
+              "Schedule mismatch: period가 다릅니다. GT=`0` vs output=`1800000`.",
+              "Extraneous temporal guard: GT는 cron 필드로 시간 범위를 이미 표현하므로 output code 안의 `#Clock` 조건은 중복/불필요한 guard일 가능성이 큽니다."
+            ]
+          },
+          {
+            "row_no": "24",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:pump_setpumpmodenormal"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `pump_setpumpmode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `pump_setpumpmodenormal`.",
+              "Unknown service detail: `pump_setpumpmodenormal`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `pump_setpumpmode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          }
+        ]
+      },
+      "cloud_judge_basis": {
+        "auxiliary_only": true,
+        "representative_scores": [
+          {
+            "row_no": "133",
+            "lang_scores": {
+              "overall_lang": 0.6622222222222223,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.12
+          },
+          {
+            "row_no": "194",
+            "lang_scores": {
+              "overall_lang": null,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": null
+          },
+          {
+            "row_no": "24",
+            "lang_scores": {
+              "overall_lang": 0.7555555555555556,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.2
+          }
+        ]
+      },
+      "expected_effect": "Improve future rows affected by DET_Helper without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "regression_risk": "low",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "success_criteria": [
+        "strict DET pass rate improves on evidence rows",
+        "no increase in invalid_json or unknown_service failures"
+      ],
+      "core_optional_decision": "optional",
+      "dynamic_core": false,
+      "optional": true,
+      "suppress_or_do_not_change": false
+    },
+    {
+      "patch_id": "patch_007_receiver_tag_preservation",
+      "target_block_family": "Receiver_Tag_Preservation",
+      "target_block_id": "02",
+      "target_gene_id": "02:Receiver_Tag_Preservation",
+      "operation": "strengthen_existing_rule",
+      "priority": 62,
+      "patch_text": "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema.",
+      "evidence_rows": [
+        "133",
+        "194",
+        "24",
+        "25",
+        "186",
+        "71",
+        "234",
+        "28"
+      ],
+      "evidence_failure_reasons": [
+        "gt_mismatch",
+        "gt_receiver_coverage",
+        "gt_service_coverage",
+        "arg_type",
+        "enum_grounding",
+        "extraneous",
+        "semantic",
+        "unknown_service",
+        "service_match",
+        "dataflow",
+        "precondition"
+      ],
+      "strict_det_basis": {
+        "cluster": "Receiver_Tag_Preservation",
+        "failure_reason_counts": {
+          "gt_mismatch": 9,
+          "gt_receiver_coverage": 9,
+          "gt_service_coverage": 9,
+          "arg_type": 6,
+          "enum_grounding": 6,
+          "extraneous": 6,
+          "semantic": 6,
+          "unknown_service": 6,
+          "service_match": 5,
+          "dataflow": 3,
+          "precondition": 2
+        },
+        "representative_diagnostics": [
+          {
+            "row_no": "133",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`.",
+              "Unknown service detail: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `robotvacuumcleaner_setrobotvacuumcleanermodemode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          },
+          {
+            "row_no": "194",
+            "failure_reasons": [
+              "arg_type",
+              "dataflow",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_robotvacuumcleanermodemode",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Schedule mismatch: GT는 cron `0,30 19-21 * * *`로 실행 시점을 표현하지만 output은 cron을 비우고 period `1800000`와 코드 내부 Clock guard로 표현했습니다. cron 기반 schedule은 JSON의 cron 필드에 두고 코드 내부 시간 guard는 제거해야 합니다.",
+              "Schedule mismatch: period가 다릅니다. GT=`0` vs output=`1800000`.",
+              "Extraneous temporal guard: GT는 cron 필드로 시간 범위를 이미 표현하므로 output code 안의 `#Clock` 조건은 중복/불필요한 guard일 가능성이 큽니다."
+            ]
+          },
+          {
+            "row_no": "24",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:pump_setpumpmodenormal"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `pump_setpumpmode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `pump_setpumpmodenormal`.",
+              "Unknown service detail: `pump_setpumpmodenormal`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `pump_setpumpmode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          }
+        ]
+      },
+      "cloud_judge_basis": {
+        "auxiliary_only": true,
+        "representative_scores": [
+          {
+            "row_no": "133",
+            "lang_scores": {
+              "overall_lang": 0.6622222222222223,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.12
+          },
+          {
+            "row_no": "194",
+            "lang_scores": {
+              "overall_lang": null,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": null
+          },
+          {
+            "row_no": "24",
+            "lang_scores": {
+              "overall_lang": 0.7555555555555556,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.2
+          }
+        ]
+      },
+      "expected_effect": "Improve future rows affected by Receiver_Tag_Preservation without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "regression_risk": "low",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "success_criteria": [
+        "strict DET pass rate improves on evidence rows",
+        "no increase in invalid_json or unknown_service failures"
+      ],
+      "core_optional_decision": "optional",
+      "dynamic_core": false,
+      "optional": true,
+      "suppress_or_do_not_change": false
+    },
+    {
+      "patch_id": "patch_008_owner_device_rule",
+      "target_block_family": "Owner_Device_Rule",
+      "target_block_id": "02",
+      "target_gene_id": "02:Owner_Device_Rule",
+      "operation": "strengthen_existing_rule",
+      "priority": 58,
+      "patch_text": "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema.",
+      "evidence_rows": [
+        "133",
+        "194",
+        "24",
+        "25",
+        "186",
+        "71",
+        "234",
+        "28"
+      ],
+      "evidence_failure_reasons": [
+        "gt_mismatch",
+        "gt_receiver_coverage",
+        "gt_service_coverage",
+        "arg_type",
+        "enum_grounding",
+        "extraneous",
+        "semantic",
+        "unknown_service",
+        "service_match",
+        "dataflow",
+        "precondition"
+      ],
+      "strict_det_basis": {
+        "cluster": "Owner_Device_Rule",
+        "failure_reason_counts": {
+          "gt_mismatch": 9,
+          "gt_receiver_coverage": 9,
+          "gt_service_coverage": 9,
+          "arg_type": 6,
+          "enum_grounding": 6,
+          "extraneous": 6,
+          "semantic": 6,
+          "unknown_service": 6,
+          "service_match": 5,
+          "dataflow": 3,
+          "precondition": 2
+        },
+        "representative_diagnostics": [
+          {
+            "row_no": "133",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`.",
+              "Unknown service detail: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `robotvacuumcleaner_setrobotvacuumcleanermodemode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          },
+          {
+            "row_no": "194",
+            "failure_reasons": [
+              "arg_type",
+              "dataflow",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_robotvacuumcleanermodemode",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Schedule mismatch: GT는 cron `0,30 19-21 * * *`로 실행 시점을 표현하지만 output은 cron을 비우고 period `1800000`와 코드 내부 Clock guard로 표현했습니다. cron 기반 schedule은 JSON의 cron 필드에 두고 코드 내부 시간 guard는 제거해야 합니다.",
+              "Schedule mismatch: period가 다릅니다. GT=`0` vs output=`1800000`.",
+              "Extraneous temporal guard: GT는 cron 필드로 시간 범위를 이미 표현하므로 output code 안의 `#Clock` 조건은 중복/불필요한 guard일 가능성이 큽니다."
+            ]
+          },
+          {
+            "row_no": "24",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:pump_setpumpmodenormal"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `pump_setpumpmode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `pump_setpumpmodenormal`.",
+              "Unknown service detail: `pump_setpumpmodenormal`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `pump_setpumpmode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          }
+        ]
+      },
+      "cloud_judge_basis": {
+        "auxiliary_only": true,
+        "representative_scores": [
+          {
+            "row_no": "133",
+            "lang_scores": {
+              "overall_lang": 0.6622222222222223,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.12
+          },
+          {
+            "row_no": "194",
+            "lang_scores": {
+              "overall_lang": null,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": null
+          },
+          {
+            "row_no": "24",
+            "lang_scores": {
+              "overall_lang": 0.7555555555555556,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.2
+          }
+        ]
+      },
+      "expected_effect": "Improve future rows affected by Owner_Device_Rule without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "regression_risk": "low",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "success_criteria": [
+        "strict DET pass rate improves on evidence rows",
+        "no increase in invalid_json or unknown_service failures"
+      ],
+      "core_optional_decision": "optional",
+      "dynamic_core": false,
+      "optional": true,
+      "suppress_or_do_not_change": false
+    },
+    {
+      "patch_id": "patch_009_service_mapping",
+      "target_block_family": "Service_Mapping",
+      "target_block_id": "02",
+      "target_gene_id": "02:Service_Mapping",
+      "operation": "strengthen_existing_rule",
+      "priority": 55,
+      "patch_text": "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema.",
+      "evidence_rows": [
+        "133",
+        "194",
+        "24",
+        "25",
+        "186",
+        "71",
+        "234",
+        "28"
+      ],
+      "evidence_failure_reasons": [
+        "gt_mismatch",
+        "gt_receiver_coverage",
+        "gt_service_coverage",
+        "arg_type",
+        "enum_grounding",
+        "extraneous",
+        "semantic",
+        "unknown_service",
+        "service_match",
+        "dataflow",
+        "precondition"
+      ],
+      "strict_det_basis": {
+        "cluster": "Service_Mapping",
+        "failure_reason_counts": {
+          "gt_mismatch": 9,
+          "gt_receiver_coverage": 9,
+          "gt_service_coverage": 9,
+          "arg_type": 6,
+          "enum_grounding": 6,
+          "extraneous": 6,
+          "semantic": 6,
+          "unknown_service": 6,
+          "service_match": 5,
+          "dataflow": 3,
+          "precondition": 2
+        },
+        "representative_diagnostics": [
+          {
+            "row_no": "133",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`.",
+              "Unknown service detail: `robotvacuumcleaner_setrobotvacuumcleanermodemodemode`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `robotvacuumcleaner_setrobotvacuumcleanermodemode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          },
+          {
+            "row_no": "194",
+            "failure_reasons": [
+              "arg_type",
+              "dataflow",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "semantic",
+              "service_match",
+              "unknown_service:robotvacuumcleaner_robotvacuumcleanermodemode",
+              "unknown_service:robotvacuumcleaner_setrobotvacuumcleanermodemodemode"
+            ],
+            "diagnostics": [
+              "Schedule mismatch: GT는 cron `0,30 19-21 * * *`로 실행 시점을 표현하지만 output은 cron을 비우고 period `1800000`와 코드 내부 Clock guard로 표현했습니다. cron 기반 schedule은 JSON의 cron 필드에 두고 코드 내부 시간 guard는 제거해야 합니다.",
+              "Schedule mismatch: period가 다릅니다. GT=`0` vs output=`1800000`.",
+              "Extraneous temporal guard: GT는 cron 필드로 시간 범위를 이미 표현하므로 output code 안의 `#Clock` 조건은 중복/불필요한 guard일 가능성이 큽니다."
+            ]
+          },
+          {
+            "row_no": "24",
+            "failure_reasons": [
+              "arg_type",
+              "enum_grounding",
+              "extraneous",
+              "gt_mismatch",
+              "gt_receiver_coverage",
+              "gt_service_coverage",
+              "precondition",
+              "semantic",
+              "service_match",
+              "unknown_service:pump_setpumpmodenormal"
+            ],
+            "diagnostics": [
+              "Missing GT service/member: GT에는 있지만 output/resolved services에서 확인되지 않은 member가 있습니다: `pump_setpumpmode`.",
+              "Extra or substituted service/member: output에는 있으나 GT/resolved services와 직접 대응되지 않는 member가 있습니다: `pump_setpumpmodenormal`.",
+              "Unknown service detail: `pump_setpumpmodenormal`는 schema에 없는 member입니다. 가장 가까운 GT/resolved 후보는 `pump_setpumpmode`입니다. 이름을 합성하지 말고 schema의 canonical member를 그대로 사용해야 합니다."
+            ]
+          }
+        ]
+      },
+      "cloud_judge_basis": {
+        "auxiliary_only": true,
+        "representative_scores": [
+          {
+            "row_no": "133",
+            "lang_scores": {
+              "overall_lang": 0.6622222222222223,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.12
+          },
+          {
+            "row_no": "194",
+            "lang_scores": {
+              "overall_lang": null,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": null
+          },
+          {
+            "row_no": "24",
+            "lang_scores": {
+              "overall_lang": 0.7555555555555556,
+              "semantic_intent": null,
+              "time_period": null,
+              "device_service": null,
+              "conditions": null
+            },
+            "overall_gpt": 0.2
+          }
+        ]
+      },
+      "expected_effect": "Improve future rows affected by Service_Mapping without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "regression_risk": "low",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "success_criteria": [
+        "strict DET pass rate improves on evidence rows",
+        "no increase in invalid_json or unknown_service failures"
+      ],
+      "core_optional_decision": "optional",
+      "dynamic_core": false,
+      "optional": true,
+      "suppress_or_do_not_change": false
+    }
+  ],
+  "do_not_change": [
+    "Do not attach advisor_rich_feedback.json to final generation prompts.",
+    "Do not rewrite entire prompt blocks.",
+    "Do not treat cloud judge scores as official benchmark metrics."
+  ],
+  "iteration_audit": [
+    {
+      "cycle": 1,
+      "criteria_update": "Start from strict DET failures, concrete diagnostics, and minimal prompt mutation scope.",
+      "patch_review_summary": "Reject broad rewrites; keep only targeted micro-rules with evidence rows.",
+      "weak_patch_filter": "Mark one-row or cloud-only support as low confidence.",
+      "predicted_user_q": "Why is this patch applied to advisor/mutation rather than final generation prompt?",
+      "answer": "The advisor evidence is converted into micro-rule patches so final generation prompts stay controlled.",
+      "score": 90
+    },
+    {
+      "cycle": 2,
+      "criteria_update": "Tighten evidence threshold, token discipline, regression protection, and validation scope.",
+      "patch_review_summary": "Reject broad rewrites; keep only targeted micro-rules with evidence rows.",
+      "weak_patch_filter": "Mark one-row or cloud-only support as low confidence.",
+      "predicted_user_q": "If strict DET and cloud judge disagree, which one is trusted?",
+      "answer": "Strict DET is primary; cloud reasoning is auxiliary explanation only.",
+      "score": 92
+    },
+    {
+      "cycle": 3,
+      "criteria_update": "Tighten evidence threshold, token discipline, regression protection, and validation scope.",
+      "patch_review_summary": "Reject broad rewrites; keep only targeted micro-rules with evidence rows.",
+      "weak_patch_filter": "Mark one-row or cloud-only support as low confidence.",
+      "predicted_user_q": "Could this micro-rule damage v13's existing high performance?",
+      "answer": "Each patch carries regression risk and validation scope to protect passing behavior.",
+      "score": 94
+    },
+    {
+      "cycle": 4,
+      "criteria_update": "Tighten evidence threshold, token discipline, regression protection, and validation scope.",
+      "patch_review_summary": "Reject broad rewrites; keep only targeted micro-rules with evidence rows.",
+      "weak_patch_filter": "Mark one-row or cloud-only support as low confidence.",
+      "predicted_user_q": "Does this increase prompt tokens too much?",
+      "answer": "Token cost is labeled and high-cost patches are isolated from conservative candidates.",
+      "score": 96
+    },
+    {
+      "cycle": 5,
+      "criteria_update": "Tighten evidence threshold, token discipline, regression protection, and validation scope.",
+      "patch_review_summary": "Reject broad rewrites; keep only targeted micro-rules with evidence rows.",
+      "weak_patch_filter": "Mark one-row or cloud-only support as low confidence.",
+      "predicted_user_q": "Is this overfitting one row?",
+      "answer": "Single-row evidence is low confidence and should become optional or diversity-only.",
+      "score": 98
+    },
+    {
+      "cycle": 6,
+      "criteria_update": "Tighten evidence threshold, token discipline, regression protection, and validation scope.",
+      "patch_review_summary": "Reject broad rewrites; keep only targeted micro-rules with evidence rows.",
+      "weak_patch_filter": "Mark one-row or cloud-only support as low confidence.",
+      "predicted_user_q": "Should this be dynamic core or optional?",
+      "answer": "Repeated low-risk clusters can be dynamic core; narrower evidence stays optional.",
+      "score": 100
+    }
+  ],
+  "validation_plan": {
+    "primary": "Run strict DET on evidence rows, then full 280-row benchmark if improved.",
+    "secondary": "Run cloud semantic judges for explanation drift only."
+  },
+  "final_decision": {
+    "status": "ready_for_population_generation",
+    "reason": "Patches are scoped to genome micro-rules and optional block activation."
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ],
+  "params": {},
+  "block_params": {
+    "06": {
+      "micro_rules": [
+        "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+      ]
+    }
+  },
+  "seed": 0,
+  "id": "cand_005_skeleton",
+  "advisor_metadata": {
+    "candidate_id": "cand_005_skeleton",
+    "mutation_intent": "skeleton_repair",
+    "source_patch_ids": [
+      "patch_005_skeleton"
+    ],
+    "active_blocks": [
+      "01",
+      "02",
+      "03",
+      "06"
+    ],
+    "dynamic_core_families": [],
+    "optional_families": [
+      "Skeleton"
+    ],
+    "suppressed_families": [],
+    "target_block_families": [
+      "Skeleton"
+    ],
+    "micro_rule_count": 1,
+    "estimated_token_cost": "medium",
+    "expected_effect": "Improve future rows affected by Skeleton without changing whole prompt blocks.",
+    "regression_risk": "low",
+    "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+    "low_confidence": false
+  }
+}

@@ -1,0 +1,1132 @@
+{
+  "metadata": {
+    "created_at": "2026-06-17T13:28:19.968378+00:00",
+    "prompt_patches": "artifacts/prompt_advisor_test/prompt_patches.json",
+    "base_genome": "fallback",
+    "population_size_requested": 12
+  },
+  "summary": {
+    "candidate_count": 12,
+    "mutation_intent_groups": [
+      "aggressive",
+      "conservative",
+      "dataflow_repair",
+      "minimality_repair",
+      "receiver_repair",
+      "service_repair",
+      "skeleton_repair"
+    ],
+    "target_block_family_combinations": [
+      "Canonical_Service_Name",
+      "Canonical_Service_Name+Dataflow+Enum_Grounding+Minimality+Output_Schema+Skeleton",
+      "Canonical_Service_Name+Minimality+Output_Schema",
+      "DET_Helper",
+      "Dataflow",
+      "Enum_Grounding",
+      "Minimality",
+      "Output_Schema",
+      "Owner_Device_Rule",
+      "Receiver_Tag_Preservation",
+      "Service_Mapping",
+      "Skeleton"
+    ],
+    "has_conservative": true,
+    "has_aggressive": true,
+    "all_candidates_same_patch_set": false
+  },
+  "prompt_patches_meta": {
+    "created_at": "2026-06-17T13:28:17.022036+00:00",
+    "source": "dry_run_deterministic",
+    "schema_version": "prompt_advisor.v1",
+    "dry_run": true,
+    "advisor_prompt": "artifacts/prompt_advisor_test/advisor_prompt.json"
+  },
+  "candidates": [
+    {
+      "candidate_id": "cand_000_canonical_service_name",
+      "source_patch_ids": [
+        "patch_000_canonical_service_name"
+      ],
+      "mutation_intent": "service_repair",
+      "diversity_family": "Canonical_Service_Name",
+      "genome": {
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {},
+        "block_params": {
+          "02": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          }
+        },
+        "seed": 0,
+        "id": "cand_000_canonical_service_name",
+        "advisor_metadata": {
+          "candidate_id": "cand_000_canonical_service_name",
+          "mutation_intent": "service_repair",
+          "source_patch_ids": [
+            "patch_000_canonical_service_name"
+          ],
+          "active_blocks": [
+            "01",
+            "02",
+            "03",
+            "06"
+          ],
+          "dynamic_core_families": [
+            "Canonical_Service_Name"
+          ],
+          "optional_families": [],
+          "suppressed_families": [],
+          "target_block_families": [
+            "Canonical_Service_Name"
+          ],
+          "micro_rule_count": 1,
+          "estimated_token_cost": "medium",
+          "expected_effect": "Improve future rows affected by Canonical_Service_Name without changing whole prompt blocks.",
+          "regression_risk": "low",
+          "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+          "low_confidence": false
+        }
+      },
+      "expected_effect": "Improve future rows affected by Canonical_Service_Name without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "metadata": {
+        "candidate_id": "cand_000_canonical_service_name",
+        "mutation_intent": "service_repair",
+        "source_patch_ids": [
+          "patch_000_canonical_service_name"
+        ],
+        "active_blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "dynamic_core_families": [
+          "Canonical_Service_Name"
+        ],
+        "optional_families": [],
+        "suppressed_families": [],
+        "target_block_families": [
+          "Canonical_Service_Name"
+        ],
+        "micro_rule_count": 1,
+        "estimated_token_cost": "medium",
+        "expected_effect": "Improve future rows affected by Canonical_Service_Name without changing whole prompt blocks.",
+        "regression_risk": "low",
+        "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+        "low_confidence": false
+      },
+      "genome_path": "artifacts/prompt_advisor_test/population/genomes/cand_000_canonical_service_name.json"
+    },
+    {
+      "candidate_id": "cand_001_minimality",
+      "source_patch_ids": [
+        "patch_001_minimality"
+      ],
+      "mutation_intent": "minimality_repair",
+      "diversity_family": "Minimality",
+      "genome": {
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {},
+        "block_params": {
+          "03": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          }
+        },
+        "seed": 0,
+        "id": "cand_001_minimality",
+        "advisor_metadata": {
+          "candidate_id": "cand_001_minimality",
+          "mutation_intent": "minimality_repair",
+          "source_patch_ids": [
+            "patch_001_minimality"
+          ],
+          "active_blocks": [
+            "01",
+            "02",
+            "03",
+            "06"
+          ],
+          "dynamic_core_families": [
+            "Minimality"
+          ],
+          "optional_families": [],
+          "suppressed_families": [],
+          "target_block_families": [
+            "Minimality"
+          ],
+          "micro_rule_count": 1,
+          "estimated_token_cost": "medium",
+          "expected_effect": "Improve future rows affected by Minimality without changing whole prompt blocks.",
+          "regression_risk": "medium",
+          "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+          "low_confidence": false
+        }
+      },
+      "expected_effect": "Improve future rows affected by Minimality without changing whole prompt blocks.",
+      "risk": "medium",
+      "token_cost": "medium",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "metadata": {
+        "candidate_id": "cand_001_minimality",
+        "mutation_intent": "minimality_repair",
+        "source_patch_ids": [
+          "patch_001_minimality"
+        ],
+        "active_blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "dynamic_core_families": [
+          "Minimality"
+        ],
+        "optional_families": [],
+        "suppressed_families": [],
+        "target_block_families": [
+          "Minimality"
+        ],
+        "micro_rule_count": 1,
+        "estimated_token_cost": "medium",
+        "expected_effect": "Improve future rows affected by Minimality without changing whole prompt blocks.",
+        "regression_risk": "medium",
+        "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+        "low_confidence": false
+      },
+      "genome_path": "artifacts/prompt_advisor_test/population/genomes/cand_001_minimality.json"
+    },
+    {
+      "candidate_id": "cand_002_output_schema",
+      "source_patch_ids": [
+        "patch_002_output_schema"
+      ],
+      "mutation_intent": "minimality_repair",
+      "diversity_family": "Output_Schema",
+      "genome": {
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {},
+        "block_params": {
+          "03": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          }
+        },
+        "seed": 0,
+        "id": "cand_002_output_schema",
+        "advisor_metadata": {
+          "candidate_id": "cand_002_output_schema",
+          "mutation_intent": "minimality_repair",
+          "source_patch_ids": [
+            "patch_002_output_schema"
+          ],
+          "active_blocks": [
+            "01",
+            "02",
+            "03",
+            "06"
+          ],
+          "dynamic_core_families": [
+            "Output_Schema"
+          ],
+          "optional_families": [],
+          "suppressed_families": [],
+          "target_block_families": [
+            "Output_Schema"
+          ],
+          "micro_rule_count": 1,
+          "estimated_token_cost": "medium",
+          "expected_effect": "Improve future rows affected by Output_Schema without changing whole prompt blocks.",
+          "regression_risk": "medium",
+          "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+          "low_confidence": false
+        }
+      },
+      "expected_effect": "Improve future rows affected by Output_Schema without changing whole prompt blocks.",
+      "risk": "medium",
+      "token_cost": "medium",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "metadata": {
+        "candidate_id": "cand_002_output_schema",
+        "mutation_intent": "minimality_repair",
+        "source_patch_ids": [
+          "patch_002_output_schema"
+        ],
+        "active_blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "dynamic_core_families": [
+          "Output_Schema"
+        ],
+        "optional_families": [],
+        "suppressed_families": [],
+        "target_block_families": [
+          "Output_Schema"
+        ],
+        "micro_rule_count": 1,
+        "estimated_token_cost": "medium",
+        "expected_effect": "Improve future rows affected by Output_Schema without changing whole prompt blocks.",
+        "regression_risk": "medium",
+        "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+        "low_confidence": false
+      },
+      "genome_path": "artifacts/prompt_advisor_test/population/genomes/cand_002_output_schema.json"
+    },
+    {
+      "candidate_id": "cand_003_enum_grounding",
+      "source_patch_ids": [
+        "patch_003_enum_grounding"
+      ],
+      "mutation_intent": "service_repair",
+      "diversity_family": "Enum_Grounding",
+      "genome": {
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {},
+        "block_params": {
+          "02": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          }
+        },
+        "seed": 0,
+        "id": "cand_003_enum_grounding",
+        "advisor_metadata": {
+          "candidate_id": "cand_003_enum_grounding",
+          "mutation_intent": "service_repair",
+          "source_patch_ids": [
+            "patch_003_enum_grounding"
+          ],
+          "active_blocks": [
+            "01",
+            "02",
+            "03",
+            "06"
+          ],
+          "dynamic_core_families": [
+            "Enum_Grounding"
+          ],
+          "optional_families": [],
+          "suppressed_families": [],
+          "target_block_families": [
+            "Enum_Grounding"
+          ],
+          "micro_rule_count": 1,
+          "estimated_token_cost": "medium",
+          "expected_effect": "Improve future rows affected by Enum_Grounding without changing whole prompt blocks.",
+          "regression_risk": "low",
+          "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+          "low_confidence": false
+        }
+      },
+      "expected_effect": "Improve future rows affected by Enum_Grounding without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "metadata": {
+        "candidate_id": "cand_003_enum_grounding",
+        "mutation_intent": "service_repair",
+        "source_patch_ids": [
+          "patch_003_enum_grounding"
+        ],
+        "active_blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "dynamic_core_families": [
+          "Enum_Grounding"
+        ],
+        "optional_families": [],
+        "suppressed_families": [],
+        "target_block_families": [
+          "Enum_Grounding"
+        ],
+        "micro_rule_count": 1,
+        "estimated_token_cost": "medium",
+        "expected_effect": "Improve future rows affected by Enum_Grounding without changing whole prompt blocks.",
+        "regression_risk": "low",
+        "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+        "low_confidence": false
+      },
+      "genome_path": "artifacts/prompt_advisor_test/population/genomes/cand_003_enum_grounding.json"
+    },
+    {
+      "candidate_id": "cand_004_dataflow",
+      "source_patch_ids": [
+        "patch_004_dataflow"
+      ],
+      "mutation_intent": "dataflow_repair",
+      "diversity_family": "Dataflow",
+      "genome": {
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {},
+        "block_params": {
+          "06": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          }
+        },
+        "seed": 0,
+        "id": "cand_004_dataflow",
+        "advisor_metadata": {
+          "candidate_id": "cand_004_dataflow",
+          "mutation_intent": "dataflow_repair",
+          "source_patch_ids": [
+            "patch_004_dataflow"
+          ],
+          "active_blocks": [
+            "01",
+            "02",
+            "03",
+            "06"
+          ],
+          "dynamic_core_families": [],
+          "optional_families": [
+            "Dataflow"
+          ],
+          "suppressed_families": [],
+          "target_block_families": [
+            "Dataflow"
+          ],
+          "micro_rule_count": 1,
+          "estimated_token_cost": "medium",
+          "expected_effect": "Improve future rows affected by Dataflow without changing whole prompt blocks.",
+          "regression_risk": "low",
+          "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+          "low_confidence": false
+        }
+      },
+      "expected_effect": "Improve future rows affected by Dataflow without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "metadata": {
+        "candidate_id": "cand_004_dataflow",
+        "mutation_intent": "dataflow_repair",
+        "source_patch_ids": [
+          "patch_004_dataflow"
+        ],
+        "active_blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "dynamic_core_families": [],
+        "optional_families": [
+          "Dataflow"
+        ],
+        "suppressed_families": [],
+        "target_block_families": [
+          "Dataflow"
+        ],
+        "micro_rule_count": 1,
+        "estimated_token_cost": "medium",
+        "expected_effect": "Improve future rows affected by Dataflow without changing whole prompt blocks.",
+        "regression_risk": "low",
+        "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+        "low_confidence": false
+      },
+      "genome_path": "artifacts/prompt_advisor_test/population/genomes/cand_004_dataflow.json"
+    },
+    {
+      "candidate_id": "cand_005_skeleton",
+      "source_patch_ids": [
+        "patch_005_skeleton"
+      ],
+      "mutation_intent": "skeleton_repair",
+      "diversity_family": "Skeleton",
+      "genome": {
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {},
+        "block_params": {
+          "06": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          }
+        },
+        "seed": 0,
+        "id": "cand_005_skeleton",
+        "advisor_metadata": {
+          "candidate_id": "cand_005_skeleton",
+          "mutation_intent": "skeleton_repair",
+          "source_patch_ids": [
+            "patch_005_skeleton"
+          ],
+          "active_blocks": [
+            "01",
+            "02",
+            "03",
+            "06"
+          ],
+          "dynamic_core_families": [],
+          "optional_families": [
+            "Skeleton"
+          ],
+          "suppressed_families": [],
+          "target_block_families": [
+            "Skeleton"
+          ],
+          "micro_rule_count": 1,
+          "estimated_token_cost": "medium",
+          "expected_effect": "Improve future rows affected by Skeleton without changing whole prompt blocks.",
+          "regression_risk": "low",
+          "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+          "low_confidence": false
+        }
+      },
+      "expected_effect": "Improve future rows affected by Skeleton without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "metadata": {
+        "candidate_id": "cand_005_skeleton",
+        "mutation_intent": "skeleton_repair",
+        "source_patch_ids": [
+          "patch_005_skeleton"
+        ],
+        "active_blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "dynamic_core_families": [],
+        "optional_families": [
+          "Skeleton"
+        ],
+        "suppressed_families": [],
+        "target_block_families": [
+          "Skeleton"
+        ],
+        "micro_rule_count": 1,
+        "estimated_token_cost": "medium",
+        "expected_effect": "Improve future rows affected by Skeleton without changing whole prompt blocks.",
+        "regression_risk": "low",
+        "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+        "low_confidence": false
+      },
+      "genome_path": "artifacts/prompt_advisor_test/population/genomes/cand_005_skeleton.json"
+    },
+    {
+      "candidate_id": "cand_006_det_helper_cluster",
+      "source_patch_ids": [
+        "patch_006_det_helper"
+      ],
+      "mutation_intent": "skeleton_repair",
+      "diversity_family": "DET_Helper_cluster",
+      "genome": {
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {},
+        "block_params": {
+          "06": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          }
+        },
+        "seed": 0,
+        "id": "cand_006_det_helper_cluster",
+        "advisor_metadata": {
+          "candidate_id": "cand_006_det_helper_cluster",
+          "mutation_intent": "skeleton_repair",
+          "source_patch_ids": [
+            "patch_006_det_helper"
+          ],
+          "active_blocks": [
+            "01",
+            "02",
+            "03",
+            "06"
+          ],
+          "dynamic_core_families": [],
+          "optional_families": [
+            "DET_Helper"
+          ],
+          "suppressed_families": [],
+          "target_block_families": [
+            "DET_Helper"
+          ],
+          "micro_rule_count": 1,
+          "estimated_token_cost": "medium",
+          "expected_effect": "Improve future rows affected by DET_Helper without changing whole prompt blocks.",
+          "regression_risk": "low",
+          "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+          "low_confidence": false
+        }
+      },
+      "expected_effect": "Improve future rows affected by DET_Helper without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "metadata": {
+        "candidate_id": "cand_006_det_helper_cluster",
+        "mutation_intent": "skeleton_repair",
+        "source_patch_ids": [
+          "patch_006_det_helper"
+        ],
+        "active_blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "dynamic_core_families": [],
+        "optional_families": [
+          "DET_Helper"
+        ],
+        "suppressed_families": [],
+        "target_block_families": [
+          "DET_Helper"
+        ],
+        "micro_rule_count": 1,
+        "estimated_token_cost": "medium",
+        "expected_effect": "Improve future rows affected by DET_Helper without changing whole prompt blocks.",
+        "regression_risk": "low",
+        "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+        "low_confidence": false
+      },
+      "genome_path": "artifacts/prompt_advisor_test/population/genomes/cand_006_det_helper_cluster.json"
+    },
+    {
+      "candidate_id": "cand_007_receiver_tag_preservation_cluster",
+      "source_patch_ids": [
+        "patch_007_receiver_tag_preservation"
+      ],
+      "mutation_intent": "receiver_repair",
+      "diversity_family": "Receiver_Tag_Preservation_cluster",
+      "genome": {
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {},
+        "block_params": {
+          "02": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          }
+        },
+        "seed": 0,
+        "id": "cand_007_receiver_tag_preservation_cluster",
+        "advisor_metadata": {
+          "candidate_id": "cand_007_receiver_tag_preservation_cluster",
+          "mutation_intent": "receiver_repair",
+          "source_patch_ids": [
+            "patch_007_receiver_tag_preservation"
+          ],
+          "active_blocks": [
+            "01",
+            "02",
+            "03",
+            "06"
+          ],
+          "dynamic_core_families": [],
+          "optional_families": [
+            "Receiver_Tag_Preservation"
+          ],
+          "suppressed_families": [],
+          "target_block_families": [
+            "Receiver_Tag_Preservation"
+          ],
+          "micro_rule_count": 1,
+          "estimated_token_cost": "medium",
+          "expected_effect": "Improve future rows affected by Receiver_Tag_Preservation without changing whole prompt blocks.",
+          "regression_risk": "low",
+          "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+          "low_confidence": false
+        }
+      },
+      "expected_effect": "Improve future rows affected by Receiver_Tag_Preservation without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "metadata": {
+        "candidate_id": "cand_007_receiver_tag_preservation_cluster",
+        "mutation_intent": "receiver_repair",
+        "source_patch_ids": [
+          "patch_007_receiver_tag_preservation"
+        ],
+        "active_blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "dynamic_core_families": [],
+        "optional_families": [
+          "Receiver_Tag_Preservation"
+        ],
+        "suppressed_families": [],
+        "target_block_families": [
+          "Receiver_Tag_Preservation"
+        ],
+        "micro_rule_count": 1,
+        "estimated_token_cost": "medium",
+        "expected_effect": "Improve future rows affected by Receiver_Tag_Preservation without changing whole prompt blocks.",
+        "regression_risk": "low",
+        "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+        "low_confidence": false
+      },
+      "genome_path": "artifacts/prompt_advisor_test/population/genomes/cand_007_receiver_tag_preservation_cluster.json"
+    },
+    {
+      "candidate_id": "cand_008_owner_device_rule_cluster",
+      "source_patch_ids": [
+        "patch_008_owner_device_rule"
+      ],
+      "mutation_intent": "receiver_repair",
+      "diversity_family": "Owner_Device_Rule_cluster",
+      "genome": {
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {},
+        "block_params": {
+          "02": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          }
+        },
+        "seed": 0,
+        "id": "cand_008_owner_device_rule_cluster",
+        "advisor_metadata": {
+          "candidate_id": "cand_008_owner_device_rule_cluster",
+          "mutation_intent": "receiver_repair",
+          "source_patch_ids": [
+            "patch_008_owner_device_rule"
+          ],
+          "active_blocks": [
+            "01",
+            "02",
+            "03",
+            "06"
+          ],
+          "dynamic_core_families": [],
+          "optional_families": [
+            "Owner_Device_Rule"
+          ],
+          "suppressed_families": [],
+          "target_block_families": [
+            "Owner_Device_Rule"
+          ],
+          "micro_rule_count": 1,
+          "estimated_token_cost": "medium",
+          "expected_effect": "Improve future rows affected by Owner_Device_Rule without changing whole prompt blocks.",
+          "regression_risk": "low",
+          "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+          "low_confidence": false
+        }
+      },
+      "expected_effect": "Improve future rows affected by Owner_Device_Rule without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "metadata": {
+        "candidate_id": "cand_008_owner_device_rule_cluster",
+        "mutation_intent": "receiver_repair",
+        "source_patch_ids": [
+          "patch_008_owner_device_rule"
+        ],
+        "active_blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "dynamic_core_families": [],
+        "optional_families": [
+          "Owner_Device_Rule"
+        ],
+        "suppressed_families": [],
+        "target_block_families": [
+          "Owner_Device_Rule"
+        ],
+        "micro_rule_count": 1,
+        "estimated_token_cost": "medium",
+        "expected_effect": "Improve future rows affected by Owner_Device_Rule without changing whole prompt blocks.",
+        "regression_risk": "low",
+        "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+        "low_confidence": false
+      },
+      "genome_path": "artifacts/prompt_advisor_test/population/genomes/cand_008_owner_device_rule_cluster.json"
+    },
+    {
+      "candidate_id": "cand_009_service_mapping_cluster",
+      "source_patch_ids": [
+        "patch_009_service_mapping"
+      ],
+      "mutation_intent": "service_repair",
+      "diversity_family": "Service_Mapping_cluster",
+      "genome": {
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {},
+        "block_params": {
+          "02": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          }
+        },
+        "seed": 0,
+        "id": "cand_009_service_mapping_cluster",
+        "advisor_metadata": {
+          "candidate_id": "cand_009_service_mapping_cluster",
+          "mutation_intent": "service_repair",
+          "source_patch_ids": [
+            "patch_009_service_mapping"
+          ],
+          "active_blocks": [
+            "01",
+            "02",
+            "03",
+            "06"
+          ],
+          "dynamic_core_families": [],
+          "optional_families": [
+            "Service_Mapping"
+          ],
+          "suppressed_families": [],
+          "target_block_families": [
+            "Service_Mapping"
+          ],
+          "micro_rule_count": 1,
+          "estimated_token_cost": "medium",
+          "expected_effect": "Improve future rows affected by Service_Mapping without changing whole prompt blocks.",
+          "regression_risk": "low",
+          "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+          "low_confidence": false
+        }
+      },
+      "expected_effect": "Improve future rows affected by Service_Mapping without changing whole prompt blocks.",
+      "risk": "low",
+      "token_cost": "medium",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "metadata": {
+        "candidate_id": "cand_009_service_mapping_cluster",
+        "mutation_intent": "service_repair",
+        "source_patch_ids": [
+          "patch_009_service_mapping"
+        ],
+        "active_blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "dynamic_core_families": [],
+        "optional_families": [
+          "Service_Mapping"
+        ],
+        "suppressed_families": [],
+        "target_block_families": [
+          "Service_Mapping"
+        ],
+        "micro_rule_count": 1,
+        "estimated_token_cost": "medium",
+        "expected_effect": "Improve future rows affected by Service_Mapping without changing whole prompt blocks.",
+        "regression_risk": "low",
+        "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+        "low_confidence": false
+      },
+      "genome_path": "artifacts/prompt_advisor_test/population/genomes/cand_009_service_mapping_cluster.json"
+    },
+    {
+      "candidate_id": "cand_010_low_cost_low_risk",
+      "source_patch_ids": [
+        "patch_000_canonical_service_name",
+        "patch_001_minimality",
+        "patch_002_output_schema"
+      ],
+      "mutation_intent": "conservative",
+      "diversity_family": "low_cost_low_risk",
+      "genome": {
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {},
+        "block_params": {
+          "02": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          },
+          "03": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          }
+        },
+        "seed": 0,
+        "id": "cand_010_low_cost_low_risk",
+        "advisor_metadata": {
+          "candidate_id": "cand_010_low_cost_low_risk",
+          "mutation_intent": "conservative",
+          "source_patch_ids": [
+            "patch_000_canonical_service_name",
+            "patch_001_minimality",
+            "patch_002_output_schema"
+          ],
+          "active_blocks": [
+            "01",
+            "02",
+            "03",
+            "06"
+          ],
+          "dynamic_core_families": [
+            "Canonical_Service_Name",
+            "Minimality",
+            "Output_Schema"
+          ],
+          "optional_families": [],
+          "suppressed_families": [],
+          "target_block_families": [
+            "Canonical_Service_Name",
+            "Minimality",
+            "Output_Schema"
+          ],
+          "micro_rule_count": 2,
+          "estimated_token_cost": "medium",
+          "expected_effect": "Improve future rows affected by Canonical_Service_Name without changing whole prompt blocks. | Improve future rows affected by Minimality without changing whole prompt blocks. | Improve future rows affected by Output_Schema without changing whole prompt blocks.",
+          "regression_risk": "medium",
+          "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+          "low_confidence": false
+        }
+      },
+      "expected_effect": "Improve future rows affected by Canonical_Service_Name without changing whole prompt blocks. | Improve future rows affected by Minimality without changing whole prompt blocks. | Improve future rows affected by Output_Schema without changing whole prompt blocks.",
+      "risk": "medium",
+      "token_cost": "medium",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "metadata": {
+        "candidate_id": "cand_010_low_cost_low_risk",
+        "mutation_intent": "conservative",
+        "source_patch_ids": [
+          "patch_000_canonical_service_name",
+          "patch_001_minimality",
+          "patch_002_output_schema"
+        ],
+        "active_blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "dynamic_core_families": [
+          "Canonical_Service_Name",
+          "Minimality",
+          "Output_Schema"
+        ],
+        "optional_families": [],
+        "suppressed_families": [],
+        "target_block_families": [
+          "Canonical_Service_Name",
+          "Minimality",
+          "Output_Schema"
+        ],
+        "micro_rule_count": 2,
+        "estimated_token_cost": "medium",
+        "expected_effect": "Improve future rows affected by Canonical_Service_Name without changing whole prompt blocks. | Improve future rows affected by Minimality without changing whole prompt blocks. | Improve future rows affected by Output_Schema without changing whole prompt blocks.",
+        "regression_risk": "medium",
+        "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+        "low_confidence": false
+      },
+      "genome_path": "artifacts/prompt_advisor_test/population/genomes/cand_010_low_cost_low_risk.json"
+    },
+    {
+      "candidate_id": "cand_011_high_priority_bundle",
+      "source_patch_ids": [
+        "patch_000_canonical_service_name",
+        "patch_001_minimality",
+        "patch_002_output_schema",
+        "patch_003_enum_grounding",
+        "patch_004_dataflow",
+        "patch_005_skeleton"
+      ],
+      "mutation_intent": "aggressive",
+      "diversity_family": "high_priority_bundle",
+      "genome": {
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {},
+        "block_params": {
+          "02": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          },
+          "03": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          },
+          "06": {
+            "micro_rules": [
+              "For ENUM arguments, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals; preserve positional argument order and separator required by the schema."
+            ]
+          }
+        },
+        "seed": 0,
+        "id": "cand_011_high_priority_bundle",
+        "advisor_metadata": {
+          "candidate_id": "cand_011_high_priority_bundle",
+          "mutation_intent": "aggressive",
+          "source_patch_ids": [
+            "patch_000_canonical_service_name",
+            "patch_001_minimality",
+            "patch_002_output_schema",
+            "patch_003_enum_grounding",
+            "patch_004_dataflow",
+            "patch_005_skeleton"
+          ],
+          "active_blocks": [
+            "01",
+            "02",
+            "03",
+            "06"
+          ],
+          "dynamic_core_families": [
+            "Canonical_Service_Name",
+            "Enum_Grounding",
+            "Minimality",
+            "Output_Schema"
+          ],
+          "optional_families": [
+            "Dataflow",
+            "Skeleton"
+          ],
+          "suppressed_families": [],
+          "target_block_families": [
+            "Canonical_Service_Name",
+            "Dataflow",
+            "Enum_Grounding",
+            "Minimality",
+            "Output_Schema",
+            "Skeleton"
+          ],
+          "micro_rule_count": 3,
+          "estimated_token_cost": "medium",
+          "expected_effect": "Improve future rows affected by Canonical_Service_Name without changing whole prompt blocks. | Improve future rows affected by Minimality without changing whole prompt blocks. | Improve future rows affected by Output_Schema without changing whole prompt blocks.",
+          "regression_risk": "medium",
+          "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+          "low_confidence": false
+        }
+      },
+      "expected_effect": "Improve future rows affected by Canonical_Service_Name without changing whole prompt blocks. | Improve future rows affected by Minimality without changing whole prompt blocks. | Improve future rows affected by Output_Schema without changing whole prompt blocks.",
+      "risk": "medium",
+      "token_cost": "medium",
+      "validation_scope": "Rerun strict DET on evidence rows, then related category rows.",
+      "metadata": {
+        "candidate_id": "cand_011_high_priority_bundle",
+        "mutation_intent": "aggressive",
+        "source_patch_ids": [
+          "patch_000_canonical_service_name",
+          "patch_001_minimality",
+          "patch_002_output_schema",
+          "patch_003_enum_grounding",
+          "patch_004_dataflow",
+          "patch_005_skeleton"
+        ],
+        "active_blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "dynamic_core_families": [
+          "Canonical_Service_Name",
+          "Enum_Grounding",
+          "Minimality",
+          "Output_Schema"
+        ],
+        "optional_families": [
+          "Dataflow",
+          "Skeleton"
+        ],
+        "suppressed_families": [],
+        "target_block_families": [
+          "Canonical_Service_Name",
+          "Dataflow",
+          "Enum_Grounding",
+          "Minimality",
+          "Output_Schema",
+          "Skeleton"
+        ],
+        "micro_rule_count": 3,
+        "estimated_token_cost": "medium",
+        "expected_effect": "Improve future rows affected by Canonical_Service_Name without changing whole prompt blocks. | Improve future rows affected by Minimality without changing whole prompt blocks. | Improve future rows affected by Output_Schema without changing whole prompt blocks.",
+        "regression_risk": "medium",
+        "recommended_rerun_scope": "Rerun strict DET on evidence rows, then related category rows.",
+        "low_confidence": false
+      },
+      "genome_path": "artifacts/prompt_advisor_test/population/genomes/cand_011_high_priority_bundle.json"
+    }
+  ]
+}
