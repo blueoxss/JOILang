@@ -104,13 +104,37 @@ def parse_selected_device_simple(connected_devices: dict):
     return category_tags_str, list(cnt_others_tags), all_categories
 
 
-def load_version_config(user_input, connected_devices: dict=None, other_params: dict=None, base_path: str="."):
+def _resolve_base_path(base_path: str = ".") -> str:
+    if os.path.isabs(str(base_path)):
+        return str(base_path)
+    if os.path.exists(str(base_path)):
+        return os.path.abspath(str(base_path))
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), str(base_path))
+
+
+def get_prompt_render_config(config: dict) -> dict:
+    raw = config.get("prompt_render") if isinstance(config, dict) else None
+    raw = raw if isinstance(raw, dict) else {}
+    mode = str(raw.get("mode") or "monolith").strip().lower()
+    if mode not in {"monolith", "blocks", "auto"}:
+        mode = "monolith"
+    return {
+        "mode": mode,
+        "loader": str(raw.get("loader") or "config_loader.py"),
+        "loader_function": str(raw.get("loader_function") or "load_version_config"),
+        "merged_prompt_output": str(raw.get("merged_prompt_output") or "merged_system_prompt.md"),
+        **{k: v for k, v in raw.items() if k not in {"mode", "loader", "loader_function", "merged_prompt_output"}},
+    }
+
+
+def render_prompt_package(user_input, connected_devices: dict=None, other_params: dict=None, base_path: str="."):
     # 1. 모델 구성 정보 로드
-    base_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), base_path)
+    base_path = _resolve_base_path(base_path)
     ensure_version013_backend_installed()
 
     with open(os.path.join(base_path, "model_config.json"), "r", encoding="utf-8") as f:
         config = json.load(f)
+    prompt_render = get_prompt_render_config(config)
     model_input = copy.deepcopy(config["model_input"])
     model_input["local_python"] = _default_local_python()
     model_input["local_worker"] = _default_local_worker()
@@ -264,8 +288,36 @@ Every scenario generated will follow this structure:
     model_input["messages"] = final_messages
 
     today_str = datetime.now().strftime("%y%m%d")
+    merged_prompt_path = os.path.join(base_path, f"merged_system_prompt_{today_str}.md")
 
-    with open(os.path.join(base_path, f"merged_system_prompt_{today_str}.md"), "w", encoding="utf-8") as f:
+    with open(merged_prompt_path, "w", encoding="utf-8") as f:
         f.write(system_prompt)
 
+    return {
+        "mode": prompt_render["mode"],
+        "system_prompt": system_prompt,
+        "messages": final_messages,
+        "merged_prompt_path": merged_prompt_path,
+        "blocks": None,
+        "metadata": {
+            "model_name": config.get("model_name"),
+            "model_version": config.get("model_version"),
+            "base_path": base_path,
+            "prompt_render": prompt_render,
+            "debug_prompt_output": merged_prompt_path,
+        },
+        "config": config,
+        "model_input": model_input,
+    }
+
+
+def load_version_config(user_input, connected_devices: dict=None, other_params: dict=None, base_path: str="."):
+    package = render_prompt_package(
+        user_input,
+        connected_devices=connected_devices,
+        other_params=other_params,
+        base_path=base_path,
+    )
+    config = package["config"]
+    model_input = package["model_input"]
     return config, model_input

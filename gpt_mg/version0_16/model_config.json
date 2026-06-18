@@ -8,6 +8,12 @@
     "first_name": "Mingi",
     "last_name": "Jeong"
   },
+  "prompt_render": {
+    "mode": "monolith",
+    "loader": "config_loader.py",
+    "loader_function": "load_version_config",
+    "merged_prompt_output": "merged_system_prompt.md"
+  },
   "model_input": {
     "model": "qwen2.5-Coder-7B-Instruct",
     "backend": "local_qwen",

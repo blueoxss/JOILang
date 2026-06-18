@@ -251,3 +251,5 @@ utils/evaluation_cloud/**/.ipynb_checkpoints/
 *.pyc
 artifacts/hybrid_strict_cloud*/
 artifacts/evaluation_cloud/
+artifacts/ga_search/
+artifacts/test_fixtures/
