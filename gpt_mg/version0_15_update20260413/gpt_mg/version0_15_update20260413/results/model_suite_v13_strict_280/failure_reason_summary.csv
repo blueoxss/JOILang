@@ -1,17 +1,1 @@
 model_key,model_label,failure_reason,count
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,gt_mismatch,135
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,semantic,58
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,extraneous,48
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,invalid_json,25
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,numeric_grounding,25
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,arg_type,24
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,gt_receiver_coverage,21
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,gt_service_coverage,21
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,precondition,12
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,enum_grounding,7
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,service_match,5
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,dataflow,3
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,unknown_service:doorlock_lockstate,2
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,unknown_service:cloudserviceprovider_savefile,1
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,unknown_service:laundrydryer_setlaundrydryermodemode,1
-qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,unknown_service:robotvacuumcleaner_robotvacuumcleanermodemode,1

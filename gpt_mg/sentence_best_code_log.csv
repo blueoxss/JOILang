@@ -740,3 +740,5 @@ Switch the dishwasher to dry mode.,"[{'name': 'SwitchDishwasherToDryMode', 'cron
 "매일 아침 9시에 불을 켜줘, 사람이 없으면 불을 키지마.","[{'name': 'TurnOnLightIfNoOnePresent', 'cron': '', 'period': 0, 'code': 'prev := (#LightSensor).lightsensor_brightness\ncurr = (#LightSensor).lightsensor_brightness\nif (prev > 10 and curr <= 10) {\n    (#tc1_de19adc7-a6fd-4b6f-85a5-3321a747a4d0).switch_on()\n}\nprev = curr'}]"
 "매일 아침 9시에 사람이 있으면 불을 켜고, 사람이 없으면 불을 켜지 않는다.","[{'name': 'TurnOnLightIfOccupied', 'cron': '', 'period': 0, 'code': 'prev := (#LightSensor).lightsensor_brightness\ncurr = (#LightSensor).lightsensor_brightness\nif (prev == 0 and curr > 0) {\n    (#Light).light_movetorgb(255, 255, 0)\n}\nprev = curr'}]"
 모든 전등 꺼줘,"[{'name': 'AllLightsOff', 'cron': '', 'period': -1, 'code': 'all(#Light).switch_off()'}]"
+Switch the dishwasher to dry mode.,
+Add 5 minutes to the oven.,

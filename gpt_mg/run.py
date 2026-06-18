@@ -10,11 +10,19 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from dotenv import load_dotenv
 
 load_dotenv()
-os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY_PROJ_BENCH")  # .env 파일에서 키 가져오기
 
-from openai import OpenAI
+api_key = (
+    os.getenv("OPENAI_API_KEY_PROJ_BENCH")
+    or os.getenv("JOI_EVAL_OPENAI_API_KEY")
+    or os.getenv("JOI_V15_OPENAI_API_KEY")
+    or os.getenv("OPENAI_API_KEY")
+)
 
-client = OpenAI()
+if not api_key:
+    raise RuntimeError("OpenAI API key is not configured")
+
+os.environ["OPENAI_API_KEY"] = api_key
+client = OpenAI(api_key=api_key)
 
 import pandas as pd
 import json, ast, requests

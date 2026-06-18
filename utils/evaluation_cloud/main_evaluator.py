@@ -37,9 +37,11 @@ import traceback  # 상세 오류 출력용
 from pathlib import Path  # 경로 처리용
 
 CURRENT_FILE_DIR = Path(__file__).resolve().parent
-PARENT_DIR = CURRENT_FILE_DIR.parent
-if str(PARENT_DIR) not in sys.path:
-    sys.path.insert(0, str(PARENT_DIR))
+REPO_ROOT = CURRENT_FILE_DIR.parents[1]
+PARENT_DIR = REPO_ROOT
+
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 if str(CURRENT_FILE_DIR) not in sys.path:
     sys.path.insert(0, str(CURRENT_FILE_DIR))
 
@@ -433,7 +435,8 @@ def _choose_rep_gt_for_display(det_eval_results, gt_json_list, gt_str_list):
 
 # --- (A) GPT 호출 함수 임포트 (수정: selector + ../ 경로 지원) ---
 CURRENT_FILE_DIR = Path(__file__).resolve().parent
-REPO_ROOT = CURRENT_FILE_DIR.parent  # joi_lang_evaluation의 상위 폴더 (gpt_cap와 같은 레벨)
+REPO_ROOT = CURRENT_FILE_DIR.parents[1]
+PARENT_DIR = REPO_ROOT
 
 from contextlib import contextmanager
 @contextmanager
@@ -1103,8 +1106,6 @@ def run_local_test(
                 print("  - sys.path(head 8):")
                 for p in sys.path[:8]:
                     print("    ", p)
-                # 실제 파일 존재 여부
-                from pathlib import Path
                 here = Path(__file__).resolve().parent
                 print("  - exists:", (here / "cloud_judge" / "judge.py").exists(), str(here / "cloud_judge" / "judge.py"))
                 traceback.print_exc()
@@ -1207,7 +1208,6 @@ def run_local_test(
                 print("  - sys.path(head 8):")
                 for p in sys.path[:8]:
                     print("    ", p)
-                from pathlib import Path
                 here = Path(__file__).resolve().parent
                 print("  - exists:", (here / "cloud_judge" / "judge_gpt.py").exists(), str(here / "cloud_judge" / "judge_gpt.py"))
                 traceback.print_exc()
