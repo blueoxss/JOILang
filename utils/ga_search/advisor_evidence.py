@@ -31,6 +31,19 @@ FAILURE_TO_FAMILY = {
     "enum_grounding": "Enum_Grounding",
     "extraneous": "Minimality",
     "invalid_json": "Output_Schema",
+    "invalid_json.non_json_text": "Output_Schema",
+    "invalid_json.markdown_fence": "Output_Schema",
+    "invalid_json.malformed_json": "Output_Schema",
+    "invalid_json.truncated_json": "Output_Schema",
+    "schema_missing_required_keys": "Output_Schema",
+    "schema_invalid_field_type": "Output_Schema",
+    "generation_empty_output": "Generation_Health",
+    "generation_runtime_error": "Generation_Health",
+    "generation_cuda_oom": "Prompt_Budget",
+    "generation_timeout": "Runtime_Health",
+    "candidate_extraction_failure": "Parser_Extraction",
+    "valid_json_empty_behavior_match": "No_Mutation",
+    "valid_json_empty_behavior_failure": "Intent_Fulfillment",
     "precondition": "Skeleton",
     "conditions": "Owner_Device_Rule",
     "device_service": "Service_Mapping",
@@ -49,6 +62,12 @@ FAMILY_TO_INTENT = {
     "Enum_Grounding": "service_repair",
     "Minimality": "minimality_repair",
     "Output_Schema": "minimality_repair",
+    "Generation_Health": "runtime_health",
+    "Prompt_Budget": "prompt_budget_repair",
+    "Runtime_Health": "runtime_health",
+    "Parser_Extraction": "parser_extraction_repair",
+    "Intent_Fulfillment": "skeleton_repair",
+    "No_Mutation": "no_mutation",
 }
 
 CLOUD_SCORE_COLUMNS = [
@@ -112,6 +131,29 @@ def base_reason(reason: Any) -> str:
     return token.split(":", 1)[0]
 
 
+def _root_cause_reason(row: dict[str, Any]) -> str:
+    summary = row.get("root_cause_summary") if isinstance(row.get("root_cause_summary"), dict) else {}
+    root = str(summary.get("root_cause") or "").strip()
+    return root if root and root != "valid_json_nonempty" else ""
+
+
+def _cloud_valid(row: dict[str, Any], prefix: str) -> bool:
+    key = "ls_valid_score" if prefix == "lang" else "gpt_valid_score"
+    status_key = "ls_judge_status" if prefix == "lang" else "gpt_judge_status"
+    if key not in row and status_key not in row:
+        return True
+    value = row.get(key)
+    if isinstance(value, bool):
+        return value
+    text = str(value or "").strip().lower()
+    if text in {"1", "true", "yes", "y"}:
+        return True
+    if text in {"0", "false", "no", "n"}:
+        return False
+    status = str(row.get(status_key) or "").strip().lower()
+    return status in {"valid_score", "ok", "success"}
+
+
 def to_float(value: Any) -> float | None:
     try:
         if value is None or str(value).strip() == "":
@@ -153,7 +195,8 @@ def _failure_cluster(failure_type: str, rows: list[dict[str, Any]]) -> dict[str,
 def _cluster_rows(high_priority_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in high_priority_rows:
-        reasons = row.get("local_failure_reasons") or row.get("cloud_failure_dimensions") or ["gt_mismatch"]
+        root = _root_cause_reason(row)
+        reasons = [root] if root else row.get("local_failure_reasons") or row.get("cloud_failure_dimensions") or ["gt_mismatch"]
         for reason in str_list(reasons):
             grouped[base_reason(reason) or "gt_mismatch"].append(row)
     return [_failure_cluster(reason, rows) for reason, rows in sorted(grouped.items())]
@@ -208,7 +251,8 @@ def build_local_evidence(
     for index, row in enumerate(rows if isinstance(rows, list) else [], start=1):
         if not isinstance(row, dict):
             continue
-        reasons = [base_reason(item) for item in str_list(row.get("failure_reasons"))]
+        root = _root_cause_reason(row)
+        reasons = [root] if root else [base_reason(item) for item in str_list(row.get("failure_reasons"))]
         normalized_rows.append(
             {
                 "row_no": row_no_from_row(row, index),
@@ -221,6 +265,10 @@ def build_local_evidence(
                 "cloud_scores": {},
                 "cloud_reasoning": "",
                 "recommended_prompt_mutations": as_list(row.get("recommended_mutations")),
+                "generation_state": row.get("generation_state", {}),
+                "generation_health": row.get("generation_health", {}),
+                "root_cause_summary": row.get("root_cause_summary", {}),
+                "suppressed_mutations": row.get("suppressed_mutations", []),
             }
         )
     reason_counter = Counter(
@@ -262,6 +310,10 @@ def _cloud_failure_dimensions(row: dict[str, str]) -> list[str]:
         "overall_gpt": "gpt_semantic",
     }
     for column, dimension in dimension_map.items():
+        if column.startswith("ls_") and not _cloud_valid(row, "lang"):
+            continue
+        if column.startswith("overall_gpt") and not _cloud_valid(row, "gpt"):
+            continue
         score = normalize_score(row.get(column))
         if score is not None and score < 0.8:
             dims.append(dimension)
@@ -281,12 +333,21 @@ def build_cloud_evidence(*, cloud_judge_csv: str | None, top_k: int = 20) -> dic
     ]
     normalized_rows: list[dict[str, Any]] = []
     for index, row in enumerate(rows, start=1):
-        cloud_scores = {column: normalize_score(row.get(column)) for column in CLOUD_SCORE_COLUMNS if column in row}
+        cloud_scores = {}
+        for column in CLOUD_SCORE_COLUMNS:
+            if column not in row:
+                continue
+            if column.startswith("ls_") or column == "overall_lang":
+                cloud_scores[column] = normalize_score(row.get(column)) if _cloud_valid(row, "lang") else None
+            elif column.startswith("gpt_") or column == "overall_gpt":
+                cloud_scores[column] = normalize_score(row.get(column)) if _cloud_valid(row, "gpt") else None
+            else:
+                cloud_scores[column] = normalize_score(row.get(column))
         available = [value for value in cloud_scores.values() if value is not None]
-        mean_score = sum(available) / len(available) if available else 1.0
+        mean_score = sum(available) / len(available) if available else None
         reasoning_parts = [str(row.get(column) or "").strip() for column in CLOUD_REASONING_COLUMNS if row.get(column)]
         dims = _cloud_failure_dimensions(row)
-        if dims or mean_score < 0.8:
+        if dims or (mean_score is not None and mean_score < 0.8):
             normalized_rows.append(
                 {
                     "row_no": row_no_from_row(row, index),
@@ -300,7 +361,7 @@ def build_cloud_evidence(*, cloud_judge_csv: str | None, top_k: int = 20) -> dic
                     "cloud_reasoning": " | ".join(reasoning_parts)[:2000],
                     "cloud_failure_dimensions": dims or ["gpt_semantic"],
                     "recommended_prompt_mutations": [],
-                    "_rank_score": mean_score,
+                    "_rank_score": mean_score if mean_score is not None else 1.0,
                 }
             )
     normalized_rows.sort(key=lambda item: (item.get("_rank_score", 1.0), str(item.get("row_no"))))
@@ -328,14 +389,15 @@ def _row_from_rich_feedback(row: dict[str, Any], fallback: int) -> dict[str, Any
     diagnostics = row.get("local_det_diagnostics") if isinstance(row.get("local_det_diagnostics"), dict) else {}
     lang = row.get("lang_judge") if isinstance(row.get("lang_judge"), dict) else {}
     gpt = row.get("gpt_judge") if isinstance(row.get("gpt_judge"), dict) else {}
-    reasons = [base_reason(item) for item in str_list(strict_det.get("failure_reasons"))]
+    root = _root_cause_reason(row)
+    reasons = [root] if root else [base_reason(item) for item in str_list(strict_det.get("failure_reasons"))]
     cloud_scores = {
-        "overall_lang": normalize_score(lang.get("overall_lang")),
-        "ls_semantic_intent": normalize_score(lang.get("semantic_intent")),
-        "ls_conditions": normalize_score(lang.get("conditions")),
-        "ls_time_period": normalize_score(lang.get("time_period")),
-        "ls_device_service": normalize_score(lang.get("device_service")),
-        "overall_gpt": normalize_score(gpt.get("overall_gpt")),
+        "overall_lang": normalize_score(lang.get("overall_lang")) if lang.get("valid_score") is not False else None,
+        "ls_semantic_intent": normalize_score(lang.get("semantic_intent")) if lang.get("valid_score") is not False else None,
+        "ls_conditions": normalize_score(lang.get("conditions")) if lang.get("valid_score") is not False else None,
+        "ls_time_period": normalize_score(lang.get("time_period")) if lang.get("valid_score") is not False else None,
+        "ls_device_service": normalize_score(lang.get("device_service")) if lang.get("valid_score") is not False else None,
+        "overall_gpt": normalize_score(gpt.get("overall_gpt")) if gpt.get("valid_score") is not False else None,
     }
     reasoning = []
     for value in (lang.get("reasoning"), gpt.get("reasoning")):
@@ -355,6 +417,11 @@ def _row_from_rich_feedback(row: dict[str, Any], fallback: int) -> dict[str, Any
         "cloud_scores": cloud_scores,
         "cloud_reasoning": " | ".join(reasoning)[:2000],
         "recommended_prompt_mutations": as_list(diagnostics.get("recommended_mutations")),
+        "generation_state": row.get("generation_state", {}),
+        "generation_health": row.get("generation_health", {}),
+        "evidence_quality": row.get("evidence_quality", {}),
+        "root_cause_summary": row.get("root_cause_summary", {}),
+        "suppressed_mutations": row.get("suppressed_mutations", []),
         "priority_score": row.get("advisor_priority", {}).get("priority_score")
         if isinstance(row.get("advisor_priority"), dict)
         else None,
@@ -397,6 +464,7 @@ def build_hybrid_evidence(
             "top_cloud_failure_dimensions": [],
             "strict_is_primary": True,
             "cloud_is_auxiliary": True,
+            "evidence_quality": data.get("metadata", {}).get("join_quality_details", {}),
         }
         packet["high_priority_rows"] = normalized_rows[: max(1, top_k)]
         packet["failure_clusters"] = _cluster_rows(packet["high_priority_rows"])

@@ -6,9 +6,24 @@ import csv
 import difflib
 import json
 import re
+import sys
 from collections import Counter
 from pathlib import Path
 from typing import Any
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from utils.feedback_generation_state import (
+    GENERATION_FAILURE_CLASSES,
+    INVALID_JSON_CLASSES,
+    SCHEMA_FAILURE_CLASSES,
+    classify_generation_state,
+    component_score_policy,
+    generation_failure_diagnostic,
+    root_cause_summary_for_state,
+)
 
 
 FAILURE_TAXONOMY: dict[str, dict[str, str]] = {
@@ -320,6 +335,16 @@ def build_concrete_diagnostics(
     reasons: list[str],
     rerank_row: dict[str, str] | None,
 ) -> list[str]:
+    state = classify_generation_state(row, model_key)
+    state_class = str(state.get("class") or "")
+    if (
+        state_class in GENERATION_FAILURE_CLASSES
+        or state_class in INVALID_JSON_CLASSES
+        or state_class in SCHEMA_FAILURE_CLASSES
+        or state_class == "valid_json_empty_behavior_match"
+    ):
+        return [generation_failure_diagnostic(state)]
+
     diagnostics: list[str] = []
     gt_code = str(row.get("gt_code", "") or "")
     output_code = model_get(row, model_key, "output_code")
@@ -513,6 +538,54 @@ def recommend_for_reasons(reasons: list[str]) -> list[dict[str, str]]:
     return recommendations
 
 
+def recommend_for_generation_state(state: dict[str, Any], reasons: list[str]) -> list[dict[str, str]]:
+    state_class = str(state.get("class") or "")
+    if state_class == "valid_json_nonempty":
+        return recommend_for_reasons(reasons)
+    root = root_cause_summary_for_state(state)
+    family = str(root.get("target_block_family") or "")
+    policy = str(root.get("mutation_policy") or "")
+    if family == "No_Mutation" or policy == "no_mutation":
+        return []
+    block_id = {
+        "Output_Schema": "03",
+        "Skeleton": "06",
+        "Intent_Fulfillment": "06",
+        "Service_Mapping": "02",
+        "Generation_Health": "",
+        "Prompt_Budget": "",
+        "Runtime_Health": "",
+        "Runtime_Config": "",
+        "Parser_Extraction": "",
+    }.get(family, "06" if family else "")
+    if family == "Output_Schema" and not state.get("allow_output_schema_mutation"):
+        return []
+    return [
+        {
+            "failure_reason": state_class,
+            "target_block_id": block_id,
+            "target_block_family": family,
+            "suggested_mutation_type": policy,
+            "micro_rule": (
+                "Inspect generation health, raw output, worker logs, prompt length, and runtime config before prompt semantic mutations."
+                if family in {"Generation_Health", "Prompt_Budget", "Runtime_Health", "Runtime_Config", "Parser_Extraction"}
+                else "Require non-empty behavior when the command requires an action."
+                if state_class == "valid_json_empty_behavior_failure"
+                else "Return one parseable JSON object with required keys and no prose/markdown."
+            ),
+        }
+    ]
+
+
+def root_cause_reasons(state: dict[str, Any], reasons: list[str]) -> list[str]:
+    state_class = str(state.get("class") or "")
+    if state_class in {"valid_json_nonempty"}:
+        return reasons
+    if state_class == "valid_json_nonempty_gt_mismatch":
+        return reasons or [state_class]
+    return [state_class]
+
+
 def build_report_rows(
     rows: list[dict[str, str]],
     *,
@@ -527,11 +600,21 @@ def build_report_rows(
         if boolish(model_get(row, model_key, "det_pass")) and not include_pass:
             continue
         rerank_row = rerank_by_row.get(row_no, {})
-        reasons = infer_reasons(row, model_key, rerank_row)
+        original_reasons = infer_reasons(row, model_key, rerank_row)
+        state = classify_generation_state(row, model_key)
+        reasons = root_cause_reasons(state, original_reasons)
         if not reasons and not include_pass:
             continue
         resolved_services = str(rerank_row.get("det_resolved_services", "") or "")
         concrete_diagnostics = build_concrete_diagnostics(row, model_key=model_key, reasons=reasons, rerank_row=rerank_row)
+        det_scores = collect_scores(row, model_key)
+        det_scores["component_score_policy"] = component_score_policy(row, model_key, state)
+        state_class = str(state.get("class") or "")
+        automatic_explanations = (
+            [generation_failure_diagnostic(state)]
+            if reasons == [state_class] and state_class != "valid_json_empty_behavior_failure"
+            else [explain_reason(reason, row, model_key, rerank_row) for reason in reasons]
+        )
         report_rows.append(
             {
                 "row_no": row_no,
@@ -539,7 +622,16 @@ def build_report_rows(
                 "command_eng": row.get("command_eng", ""),
                 "command_kor": row.get("command_kor", ""),
                 "failure_reasons": reasons,
-                "det_scores": collect_scores(row, model_key),
+                "original_failure_reasons": original_reasons,
+                "generation_state": state,
+                "generation_health": {
+                    "output_empty": bool(state.get("parsed_fields_empty")),
+                    "runtime_error_type": state.get("runtime_error_type", ""),
+                    "oom_flag": state.get("class") == "generation_cuda_oom",
+                    "prompt_mutation_allowed": state.get("class") not in {"valid_json_empty_behavior_match"},
+                },
+                "root_cause_summary": root_cause_summary_for_state(state),
+                "det_scores": det_scores,
                 "gt": row.get("gt", ""),
                 "gt_cron": row.get("gt_cron", ""),
                 "gt_period": row.get("gt_period", ""),
@@ -550,8 +642,8 @@ def build_report_rows(
                 "output_code": model_get(row, model_key, "output_code"),
                 "resolved_services": safe_json_loads(resolved_services, resolved_services),
                 "concrete_diagnostics": concrete_diagnostics,
-                "automatic_explanations": [explain_reason(reason, row, model_key, rerank_row) for reason in reasons],
-                "recommended_mutations": recommend_for_reasons(reasons),
+                "automatic_explanations": automatic_explanations,
+                "recommended_mutations": recommend_for_generation_state(state, reasons),
             }
         )
         if max_rows and len(report_rows) >= max_rows:
@@ -674,6 +766,7 @@ def flatten_for_csv(report_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for item in report_rows:
         scores = item["det_scores"]
+        state = item.get("generation_state") or {}
         rows.append(
             {
                 "row_no": item["row_no"],
@@ -681,6 +774,10 @@ def flatten_for_csv(report_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "command_eng": item["command_eng"],
                 "command_kor": item["command_kor"],
                 "failure_reasons": json.dumps(item["failure_reasons"], ensure_ascii=False),
+                "original_failure_reasons": json.dumps(item.get("original_failure_reasons", []), ensure_ascii=False),
+                "generation_state_class": state.get("class", ""),
+                "generation_state": json.dumps(state, ensure_ascii=False),
+                "root_cause_summary": json.dumps(item.get("root_cause_summary", {}), ensure_ascii=False),
                 "concrete_diagnostics": "\n".join(item.get("concrete_diagnostics") or []),
                 "det_score": scores.get("det_score", ""),
                 "det_gt_similarity": scores.get("det_gt_similarity", ""),
@@ -689,6 +786,7 @@ def flatten_for_csv(report_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "det_dataflow_score": scores.get("det_dataflow_score", ""),
                 "det_numeric_grounding": scores.get("det_numeric_grounding", ""),
                 "det_enum_grounding": scores.get("det_enum_grounding", ""),
+                "component_score_policy": json.dumps(scores.get("component_score_policy", {}), ensure_ascii=False),
                 "gt_cron": item["gt_cron"],
                 "gt_period": item["gt_period"],
                 "output_cron": item["output_cron"],

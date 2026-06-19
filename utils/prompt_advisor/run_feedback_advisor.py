@@ -91,12 +91,22 @@ def compact_text(value: Any, limit: int = 700) -> str:
 
 
 def best_micro_rule_from_cluster(cluster: dict[str, Any]) -> str:
+    family = str(cluster.get("target_block_family") or cluster.get("cluster_id") or "DET_Helper")
+    if family == "Generation_Health":
+        return "Do not classify empty generations as semantic mismatches; inspect raw output capture, worker logs, prompt length, and runtime errors first."
+    if family == "Prompt_Budget":
+        return "For OOM or prompt-pressure failures, reduce prompt/context budget before adding new semantic repair rules."
+    if family == "Runtime_Health":
+        return "For timeout/runtime failures, validate worker runtime configuration and retry policy before changing JOILang semantics."
+    if family == "Parser_Extraction":
+        return "When raw output exists but candidate extraction fails, inspect response wrapping and extraction rules before semantic prompt mutation."
+    if family == "Intent_Fulfillment":
+        return "When the command requires an action, produce at least one non-empty behavior field unless the GT behavior is explicitly empty."
     for row in cluster.get("representative_rows") or []:
         diag = row.get("local_det_diagnostics") or {}
         for mutation in diag.get("recommended_mutations") or []:
             if isinstance(mutation, dict) and mutation.get("micro_rule"):
                 return compact_text(mutation.get("micro_rule"), 500)
-    family = cluster.get("target_block_family", "DET_Helper")
     return f"Before final JSON, run a targeted self-check for recurring {family} failures."
 
 
@@ -105,7 +115,19 @@ def patch_operation_for_family(family: str) -> str:
         return "strengthen_existing_rule"
     if family in {"Output_Schema", "Minimality"}:
         return "append_micro_rule"
-    if family in {"Temporal_Rule", "Skeleton", "DET_Helper", "Dataflow", "Cron_Period_Planning", "Event_Trigger_Skeleton"}:
+    if family in {
+        "Temporal_Rule",
+        "Skeleton",
+        "DET_Helper",
+        "Dataflow",
+        "Cron_Period_Planning",
+        "Event_Trigger_Skeleton",
+        "Generation_Health",
+        "Prompt_Budget",
+        "Runtime_Health",
+        "Parser_Extraction",
+        "Intent_Fulfillment",
+    }:
         return "append_micro_rule"
     return "append_micro_rule"
 
@@ -134,10 +156,14 @@ def deterministic_patches_from_prompt(prompt_payload: dict[str, Any]) -> dict[st
     clusters = evidence.get("failure_clusters") or []
     summary = evidence.get("compressed_feedback_summary") or {}
     patches: list[dict[str, Any]] = []
+    skipped_no_mutation = 0
     for idx, cluster in enumerate(clusters[:12]):
         if not isinstance(cluster, dict):
             continue
         family = str(cluster.get("target_block_family") or cluster.get("cluster_id") or "DET_Helper")
+        if family == "No_Mutation":
+            skipped_no_mutation += 1
+            continue
         block_id = str(cluster.get("target_block_id") or FAMILY_TO_DEFAULT_BLOCK.get(family, "06"))
         row_nos = [str(item) for item in cluster.get("row_nos", []) if str(item).strip()]
         reason_counts = cluster.get("failure_reason_counts") or {}
@@ -182,6 +208,8 @@ def deterministic_patches_from_prompt(prompt_payload: dict[str, Any]) -> dict[st
                 "suppress_or_do_not_change": False,
             }
         )
+    if not patches and skipped_no_mutation and skipped_no_mutation == len([c for c in clusters[:12] if isinstance(c, dict)]):
+        return make_minimal_patches_output([], source="dry_run_deterministic", summary=summary)
     if not patches:
         patches.append(
             {
@@ -284,4 +312,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

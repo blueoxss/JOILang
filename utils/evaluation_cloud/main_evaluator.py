@@ -50,6 +50,8 @@ try:
 except ImportError:
     from eval_tools import config
 
+from utils.feedback_generation_state import classify_generation_state
+
 def _label_overall_final(score: Any) -> str:
     """overall_final 점수로 최종 라벨(fail/partial/pass) 반환."""
     OVERALL_FINAL_FAIL_LT = getattr(config, "OVERALL_FINAL_FAIL_LT", 0.5)
@@ -1047,6 +1049,8 @@ def run_local_test(
             candidate_json = {"code": f"INVALID JSON: {generated_code_json_str}"}
     else:  # 이미 json 형태인 경우
         candidate_json = generated_code_json_str if generated_code_json_str else {"code": ""}
+    if not isinstance(candidate_json, dict):
+        candidate_json = {"code": str(candidate_json or "")}
     print(f"[2/N] 후보 JSON 생성 ({response_time:.3f}초, 측정 {elapse_time:.3f}s):\n{generated_code_json_str}")
 
     # 4. Ground Truth 로드 (안전 파서)
@@ -1073,6 +1077,24 @@ def run_local_test(
         gt_str_list.append(norm if isinstance(norm, str) and norm else json.dumps(obj, ensure_ascii=False))
     print(f"[3/N] {len(gt_json_list)}개의 유효한 Ground Truth 로드 완료.")
 
+    generation_state_row = {
+        "row_no": original_index,
+        "raw_candidate": generated_code_json_str,
+        "generated_candidate_json": generated_code_json_str,
+        "ground_truth_json_list": gt_str_list,
+        "gt_code": gt_json_list[0].get("code", "") if gt_json_list and isinstance(gt_json_list[0], dict) else "",
+        "gt_cron": gt_json_list[0].get("cron", "") if gt_json_list and isinstance(gt_json_list[0], dict) else "",
+        "gt_period": gt_json_list[0].get("period", "") if gt_json_list and isinstance(gt_json_list[0], dict) else "",
+        "output_code": candidate_json.get("code", ""),
+        "output_cron": candidate_json.get("cron", ""),
+        "output_period": candidate_json.get("period", ""),
+    }
+    generation_state = classify_generation_state(generation_state_row)
+    generation_state_class = str(generation_state.get("class") or "")
+    skip_cloud_judge = bool(generation_state.get("skip_cloud_judge"))
+    if skip_cloud_judge:
+        print(f"   Cloud judges will be skipped for generation_state={generation_state_class}.")
+
     # 5. 결정론적 평가 실행 (선택)
     det_eval_results = {"scores": {}, "evidence": {}}
     if run_det:
@@ -1086,7 +1108,17 @@ def run_local_test(
     semantic_intent_ls = None
     ls_judge_reasoning = ""
     ls_multi_scores = {}
-    if run_lang:
+    ls_judge_status = "not_requested"
+    ls_valid_score = False
+    ls_error_type = ""
+    ls_skip_reason = ""
+    if run_lang and skip_cloud_judge:
+        step_order += 1
+        print(f"[{step_order}/N] LangSmith Criteria Judge skipped ({generation_state_class}).")
+        ls_judge_status = "skipped"
+        ls_skip_reason = generation_state_class
+        ls_judge_reasoning = f"skipped ({generation_state_class})"
+    elif run_lang:
         step_order += 1
         print(f"[{step_order}/N] LangSmith Criteria Judge (로컬 실행) 시작...")
 
@@ -1165,13 +1197,30 @@ def run_local_test(
                         )
                         score = eval_result.get("score", None)
                         if score is None:
-                            score = 0.0
-                        semantic_intent_ls = float(score)
+                            semantic_intent_ls = None
+                        else:
+                            semantic_intent_ls = float(score)
                         ls_judge_reasoning = eval_result.get("reasoning", "N/A")
-                        print(f"  - LangSmith Judge Score (semantic_intent_ls): {semantic_intent_ls:.4f}")
+                        if semantic_intent_ls is not None:
+                            print(f"  - LangSmith Judge Score (semantic_intent_ls): {semantic_intent_ls:.4f}")
         except Exception as e:
             print(f"  ❌ LangSmith Judge 실행 중 오류: {e}")
+            ls_error_type = type(e).__name__
             ls_judge_reasoning = f"error ({e})"
+    if run_lang and not skip_cloud_judge:
+        if ls_error_type or str(ls_judge_reasoning).strip().lower().startswith("error"):
+            ls_judge_status = "judge_runtime_error"
+            ls_valid_score = False
+        elif str(ls_judge_reasoning).strip().lower().startswith("skipped"):
+            ls_judge_status = "skipped"
+            ls_skip_reason = ls_skip_reason or str(ls_judge_reasoning).strip()
+            ls_valid_score = False
+        elif semantic_intent_ls is not None or bool(ls_multi_scores):
+            ls_judge_status = "valid_score"
+            ls_valid_score = True
+        else:
+            ls_judge_status = "missing_or_error"
+            ls_valid_score = False
 
     # 7. Custom GPT Judge (선택)
     raw_gpt_similarity = None
@@ -1181,7 +1230,17 @@ def run_local_test(
     gpt_reconverted_same = ""
     gpt_reconverted_score = None
     gpt_reconverted_reasoning = ""
-    if run_gpt_j:
+    gpt_judge_status = "not_requested"
+    gpt_valid_score = False
+    gpt_error_type = ""
+    gpt_skip_reason = ""
+    if run_gpt_j and skip_cloud_judge:
+        step_order += 1
+        print(f"[{step_order}/N] Custom GPT Judge skipped ({generation_state_class}).")
+        gpt_judge_status = "skipped"
+        gpt_skip_reason = generation_state_class
+        gpt_judge_reasoning = f"skipped ({generation_state_class})"
+    elif run_gpt_j:
         step_order += 1
         print(f"[{step_order}/N] Custom GPT Judge (로컬 실행) 시작...")
         try:
@@ -1224,11 +1283,13 @@ def run_local_test(
             if first_gt_code:
                 try:
                     gpt_judge_result = run_custom_gpt_judge_func(candidate_json.get("code", ""), first_gt_code, command)
-                    raw_gpt_similarity = gpt_judge_result.get("score", 0.0)  # 원시 점수
+                    raw_gpt_similarity = gpt_judge_result.get("score")  # 원시 점수
                     gpt_judge_reasoning = gpt_judge_result.get("comment", "")
-                    print(f"  - Custom GPT Judge Raw Similarity: {raw_gpt_similarity:.4f}")
+                    if raw_gpt_similarity is not None:
+                        print(f"  - Custom GPT Judge Raw Similarity: {float(raw_gpt_similarity):.4f}")
                 except Exception as e:
                     print(f"  ❌ Custom GPT Judge 실행 중 오류: {e}")
+                    gpt_error_type = type(e).__name__
                     gpt_judge_reasoning = f"error ({e})"
             elif run_reconverted_fallback_judge_func:
                 gpt_reconverted_reference_sentence = command_kor or command
@@ -1240,7 +1301,7 @@ def run_local_test(
                         connected_devices=connected_devices,
                         other_params=other_params,
                     )
-                    raw_gpt_similarity = fallback_result.get("score", 0.0)
+                    raw_gpt_similarity = fallback_result.get("score")
                     gpt_reconverted_sentence = fallback_result.get("translated_sentence", "")
                     gpt_reconverted_same = fallback_result.get("same", False)
                     gpt_reconverted_score = raw_gpt_similarity
@@ -1252,18 +1313,38 @@ def run_local_test(
                     if translation_comment:
                         reason_bits.append(f"translation: {translation_comment}")
                     gpt_judge_reasoning = " | ".join(reason_bits) or "fallback_reconverted_match"
-                    print(f"  - No valid GT. Fallback reconverted match score: {raw_gpt_similarity:.4f}")
+                    if raw_gpt_similarity is not None:
+                        print(f"  - No valid GT. Fallback reconverted match score: {float(raw_gpt_similarity):.4f}")
                     if gpt_reconverted_sentence:
                         print(f"  - Reconverted Korean Sentence: {gpt_reconverted_sentence}")
                     print(f"  - Same As Input: {gpt_reconverted_same}")
                 except Exception as e:
                     print(f"  ❌ Fallback reconverted judge 실행 중 오류: {e}")
+                    gpt_error_type = type(e).__name__
                     gpt_judge_reasoning = f"fallback_error ({e})"
                     gpt_reconverted_reasoning = f"error ({e})"
             else:
+                gpt_judge_status = "skipped"
+                gpt_skip_reason = "no_valid_gt"
                 gpt_judge_reasoning = "skipped (no valid GT)"
         else:
+            gpt_judge_status = "skipped"
+            gpt_skip_reason = "module_unavailable"
             gpt_judge_reasoning = "skipped (module unavailable)"
+    if run_gpt_j and not skip_cloud_judge:
+        if gpt_error_type or "error" in str(gpt_judge_reasoning).lower():
+            gpt_judge_status = "judge_runtime_error"
+            gpt_valid_score = False
+        elif str(gpt_judge_reasoning).strip().lower().startswith("skipped"):
+            gpt_judge_status = gpt_judge_status if gpt_judge_status != "not_requested" else "skipped"
+            gpt_skip_reason = gpt_skip_reason or str(gpt_judge_reasoning).strip()
+            gpt_valid_score = False
+        elif raw_gpt_similarity is not None:
+            gpt_judge_status = "valid_score"
+            gpt_valid_score = True
+        else:
+            gpt_judge_status = "missing_or_error"
+            gpt_valid_score = False
 
     # 8. 최종 점수 계산
     #    DET × ( overall_lang(=LS 세부 가중합 or fallback) + overall_gpt(=W * raw_gpt_similarity) )
@@ -1278,12 +1359,14 @@ def run_local_test(
     det_score = float(final_scores.get("overall_deterministic") or 0.0)
 
     # LS: 세부 항목 가중합 (있으면 세부항목만 사용, 없으면 fallback으로 semantic_intent_ls 사용)
+    # Judge skipped/error/missing states are kept as null rather than being
+    # converted into semantic score 0.
     LS_CRITERIA_WEIGHTS = dict(getattr(config, "LS_CRITERIA_WEIGHTS", {}))
     _W_GPT = getattr(config, "GPT_SCORE_WEIGHT", 0.2)
     import re as _re
 
     ls_weighted = None
-    if ls_multi_scores:
+    if ls_valid_score and ls_multi_scores:
         present = [(k, v) for k, v in ls_multi_scores.items() if k in LS_CRITERIA_WEIGHTS]
         if not present:
             norm_scores  = { _re.sub(r"\s+", "_", k.lower()): v for k, v in ls_multi_scores.items() }
@@ -1297,7 +1380,7 @@ def run_local_test(
             if wsum > 0:
                 ls_weighted = sum(LS_CRITERIA_WEIGHTS[k] * float(v or 0.0) for k, v in present) / float(wsum)
 
-    if ls_weighted is None:
+    if ls_weighted is None and ls_valid_score:
         ls_weighted = float(final_scores.get("semantic_intent_ls") or 0.0)
 
     # --- Lang/GPT 가중 평균 (가중치 합=1) ---
@@ -1309,18 +1392,30 @@ def run_local_test(
     W_GPT = max(0.0, min(1.0, W_GPT))
     W_LANG = 1.0 - W_GPT
 
-    lang_raw = max(0.0, min(1.0, float(ls_weighted or 0.0)))
-    gpt_raw  = max(0.0, min(1.0, float(raw_gpt_similarity) if raw_gpt_similarity is not None else 0.0))
+    lang_raw = max(0.0, min(1.0, float(ls_weighted))) if (run_lang and ls_valid_score and ls_weighted is not None) else None
+    gpt_raw = max(0.0, min(1.0, float(raw_gpt_similarity))) if (run_gpt_j and gpt_valid_score and raw_gpt_similarity is not None) else None
 
-    # GPT 심사를 안 돌린 경우(점수 없음) 재정규화 옵션
-    if raw_gpt_similarity is None and getattr(config, "RENORM_WHEN_GPT_MISSING", True):
-        W_LANG, W_GPT = 1.0, 0.0
+    valid_weights: list[tuple[str, float, float]] = []
+    if lang_raw is not None:
+        valid_weights.append(("lang", W_LANG, lang_raw))
+    if gpt_raw is not None:
+        valid_weights.append(("gpt", W_GPT, gpt_raw))
+    weight_sum = sum(weight for _name, weight, _score in valid_weights)
+    if valid_weights and weight_sum <= 0:
+        weight_sum = float(len(valid_weights))
+        valid_weights = [(name, 1.0, score) for name, _weight, score in valid_weights]
 
-    overall_lang = W_LANG * lang_raw
-    overall_gpt  = W_GPT * gpt_raw
-
-    # ▶ 최종 산식: overall_final = DET × (W_LANG*LANG + W_GPT*GPT)
-    overall_final_new = det_score * (overall_lang + overall_gpt)
+    overall_lang = None
+    overall_gpt = None
+    overall_final_new = None
+    if valid_weights and weight_sum > 0:
+        for name, weight, score in valid_weights:
+            weighted = (weight / weight_sum) * score
+            if name == "lang":
+                overall_lang = weighted
+            else:
+                overall_gpt = weighted
+        overall_final_new = det_score * sum(value for value in (overall_lang, overall_gpt) if value is not None)
 
     final_scores["overall_lang"]  = overall_lang
     final_scores["overall_gpt"]   = overall_gpt
@@ -1330,6 +1425,7 @@ def run_local_test(
 
     # CSV 데이터 준비
     output_data = {
+        "row_no": original_index,
         "index": original_index,
         "category": ("" if category_for_csv is None else category_for_csv),
         "model_name": full_model_name,
@@ -1358,13 +1454,23 @@ def run_local_test(
         "overall_gpt": final_scores.get("overall_gpt") if run_gpt_j else "",    # ← 추가
 
         # --- 텍스트/증거 ---
+        "generation_state_class": generation_state_class,
+        "generation_state": json.dumps(generation_state, ensure_ascii=False, separators=(",", ":")),
         "generated_candidate_json": _compact_json_for_csv(candidate_json),
         "ground_truth_json_list": _compact_json_for_csv(gt_json_list),
         "syntax_errors": det_eval_results["evidence"].get("syntax_errors") if run_det else "",
         "rule_violations": det_eval_results["evidence"].get("rule_violations") if run_det else "",
         "function_call_issues": det_eval_results["evidence"].get("function_call_issues") if run_det else "",
         "z3_diff": det_eval_results["evidence"].get("similarity_diff") if run_det else "",
+        "ls_judge_status": ls_judge_status if run_lang else "not_requested",
+        "ls_valid_score": ls_valid_score if run_lang else False,
+        "ls_error_type": ls_error_type if run_lang else "",
+        "ls_skip_reason": ls_skip_reason if run_lang else "",
         "ls_judge_reasoning": ls_judge_reasoning if run_lang else "",
+        "gpt_judge_status": gpt_judge_status if run_gpt_j else "not_requested",
+        "gpt_valid_score": gpt_valid_score if run_gpt_j else False,
+        "gpt_error_type": gpt_error_type if run_gpt_j else "",
+        "gpt_skip_reason": gpt_skip_reason if run_gpt_j else "",
         "gpt_judge_reasoning": gpt_judge_reasoning if run_gpt_j else "",
         "gpt_reconverted_reference_sentence": gpt_reconverted_reference_sentence if run_gpt_j else "",
         "gpt_reconverted_sentence": gpt_reconverted_sentence if run_gpt_j else "",
@@ -1387,6 +1493,7 @@ def run_local_test(
 
     try:
         ordered_columns = [
+            "row_no",
             "index",
             "category",
             "model_name",
@@ -1415,13 +1522,23 @@ def run_local_test(
             "overall_gpt",          # ← 추가
 
             # --- 텍스트/증거 ---
+            "generation_state_class",
+            "generation_state",
             "generated_candidate_json",
             "ground_truth_json_list",
             "syntax_errors",
             "rule_violations",
             "function_call_issues",
             "z3_diff",
+            "ls_judge_status",
+            "ls_valid_score",
+            "ls_error_type",
+            "ls_skip_reason",
             "ls_judge_reasoning",
+            "gpt_judge_status",
+            "gpt_valid_score",
+            "gpt_error_type",
+            "gpt_skip_reason",
             "gpt_judge_reasoning",
             "gpt_reconverted_reference_sentence",
             "gpt_reconverted_sentence",
@@ -1523,6 +1640,7 @@ def run_local_test(
 
         # (5) ‘index’ 컬럼에는 원본 CSV의 실제 인덱스 번호(original_index) 저장
         existing_df.loc[target_row_idx, "index"] = str(original_index)
+        existing_df.loc[target_row_idx, "row_no"] = str(original_index)
 
         # (6) 컬럼 순서/결측 정리 후 저장
         final_df = existing_df.reindex(columns=ordered_columns)

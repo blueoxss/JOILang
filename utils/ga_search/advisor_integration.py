@@ -33,6 +33,12 @@ FAMILY_TO_DEFAULT_BLOCK = {
     "Skeleton": "06",
     "Event_Trigger_Skeleton": "06",
     "Dataflow": "06",
+    "Generation_Health": "06",
+    "Prompt_Budget": "06",
+    "Runtime_Health": "06",
+    "Parser_Extraction": "06",
+    "Intent_Fulfillment": "06",
+    "No_Mutation": "06",
 }
 
 FAMILY_RULES = {
@@ -46,6 +52,11 @@ FAMILY_RULES = {
     "Enum_Grounding": "For enum services, copy one allowed enum value exactly; for numeric arguments, use unquoted numeric literals in schema-required order.",
     "Minimality": "Emit only actions and reads required by the command; remove unrelated reads, duplicate actions, wrappers, and unnecessary state changes.",
     "Output_Schema": "Return exactly one JSON object with required keys only; do not emit markdown, prose, comments, or code fences.",
+    "Generation_Health": "Do not infer semantic prompt failures from empty generations; inspect worker output, raw candidate capture, prompt length, and runtime logs first.",
+    "Prompt_Budget": "When generation fails from OOM or prompt pressure, reduce prompt payload or context budget before adding semantic repair rules.",
+    "Runtime_Health": "When generation times out or raises runtime errors, validate worker/runtime configuration and retry policy before semantic prompt mutation.",
+    "Parser_Extraction": "When raw output exists but candidate extraction fails, inspect response wrapping and extraction rules before changing JOILang semantics.",
+    "Intent_Fulfillment": "For action commands, require at least one non-empty behavior field unless the GT behavior is explicitly empty.",
 }
 
 
@@ -110,6 +121,14 @@ def build_prompt_patches_from_evidence(evidence_packet: dict[str, Any], *, dry_r
     for index, cluster in enumerate(clusters[:12], start=1):
         failure_types = _str_list(cluster.get("failure_types")) or ["gt_mismatch"]
         family = str(cluster.get("recommended_block_family") or FAILURE_TO_FAMILY.get(failure_types[0], "DET_Helper"))
+        if family == "No_Mutation":
+            continue
+        if family == "Output_Schema" and any(
+            family in _str_list(row.get("suppressed_mutations"))
+            for row in evidence_packet.get("high_priority_rows", [])
+            if str(row.get("row_no")) in set(_str_list(cluster.get("rows")))
+        ):
+            continue
         block_id = FAMILY_TO_DEFAULT_BLOCK.get(family, "06")
         row_ids = _str_list(cluster.get("rows"))
         priority = _patch_priority(cluster, row_ids)

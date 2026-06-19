@@ -13,6 +13,16 @@ from pathlib import Path
 from statistics import mean
 from typing import Any
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from utils.feedback_generation_state import (
+    classify_generation_state,
+    component_score_policy,
+    root_cause_summary_for_state,
+)
+
 
 STRICT_REQUIRED_FILES = [
     "row_comparison.csv",
@@ -86,6 +96,10 @@ CSV_COLUMNS = [
     "gpt_judge_reasoning",
     "priority_score",
     "priority_level",
+    "generation_state_class",
+    "evidence_quality",
+    "root_cause_summary",
+    "suppressed_mutations",
     "gt_code",
     "output_code",
 ]
@@ -295,6 +309,68 @@ def index_cloud_rows(
     return indexed, keys, duplicates, chosen_key
 
 
+def duplicate_key_count(rows: list[dict[str, str]], key_name: str) -> int:
+    counts: Counter[str] = Counter()
+    for pos, row in enumerate(rows):
+        raw = pos if key_name == "__row_position__" else row.get(key_name, "")
+        key = normalize_join_value(raw)
+        if key:
+            counts[key] += 1
+    return sum(1 for count in counts.values() if count > 1)
+
+
+def assess_join_quality(
+    *,
+    strict_rows: list[dict[str, str]],
+    cloud_rows: list[dict[str, str]],
+    strict_keys: set[str],
+    cloud_keys: set[str],
+    joined_keys: set[str],
+    chosen_join_key: str,
+    cloud_duplicates: int,
+) -> dict[str, Any]:
+    strict_duplicates = duplicate_key_count(strict_rows, "row_no")
+    row_position_join = chosen_join_key == "__row_position__"
+    ordered_ok = bool(row_position_join and len(strict_rows) == len(cloud_rows) and not strict_duplicates and not cloud_duplicates)
+    if strict_duplicates or cloud_duplicates:
+        quality = "bad"
+        usable = False
+        mode = "strict_only_fallback"
+        reason = "duplicate_join_key"
+    elif row_position_join and not ordered_ok:
+        quality = "bad"
+        usable = False
+        mode = "strict_only_fallback"
+        reason = "unverified_index_join"
+    elif len(joined_keys) == len(strict_keys) and len(strict_keys) > 0:
+        quality = "good"
+        usable = True
+        mode = "hybrid"
+        reason = "row_no_match" if chosen_join_key == "row_no" else "verified_index_fallback"
+    elif joined_keys:
+        quality = "partial"
+        usable = True
+        mode = "cloud_only_auxiliary"
+        reason = "partial_join"
+    else:
+        quality = "bad"
+        usable = False
+        mode = "strict_only_fallback"
+        reason = "missing_join"
+    return {
+        "join_quality": quality,
+        "join_reason": reason,
+        "cloud_feedback_usable_for_priority": usable,
+        "effective_feedback_mode": mode,
+        "chosen_join_key": chosen_join_key,
+        "strict_duplicate_join_keys": strict_duplicates,
+        "cloud_duplicate_join_keys": cloud_duplicates,
+        "joined_rows": len(joined_keys),
+        "strict_only_rows": len(strict_keys - cloud_keys),
+        "cloud_only_rows": len(cloud_keys - strict_keys),
+    }
+
+
 def load_failure_report(path: Path) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
     data = json.loads(path.read_text(encoding="utf-8"))
     rows = data.get("rows", []) if isinstance(data, dict) else []
@@ -336,15 +412,7 @@ def collect_top_mutation_blocks(report_rows: list[dict[str, Any]]) -> list[dict[
 
 
 def component_scores(strict_row: dict[str, str], model_key: str) -> dict[str, float | None]:
-    return {
-        "gt_similarity": as_float(model_get(strict_row, model_key, "det_gt_similarity")),
-        "gt_service_coverage": as_float(model_get(strict_row, model_key, "det_gt_service_coverage")),
-        "gt_service_precision": as_float(model_get(strict_row, model_key, "det_gt_service_precision")),
-        "gt_receiver_coverage": as_float(model_get(strict_row, model_key, "det_gt_receiver_coverage")),
-        "dataflow_score": as_float(model_get(strict_row, model_key, "det_dataflow_score")),
-        "numeric_grounding": as_float(model_get(strict_row, model_key, "det_numeric_grounding")),
-        "enum_grounding": as_float(model_get(strict_row, model_key, "det_enum_grounding")),
-    }
+    return component_score_policy(strict_row, model_key)
 
 
 def mutation_present(report_row: dict[str, Any]) -> bool:
@@ -357,10 +425,11 @@ def compute_priority(
     overall_lang: Any,
     overall_gpt: Any,
     has_mutations: bool,
+    use_cloud_scores: bool = True,
 ) -> dict[str, Any]:
     det_norm = normalize_score(det_score)
-    lang_norm = normalize_score(overall_lang)
-    gpt_norm = normalize_score(overall_gpt)
+    lang_norm = normalize_score(overall_lang) if use_cloud_scores else None
+    gpt_norm = normalize_score(overall_gpt) if use_cloud_scores else None
     if det_norm is None:
         det_norm = 0.0
 
@@ -398,6 +467,8 @@ def compute_priority(
     reason_bits = [f"strict_det_norm={det_norm:.3f}"]
     if missing:
         reason_bits.append("missing " + "/".join(missing) + " redistributed to strict DET")
+    if not use_cloud_scores:
+        reason_bits.append("cloud priority disabled by join/status quality; strict_only_fallback")
     if has_mutations:
         reason_bits.append("recommended_mutations present")
     if det_pass is False:
@@ -416,11 +487,67 @@ def cloud_available(row: dict[str, str] | None, fields: list[str]) -> bool:
     return any(str(row.get(field, "")).strip() for field in fields)
 
 
+def cloud_score_status(
+    cloud_row: dict[str, str] | None,
+    *,
+    score_key: str,
+    status_key: str,
+    valid_key: str,
+    error_key: str,
+    skip_key: str,
+    reasoning_key: str,
+) -> dict[str, Any]:
+    if not cloud_row:
+        return {
+            "available": False,
+            "valid_score": False,
+            "status": "missing_join",
+            "score": None,
+            "error_type": "",
+            "skip_reason": "missing_join",
+        }
+    raw_status = str(cloud_row.get(status_key, "") or "").strip()
+    raw_valid = as_bool(cloud_row.get(valid_key))
+    error_type = str(cloud_row.get(error_key, "") or "").strip()
+    skip_reason = str(cloud_row.get(skip_key, "") or "").strip()
+    reasoning = str(cloud_row.get(reasoning_key, "") or "").lower()
+    score = as_float(cloud_row.get(score_key))
+    if raw_valid is True and score is not None:
+        status = raw_status or "valid_score"
+        valid = True
+    elif raw_status:
+        status = raw_status
+        valid = False
+    elif "skipped (empty code)" in reasoning or "empty code" in reasoning:
+        status = "empty_code_skipped"
+        skip_reason = skip_reason or "empty_code"
+        valid = False
+    elif "error" in reasoning or error_type:
+        status = "judge_runtime_error"
+        error_type = error_type or "judge_runtime_error"
+        valid = False
+    elif score is not None:
+        status = "valid_score"
+        valid = True
+    else:
+        status = "missing_or_error"
+        valid = False
+    return {
+        "available": True,
+        "valid_score": bool(valid),
+        "status": status,
+        "score": score if valid else None,
+        "error_type": error_type,
+        "skip_reason": skip_reason,
+    }
+
+
 def build_advisor_row(
     strict_row: dict[str, str],
     cloud_row: dict[str, str] | None,
     report_row: dict[str, Any],
     model_key: str,
+    join_quality: dict[str, Any],
 ) -> dict[str, Any]:
     failure_reasons = [
         str(reason)
@@ -437,10 +564,32 @@ def build_advisor_row(
     det_score = as_float(model_get(strict_row, model_key, "det_score"))
     det_pass = as_bool(model_get(strict_row, model_key, "det_pass"))
     gt_exact = as_bool(model_get(strict_row, model_key, "det_gt_exact"))
-    overall_lang = as_float((cloud_row or {}).get("overall_lang"))
-    overall_gpt = as_float((cloud_row or {}).get("overall_gpt"))
+    state = classify_generation_state(strict_row, model_key)
+    lang_status = cloud_score_status(
+        cloud_row,
+        score_key="overall_lang",
+        status_key="ls_judge_status",
+        valid_key="ls_valid_score",
+        error_key="ls_error_type",
+        skip_key="ls_skip_reason",
+        reasoning_key="ls_judge_reasoning",
+    )
+    gpt_status = cloud_score_status(
+        cloud_row,
+        score_key="overall_gpt",
+        status_key="gpt_judge_status",
+        valid_key="gpt_valid_score",
+        error_key="gpt_error_type",
+        skip_key="gpt_skip_reason",
+        reasoning_key="gpt_judge_reasoning",
+    )
+    use_cloud_priority = bool(join_quality.get("cloud_feedback_usable_for_priority")) and (
+        bool(lang_status["valid_score"]) or bool(gpt_status["valid_score"])
+    )
+    overall_lang = lang_status["score"]
+    overall_gpt = gpt_status["score"]
     has_mutations = mutation_present(report_row)
-    priority = compute_priority(det_score, det_pass, overall_lang, overall_gpt, has_mutations)
+    priority = compute_priority(det_score, det_pass, overall_lang, overall_gpt, has_mutations, use_cloud_scores=use_cloud_priority)
 
     ls_reasoning = parse_reasoning((cloud_row or {}).get("ls_judge_reasoning", ""))
     gpt_reasoning = parse_reasoning((cloud_row or {}).get("gpt_judge_reasoning", ""))
@@ -457,6 +606,23 @@ def build_advisor_row(
             "failure_reasons": failure_reasons,
             "component_scores": component_scores(strict_row, model_key),
         },
+        "generation_state": state,
+        "generation_health": {
+            "output_empty": bool(state.get("parsed_fields_empty")),
+            "runtime_error_type": state.get("runtime_error_type", ""),
+            "oom_flag": state.get("class") == "generation_cuda_oom",
+            "prompt_mutation_allowed": state.get("class") != "valid_json_empty_behavior_match",
+        },
+        "evidence_quality": {
+            "strict_det": "valid",
+            "cloud_lang": lang_status["status"],
+            "cloud_gpt": gpt_status["status"],
+            "join_quality": join_quality.get("join_quality"),
+            "effective_feedback_mode": join_quality.get("effective_feedback_mode"),
+            "cloud_feedback_usable_for_priority": bool(join_quality.get("cloud_feedback_usable_for_priority")),
+        },
+        "root_cause_summary": root_cause_summary_for_state(state),
+        "suppressed_mutations": state.get("suppressed_mutations", []),
         "code_comparison": {
             "gt_cron": strict_row.get("gt_cron", ""),
             "gt_period": strict_row.get("gt_period", ""),
@@ -483,11 +649,15 @@ def build_advisor_row(
                     "ls_judge_reasoning",
                 ],
             ),
+            "valid_score": lang_status["valid_score"],
+            "status": lang_status["status"],
+            "error_type": lang_status["error_type"],
+            "skip_reason": lang_status["skip_reason"],
             "overall_lang": overall_lang,
-            "semantic_intent": as_float((cloud_row or {}).get("ls_semantic_intent")),
-            "conditions": as_float((cloud_row or {}).get("ls_conditions")),
-            "time_period": as_float((cloud_row or {}).get("ls_time_period")),
-            "device_service": as_float((cloud_row or {}).get("ls_device_service")),
+            "semantic_intent": as_float((cloud_row or {}).get("ls_semantic_intent")) if lang_status["valid_score"] else None,
+            "conditions": as_float((cloud_row or {}).get("ls_conditions")) if lang_status["valid_score"] else None,
+            "time_period": as_float((cloud_row or {}).get("ls_time_period")) if lang_status["valid_score"] else None,
+            "device_service": as_float((cloud_row or {}).get("ls_device_service")) if lang_status["valid_score"] else None,
             "reasoning": ls_reasoning,
         },
         "gpt_judge": {
@@ -502,6 +672,10 @@ def build_advisor_row(
                     "gpt_reconverted_reasoning",
                 ],
             ),
+            "valid_score": gpt_status["valid_score"],
+            "status": gpt_status["status"],
+            "error_type": gpt_status["error_type"],
+            "skip_reason": gpt_status["skip_reason"],
             "overall_gpt": overall_gpt,
             "reasoning": gpt_reasoning,
             "reconverted": {
@@ -540,13 +714,32 @@ def summarize(
 ) -> dict[str, Any]:
     det_scores = [as_float(model_get(row, model_key, "det_score")) for row in strict_rows]
     det_failed = sum(1 for row in strict_rows if as_bool(model_get(row, model_key, "det_pass")) is False)
+    root_causes = Counter(
+        str((row.get("root_cause_summary") or {}).get("root_cause") or "")
+        for row in advisor_rows
+        if str((row.get("root_cause_summary") or {}).get("root_cause") or "").strip()
+    )
+    actionable_families = Counter()
+    suppressed = Counter()
+    for row in advisor_rows:
+        for mutation in parse_list_like((row.get("local_det_diagnostics") or {}).get("recommended_mutations", [])):
+            if isinstance(mutation, dict):
+                family = str(mutation.get("target_block_family") or "").strip()
+                if family:
+                    actionable_families[family] += 1
+        for family in parse_list_like(row.get("suppressed_mutations", [])):
+            if str(family).strip():
+                suppressed[str(family)] += 1
     return {
         "mean_strict_det_score": mean_or_none(det_scores),
         "strict_det_failed_rows": det_failed,
         "mean_overall_lang": mean_or_none([row["lang_judge"].get("overall_lang") for row in advisor_rows]),
         "mean_overall_gpt": mean_or_none([row["gpt_judge"].get("overall_gpt") for row in advisor_rows]),
         "top_failure_reasons": failure_summary[:20],
+        "top_root_causes": [{"root_cause": key, "count": count} for key, count in root_causes.most_common(20)],
         "top_mutation_blocks": mutation_summary[:20],
+        "actionable_prompt_mutation_counts": dict(actionable_families.most_common()),
+        "suppressed_mutations": dict(suppressed.most_common()),
     }
 
 
@@ -618,6 +811,10 @@ def csv_rows_from_advisor(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "gpt_judge_reasoning": row["gpt_judge"].get("reasoning"),
                 "priority_score": row["advisor_priority"].get("priority_score"),
                 "priority_level": row["advisor_priority"].get("priority_level"),
+                "generation_state_class": (row.get("generation_state") or {}).get("class", ""),
+                "evidence_quality": row.get("evidence_quality", {}),
+                "root_cause_summary": row.get("root_cause_summary", {}),
+                "suppressed_mutations": row.get("suppressed_mutations", []),
                 "gt_code": row["code_comparison"].get("gt_code", ""),
                 "output_code": row["code_comparison"].get("output_code", ""),
             }
@@ -658,6 +855,8 @@ def write_markdown(
     lines.append(f"- joined cloud rows: {metadata['joined_rows']}")
     lines.append(f"- strict-only rows: {metadata['strict_only_rows']}")
     lines.append(f"- cloud-only rows: {metadata['cloud_only_rows']}")
+    lines.append(f"- join quality: {metadata.get('join_quality')} ({metadata.get('join_reason')})")
+    lines.append(f"- effective feedback mode: {metadata.get('effective_feedback_mode')}")
     lines.append(f"- strict DET failed rows: {summary['strict_det_failed_rows']}")
     lines.append(f"- mean strict_det_score: {summary['mean_strict_det_score']}")
     lines.append(f"- mean overall_lang: {summary['mean_overall_lang']}")
@@ -668,6 +867,9 @@ def write_markdown(
     lines.append("- top recommended mutation blocks:")
     for item in summary["top_mutation_blocks"][:10]:
         lines.append(f"  - {item.get('mutation_block')}: {item.get('count')}")
+    lines.append("- top root causes:")
+    for item in summary.get("top_root_causes", [])[:10]:
+        lines.append(f"  - {item.get('root_cause')}: {item.get('count')}")
     lines.append("")
     lines.append("## 2. Failure reason × cloud judge correlation")
     lines.append("")
@@ -765,13 +967,20 @@ def main() -> int:
         args.join_key,
     )
     joined_keys = strict_keys.intersection(cloud_keys)
+    join_quality = assess_join_quality(
+        strict_rows=strict_rows,
+        cloud_rows=cloud_rows,
+        strict_keys=strict_keys,
+        cloud_keys=cloud_keys,
+        joined_keys=joined_keys,
+        chosen_join_key=chosen_join_key,
+        cloud_duplicates=cloud_duplicates,
+    )
     if not joined_keys:
-        die(
-            "Join produced 0 rows.\n"
-            f"strict row key: row_no\n"
-            f"cloud join key: {chosen_join_key}\n"
-            f"strict columns: {strict_columns}\n"
-            f"cloud columns: {cloud_columns}"
+        print(
+            "Warning: join produced 0 rows; continuing with strict_only_fallback. "
+            f"strict row key=row_no, cloud join key={chosen_join_key}",
+            file=sys.stderr,
         )
 
     all_advisor_rows: list[dict[str, Any]] = []
@@ -784,6 +993,7 @@ def main() -> int:
                 cloud_row=cloud_by_key.get(key),
                 report_row=report_row,
                 model_key=args.model_key,
+                join_quality=join_quality,
             )
         )
 
@@ -807,6 +1017,12 @@ def main() -> int:
         "strict_only_rows": len(strict_keys - cloud_keys),
         "cloud_only_rows": len(cloud_keys - strict_keys),
         "cloud_duplicate_join_keys": cloud_duplicates,
+        "strict_duplicate_join_keys": join_quality.get("strict_duplicate_join_keys"),
+        "join_quality": join_quality.get("join_quality"),
+        "join_reason": join_quality.get("join_reason"),
+        "cloud_feedback_usable_for_priority": join_quality.get("cloud_feedback_usable_for_priority"),
+        "effective_feedback_mode": join_quality.get("effective_feedback_mode"),
+        "join_quality_details": join_quality,
         "output_rows": len(selected_rows),
         "include_pass": bool(args.include_pass),
     }

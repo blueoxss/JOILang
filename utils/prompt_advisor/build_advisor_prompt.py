@@ -29,6 +29,12 @@ IMPORTANT_REASONS = {
     "dataflow",
     "extraneous",
     "service_match",
+    "generation_empty_output",
+    "generation_runtime_error",
+    "generation_cuda_oom",
+    "generation_timeout",
+    "candidate_extraction_failure",
+    "valid_json_empty_behavior_failure",
 }
 
 FAILURE_CLUSTER_MAP = {
@@ -45,6 +51,19 @@ FAILURE_CLUSTER_MAP = {
     "arg_type": ("Enum_Grounding",),
     "enum_grounding": ("Enum_Grounding",),
     "extraneous": ("Minimality", "Output_Schema"),
+    "generation_empty_output": ("Generation_Health",),
+    "generation_runtime_error": ("Generation_Health",),
+    "generation_cuda_oom": ("Prompt_Budget", "Runtime_Health"),
+    "generation_timeout": ("Runtime_Health", "Prompt_Budget"),
+    "candidate_extraction_failure": ("Parser_Extraction",),
+    "invalid_json.non_json_text": ("Output_Schema",),
+    "invalid_json.markdown_fence": ("Output_Schema",),
+    "invalid_json.malformed_json": ("Output_Schema",),
+    "invalid_json.truncated_json": ("Output_Schema",),
+    "schema_missing_required_keys": ("Output_Schema",),
+    "schema_invalid_field_type": ("Output_Schema",),
+    "valid_json_empty_behavior_match": ("No_Mutation",),
+    "valid_json_empty_behavior_failure": ("Intent_Fulfillment", "Skeleton"),
 }
 
 
@@ -107,6 +126,10 @@ def get_priority_level(row: dict[str, Any]) -> str:
 
 
 def row_failure_reasons(row: dict[str, Any]) -> list[str]:
+    root = row.get("root_cause_summary") if isinstance(row.get("root_cause_summary"), dict) else {}
+    root_cause = str(root.get("root_cause") or "").strip()
+    if root_cause and root_cause != "valid_json_nonempty":
+        return [root_cause]
     strict = row.get("strict_det") or {}
     reasons = strict.get("failure_reasons") or []
     return [str(item) for item in reasons if str(item).strip()]
@@ -114,8 +137,14 @@ def row_failure_reasons(row: dict[str, Any]) -> list[str]:
 
 def row_clusters(row: dict[str, Any]) -> list[str]:
     families: list[str] = []
+    root = row.get("root_cause_summary") if isinstance(row.get("root_cause_summary"), dict) else {}
+    root_family = str(root.get("target_block_family") or "").strip()
+    if root_family and root_family != "DET_Helper":
+        families.append(root_family)
     for reason in row_failure_reasons(row):
         for family in FAILURE_CLUSTER_MAP.get(base_reason(reason), ("DET_Helper",)):
+            if family == "Output_Schema" and family in set(row.get("suppressed_mutations") or []):
+                continue
             if family not in families:
                 families.append(family)
     return families or ["DET_Helper"]
@@ -132,7 +161,7 @@ def row_is_primary_candidate(row: dict[str, Any]) -> bool:
     return (
         det_pass is False
         and priority_level in {"high", "medium"}
-        and bool(reasons.intersection(IMPORTANT_REASONS))
+        and (bool(reasons.intersection(IMPORTANT_REASONS)) or bool((row.get("root_cause_summary") or {}).get("target_block_family")))
         and bool(concrete)
         and bool(mutations)
     )
@@ -140,8 +169,13 @@ def row_is_primary_candidate(row: dict[str, Any]) -> bool:
 
 def row_auxiliary_boost(row: dict[str, Any]) -> float:
     boost = 0.0
+    evidence_quality = row.get("evidence_quality") if isinstance(row.get("evidence_quality"), dict) else {}
+    if evidence_quality.get("effective_feedback_mode") == "strict_only_fallback":
+        return boost
     lang = row.get("lang_judge") or {}
     gpt = row.get("gpt_judge") or {}
+    if lang.get("valid_score") is False and gpt.get("valid_score") is False:
+        return boost
     for key in ("time_period", "device_service", "semantic_intent"):
         val = as_float(lang.get(key))
         if val is not None and val < 0.8:
@@ -197,6 +231,11 @@ def compact_row(row: dict[str, Any], *, include_code: bool) -> dict[str, Any]:
         "command_eng": short_text(row.get("command_eng", ""), 700),
         "command_kor": short_text(row.get("command_kor", ""), 700),
         "failure_clusters": row_clusters(row),
+        "generation_state": row.get("generation_state", {}),
+        "generation_health": row.get("generation_health", {}),
+        "evidence_quality": row.get("evidence_quality", {}),
+        "root_cause_summary": row.get("root_cause_summary", {}),
+        "suppressed_mutations": row.get("suppressed_mutations", []),
         "strict_det": {
             "det_score": strict.get("det_score"),
             "det_pass": strict.get("det_pass"),
@@ -215,6 +254,9 @@ def compact_row(row: dict[str, Any], *, include_code: bool) -> dict[str, Any]:
         "cloud_auxiliary": {
             "lang": {
                 "available": lang.get("available", False),
+                "valid_score": lang.get("valid_score", False),
+                "status": lang.get("status", ""),
+                "skip_reason": lang.get("skip_reason", ""),
                 "overall_lang": lang.get("overall_lang"),
                 "semantic_intent": lang.get("semantic_intent"),
                 "conditions": lang.get("conditions"),
@@ -224,6 +266,9 @@ def compact_row(row: dict[str, Any], *, include_code: bool) -> dict[str, Any]:
             },
             "gpt": {
                 "available": gpt.get("available", False),
+                "valid_score": gpt.get("valid_score", False),
+                "status": gpt.get("status", ""),
+                "skip_reason": gpt.get("skip_reason", ""),
                 "overall_gpt": gpt.get("overall_gpt"),
                 "reasoning_summary": compact_reasoning(gpt.get("reasoning")),
                 "reconverted": gpt.get("reconverted") or {},
@@ -398,6 +443,12 @@ Rules:
 - Treat strict DET failure reasons as the primary signal.
 - Use cloud judge reasoning only as auxiliary explanation.
 - Do not use cloud judge scores as official benchmark scores.
+- If evidence_quality.effective_feedback_mode is strict_only_fallback, do not use cloud scores to prioritize patches.
+- Respect generation_state and root_cause_summary before semantic mismatch diagnostics.
+- For generation_empty_output, generation_cuda_oom, generation_timeout, generation_runtime_error, or candidate_extraction_failure, route advice to Generation_Health, Prompt_Budget, Runtime_Health, or Parser_Extraction; do not propose Output_Schema or service/semantic rules unless raw JSON text exists.
+- For valid_json_empty_behavior_match, propose no prompt mutation.
+- For invalid_json.* or schema_missing_required_keys, Output_Schema patches are allowed only when output_schema_suppressed is false.
+- Never treat skipped/error/missing cloud judge scores as zero-quality semantic evidence.
 - Do not rewrite the entire prompt.
 - Prefer small micro-rules that target recurring failure patterns.
 - Preserve existing high-performing behavior.
@@ -516,4 +567,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -39,6 +39,12 @@ VALID_BLOCK_FAMILIES = {
     "Canonical_Service_Name",
     "Cron_Period_Planning",
     "Event_Trigger_Skeleton",
+    "Generation_Health",
+    "Prompt_Budget",
+    "Runtime_Health",
+    "Parser_Extraction",
+    "Intent_Fulfillment",
+    "No_Mutation",
 }
 
 FAMILY_TO_DEFAULT_BLOCK = {
@@ -57,6 +63,12 @@ FAMILY_TO_DEFAULT_BLOCK = {
     "Skeleton": "06",
     "Event_Trigger_Skeleton": "06",
     "Dataflow": "06",
+    "Generation_Health": "06",
+    "Prompt_Budget": "06",
+    "Runtime_Health": "06",
+    "Parser_Extraction": "06",
+    "Intent_Fulfillment": "06",
+    "No_Mutation": "06",
 }
 
 BLOCK_TO_DEFAULT_FAMILY = {
