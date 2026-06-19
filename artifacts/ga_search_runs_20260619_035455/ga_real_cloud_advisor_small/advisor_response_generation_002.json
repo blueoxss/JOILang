@@ -1,0 +1,122 @@
+{
+  "raw_content": "{\n  \"advisor_status\": \"accepted\",\n  \"compression_policy\": {\n    \"activate_when_detpass_ge\": 90.0,\n    \"compression_ready\": false,\n    \"compression_phase\": \"ACCURACY_SEARCH\",\n    \"prefer_compression_if_accuracy_saturated\": true,\n    \"target_token_reduction_ratio\": 0.15,\n    \"allow_aggressive_compression\": false,\n    \"preserve_core_blocks\": true,\n    \"preserve_output_schema\": true,\n    \"preserve_service_mapping\": true\n  },\n  \"prompt_token_breakdown_seen\": true,\n  \"block_token_breakdown_seen\": true,\n  \"proposals\": [\n    {\n      \"proposal_id\": \"g002_01\",\n      \"target_block_id\": \"03\",\n      \"target_block_family\": \"Output_Schema\",\n      \"mutation_family\": \"accuracy_repair\",\n      \"mutation_type\": \"strengthen_json_only_rule\",\n      \"priority\": 1,\n      \"reason\": \"Strengthen JSON-only output enforcement and required keys grounding to fix invalid_json failures.\",\n      \"affected_failure_families\": [\n        \"invalid_json\"\n      ],\n      \"category_scope\": [\n        1,\n        2\n      ],\n      \"group_scope\": [\n        \"basic\"\n      ],\n      \"proposed_micro_rule\": \"Enforce strict JSON-only output with all required keys: name, cron, period, script; disallow any non-JSON text or prose. Validate output is parseable JSON matching schema exactly.\",\n      \"expected_effect\": \"Fix invalid_json failures by ensuring output is valid JSON with required keys only.\",\n      \"expected_token_delta\": 10,\n      \"regression_risk\": 0.1,\n      \"apply_mode\": \"create_child\",\n      \"token_reduction_methods\": [],\n      \"reasoning_budget_before\": \"none\",\n      \"reasoning_budget_after\": \"none\",\n      \"prompt_rewrite_before\": \"\",\n      \"prompt_rewrite_after\": \"\",\n      \"rule_cards_added_or_kept\": [\n        \"SCHEMA\"\n      ],\n      \"output_budget_policy\": \"DSL-only, no prose\"\n    }\n  ],\n  \"micro_compression_proposals\": [],\n  \"block_compression_proposals\": [],\n  \"multi_block_compression_proposals\": [],\n  \"global_budget_compression_proposals\": []\n}",
+  "parsed": {
+    "advisor_status": "accepted",
+    "compression_policy": {
+      "activate_when_detpass_ge": 90.0,
+      "compression_ready": false,
+      "compression_phase": "ACCURACY_SEARCH",
+      "prefer_compression_if_accuracy_saturated": true,
+      "target_token_reduction_ratio": 0.15,
+      "allow_aggressive_compression": false,
+      "preserve_core_blocks": true,
+      "preserve_output_schema": true,
+      "preserve_service_mapping": true
+    },
+    "prompt_token_breakdown_seen": true,
+    "block_token_breakdown_seen": true,
+    "proposals": [
+      {
+        "proposal_id": "g002_01",
+        "target_block_id": "03",
+        "target_block_family": "Output_Schema",
+        "mutation_family": "accuracy_repair",
+        "mutation_type": "strengthen_json_only_rule",
+        "priority": 1,
+        "reason": "Strengthen JSON-only output enforcement and required keys grounding to fix invalid_json failures.",
+        "affected_failure_families": [
+          "invalid_json"
+        ],
+        "category_scope": [
+          1,
+          2
+        ],
+        "group_scope": [
+          "basic"
+        ],
+        "proposed_micro_rule": "Enforce strict JSON-only output with all required keys: name, cron, period, script; disallow any non-JSON text or prose. Validate output is parseable JSON matching schema exactly.",
+        "expected_effect": "Fix invalid_json failures by ensuring output is valid JSON with required keys only.",
+        "expected_token_delta": 10,
+        "regression_risk": 0.1,
+        "apply_mode": "create_child",
+        "token_reduction_methods": [],
+        "reasoning_budget_before": "none",
+        "reasoning_budget_after": "none",
+        "prompt_rewrite_before": "",
+        "prompt_rewrite_after": "",
+        "rule_cards_added_or_kept": [
+          "SCHEMA"
+        ],
+        "output_budget_policy": "DSL-only, no prose"
+      }
+    ],
+    "micro_compression_proposals": [],
+    "block_compression_proposals": [],
+    "multi_block_compression_proposals": [],
+    "global_budget_compression_proposals": []
+  },
+  "compression_policy": {
+    "activate_when_detpass_ge": 90.0,
+    "compression_ready": false,
+    "compression_phase": "ACCURACY_SEARCH",
+    "prefer_compression_if_accuracy_saturated": true,
+    "target_token_reduction_ratio": 0.15,
+    "allow_aggressive_compression": false,
+    "preserve_core_blocks": true,
+    "preserve_output_schema": true,
+    "preserve_service_mapping": true
+  },
+  "advisor_batch_id": "advisor_batch_g002_3360bc3b",
+  "accepted_proposals": [
+    {
+      "proposal_id": "g002_01",
+      "target_block_id": "03",
+      "target_block_family": "Output_Schema",
+      "mutation_family": "accuracy_repair",
+      "mutation_type": "strengthen_json_only_rule",
+      "priority": 1,
+      "reason": "Strengthen JSON-only output enforcement and required keys grounding to fix invalid_json failures.",
+      "affected_failure_families": [
+        "invalid_json"
+      ],
+      "category_scope": [
+        1,
+        2
+      ],
+      "group_scope": [
+        "basic"
+      ],
+      "proposed_micro_rule": "Enforce strict JSON-only output with all required keys: name, cron, period, script; disallow any non-JSON text or prose. Validate output is parseable JSON matching schema exactly.",
+      "expected_effect": "Fix invalid_json failures by ensuring output is valid JSON with required keys only.",
+      "expected_token_delta": 10,
+      "regression_risk": 0.1,
+      "apply_mode": "create_child",
+      "token_reduction_methods": [],
+      "reasoning_budget_before": "none",
+      "reasoning_budget_after": "none",
+      "prompt_rewrite_before": "",
+      "prompt_rewrite_after": "",
+      "rule_cards_added_or_kept": [
+        "SCHEMA"
+      ],
+      "output_budget_policy": "DSL-only, no prose",
+      "schema_source": "proposals",
+      "advisor_generation": 2,
+      "advisor_batch_id": "advisor_batch_g002_3360bc3b",
+      "proposal_state": "proposed",
+      "operator": "strengthen_json_only_rule",
+      "selected_block_id": "03",
+      "raw_response_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_real_cloud_advisor_small/advisor_raw_responses/generation_002_raw.txt",
+      "advisor_prompt_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_real_cloud_advisor_small/advisor_prompt_generation_002.txt",
+      "accepted": false,
+      "rejection_reason": ""
+    }
+  ],
+  "rejected_proposals": [],
+  "advisor_llm_mode": "openai",
+  "advisor_model_key": "gpt41_mini",
+  "advisor_model": "gpt-4.1-mini",
+  "cloud_advisor_prompt_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_real_cloud_advisor_small/cloud_advisor_prompt_generation_002.md",
+  "cloud_advisor_feedback_packet_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_real_cloud_advisor_small/cloud_advisor_feedback_packet_generation_002.json",
+  "cloud_advisor_prompt_meta_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_real_cloud_advisor_small/cloud_advisor_prompt_meta_generation_002.json"
+}

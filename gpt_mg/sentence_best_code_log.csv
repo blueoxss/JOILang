@@ -742,3 +742,5 @@ Switch the dishwasher to dry mode.,"[{'name': 'SwitchDishwasherToDryMode', 'cron
 모든 전등 꺼줘,"[{'name': 'AllLightsOff', 'cron': '', 'period': -1, 'code': 'all(#Light).switch_off()'}]"
 Switch the dishwasher to dry mode.,
 Add 5 minutes to the oven.,
+Switch the dishwasher to dry mode.,
+Add 5 minutes to the oven.,

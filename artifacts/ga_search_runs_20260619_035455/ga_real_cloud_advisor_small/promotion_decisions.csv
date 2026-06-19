@@ -1,0 +1,3 @@
+generation,candidate_id,model_key,DETPass,SDET,avg_prompt_tokens,replay_gate_pass,regression_gate_pass,promoted,rejection_reason,accepted_prompt_path,previous_accepted_prompt
+1,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,qwen25_coder_14b,0.0,0.0,0.0,True,True,True,,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_real_cloud_advisor_small/accepted_genomes/generation_001_gen-378892e9-ecc3-87ab-8b45-85023a0286cc.json,
+2,gen-109fb9b5-4062-479c-fb5b-7bad30198596,qwen25_coder_14b,0.0,0.0,0.0,True,True,True,,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_real_cloud_advisor_small/accepted_genomes/generation_002_gen-109fb9b5-4062-479c-fb5b-7bad30198596.json,gen-378892e9-ecc3-87ab-8b45-85023a0286cc

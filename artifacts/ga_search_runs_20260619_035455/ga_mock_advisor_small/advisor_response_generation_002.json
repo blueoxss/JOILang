@@ -1,0 +1,64 @@
+{
+  "raw_content": "{\"generation\": 2, \"model_key\": \"qwen25_coder_14b\", \"diagnosis\": [{\"category_group\": \"validation\", \"main_failure\": \"invalid_json\", \"hypothesis\": \"Output_Schema needs a targeted micro-rule from deterministic validation.\"}], \"mutation_proposals\": [{\"target_block_id\": \"03\", \"target_block_family\": \"Output_Schema\", \"mutation_type\": \"strengthen_json_only_rule\", \"priority\": 1, \"reason\": \"Mock advisor proposal generated for schema validation smoke.\", \"edit_instruction\": \"Add the proposed micro-rule to the target prompt block.\", \"proposed_micro_rule\": \"Return exactly one JSON object only; never emit markdown, prose, comments, or code fences.\"}], \"do_not_change\": [\"core blocks\", \"retrieval pre-mapping\"], \"advisor_backend\": \"mock_schema\"}",
+  "parsed": {
+    "generation": 2,
+    "model_key": "qwen25_coder_14b",
+    "diagnosis": [
+      {
+        "category_group": "validation",
+        "main_failure": "invalid_json",
+        "hypothesis": "Output_Schema needs a targeted micro-rule from deterministic validation."
+      }
+    ],
+    "mutation_proposals": [
+      {
+        "target_block_id": "03",
+        "target_block_family": "Output_Schema",
+        "mutation_type": "strengthen_json_only_rule",
+        "priority": 1,
+        "reason": "Mock advisor proposal generated for schema validation smoke.",
+        "edit_instruction": "Add the proposed micro-rule to the target prompt block.",
+        "proposed_micro_rule": "Return exactly one JSON object only; never emit markdown, prose, comments, or code fences."
+      }
+    ],
+    "do_not_change": [
+      "core blocks",
+      "retrieval pre-mapping"
+    ],
+    "advisor_backend": "mock_schema"
+  },
+  "compression_policy": {},
+  "advisor_batch_id": "advisor_batch_g002_3360bc3b",
+  "accepted_proposals": [],
+  "rejected_proposals": [
+    {
+      "target_block_id": "03",
+      "target_block_family": "Output_Schema",
+      "mutation_type": "strengthen_json_only_rule",
+      "priority": 1,
+      "reason": "Mock advisor proposal generated for schema validation smoke.",
+      "edit_instruction": "Add the proposed micro-rule to the target prompt block.",
+      "proposed_micro_rule": "Return exactly one JSON object only; never emit markdown, prose, comments, or code fences.",
+      "schema_source": "mutation_proposals",
+      "advisor_generation": 2,
+      "advisor_batch_id": "advisor_batch_g002_3360bc3b",
+      "proposal_state": "rejected",
+      "operator": "strengthen_json_only_rule",
+      "selected_block_id": "03",
+      "affected_failure_families": [
+        "Output_Schema"
+      ],
+      "proposal_id": "advisor_g002_01",
+      "raw_response_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/advisor_raw_responses/generation_002_raw.txt",
+      "advisor_prompt_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/advisor_prompt_generation_002.txt",
+      "accepted": false,
+      "rejection_reason": "duplicates an existing micro-rule exactly"
+    }
+  ],
+  "advisor_llm_mode": "mock",
+  "advisor_model_key": "gpt41_mini",
+  "advisor_model": "gpt-4.1-mini",
+  "cloud_advisor_prompt_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/cloud_advisor_prompt_generation_002.md",
+  "cloud_advisor_feedback_packet_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/cloud_advisor_feedback_packet_generation_002.json",
+  "cloud_advisor_prompt_meta_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/cloud_advisor_prompt_meta_generation_002.json"
+}

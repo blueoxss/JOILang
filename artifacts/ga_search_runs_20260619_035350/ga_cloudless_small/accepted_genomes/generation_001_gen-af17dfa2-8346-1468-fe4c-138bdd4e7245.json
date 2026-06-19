@@ -1,0 +1,41 @@
+{
+  "id": "gen-af17dfa2-8346-1468-fe4c-138bdd4e7245",
+  "seed": 157367319,
+  "blocks": [
+    "01",
+    "02",
+    "03"
+  ],
+  "params": {
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+    "temperature": 0.05,
+    "few_shot_count": 3,
+    "max_tokens": 1024,
+    "candidate_strategies": [
+      "compact_json",
+      "explicit_preconditions"
+    ]
+  },
+  "block_params": {
+    "02": {
+      "few_shot_count": 2,
+      "micro_rules": [
+        "Return exactly one JSON object only with keys name, cron, period, code.",
+        "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+      ]
+    },
+    "05": {
+      "repair_mode": "conservative",
+      "few_shot_count": 3
+    }
+  },
+  "_ga_metadata": {
+    "parent_ids": [],
+    "mutation_types": [
+      "initial_random"
+    ],
+    "crossover_used": false,
+    "feedback_types_used": [],
+    "base_genome_id": ""
+  }
+}

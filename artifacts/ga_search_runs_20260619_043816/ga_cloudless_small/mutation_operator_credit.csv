@@ -1,0 +1,2 @@
+generation,mutation_family,mutation_operator,parent_genome_id,child_genome_id,delta_DETPass,delta_AvgDET,delta_tokens,delta_latency,delta_basic_DETPass,delta_temporal_DETPass,delta_complex_DETPass,accepted,elite_reason,operator_credit
+2,compression,drop_optional_blocks_for_budget,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,gen-2e1069de-7225-be6c-3bf6-baf915e48f91,,,,,,,,True,,

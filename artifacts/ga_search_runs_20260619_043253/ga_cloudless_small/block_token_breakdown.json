@@ -1,0 +1,68 @@
+{
+  "generation": 1,
+  "rows": [
+    {
+      "generation": 1,
+      "model_key": "qwen25_coder_14b",
+      "block_id": "01",
+      "block_family": "Core_System",
+      "block_role": "core",
+      "is_core_block": true,
+      "is_protected_block": true,
+      "char_count": 14148,
+      "token_estimate": 3537,
+      "few_shot_count": 0,
+      "micro_rule_count": 0,
+      "candidate_strategy_count": 0,
+      "optional_status": "",
+      "current_params": {},
+      "compression_allowed": false,
+      "safe_mutation_types": [],
+      "measurement_method": "char_div_4_estimate"
+    },
+    {
+      "generation": 1,
+      "model_key": "qwen25_coder_14b",
+      "block_id": "02",
+      "block_family": "Service_Mapping",
+      "block_role": "core",
+      "is_core_block": true,
+      "is_protected_block": true,
+      "char_count": 27529,
+      "token_estimate": 6883,
+      "few_shot_count": 2,
+      "micro_rule_count": 2,
+      "candidate_strategy_count": 0,
+      "optional_status": "",
+      "current_params": {
+        "few_shot_count": 2,
+        "micro_rules": [
+          "Return exactly one JSON object only with keys name, cron, period, code.",
+          "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+        ]
+      },
+      "compression_allowed": false,
+      "safe_mutation_types": [],
+      "measurement_method": "char_div_4_estimate"
+    },
+    {
+      "generation": 1,
+      "model_key": "qwen25_coder_14b",
+      "block_id": "03",
+      "block_family": "Output_Schema",
+      "block_role": "optional",
+      "is_core_block": false,
+      "is_protected_block": true,
+      "char_count": 1343,
+      "token_estimate": 336,
+      "few_shot_count": 0,
+      "micro_rule_count": 0,
+      "candidate_strategy_count": 0,
+      "optional_status": "active",
+      "current_params": {},
+      "compression_allowed": false,
+      "safe_mutation_types": [],
+      "measurement_method": "char_div_4_estimate"
+    }
+  ]
+}

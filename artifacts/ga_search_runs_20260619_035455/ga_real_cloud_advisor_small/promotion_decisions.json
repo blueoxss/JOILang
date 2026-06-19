@@ -1,0 +1,32 @@
+{
+  "rows": [
+    {
+      "generation": 1,
+      "candidate_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+      "model_key": "qwen25_coder_14b",
+      "DETPass": 0.0,
+      "SDET": 0.0,
+      "avg_prompt_tokens": 0.0,
+      "replay_gate_pass": true,
+      "regression_gate_pass": true,
+      "promoted": true,
+      "rejection_reason": "",
+      "accepted_prompt_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_real_cloud_advisor_small/accepted_genomes/generation_001_gen-378892e9-ecc3-87ab-8b45-85023a0286cc.json",
+      "previous_accepted_prompt": ""
+    },
+    {
+      "generation": 2,
+      "candidate_id": "gen-109fb9b5-4062-479c-fb5b-7bad30198596",
+      "model_key": "qwen25_coder_14b",
+      "DETPass": 0.0,
+      "SDET": 0.0,
+      "avg_prompt_tokens": 0.0,
+      "replay_gate_pass": true,
+      "regression_gate_pass": true,
+      "promoted": true,
+      "rejection_reason": "",
+      "accepted_prompt_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_real_cloud_advisor_small/accepted_genomes/generation_002_gen-109fb9b5-4062-479c-fb5b-7bad30198596.json",
+      "previous_accepted_prompt": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc"
+    }
+  ]
+}

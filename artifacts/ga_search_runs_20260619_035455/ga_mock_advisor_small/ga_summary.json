@@ -1,0 +1,270 @@
+{
+  "best_history": [
+    {
+      "generation": 1,
+      "genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+      "fitness": 0.0,
+      "avg_det_score": 0.0,
+      "validation_avg_det_score": 0.0,
+      "train_det_pass_rate": 0.0,
+      "train_gt_exact_rate": 0.0,
+      "validation_det_pass_rate": 0.0,
+      "validation_gt_exact_rate": 0.0,
+      "genome": {
+        "id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+        "seed": 626297831,
+        "blocks": [
+          "01",
+          "02",
+          "05",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+          "temperature": 0.0,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "minimal",
+            "direct",
+            "canonical_names_first",
+            "compact_json"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 3,
+            "micro_rules": [
+              "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+            ]
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [],
+          "mutation_types": [
+            "initial_random"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": ""
+        }
+      }
+    },
+    {
+      "generation": 2,
+      "genome_id": "gen-109fb9b5-4062-479c-fb5b-7bad30198596",
+      "fitness": 0.0,
+      "avg_det_score": 0.0,
+      "validation_avg_det_score": 0.0,
+      "train_det_pass_rate": 0.0,
+      "train_gt_exact_rate": 0.0,
+      "validation_det_pass_rate": 0.0,
+      "validation_gt_exact_rate": 0.0,
+      "genome": {
+        "id": "gen-109fb9b5-4062-479c-fb5b-7bad30198596",
+        "seed": 867173109,
+        "blocks": [
+          "01",
+          "02",
+          "05",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+          "temperature": 0.0,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "minimal",
+            "direct",
+            "canonical_names_first",
+            "compact_json"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 3,
+            "micro_rules": [
+              "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+            ]
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          },
+          "03": {
+            "micro_rules": [
+              "Return exactly one JSON object only; never emit markdown, prose, comments, or code fences."
+            ]
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [
+            "gen-378892e9-ecc3-87ab-8b45-85023a0286cc"
+          ],
+          "mutation_types": [
+            "strengthen_json_only_rule"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+          "mutation_family": "advisor_guided",
+          "mutation_operator": "strengthen_json_only_rule",
+          "mutation_proposal_id": "advisor_g001_01",
+          "diffs": [
+            {
+              "block_id": "03",
+              "field": "block_params",
+              "old_value": "{\"02\": {\"few_shot_count\": 3, \"micro_rules\": [\"For INTEGER and DOUBLE arguments, avoid quoted numeric literals.\"]}, \"05\": {\"few_shot_count\": 3, \"repair_mode\": \"conservative\"}}",
+              "new_value": "{\"02\": {\"few_shot_count\": 3, \"micro_rules\": [\"For INTEGER and DOUBLE arguments, avoid quoted numeric literals.\"]}, \"03\": {\"micro_rules\": [\"Return exactly one JSON object only; never emit markdown, prose, comments, or code fences.\"]}, \"05\": {\"few_shot_count\": 3, \"repair_mode\": \"conservative\"}}",
+              "mutation_type": "strengthen_json_only_rule",
+              "mutation_family": "advisor_guided",
+              "compression_level": "",
+              "selected_compression_target": "03",
+              "selected_block_id": "03",
+              "selected_block_ids": "[]",
+              "expected_token_delta": 0,
+              "feedback_driven": true,
+              "llm_advised": true,
+              "advisor_proposal_id": "advisor_g001_01",
+              "advisor_batch_id": "advisor_batch_g001_0cc56be3",
+              "failure_type_source": "Output_Schema"
+            }
+          ],
+          "source": "advisor",
+          "advisor_used": true,
+          "llm_advised": true,
+          "advisor_proposal_id": "advisor_g001_01",
+          "advisor_batch_id": "advisor_batch_g001_0cc56be3",
+          "advisor_mutation_type": "strengthen_json_only_rule"
+        }
+      }
+    }
+  ],
+  "output_root": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small",
+  "generation_progress_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/ga_generation_progress.csv",
+  "generation_progress_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/ga_generation_progress.jsonl",
+  "topk_genomes_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/ga_topk_genomes.csv",
+  "block_diffs_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/ga_block_diffs.jsonl",
+  "population_diagnostics_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/ga_population_diagnostics.csv",
+  "population_diagnostics_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/ga_population_diagnostics.jsonl",
+  "advisor_feedback_batches_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/advisor_feedback_batches.jsonl",
+  "advisor_mutation_proposals_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/advisor_mutation_proposals.jsonl",
+  "advisor_mutation_summary_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/advisor_mutation_summary.csv",
+  "structured_feedback_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/structured_feedback.jsonl",
+  "structured_feedback_summary_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/structured_feedback_summary.csv",
+  "population_transitions_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/population_transitions.csv",
+  "promotion_decisions_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/promotion_decisions.csv",
+  "mutation_proposals_jsonl": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/mutation_proposals.jsonl",
+  "pareto_archive_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/pareto_archive.csv",
+  "mutation_operator_credit_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/mutation_operator_credit.csv",
+  "best_genome": {
+    "id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+    "seed": 626297831,
+    "blocks": [
+      "01",
+      "02",
+      "05",
+      "06"
+    ],
+    "params": {
+      "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+      "temperature": 0.0,
+      "few_shot_count": 3,
+      "max_tokens": 1024,
+      "candidate_strategies": [
+        "minimal",
+        "direct",
+        "canonical_names_first",
+        "compact_json"
+      ]
+    },
+    "block_params": {
+      "02": {
+        "few_shot_count": 3,
+        "micro_rules": [
+          "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+        ]
+      },
+      "05": {
+        "repair_mode": "conservative",
+        "few_shot_count": 3
+      }
+    },
+    "_ga_metadata": {
+      "parent_ids": [],
+      "mutation_types": [
+        "initial_random"
+      ],
+      "crossover_used": false,
+      "feedback_types_used": [],
+      "base_genome_id": ""
+    }
+  },
+  "best_fitness": 0.0,
+  "best_validation_avg_det_score": 0.0,
+  "best_DETPass": 0.0,
+  "best_avg_DET": 0.0,
+  "best_genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+  "best_generation": 1,
+  "fitness_formula": "phase-aware DETPass + AvgDET + category/compression - token/variance/regression penalties",
+  "retrieval_policy": "fixed runtime service-context construction; not mutated by GA",
+  "stage": "full-run",
+  "advisor_status": "enabled",
+  "final_phase": "FINAL_SELECTION",
+  "stop_reason": "max generations reached",
+  "best_so_far_DETPass": 0.0,
+  "accepted_best": "gen-109fb9b5-4062-479c-fb5b-7bad30198596",
+  "accepted_best_genome_id": "gen-109fb9b5-4062-479c-fb5b-7bad30198596",
+  "accepted_best_DETPass": 0.0,
+  "accepted_best_avg_DET": 0.0,
+  "accepted_best_tokens": 0.0,
+  "compact_best": "",
+  "compact_best_genome_id": "",
+  "compact_best_DETPass": null,
+  "compact_best_tokens": null,
+  "compact_best_eligible": false,
+  "compact_best_reason": "no_eligible_compact_best",
+  "token_minimal_unconstrained_genome_id": "",
+  "pareto_archive_size": 7,
+  "cloudless_mutation_used": true,
+  "advisor_used": true,
+  "advisor_proposals_generated": 2,
+  "advisor_proposals_accepted_applied": 1,
+  "advisor_proposals_accepted_not_scheduled": 0,
+  "advisor_proposals_rejected": 1,
+  "advisor_children_scheduled": 1,
+  "compression_ready_final": false,
+  "compression_detpass_threshold": 90.0,
+  "aggressive_compression_after_target": false,
+  "compression_token_reduction_target": 0.15,
+  "advisor_compression_proposals_generated": 0,
+  "advisor_compression_children_scheduled": 0,
+  "cloudless_compression_fallback_scheduled": 0,
+  "new_by_compression_fallback": 0,
+  "new_by_micro_compression": 2,
+  "new_by_block_compression": 0,
+  "new_by_multi_block_compression": 0,
+  "new_by_global_budget_compression": 0,
+  "prompt_token_breakdown_json": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/prompt_token_breakdown.json",
+  "block_token_breakdown_json": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_runs_20260619_035455/ga_mock_advisor_small/block_token_breakdown.json",
+  "category_balance_mode": "guard",
+  "token_penalty_mode": "hybrid",
+  "mutation_family_counts": {
+    "compression": 2,
+    "advisor_guided": 2,
+    "accuracy_repair": 1
+  },
+  "compression_success_count": 2,
+  "compression_rejection_count": 0,
+  "summary_consistency_check": {
+    "promotion_consistent": true,
+    "compact_best_eligible": true,
+    "best_fields_complete": true,
+    "errors": []
+  }
+}

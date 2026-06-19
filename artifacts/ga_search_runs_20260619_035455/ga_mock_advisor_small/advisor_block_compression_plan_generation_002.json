@@ -1,0 +1,10 @@
+{
+  "generation": 2,
+  "compression_phase": "ACCURACY_SEARCH",
+  "accepted_block_proposals": [],
+  "accepted_multi_block_proposals": [],
+  "accepted_global_budget_proposals": [],
+  "rejected_compression_proposals": [],
+  "fallback_used": false,
+  "fallback_reason": ""
+}
