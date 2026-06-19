@@ -388,13 +388,23 @@ fi
 # ------------------------------------------------------------------------------
 # 4) Merge strict DET + cloud judge results
 # ------------------------------------------------------------------------------
+MERGE_EXTRA_ARGS=()
+
+# smoke2/smoke20처럼 평가 row 수가 작으면 실패 row가 0개일 수 있다.
+# 이 경우 advisor_rich_feedback.json의 rows=[]가 되어 row-level schema 검증이 false fail이 된다.
+# 따라서 smoke 계열에서는 pass row까지 포함해서 generation_state/evidence_quality schema를 검증한다.
+if [[ "${MODE:-}" == "smoke2" || "${MODE:-}" == "smoke20" ]]; then
+  MERGE_EXTRA_ARGS+=(--include-pass)
+fi
+
 if [ -f "$CLOUD_CSV" ]; then
   run_step "merge strict/cloud feedback" "$LOG_DIR/merge.log" \
     "$PY" "$BASE_DIR/utils/merge_strict_det_with_cloud_judges.py" \
       --strict-results-dir "$STRICT_DIR" \
       --cloud-judge-csv "$CLOUD_CSV" \
       --model-key "$MODEL_KEY" \
-      --out-dir "$MERGE_OUT_DIR"
+      --out-dir "$MERGE_OUT_DIR" \
+      "${MERGE_EXTRA_ARGS[@]}"
 else
   record "merge strict/cloud feedback" "FAIL" "cloud CSV missing; cannot merge"
 fi

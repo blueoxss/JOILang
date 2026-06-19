@@ -1,0 +1,92 @@
+{
+  "created_at": "2026-06-19T13:18:20.185983",
+  "suite": "paper_local5",
+  "dataset": "/root/llm/JOILang-Server/datasets/JOICommands-280.csv",
+  "service_schema": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+  "requested_model_keys": [
+    "qwen25_coder_14b"
+  ],
+  "model_keys": [
+    "qwen25_coder_14b"
+  ],
+  "genome_json": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/genomes/example_genome.json",
+  "genome_id": "gen-example-version0-15",
+  "blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ],
+  "candidate_strategies": [
+    "direct",
+    "minimal",
+    "canonical_names_first"
+  ],
+  "candidate_k": 1,
+  "det_profile": "strict",
+  "repair_threshold": 70.0,
+  "repair_attempts": 0,
+  "prompt_render_mode": "legacy_v13_monolith",
+  "prompt_assets_dir": "/root/llm/JOILang-Server/gpt_mg/version0_13",
+  "category_filters": [],
+  "limit_per_category": null,
+  "row_count": 2,
+  "row_nos": [
+    1,
+    2
+  ],
+  "warmup_row_count": 0,
+  "warmup_row_nos": [],
+  "preflight": [
+    {
+      "model_key": "qwen25_coder_14b",
+      "model_label": "Qwen2.5-Coder-14B-Instruct",
+      "mode": "worker",
+      "backend": "transformers_worker",
+      "configured_model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+      "status": "ready",
+      "message": "worker python probe failed: module 'torch' has no attribute 'cuda'",
+      "ollama_used": false,
+      "local_model_name": "/root/llm/local_models/qwen25_coder_14b",
+      "resolved_local_model_name": "/root/llm/local_models/qwen25_coder_14b",
+      "local_files_only": true,
+      "local_device": "cuda:0",
+      "local_dtype": "bf16",
+      "local_load_in_4bit": false,
+      "local_attn_implementation": "",
+      "cache_kind": "local_path",
+      "cache_path": "/root/llm/local_models/qwen25_coder_14b",
+      "cache_exists": true,
+      "snapshot_count": 1,
+      "cache_complete": true,
+      "worker_python": "/root/anaconda3/bin/python",
+      "worker_path": "/root/llm/JOILang-Server/gpt_mg/version0_13/qwen_local_worker.py",
+      "persistent_worker_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/utils/persistent_qwen_worker.py",
+      "persistent_worker": true,
+      "worker_runtime": {
+        "ok": false,
+        "torch_version": "",
+        "error": "module 'torch' has no attribute 'cuda'",
+        "transformers_version": "4.30.2",
+        "python_path": "/root/anaconda3/bin/python",
+        "worker_path": "/root/llm/JOILang-Server/gpt_mg/version0_13/qwen_local_worker.py",
+        "persistent_worker_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/utils/persistent_qwen_worker.py",
+        "persistent_worker": true,
+        "hf_modules_cache": "/tmp/joi_v15_hf_modules"
+      },
+      "availability_override": "local_model_dir",
+      "local_model_dir": "/root/llm/local_models/qwen25_coder_14b"
+    }
+  ],
+  "skipped_models": [],
+  "skip_unavailable": false,
+  "requested_max_workers": 1,
+  "debug_runtime": false,
+  "measure_latency": false,
+  "measure_vram": false,
+  "latency_isolation_mode": "inherit",
+  "paper_fair_mode": false,
+  "export_paper_artifacts": false,
+  "effective_max_workers": 1,
+  "latency_comparison_fair": false
+}

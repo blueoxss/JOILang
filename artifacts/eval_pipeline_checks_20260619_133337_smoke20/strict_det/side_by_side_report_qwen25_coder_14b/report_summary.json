@@ -1,0 +1,78 @@
+{
+  "results_dir": "/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/strict_det",
+  "output_dir": "/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/strict_det/side_by_side_report_qwen25_coder_14b",
+  "model_key": "qwen25_coder_14b",
+  "title": "JOICode Side-by-Side Report · qwen25_coder_14b",
+  "row_count": 20,
+  "service_list_schema": "service_list_ver2.0.1.json",
+  "service_list_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+  "html_path": "/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/strict_det/side_by_side_report_qwen25_coder_14b/report.html",
+  "selected_rows_csv": "/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/strict_det/side_by_side_report_qwen25_coder_14b/selected_rows.csv",
+  "prompt_context_rows_json": "/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/strict_det/side_by_side_report_qwen25_coder_14b/prompt_context_rows.json",
+  "filters": {
+    "category": [],
+    "row_no": [],
+    "start_row": 0,
+    "end_row": 0,
+    "limit": 0,
+    "failures_only": false,
+    "det_below": null
+  },
+  "summary": {
+    "row_count": 20,
+    "avg_det_score": 96.68530500000001,
+    "det_pass_rate": 0.9,
+    "gt_exact_rate": 0.75,
+    "avg_similarity": 0.9605800500000001,
+    "avg_prompt_tokens": 43762.35,
+    "avg_completion_tokens": 57.6,
+    "avg_total_tokens": 43819.95,
+    "avg_latency_sec": 15.438550000000001,
+    "p50_latency_sec": 14.799600000000002,
+    "avg_pipeline_sec": 17.37269,
+    "peak_vram_gb_max": 40.6134,
+    "oom_count": 0,
+    "top_failures": [
+      [
+        "gt_mismatch",
+        5
+      ],
+      [
+        "gt_receiver_coverage",
+        2
+      ],
+      [
+        "gt_service_coverage",
+        2
+      ],
+      [
+        "extraneous",
+        1
+      ],
+      [
+        "arg_type",
+        1
+      ],
+      [
+        "service_match",
+        1
+      ],
+      [
+        "unknown_service:cloudserviceprovider_savefile",
+        1
+      ]
+    ],
+    "snippet_sources": {
+      "service_schema_fallback": 20
+    },
+    "categories": {
+      "1": 20
+    },
+    "generation_errors": {}
+  },
+  "pdf": {
+    "ok": false,
+    "reason": "chrome_not_found",
+    "pdf_path": "/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/strict_det/side_by_side_report_qwen25_coder_14b/report.pdf"
+  }
+}

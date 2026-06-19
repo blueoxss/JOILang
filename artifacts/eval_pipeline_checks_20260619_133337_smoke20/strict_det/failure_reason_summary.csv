@@ -1,0 +1,8 @@
+model_key,model_label,failure_reason,count
+qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,gt_mismatch,5
+qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,gt_receiver_coverage,2
+qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,gt_service_coverage,2
+qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,arg_type,1
+qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,extraneous,1
+qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,service_match,1
+qwen25_coder_14b,Qwen2.5-Coder-14B-Instruct,unknown_service:cloudserviceprovider_savefile,1

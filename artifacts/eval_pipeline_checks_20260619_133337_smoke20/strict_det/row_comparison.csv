@@ -1,0 +1,131 @@
+row_no,category,row_category,command_eng,command_kor,gt,gt_name,gt_cron,gt_period,gt_code,warmup_excluded,qwen25_coder_14b__det_score,qwen25_coder_14b__det_pass,qwen25_coder_14b__det_profile,qwen25_coder_14b__det_gt_exact,qwen25_coder_14b__det_gt_similarity,qwen25_coder_14b__det_gt_service_coverage,qwen25_coder_14b__det_gt_service_precision,qwen25_coder_14b__det_gt_receiver_coverage,qwen25_coder_14b__det_dataflow_score,qwen25_coder_14b__det_numeric_grounding,qwen25_coder_14b__det_enum_grounding,qwen25_coder_14b__failure_reasons,qwen25_coder_14b__output,qwen25_coder_14b__output_name,qwen25_coder_14b__output_cron,qwen25_coder_14b__output_period,qwen25_coder_14b__output_code,qwen25_coder_14b__prompt_chars,qwen25_coder_14b__prompt_tokens,qwen25_coder_14b__completion_tokens,qwen25_coder_14b__total_tokens,qwen25_coder_14b__llm_latency_sec,qwen25_coder_14b__total_pipeline_sec,qwen25_coder_14b__tokens_per_sec,qwen25_coder_14b__peak_vram_gb,qwen25_coder_14b__generation_error_type,qwen25_coder_14b__oom_flag,qwen25_coder_14b__worker_python,qwen25_coder_14b__resolved_model_path,qwen25_coder_14b__service_list_snippet_source,qwen25_coder_14b__service_list_device_count,qwen25_coder_14b__service_list_retrieval_status,qwen25_coder_14b__service_list_retrieval_mode,qwen25_coder_14b__service_list_retrieval_topk,qwen25_coder_14b__service_list_retrieval_categories,qwen25_coder_14b__prompt_render_mode,qwen25_coder_14b__prompt_assets_dir,qwen25_coder_14b__warmup_excluded,qwen25_coder_14b__row_category
+1,1,1,Switch the dishwasher to dry mode.,식기세척기를 건조 모드로 설정해줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""(#Dishwasher).dishwasher_setdishwashermode(\""dry\"")""}",,,0,"(#Dishwasher).dishwasher_setdishwashermode(""dry"")",False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""SetDishwasherToDryMode"",""cron"":"""",""period"":0,""code"":""(#Dishwasher).dishwasher_setdishwashermode(\""dry\"")""}",SetDishwasherToDryMode,,0,"(#Dishwasher).dishwasher_setdishwashermode(""dry"")",166044,43756,53,43809,26.5058,28.4219,1652.8081,40.6029,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+2,1,1,Add 5 minutes to the oven.,오븐의 작동 시간을 5분 늘려줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""(#Oven).oven_addmoretime(300)""}",,,0,(#Oven).oven_addmoretime(300),False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""AddTimeToOven"",""cron"":"""",""period"":0,""code"":""(#Oven).oven_addmoretime(300)""}",AddTimeToOven,,0,(#Oven).oven_addmoretime(300),166035,43757,48,43805,14.148,16.0935,3096.1973,40.6056,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+3,1,1,Start the rice cooker on cooking mode for 30 minutes.,밥솥을 조리 모드로 30분 작동시켜.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""(#RiceCooker).ricecooker_setcookingparameters(\""cooking\"", 1800)""}",,,0,"(#RiceCooker).ricecooker_setcookingparameters(""cooking"", 1800)",False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""StartRiceCooker"",""cron"":"""",""period"":0,""code"":""(#RiceCooker).ricecooker_setcookingparameters(\""cooking\"", 1800)""}",StartRiceCooker,,0,"(#RiceCooker).ricecooker_setcookingparameters(""cooking"", 1800)",166064,43765,58,43823,14.8259,16.7817,2955.8408,40.6072,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+4,1,1,Set the siren to emergency mode.,사이렌을 응급모드로 울려줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""(#Siren).siren_setsirenmode(\""emergency\"")""}",,,0,"(#Siren).siren_setsirenmode(""emergency"")",False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""SetSirenToEmergencyMode"",""cron"":"""",""period"":0,""code"":""(#Siren).siren_setsirenmode(\""emergency\"")""}",SetSirenToEmergencyMode,,0,"(#Siren).siren_setsirenmode(""emergency"")",166038,43756,49,43805,14.3394,16.2914,3054.8698,40.6055,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+5,1,1,Set the speaker volume to 30.,스피커의 볼륨을 30으로 설정해줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""(#Speaker).speaker_setvolume(30)""}",,,0,(#Speaker).speaker_setvolume(30),False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""SetSpeakerVolume"",""cron"":"""",""period"":0,""code"":""(#Speaker).speaker_setvolume(30)""}",SetSpeakerVolume,,0,(#Speaker).speaker_setvolume(30),166039,43761,43,43804,14.0615,16.0012,3115.1726,40.6064,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+6,1,1,Turn the TV channel down by one.,TV 채널을 하나 내려줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""(#Television).television_channeldown()""}",,,0,(#Television).television_channeldown(),False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""Decrease TV Channel"",""cron"":"""",""period"":0,""code"":""(#Television).television_channeldown()""}",Decrease TV Channel,,0,(#Television).television_channeldown(),166037,43753,43,43796,14.0699,15.9909,3112.7442,40.6049,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+7,1,1,Switch the TV to channel 7.,TV로 7번 채널을 틀어줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""(#Television).television_setchannel(7)""}",,,0,(#Television).television_setchannel(7),False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""Switch TV Channel"",""cron"":"""",""period"":0,""code"":""(#Television).television_setchannel(7)""}",Switch TV Channel,,0,(#Television).television_setchannel(7),166033,43758,44,43802,14.1236,16.052,3101.3339,40.6058,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+8,1,1,Announce the temperature through the speaker.,현재 온도를 스피커로 알려줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\ntemp = (#TemperatureSensor).temperaturesensor_temperature\n\n(#Speaker).speaker_speak(\""현재 온도는 \"" + temp + \""도입니다\"")""}",,,0,"
+temp = (#TemperatureSensor).temperaturesensor_temperature
+
+(#Speaker).speaker_speak(""현재 온도는 "" + temp + ""도입니다"")",False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""AnnounceTemperature"",""cron"":"""",""period"":0,""code"":""temp = (#TemperatureSensor).temperaturesensor_temperature\n(#Speaker).speaker_speak(\""현재 온도는 \"" + temp + \""°C 입니다\"")""}",AnnounceTemperature,,0,"temp = (#TemperatureSensor).temperaturesensor_temperature
+(#Speaker).speaker_speak(""현재 온도는 "" + temp + ""°C 입니다"")",166052,43756,69,43825,15.5891,17.5152,2811.2591,40.6055,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+9,1,1,Tell me the outdoor temperature through the speaker.,외부 온도를 스피커로 출력해줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\ntemp = (#WeatherProvider).weatherprovider_temperatureweather\n\n(#Speaker).speaker_speak(\""외부 온도는 \"" + temp + \""도입니다\"")""}",,,0,"
+temp = (#WeatherProvider).weatherprovider_temperatureweather
+
+(#Speaker).speaker_speak(""외부 온도는 "" + temp + ""도입니다"")",False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""TellOutdoorTemperature"",""cron"":"""",""period"":0,""code"":""temp = (#WeatherProvider).weatherprovider_temperatureweather\n(#Speaker).speaker_speak(temp)""}",TellOutdoorTemperature,,0,"temp = (#WeatherProvider).weatherprovider_temperatureweather
+(#Speaker).speaker_speak(temp)",166060,43760,52,43812,14.5558,16.4937,3009.9342,40.6062,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+10,1,1,Tell me the current humidity through the speaker.,현재 습도를 스피커로 말해줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\nhum = (#HumiditySensor).humiditysensor_humidity\n\n(#Speaker).speaker_speak(\""현재 습도는 \"" + hum + \""%입니다\"")""}",,,0,"
+hum = (#HumiditySensor).humiditysensor_humidity
+
+(#Speaker).speaker_speak(""현재 습도는 "" + hum + ""%입니다"")",False,98.5018,True,strict,False,0.871788,1.0,1.0,1.0,1.0,1.0,1.0,"[""gt_mismatch""]","{""name"":""TellCurrentHumidity"",""cron"":"""",""period"":0,""code"":""humidity = (#AirQualitySensor).airqualitysensor_humidity\n(#Speaker).speaker_speak(humidity)""}",TellCurrentHumidity,,0,"humidity = (#AirQualitySensor).airqualitysensor_humidity
+(#Speaker).speaker_speak(humidity)",166056,43758,56,43814,14.7733,16.731,2965.7558,40.6058,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+11,1,1,Tell me the outdoor humidity through the speaker.,외부 습도를 스피커로 말해줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\nhum = (#WeatherProvider).weatherprovider_humidityweather\n\n(#Speaker).speaker_speak(\""외부 습도는 \"" + hum + \""%입니다\"")""}",,,0,"
+hum = (#WeatherProvider).weatherprovider_humidityweather
+
+(#Speaker).speaker_speak(""외부 습도는 "" + hum + ""%입니다"")",False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""TellOutdoorHumidity"",""cron"":"""",""period"":0,""code"":""humidity = (#WeatherProvider).weatherprovider_humidityweather\n(#Speaker).speaker_speak(\""현재 외부 습도는 \"" + humidity + \""%입니다\"")""}",TellOutdoorHumidity,,0,"humidity = (#WeatherProvider).weatherprovider_humidityweather
+(#Speaker).speaker_speak(""현재 외부 습도는 "" + humidity + ""%입니다"")",166056,43760,70,43830,15.5641,17.4918,2816.096,40.6062,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+12,1,1,Output today's weather through the speaker.,오늘의 날씨를 스피커로 출력해줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\nweather = (#WeatherProvider).weatherprovider_weather\n\n(#Speaker).speaker_speak(\""오늘 날씨는 \"" + weather + \""입니다\"")""}",,,0,"
+weather = (#WeatherProvider).weatherprovider_weather
+
+(#Speaker).speaker_speak(""오늘 날씨는 "" + weather + ""입니다"")",False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""WeatherReport"",""cron"":"""",""period"":0,""code"":""weather = (#WeatherProvider).weatherprovider_weather\n(#Speaker).speaker_speak(weather)""}",WeatherReport,,0,"weather = (#WeatherProvider).weatherprovider_weather
+(#Speaker).speaker_speak(weather)",166052,43758,50,43808,14.3989,16.34,3042.4546,40.6058,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+13,1,1,Announce the fine dust level through the speaker.,미세먼지 농도를 스피커로 알려줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\ndust = (#AirQualitySensor).airqualitysensor_dustlevel\n\n(#Speaker).speaker_speak(\""미세먼지 농도는 \"" + dust + \""입니다\"")""}",,,0,"
+dust = (#AirQualitySensor).airqualitysensor_dustlevel
+
+(#Speaker).speaker_speak(""미세먼지 농도는 "" + dust + ""입니다"")",False,69.9,False,strict,False,0.616584,0.5,0.5,0.5,1.0,1.0,1.0,"[""extraneous"", ""gt_mismatch"", ""gt_receiver_coverage"", ""gt_service_coverage""]","{""name"":""AnnounceFineDustLevel"",""cron"":"""",""period"":0,""code"":""fine_dust_level = (#WeatherProvider).weatherprovider_pm10weather\n(#Speaker).speaker_speak(fine_dust_level)""}",AnnounceFineDustLevel,,0,"fine_dust_level = (#WeatherProvider).weatherprovider_pm10weather
+(#Speaker).speaker_speak(fine_dust_level)",166058,43762,64,43826,15.1952,17.1257,2884.2003,40.6066,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+14,1,1,Announce the outdoor fine dust level using the speaker.,외부 미세먼지 농도를 스피커로 알려줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\ndust = (#WeatherProvider).weatherprovider_pm10weather\n\n(#Speaker).speaker_speak(\""외부 미세먼지 농도는 \"" + dust + \""입니다\"")""}",,,0,"
+dust = (#WeatherProvider).weatherprovider_pm10weather
+
+(#Speaker).speaker_speak(""외부 미세먼지 농도는 "" + dust + ""입니다"")",False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""AnnounceOutdoorFineDust"",""cron"":"""",""period"":0,""code"":""dust_level = (#WeatherProvider).weatherprovider_pm10weather\n(#Speaker).speaker_speak(\""현재 외부 미세먼지 농도는 \"" + dust_level + \"" 입니다.\"")""}",AnnounceOutdoorFineDust,,0,"dust_level = (#WeatherProvider).weatherprovider_pm10weather
+(#Speaker).speaker_speak(""현재 외부 미세먼지 농도는 "" + dust_level + "" 입니다."")",166067,43766,83,43849,16.2945,18.2205,2691.0307,40.6074,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+15,1,1,"Generate a cat image using cloud service and save it as ""cat.png"".","클라우드로 고양이 사진을 생성하고 ""cat.png""로 저장해줘.","{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\nimg = (#CloudServiceProvider).cloudserviceprovider_generateimage(\""Generate a cat image\"")\n\n(#CloudServiceProvider).cloudserviceprovider_savetofile(img, \""cat.png\"")""}",,,0,"
+img = (#CloudServiceProvider).cloudserviceprovider_generateimage(""Generate a cat image"")
+
+(#CloudServiceProvider).cloudserviceprovider_savetofile(img, ""cat.png"")",False,69.9,False,strict,False,0.832368,0.5,1.0,0.5,1.0,1.0,1.0,"[""arg_type"", ""gt_mismatch"", ""gt_receiver_coverage"", ""gt_service_coverage"", ""service_match"", ""unknown_service:cloudserviceprovider_savefile""]","{""name"":""GenerateCatImage"",""cron"":"""",""period"":0,""code"":""(#CloudServiceProvider).cloudserviceprovider_generateimage(\""cat\"")\n(#CloudServiceProvider).cloudserviceprovider_savefile(\""cat.png\"")""}",GenerateCatImage,,0,"(#CloudServiceProvider).cloudserviceprovider_generateimage(""cat"")
+(#CloudServiceProvider).cloudserviceprovider_savefile(""cat.png"")",166092,43770,61,43831,15.0272,16.9651,2916.7776,40.6084,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+16,1,1,Output the charger's power consumption through the speaker.,충전기의 전력소모량을 스피커로 출력해줘.,"{""name"": """",
+""cron"": """", 
+""period"": 0, 
+""script"": ""\npower = (#Charger).charger_power\n\n(#Speaker).speaker_speak(\""전력소모량은 \"" + power + \""입니다\"")""}",,,0,"
+power = (#Charger).charger_power
+
+(#Speaker).speaker_speak(""전력소모량은 "" + power + ""입니다"")",False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""ReportChargerPowerConsumption"",""cron"":"""",""period"":0,""code"":""power = (#Charger).charger_power\n(#Speaker).speaker_speak(power)""}",ReportChargerPowerConsumption,,0,"power = (#Charger).charger_power
+(#Speaker).speaker_speak(power)",166072,43765,53,43818,14.5387,16.4655,3013.8871,40.6072,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+17,1,1,Tell me today's menu using the speaker.,오늘의 메뉴를 스피커로 출력해줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\nmenu = (#MenuProvider).menuprovider_todaymenu\n\n(#Speaker).speaker_speak(\""오늘의 메뉴는 \"" + menu + \""입니다\"")""}",,,0,"
+menu = (#MenuProvider).menuprovider_todaymenu
+
+(#Speaker).speaker_speak(""오늘의 메뉴는 "" + menu + ""입니다"")",False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""TellTodayMenu"",""cron"":"""",""period"":0,""code"":""menu = (#MenuProvider).menuprovider_todaymenu\n(#Speaker).speaker_speak(menu)""}",TellTodayMenu,,0,"menu = (#MenuProvider).menuprovider_todaymenu
+(#Speaker).speaker_speak(menu)",166048,43758,53,43811,14.531,16.4543,3015.0024,40.6058,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+18,1,1,Tell me the lunch menu for Building 301 today through the speaker.,오늘의 301동 점심 메뉴를 스피커로 알려줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\nmenu = (#MenuProvider).menuprovider_getmenu(\""오늘 301동식당 점심\"")\n\n(#Speaker).speaker_speak(\""오늘의 메뉴는 \"" + menu + \""입니다\"")""}",,,0,"
+menu = (#MenuProvider).menuprovider_getmenu(""오늘 301동식당 점심"")
+
+(#Speaker).speaker_speak(""오늘의 메뉴는 "" + menu + ""입니다"")",False,97.5497,True,strict,False,0.959948,1.0,1.0,1.0,1.0,1.0,1.0,"[""gt_mismatch""]","{""name"":""TellLunchMenuForBuilding301"",""cron"":"""",""period"":0,""code"":""menu = (#MenuProvider).menuprovider_getmenu(\""오늘 301동식당 점심\"")\n(#Speaker).speaker_speak(menu)""}",TellLunchMenuForBuilding301,,0,"menu = (#MenuProvider).menuprovider_getmenu(""오늘 301동식당 점심"")
+(#Speaker).speaker_speak(menu)",166082,43772,74,43846,15.7531,17.6848,2783.3252,40.609,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+19,1,1,"Ask the cloud AI what an LLM is, and output its answer through the speaker.",클라우드 AI한테 llm이 무엇인지 질문하고 답을 스피커로 출력해줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\nanswer = (#CloudServiceProvider).cloudserviceprovider_chatwithai(\""What is LLM?\"")\n\n(#Speaker).speaker_speak(answer)""}",,,0,"
+answer = (#CloudServiceProvider).cloudserviceprovider_chatwithai(""What is LLM?"")
+
+(#Speaker).speaker_speak(answer)",False,97.8546,True,strict,False,0.930913,1.0,1.0,1.0,1.0,1.0,1.0,"[""gt_mismatch""]","{""name"":""AskCloudAIAboutLLM"",""cron"":"""",""period"":0,""code"":""llm_description = (#CloudServiceProvider).cloudserviceprovider_chatwithai(\""What is an LLM?\"")\n(#Speaker).speaker_speak(llm_description)""}",AskCloudAIAboutLLM,,0,"llm_description = (#CloudServiceProvider).cloudserviceprovider_chatwithai(""What is an LLM?"")
+(#Speaker).speaker_speak(llm_description)",166104,43778,70,43848,15.5629,17.4929,2817.4698,40.6134,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1
+20,1,1,Set the hue of the light to 200 and the saturation to 50.,"조명의 색조를 200, 채도는 50으로 설정해줘.","{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\n(#Light).light_movetohueandsaturation(200, 50)""}",,,0,"
+(#Light).light_movetohueandsaturation(200, 50)",False,100.0,True,strict,True,1.0,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""name"":""SetLightColor"",""cron"":"""",""period"":0,""code"":""(#Light).light_movetohue(200)\n(#Light).light_movetosaturation(50)""}",SetLightColor,,0,"(#Light).light_movetohue(200)
+(#Light).light_movetosaturation(50)",166075,43778,59,43837,14.9131,16.8407,2939.4961,40.6134,,False,/root/llm/je/bin/python,/root/llm/local_models/qwen25_coder_14b,service_schema_fallback,50,disabled,hybrid,10,[],legacy_v13_monolith,/root/llm/JOILang-Server/gpt_mg/version0_13,False,1

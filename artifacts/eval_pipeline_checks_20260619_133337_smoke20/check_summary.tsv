@@ -1,0 +1,25 @@
+strict runner exists	PASS	/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/scripts/run_benchmark.py
+prompt assets exist	PASS	/root/llm/JOILang-Server/gpt_mg/version0_13
+dataset exists	PASS	/root/llm/JOILang-Server/datasets/JOICommands-280.csv
+local model dir exists	PASS	/root/llm/local_models/qwen25_coder_14b
+dataset row count	PASS	rows >= EVAL_LIMIT
+preflight local model command	PASS	rc=0
+preflight status ready	PASS	status=ready
+preflight cuda available	PASS	cuda_available=True
+strict DET benchmark command	PASS	rc=0
+strict artifact row_comparison.csv	PASS	/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/strict_det/row_comparison.csv
+strict artifact failure_reason_summary.csv	PASS	/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/strict_det/failure_reason_summary.csv
+strict row comparison readable	PASS	see /root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/logs/strict_row_count.log
+export local DET failure report command	PASS	rc=0
+local report local_det_failure_report.json	PASS	/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/strict_det/local_det_failure_report.json
+local report local_det_failure_report.md	PASS	/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/strict_det/local_det_failure_report.md
+local report local_det_failure_report.csv	PASS	/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/strict_det/local_det_failure_report.csv
+cloud API key	PASS	configured from environment
+cloud semantic judges command	PASS	rc=0
+cloud CSV exists	PASS	/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/cloud_judge/result_gpt_mg_version0_13.csv
+cloud CSV schema	PASS	see /root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/logs/cloud_csv_schema.log
+merge strict/cloud feedback command	PASS	rc=0
+merge artifact advisor_rich_feedback.json	PASS	/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/merged_feedback/advisor_rich_feedback.json
+merge artifact hybrid_strict_cloud_report.csv	PASS	/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/merged_feedback/hybrid_strict_cloud_report.csv
+merge artifact hybrid_strict_cloud_report.md	PASS	/root/llm/JOILang-Server/artifacts/eval_pipeline_checks_20260619_133337_smoke20/merged_feedback/hybrid_strict_cloud_report.md
+feedback policy schema	PASS	generation_state/generation_health/evidence_quality present

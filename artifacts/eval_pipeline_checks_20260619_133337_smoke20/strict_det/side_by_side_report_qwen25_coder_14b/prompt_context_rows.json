@@ -1,0 +1,4261 @@
+[
+  {
+    "row_no": "1",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "Dishwasher"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "Dishwasher"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "Dishwasher",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 2,
+        "value_count": 1,
+        "function_count": 1,
+        "values": [
+          {
+            "service": "Dishwasher_DishwasherMode",
+            "raw_service": "DishwasherMode",
+            "canonical_name": "Dishwasher_DishwasherMode",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Allows for the control of the dishwasher mode"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Dishwasher_SetDishwasherMode",
+            "raw_service": "SetDishwasherMode",
+            "canonical_name": "Dishwasher_SetDishwasherMode",
+            "type": "function",
+            "argument_type": "ENUM",
+            "return_type": "VOID",
+            "descriptor": "Allows for the control of the dishwasher mode"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "2",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "Oven"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "Oven"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "Oven",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 4,
+        "value_count": 1,
+        "function_count": 3,
+        "values": [
+          {
+            "service": "Oven_OvenMode",
+            "raw_service": "OvenMode",
+            "canonical_name": "Oven_OvenMode",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Allows for the control of the oven mode"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Oven_AddMoreTime",
+            "raw_service": "AddMoreTime",
+            "canonical_name": "Oven_AddMoreTime",
+            "type": "function",
+            "argument_type": "DOUBLE",
+            "return_type": "VOID",
+            "descriptor": "Allows for the control of the oven mode"
+          },
+          {
+            "service": "Oven_SetCookingParameters",
+            "raw_service": "SetCookingParameters",
+            "canonical_name": "Oven_SetCookingParameters",
+            "type": "function",
+            "argument_type": "ENUM | DOUBLE",
+            "return_type": "VOID",
+            "descriptor": "Allows for the control of the oven mode"
+          },
+          {
+            "service": "Oven_SetOvenMode",
+            "raw_service": "SetOvenMode",
+            "canonical_name": "Oven_SetOvenMode",
+            "type": "function",
+            "argument_type": "ENUM",
+            "return_type": "VOID",
+            "descriptor": "Allows for the control of the oven mode"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "3",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "RiceCooker"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "RiceCooker"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "RiceCooker",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 4,
+        "value_count": 1,
+        "function_count": 3,
+        "values": [
+          {
+            "service": "RiceCooker_RiceCookerMode",
+            "raw_service": "RiceCookerMode",
+            "canonical_name": "RiceCooker_RiceCookerMode",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Allows for the control of the Rice Cooker"
+          }
+        ],
+        "functions": [
+          {
+            "service": "RiceCooker_AddMoreTime",
+            "raw_service": "AddMoreTime",
+            "canonical_name": "RiceCooker_AddMoreTime",
+            "type": "function",
+            "argument_type": "DOUBLE",
+            "return_type": "VOID",
+            "descriptor": "Allows for the control of the Rice Cooker"
+          },
+          {
+            "service": "RiceCooker_SetCookingParameters",
+            "raw_service": "SetCookingParameters",
+            "canonical_name": "RiceCooker_SetCookingParameters",
+            "type": "function",
+            "argument_type": "ENUM | DOUBLE",
+            "return_type": "VOID",
+            "descriptor": "Allows for the control of the Rice Cooker"
+          },
+          {
+            "service": "RiceCooker_SetRiceCookerMode",
+            "raw_service": "SetRiceCookerMode",
+            "canonical_name": "RiceCooker_SetRiceCookerMode",
+            "type": "function",
+            "argument_type": "ENUM",
+            "return_type": "VOID",
+            "descriptor": "Allows for the control of the Rice Cooker"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "4",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "Siren"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "Siren"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "Siren",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 2,
+        "value_count": 1,
+        "function_count": 1,
+        "values": [
+          {
+            "service": "Siren_SirenMode",
+            "raw_service": "SirenMode",
+            "canonical_name": "Siren_SirenMode",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Allows for the control of the Siren"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Siren_SetSirenMode",
+            "raw_service": "SetSirenMode",
+            "canonical_name": "Siren_SetSirenMode",
+            "type": "function",
+            "argument_type": "ENUM",
+            "return_type": "VOID",
+            "descriptor": "Allows for the control of the Siren"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "5",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "Speaker"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "Speaker"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "Speaker",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 11,
+        "value_count": 2,
+        "function_count": 9,
+        "values": [
+          {
+            "service": "Speaker_PlaybackState",
+            "raw_service": "PlaybackState",
+            "canonical_name": "Speaker_PlaybackState",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Volume",
+            "raw_service": "Volume",
+            "canonical_name": "Speaker_Volume",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Speaker_FastForward",
+            "raw_service": "FastForward",
+            "canonical_name": "Speaker_FastForward",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Pause",
+            "raw_service": "Pause",
+            "canonical_name": "Speaker_Pause",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Play",
+            "raw_service": "Play",
+            "canonical_name": "Speaker_Play",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Rewind",
+            "raw_service": "Rewind",
+            "canonical_name": "Speaker_Rewind",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_SetVolume",
+            "raw_service": "SetVolume",
+            "canonical_name": "Speaker_SetVolume",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Speak",
+            "raw_service": "Speak",
+            "canonical_name": "Speaker_Speak",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Stop",
+            "raw_service": "Stop",
+            "canonical_name": "Speaker_Stop",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeDown",
+            "raw_service": "VolumeDown",
+            "canonical_name": "Speaker_VolumeDown",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeUp",
+            "raw_service": "VolumeUp",
+            "canonical_name": "Speaker_VolumeUp",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "6",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "Television"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "Television"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "Television",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 4,
+        "value_count": 1,
+        "function_count": 3,
+        "values": [
+          {
+            "service": "Television_Channel",
+            "raw_service": "Channel",
+            "canonical_name": "Television_Channel",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "A television device"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Television_ChannelDown",
+            "raw_service": "ChannelDown",
+            "canonical_name": "Television_ChannelDown",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "A television device"
+          },
+          {
+            "service": "Television_ChannelUp",
+            "raw_service": "ChannelUp",
+            "canonical_name": "Television_ChannelUp",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "A television device"
+          },
+          {
+            "service": "Television_SetChannel",
+            "raw_service": "SetChannel",
+            "canonical_name": "Television_SetChannel",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "VOID",
+            "descriptor": "A television device"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "7",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "Television"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "Television"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "Television",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 4,
+        "value_count": 1,
+        "function_count": 3,
+        "values": [
+          {
+            "service": "Television_Channel",
+            "raw_service": "Channel",
+            "canonical_name": "Television_Channel",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "A television device"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Television_ChannelDown",
+            "raw_service": "ChannelDown",
+            "canonical_name": "Television_ChannelDown",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "A television device"
+          },
+          {
+            "service": "Television_ChannelUp",
+            "raw_service": "ChannelUp",
+            "canonical_name": "Television_ChannelUp",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "A television device"
+          },
+          {
+            "service": "Television_SetChannel",
+            "raw_service": "SetChannel",
+            "canonical_name": "Television_SetChannel",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "VOID",
+            "descriptor": "A television device"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "8",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "TemperatureSensor",
+      "Speaker"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "TemperatureSensor",
+      "Speaker"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "TemperatureSensor",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 1,
+        "value_count": 1,
+        "function_count": 0,
+        "values": [
+          {
+            "service": "TemperatureSensor_Temperature",
+            "raw_service": "Temperature",
+            "canonical_name": "TemperatureSensor_Temperature",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Get the temperature from a Device that reports current temperature"
+          }
+        ],
+        "functions": []
+      },
+      {
+        "category": "Speaker",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 11,
+        "value_count": 2,
+        "function_count": 9,
+        "values": [
+          {
+            "service": "Speaker_PlaybackState",
+            "raw_service": "PlaybackState",
+            "canonical_name": "Speaker_PlaybackState",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Volume",
+            "raw_service": "Volume",
+            "canonical_name": "Speaker_Volume",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Speaker_FastForward",
+            "raw_service": "FastForward",
+            "canonical_name": "Speaker_FastForward",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Pause",
+            "raw_service": "Pause",
+            "canonical_name": "Speaker_Pause",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Play",
+            "raw_service": "Play",
+            "canonical_name": "Speaker_Play",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Rewind",
+            "raw_service": "Rewind",
+            "canonical_name": "Speaker_Rewind",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_SetVolume",
+            "raw_service": "SetVolume",
+            "canonical_name": "Speaker_SetVolume",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Speak",
+            "raw_service": "Speak",
+            "canonical_name": "Speaker_Speak",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Stop",
+            "raw_service": "Stop",
+            "canonical_name": "Speaker_Stop",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeDown",
+            "raw_service": "VolumeDown",
+            "canonical_name": "Speaker_VolumeDown",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeUp",
+            "raw_service": "VolumeUp",
+            "canonical_name": "Speaker_VolumeUp",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "9",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "WeatherProvider",
+      "Speaker"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "WeatherProvider",
+      "Speaker"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "WeatherProvider",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 7,
+        "value_count": 6,
+        "function_count": 1,
+        "values": [
+          {
+            "service": "WeatherProvider_HumidityWeather",
+            "raw_service": "HumidityWeather",
+            "canonical_name": "WeatherProvider_HumidityWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Pm10Weather",
+            "raw_service": "Pm10Weather",
+            "canonical_name": "WeatherProvider_Pm10Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Pm25Weather",
+            "raw_service": "Pm25Weather",
+            "canonical_name": "WeatherProvider_Pm25Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_PressureWeather",
+            "raw_service": "PressureWeather",
+            "canonical_name": "WeatherProvider_PressureWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_TemperatureWeather",
+            "raw_service": "TemperatureWeather",
+            "canonical_name": "WeatherProvider_TemperatureWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Weather",
+            "raw_service": "Weather",
+            "canonical_name": "WeatherProvider_Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Provides weather information"
+          }
+        ],
+        "functions": [
+          {
+            "service": "WeatherProvider_GetWeatherInfo",
+            "raw_service": "GetWeatherInfo",
+            "canonical_name": "WeatherProvider_GetWeatherInfo",
+            "type": "function",
+            "argument_type": "DOUBLE | DOUBLE",
+            "return_type": "STRING",
+            "descriptor": "Provides weather information"
+          }
+        ]
+      },
+      {
+        "category": "Speaker",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 11,
+        "value_count": 2,
+        "function_count": 9,
+        "values": [
+          {
+            "service": "Speaker_PlaybackState",
+            "raw_service": "PlaybackState",
+            "canonical_name": "Speaker_PlaybackState",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Volume",
+            "raw_service": "Volume",
+            "canonical_name": "Speaker_Volume",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Speaker_FastForward",
+            "raw_service": "FastForward",
+            "canonical_name": "Speaker_FastForward",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Pause",
+            "raw_service": "Pause",
+            "canonical_name": "Speaker_Pause",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Play",
+            "raw_service": "Play",
+            "canonical_name": "Speaker_Play",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Rewind",
+            "raw_service": "Rewind",
+            "canonical_name": "Speaker_Rewind",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_SetVolume",
+            "raw_service": "SetVolume",
+            "canonical_name": "Speaker_SetVolume",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Speak",
+            "raw_service": "Speak",
+            "canonical_name": "Speaker_Speak",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Stop",
+            "raw_service": "Stop",
+            "canonical_name": "Speaker_Stop",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeDown",
+            "raw_service": "VolumeDown",
+            "canonical_name": "Speaker_VolumeDown",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeUp",
+            "raw_service": "VolumeUp",
+            "canonical_name": "Speaker_VolumeUp",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "10",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "HumiditySensor",
+      "Speaker",
+      "AirQualitySensor"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "HumiditySensor",
+      "Speaker",
+      "AirQualitySensor"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "HumiditySensor",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 1,
+        "value_count": 1,
+        "function_count": 0,
+        "values": [
+          {
+            "service": "HumiditySensor_Humidity",
+            "raw_service": "Humidity",
+            "canonical_name": "HumiditySensor_Humidity",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Allow reading the relative humidity from devices that support it"
+          }
+        ],
+        "functions": []
+      },
+      {
+        "category": "Speaker",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 11,
+        "value_count": 2,
+        "function_count": 9,
+        "values": [
+          {
+            "service": "Speaker_PlaybackState",
+            "raw_service": "PlaybackState",
+            "canonical_name": "Speaker_PlaybackState",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Volume",
+            "raw_service": "Volume",
+            "canonical_name": "Speaker_Volume",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Speaker_FastForward",
+            "raw_service": "FastForward",
+            "canonical_name": "Speaker_FastForward",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Pause",
+            "raw_service": "Pause",
+            "canonical_name": "Speaker_Pause",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Play",
+            "raw_service": "Play",
+            "canonical_name": "Speaker_Play",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Rewind",
+            "raw_service": "Rewind",
+            "canonical_name": "Speaker_Rewind",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_SetVolume",
+            "raw_service": "SetVolume",
+            "canonical_name": "Speaker_SetVolume",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Speak",
+            "raw_service": "Speak",
+            "canonical_name": "Speaker_Speak",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Stop",
+            "raw_service": "Stop",
+            "canonical_name": "Speaker_Stop",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeDown",
+            "raw_service": "VolumeDown",
+            "canonical_name": "Speaker_VolumeDown",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeUp",
+            "raw_service": "VolumeUp",
+            "canonical_name": "Speaker_VolumeUp",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ]
+      },
+      {
+        "category": "AirQualitySensor",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 7,
+        "value_count": 7,
+        "function_count": 0,
+        "values": [
+          {
+            "service": "AirQualitySensor_CarbonDioxide",
+            "raw_service": "CarbonDioxide",
+            "canonical_name": "AirQualitySensor_CarbonDioxide",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Air quality detector device for comprehensive air quality monitoring"
+          },
+          {
+            "service": "AirQualitySensor_DustLevel",
+            "raw_service": "DustLevel",
+            "canonical_name": "AirQualitySensor_DustLevel",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Air quality detector device for comprehensive air quality monitoring"
+          },
+          {
+            "service": "AirQualitySensor_FineDustLevel",
+            "raw_service": "FineDustLevel",
+            "canonical_name": "AirQualitySensor_FineDustLevel",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Air quality detector device for comprehensive air quality monitoring"
+          },
+          {
+            "service": "AirQualitySensor_Humidity",
+            "raw_service": "Humidity",
+            "canonical_name": "AirQualitySensor_Humidity",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Air quality detector device for comprehensive air quality monitoring"
+          },
+          {
+            "service": "AirQualitySensor_Temperature",
+            "raw_service": "Temperature",
+            "canonical_name": "AirQualitySensor_Temperature",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Air quality detector device for comprehensive air quality monitoring"
+          },
+          {
+            "service": "AirQualitySensor_TvocLevel",
+            "raw_service": "TvocLevel",
+            "canonical_name": "AirQualitySensor_TvocLevel",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Air quality detector device for comprehensive air quality monitoring"
+          },
+          {
+            "service": "AirQualitySensor_VeryFineDustLevel",
+            "raw_service": "VeryFineDustLevel",
+            "canonical_name": "AirQualitySensor_VeryFineDustLevel",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Air quality detector device for comprehensive air quality monitoring"
+          }
+        ],
+        "functions": []
+      }
+    ]
+  },
+  {
+    "row_no": "11",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "WeatherProvider",
+      "Speaker"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "WeatherProvider",
+      "Speaker"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "WeatherProvider",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 7,
+        "value_count": 6,
+        "function_count": 1,
+        "values": [
+          {
+            "service": "WeatherProvider_HumidityWeather",
+            "raw_service": "HumidityWeather",
+            "canonical_name": "WeatherProvider_HumidityWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Pm10Weather",
+            "raw_service": "Pm10Weather",
+            "canonical_name": "WeatherProvider_Pm10Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Pm25Weather",
+            "raw_service": "Pm25Weather",
+            "canonical_name": "WeatherProvider_Pm25Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_PressureWeather",
+            "raw_service": "PressureWeather",
+            "canonical_name": "WeatherProvider_PressureWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_TemperatureWeather",
+            "raw_service": "TemperatureWeather",
+            "canonical_name": "WeatherProvider_TemperatureWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Weather",
+            "raw_service": "Weather",
+            "canonical_name": "WeatherProvider_Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Provides weather information"
+          }
+        ],
+        "functions": [
+          {
+            "service": "WeatherProvider_GetWeatherInfo",
+            "raw_service": "GetWeatherInfo",
+            "canonical_name": "WeatherProvider_GetWeatherInfo",
+            "type": "function",
+            "argument_type": "DOUBLE | DOUBLE",
+            "return_type": "STRING",
+            "descriptor": "Provides weather information"
+          }
+        ]
+      },
+      {
+        "category": "Speaker",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 11,
+        "value_count": 2,
+        "function_count": 9,
+        "values": [
+          {
+            "service": "Speaker_PlaybackState",
+            "raw_service": "PlaybackState",
+            "canonical_name": "Speaker_PlaybackState",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Volume",
+            "raw_service": "Volume",
+            "canonical_name": "Speaker_Volume",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Speaker_FastForward",
+            "raw_service": "FastForward",
+            "canonical_name": "Speaker_FastForward",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Pause",
+            "raw_service": "Pause",
+            "canonical_name": "Speaker_Pause",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Play",
+            "raw_service": "Play",
+            "canonical_name": "Speaker_Play",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Rewind",
+            "raw_service": "Rewind",
+            "canonical_name": "Speaker_Rewind",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_SetVolume",
+            "raw_service": "SetVolume",
+            "canonical_name": "Speaker_SetVolume",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Speak",
+            "raw_service": "Speak",
+            "canonical_name": "Speaker_Speak",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Stop",
+            "raw_service": "Stop",
+            "canonical_name": "Speaker_Stop",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeDown",
+            "raw_service": "VolumeDown",
+            "canonical_name": "Speaker_VolumeDown",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeUp",
+            "raw_service": "VolumeUp",
+            "canonical_name": "Speaker_VolumeUp",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "12",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "WeatherProvider",
+      "Speaker"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "WeatherProvider",
+      "Speaker"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "WeatherProvider",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 7,
+        "value_count": 6,
+        "function_count": 1,
+        "values": [
+          {
+            "service": "WeatherProvider_HumidityWeather",
+            "raw_service": "HumidityWeather",
+            "canonical_name": "WeatherProvider_HumidityWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Pm10Weather",
+            "raw_service": "Pm10Weather",
+            "canonical_name": "WeatherProvider_Pm10Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Pm25Weather",
+            "raw_service": "Pm25Weather",
+            "canonical_name": "WeatherProvider_Pm25Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_PressureWeather",
+            "raw_service": "PressureWeather",
+            "canonical_name": "WeatherProvider_PressureWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_TemperatureWeather",
+            "raw_service": "TemperatureWeather",
+            "canonical_name": "WeatherProvider_TemperatureWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Weather",
+            "raw_service": "Weather",
+            "canonical_name": "WeatherProvider_Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Provides weather information"
+          }
+        ],
+        "functions": [
+          {
+            "service": "WeatherProvider_GetWeatherInfo",
+            "raw_service": "GetWeatherInfo",
+            "canonical_name": "WeatherProvider_GetWeatherInfo",
+            "type": "function",
+            "argument_type": "DOUBLE | DOUBLE",
+            "return_type": "STRING",
+            "descriptor": "Provides weather information"
+          }
+        ]
+      },
+      {
+        "category": "Speaker",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 11,
+        "value_count": 2,
+        "function_count": 9,
+        "values": [
+          {
+            "service": "Speaker_PlaybackState",
+            "raw_service": "PlaybackState",
+            "canonical_name": "Speaker_PlaybackState",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Volume",
+            "raw_service": "Volume",
+            "canonical_name": "Speaker_Volume",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Speaker_FastForward",
+            "raw_service": "FastForward",
+            "canonical_name": "Speaker_FastForward",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Pause",
+            "raw_service": "Pause",
+            "canonical_name": "Speaker_Pause",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Play",
+            "raw_service": "Play",
+            "canonical_name": "Speaker_Play",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Rewind",
+            "raw_service": "Rewind",
+            "canonical_name": "Speaker_Rewind",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_SetVolume",
+            "raw_service": "SetVolume",
+            "canonical_name": "Speaker_SetVolume",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Speak",
+            "raw_service": "Speak",
+            "canonical_name": "Speaker_Speak",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Stop",
+            "raw_service": "Stop",
+            "canonical_name": "Speaker_Stop",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeDown",
+            "raw_service": "VolumeDown",
+            "canonical_name": "Speaker_VolumeDown",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeUp",
+            "raw_service": "VolumeUp",
+            "canonical_name": "Speaker_VolumeUp",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "13",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "AirQualitySensor",
+      "Speaker",
+      "WeatherProvider"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "AirQualitySensor",
+      "Speaker",
+      "WeatherProvider"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "AirQualitySensor",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 7,
+        "value_count": 7,
+        "function_count": 0,
+        "values": [
+          {
+            "service": "AirQualitySensor_CarbonDioxide",
+            "raw_service": "CarbonDioxide",
+            "canonical_name": "AirQualitySensor_CarbonDioxide",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Air quality detector device for comprehensive air quality monitoring"
+          },
+          {
+            "service": "AirQualitySensor_DustLevel",
+            "raw_service": "DustLevel",
+            "canonical_name": "AirQualitySensor_DustLevel",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Air quality detector device for comprehensive air quality monitoring"
+          },
+          {
+            "service": "AirQualitySensor_FineDustLevel",
+            "raw_service": "FineDustLevel",
+            "canonical_name": "AirQualitySensor_FineDustLevel",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Air quality detector device for comprehensive air quality monitoring"
+          },
+          {
+            "service": "AirQualitySensor_Humidity",
+            "raw_service": "Humidity",
+            "canonical_name": "AirQualitySensor_Humidity",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Air quality detector device for comprehensive air quality monitoring"
+          },
+          {
+            "service": "AirQualitySensor_Temperature",
+            "raw_service": "Temperature",
+            "canonical_name": "AirQualitySensor_Temperature",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Air quality detector device for comprehensive air quality monitoring"
+          },
+          {
+            "service": "AirQualitySensor_TvocLevel",
+            "raw_service": "TvocLevel",
+            "canonical_name": "AirQualitySensor_TvocLevel",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Air quality detector device for comprehensive air quality monitoring"
+          },
+          {
+            "service": "AirQualitySensor_VeryFineDustLevel",
+            "raw_service": "VeryFineDustLevel",
+            "canonical_name": "AirQualitySensor_VeryFineDustLevel",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Air quality detector device for comprehensive air quality monitoring"
+          }
+        ],
+        "functions": []
+      },
+      {
+        "category": "Speaker",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 11,
+        "value_count": 2,
+        "function_count": 9,
+        "values": [
+          {
+            "service": "Speaker_PlaybackState",
+            "raw_service": "PlaybackState",
+            "canonical_name": "Speaker_PlaybackState",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Volume",
+            "raw_service": "Volume",
+            "canonical_name": "Speaker_Volume",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Speaker_FastForward",
+            "raw_service": "FastForward",
+            "canonical_name": "Speaker_FastForward",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Pause",
+            "raw_service": "Pause",
+            "canonical_name": "Speaker_Pause",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Play",
+            "raw_service": "Play",
+            "canonical_name": "Speaker_Play",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Rewind",
+            "raw_service": "Rewind",
+            "canonical_name": "Speaker_Rewind",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_SetVolume",
+            "raw_service": "SetVolume",
+            "canonical_name": "Speaker_SetVolume",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Speak",
+            "raw_service": "Speak",
+            "canonical_name": "Speaker_Speak",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Stop",
+            "raw_service": "Stop",
+            "canonical_name": "Speaker_Stop",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeDown",
+            "raw_service": "VolumeDown",
+            "canonical_name": "Speaker_VolumeDown",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeUp",
+            "raw_service": "VolumeUp",
+            "canonical_name": "Speaker_VolumeUp",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ]
+      },
+      {
+        "category": "WeatherProvider",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 7,
+        "value_count": 6,
+        "function_count": 1,
+        "values": [
+          {
+            "service": "WeatherProvider_HumidityWeather",
+            "raw_service": "HumidityWeather",
+            "canonical_name": "WeatherProvider_HumidityWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Pm10Weather",
+            "raw_service": "Pm10Weather",
+            "canonical_name": "WeatherProvider_Pm10Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Pm25Weather",
+            "raw_service": "Pm25Weather",
+            "canonical_name": "WeatherProvider_Pm25Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_PressureWeather",
+            "raw_service": "PressureWeather",
+            "canonical_name": "WeatherProvider_PressureWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_TemperatureWeather",
+            "raw_service": "TemperatureWeather",
+            "canonical_name": "WeatherProvider_TemperatureWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Weather",
+            "raw_service": "Weather",
+            "canonical_name": "WeatherProvider_Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Provides weather information"
+          }
+        ],
+        "functions": [
+          {
+            "service": "WeatherProvider_GetWeatherInfo",
+            "raw_service": "GetWeatherInfo",
+            "canonical_name": "WeatherProvider_GetWeatherInfo",
+            "type": "function",
+            "argument_type": "DOUBLE | DOUBLE",
+            "return_type": "STRING",
+            "descriptor": "Provides weather information"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "14",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "WeatherProvider",
+      "Speaker"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "WeatherProvider",
+      "Speaker"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "WeatherProvider",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 7,
+        "value_count": 6,
+        "function_count": 1,
+        "values": [
+          {
+            "service": "WeatherProvider_HumidityWeather",
+            "raw_service": "HumidityWeather",
+            "canonical_name": "WeatherProvider_HumidityWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Pm10Weather",
+            "raw_service": "Pm10Weather",
+            "canonical_name": "WeatherProvider_Pm10Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Pm25Weather",
+            "raw_service": "Pm25Weather",
+            "canonical_name": "WeatherProvider_Pm25Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_PressureWeather",
+            "raw_service": "PressureWeather",
+            "canonical_name": "WeatherProvider_PressureWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_TemperatureWeather",
+            "raw_service": "TemperatureWeather",
+            "canonical_name": "WeatherProvider_TemperatureWeather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "Provides weather information"
+          },
+          {
+            "service": "WeatherProvider_Weather",
+            "raw_service": "Weather",
+            "canonical_name": "WeatherProvider_Weather",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Provides weather information"
+          }
+        ],
+        "functions": [
+          {
+            "service": "WeatherProvider_GetWeatherInfo",
+            "raw_service": "GetWeatherInfo",
+            "canonical_name": "WeatherProvider_GetWeatherInfo",
+            "type": "function",
+            "argument_type": "DOUBLE | DOUBLE",
+            "return_type": "STRING",
+            "descriptor": "Provides weather information"
+          }
+        ]
+      },
+      {
+        "category": "Speaker",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 11,
+        "value_count": 2,
+        "function_count": 9,
+        "values": [
+          {
+            "service": "Speaker_PlaybackState",
+            "raw_service": "PlaybackState",
+            "canonical_name": "Speaker_PlaybackState",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Volume",
+            "raw_service": "Volume",
+            "canonical_name": "Speaker_Volume",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Speaker_FastForward",
+            "raw_service": "FastForward",
+            "canonical_name": "Speaker_FastForward",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Pause",
+            "raw_service": "Pause",
+            "canonical_name": "Speaker_Pause",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Play",
+            "raw_service": "Play",
+            "canonical_name": "Speaker_Play",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Rewind",
+            "raw_service": "Rewind",
+            "canonical_name": "Speaker_Rewind",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_SetVolume",
+            "raw_service": "SetVolume",
+            "canonical_name": "Speaker_SetVolume",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Speak",
+            "raw_service": "Speak",
+            "canonical_name": "Speaker_Speak",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Stop",
+            "raw_service": "Stop",
+            "canonical_name": "Speaker_Stop",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeDown",
+            "raw_service": "VolumeDown",
+            "canonical_name": "Speaker_VolumeDown",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeUp",
+            "raw_service": "VolumeUp",
+            "canonical_name": "Speaker_VolumeUp",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "15",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "CloudServiceProvider"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "CloudServiceProvider"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "CloudServiceProvider",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 14,
+        "value_count": 5,
+        "function_count": 9,
+        "values": [
+          {
+            "service": "CloudServiceProvider_ChatSession",
+            "raw_service": "ChatSession",
+            "canonical_name": "CloudServiceProvider_ChatSession",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "STRING",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_GeneratedImage",
+            "raw_service": "GeneratedImage",
+            "canonical_name": "CloudServiceProvider_GeneratedImage",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "BINARY",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_ImageExplanation",
+            "raw_service": "ImageExplanation",
+            "canonical_name": "CloudServiceProvider_ImageExplanation",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "STRING",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_LLMModels",
+            "raw_service": "LLMModels",
+            "canonical_name": "CloudServiceProvider_LLMModels",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "LIST",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_UploadedFile",
+            "raw_service": "UploadedFile",
+            "canonical_name": "CloudServiceProvider_UploadedFile",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "BINARY",
+            "descriptor": "Provides cloud service functionalities"
+          }
+        ],
+        "functions": [
+          {
+            "service": "CloudServiceProvider_ChatWithAI",
+            "raw_service": "ChatWithAI",
+            "canonical_name": "CloudServiceProvider_ChatWithAI",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "STRING",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_ExplainImage",
+            "raw_service": "ExplainImage",
+            "canonical_name": "CloudServiceProvider_ExplainImage",
+            "type": "function",
+            "argument_type": "BINARY",
+            "return_type": "STRING",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_GenerateImage",
+            "raw_service": "GenerateImage",
+            "canonical_name": "CloudServiceProvider_GenerateImage",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "BINARY",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_IsAvailable",
+            "raw_service": "IsAvailable",
+            "canonical_name": "CloudServiceProvider_IsAvailable",
+            "type": "function",
+            "argument_type": "BOOL",
+            "return_type": "BOOL",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_SaveToFile",
+            "raw_service": "SaveToFile",
+            "canonical_name": "CloudServiceProvider_SaveToFile",
+            "type": "function",
+            "argument_type": "BINARY | STRING",
+            "return_type": "STRING",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_SpeechToText",
+            "raw_service": "SpeechToText",
+            "canonical_name": "CloudServiceProvider_SpeechToText",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "STRING",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_TextToSpeech",
+            "raw_service": "TextToSpeech",
+            "canonical_name": "CloudServiceProvider_TextToSpeech",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "BINARY",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_UploadFile",
+            "raw_service": "UploadFile",
+            "canonical_name": "CloudServiceProvider_UploadFile",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "BINARY",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_UploadToCloudStorage",
+            "raw_service": "UploadToCloudStorage",
+            "canonical_name": "CloudServiceProvider_UploadToCloudStorage",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "STRING",
+            "descriptor": "Provides cloud service functionalities"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "16",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "Charger",
+      "Speaker"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "Charger",
+      "Speaker"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "Charger",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 4,
+        "value_count": 4,
+        "function_count": 0,
+        "values": [
+          {
+            "service": "Charger_ChargingState",
+            "raw_service": "ChargingState",
+            "canonical_name": "Charger_ChargingState",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "The current status of battery charging"
+          },
+          {
+            "service": "Charger_Current",
+            "raw_service": "Current",
+            "canonical_name": "Charger_Current",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "The current status of battery charging"
+          },
+          {
+            "service": "Charger_Power",
+            "raw_service": "Power",
+            "canonical_name": "Charger_Power",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "The current status of battery charging"
+          },
+          {
+            "service": "Charger_Voltage",
+            "raw_service": "Voltage",
+            "canonical_name": "Charger_Voltage",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "The current status of battery charging"
+          }
+        ],
+        "functions": []
+      },
+      {
+        "category": "Speaker",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 11,
+        "value_count": 2,
+        "function_count": 9,
+        "values": [
+          {
+            "service": "Speaker_PlaybackState",
+            "raw_service": "PlaybackState",
+            "canonical_name": "Speaker_PlaybackState",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Volume",
+            "raw_service": "Volume",
+            "canonical_name": "Speaker_Volume",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Speaker_FastForward",
+            "raw_service": "FastForward",
+            "canonical_name": "Speaker_FastForward",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Pause",
+            "raw_service": "Pause",
+            "canonical_name": "Speaker_Pause",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Play",
+            "raw_service": "Play",
+            "canonical_name": "Speaker_Play",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Rewind",
+            "raw_service": "Rewind",
+            "canonical_name": "Speaker_Rewind",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_SetVolume",
+            "raw_service": "SetVolume",
+            "canonical_name": "Speaker_SetVolume",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Speak",
+            "raw_service": "Speak",
+            "canonical_name": "Speaker_Speak",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Stop",
+            "raw_service": "Stop",
+            "canonical_name": "Speaker_Stop",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeDown",
+            "raw_service": "VolumeDown",
+            "canonical_name": "Speaker_VolumeDown",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeUp",
+            "raw_service": "VolumeUp",
+            "canonical_name": "Speaker_VolumeUp",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "17",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "MenuProvider",
+      "Speaker"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "MenuProvider",
+      "Speaker"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "MenuProvider",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 4,
+        "value_count": 3,
+        "function_count": 1,
+        "values": [
+          {
+            "service": "MenuProvider_Menu",
+            "raw_service": "Menu",
+            "canonical_name": "MenuProvider_Menu",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "STRING",
+            "descriptor": "Provides menu information services"
+          },
+          {
+            "service": "MenuProvider_TodayMenu",
+            "raw_service": "TodayMenu",
+            "canonical_name": "MenuProvider_TodayMenu",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "STRING",
+            "descriptor": "Provides menu information services"
+          },
+          {
+            "service": "MenuProvider_TodayPlace",
+            "raw_service": "TodayPlace",
+            "canonical_name": "MenuProvider_TodayPlace",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "STRING",
+            "descriptor": "Provides menu information services"
+          }
+        ],
+        "functions": [
+          {
+            "service": "MenuProvider_GetMenu",
+            "raw_service": "GetMenu",
+            "canonical_name": "MenuProvider_GetMenu",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "STRING",
+            "descriptor": "Provides menu information services"
+          }
+        ]
+      },
+      {
+        "category": "Speaker",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 11,
+        "value_count": 2,
+        "function_count": 9,
+        "values": [
+          {
+            "service": "Speaker_PlaybackState",
+            "raw_service": "PlaybackState",
+            "canonical_name": "Speaker_PlaybackState",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Volume",
+            "raw_service": "Volume",
+            "canonical_name": "Speaker_Volume",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Speaker_FastForward",
+            "raw_service": "FastForward",
+            "canonical_name": "Speaker_FastForward",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Pause",
+            "raw_service": "Pause",
+            "canonical_name": "Speaker_Pause",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Play",
+            "raw_service": "Play",
+            "canonical_name": "Speaker_Play",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Rewind",
+            "raw_service": "Rewind",
+            "canonical_name": "Speaker_Rewind",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_SetVolume",
+            "raw_service": "SetVolume",
+            "canonical_name": "Speaker_SetVolume",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Speak",
+            "raw_service": "Speak",
+            "canonical_name": "Speaker_Speak",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Stop",
+            "raw_service": "Stop",
+            "canonical_name": "Speaker_Stop",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeDown",
+            "raw_service": "VolumeDown",
+            "canonical_name": "Speaker_VolumeDown",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeUp",
+            "raw_service": "VolumeUp",
+            "canonical_name": "Speaker_VolumeUp",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "18",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "MenuProvider",
+      "Speaker"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "MenuProvider",
+      "Speaker"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "MenuProvider",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 4,
+        "value_count": 3,
+        "function_count": 1,
+        "values": [
+          {
+            "service": "MenuProvider_Menu",
+            "raw_service": "Menu",
+            "canonical_name": "MenuProvider_Menu",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "STRING",
+            "descriptor": "Provides menu information services"
+          },
+          {
+            "service": "MenuProvider_TodayMenu",
+            "raw_service": "TodayMenu",
+            "canonical_name": "MenuProvider_TodayMenu",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "STRING",
+            "descriptor": "Provides menu information services"
+          },
+          {
+            "service": "MenuProvider_TodayPlace",
+            "raw_service": "TodayPlace",
+            "canonical_name": "MenuProvider_TodayPlace",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "STRING",
+            "descriptor": "Provides menu information services"
+          }
+        ],
+        "functions": [
+          {
+            "service": "MenuProvider_GetMenu",
+            "raw_service": "GetMenu",
+            "canonical_name": "MenuProvider_GetMenu",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "STRING",
+            "descriptor": "Provides menu information services"
+          }
+        ]
+      },
+      {
+        "category": "Speaker",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 11,
+        "value_count": 2,
+        "function_count": 9,
+        "values": [
+          {
+            "service": "Speaker_PlaybackState",
+            "raw_service": "PlaybackState",
+            "canonical_name": "Speaker_PlaybackState",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Volume",
+            "raw_service": "Volume",
+            "canonical_name": "Speaker_Volume",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Speaker_FastForward",
+            "raw_service": "FastForward",
+            "canonical_name": "Speaker_FastForward",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Pause",
+            "raw_service": "Pause",
+            "canonical_name": "Speaker_Pause",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Play",
+            "raw_service": "Play",
+            "canonical_name": "Speaker_Play",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Rewind",
+            "raw_service": "Rewind",
+            "canonical_name": "Speaker_Rewind",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_SetVolume",
+            "raw_service": "SetVolume",
+            "canonical_name": "Speaker_SetVolume",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Speak",
+            "raw_service": "Speak",
+            "canonical_name": "Speaker_Speak",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Stop",
+            "raw_service": "Stop",
+            "canonical_name": "Speaker_Stop",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeDown",
+            "raw_service": "VolumeDown",
+            "canonical_name": "Speaker_VolumeDown",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeUp",
+            "raw_service": "VolumeUp",
+            "canonical_name": "Speaker_VolumeUp",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "19",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "CloudServiceProvider",
+      "Speaker"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "CloudServiceProvider",
+      "Speaker"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "CloudServiceProvider",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 14,
+        "value_count": 5,
+        "function_count": 9,
+        "values": [
+          {
+            "service": "CloudServiceProvider_ChatSession",
+            "raw_service": "ChatSession",
+            "canonical_name": "CloudServiceProvider_ChatSession",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "STRING",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_GeneratedImage",
+            "raw_service": "GeneratedImage",
+            "canonical_name": "CloudServiceProvider_GeneratedImage",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "BINARY",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_ImageExplanation",
+            "raw_service": "ImageExplanation",
+            "canonical_name": "CloudServiceProvider_ImageExplanation",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "STRING",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_LLMModels",
+            "raw_service": "LLMModels",
+            "canonical_name": "CloudServiceProvider_LLMModels",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "LIST",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_UploadedFile",
+            "raw_service": "UploadedFile",
+            "canonical_name": "CloudServiceProvider_UploadedFile",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "BINARY",
+            "descriptor": "Provides cloud service functionalities"
+          }
+        ],
+        "functions": [
+          {
+            "service": "CloudServiceProvider_ChatWithAI",
+            "raw_service": "ChatWithAI",
+            "canonical_name": "CloudServiceProvider_ChatWithAI",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "STRING",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_ExplainImage",
+            "raw_service": "ExplainImage",
+            "canonical_name": "CloudServiceProvider_ExplainImage",
+            "type": "function",
+            "argument_type": "BINARY",
+            "return_type": "STRING",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_GenerateImage",
+            "raw_service": "GenerateImage",
+            "canonical_name": "CloudServiceProvider_GenerateImage",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "BINARY",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_IsAvailable",
+            "raw_service": "IsAvailable",
+            "canonical_name": "CloudServiceProvider_IsAvailable",
+            "type": "function",
+            "argument_type": "BOOL",
+            "return_type": "BOOL",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_SaveToFile",
+            "raw_service": "SaveToFile",
+            "canonical_name": "CloudServiceProvider_SaveToFile",
+            "type": "function",
+            "argument_type": "BINARY | STRING",
+            "return_type": "STRING",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_SpeechToText",
+            "raw_service": "SpeechToText",
+            "canonical_name": "CloudServiceProvider_SpeechToText",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "STRING",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_TextToSpeech",
+            "raw_service": "TextToSpeech",
+            "canonical_name": "CloudServiceProvider_TextToSpeech",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "BINARY",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_UploadFile",
+            "raw_service": "UploadFile",
+            "canonical_name": "CloudServiceProvider_UploadFile",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "BINARY",
+            "descriptor": "Provides cloud service functionalities"
+          },
+          {
+            "service": "CloudServiceProvider_UploadToCloudStorage",
+            "raw_service": "UploadToCloudStorage",
+            "canonical_name": "CloudServiceProvider_UploadToCloudStorage",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "STRING",
+            "descriptor": "Provides cloud service functionalities"
+          }
+        ]
+      },
+      {
+        "category": "Speaker",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 11,
+        "value_count": 2,
+        "function_count": 9,
+        "values": [
+          {
+            "service": "Speaker_PlaybackState",
+            "raw_service": "PlaybackState",
+            "canonical_name": "Speaker_PlaybackState",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Volume",
+            "raw_service": "Volume",
+            "canonical_name": "Speaker_Volume",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Speaker_FastForward",
+            "raw_service": "FastForward",
+            "canonical_name": "Speaker_FastForward",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Pause",
+            "raw_service": "Pause",
+            "canonical_name": "Speaker_Pause",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Play",
+            "raw_service": "Play",
+            "canonical_name": "Speaker_Play",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Rewind",
+            "raw_service": "Rewind",
+            "canonical_name": "Speaker_Rewind",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_SetVolume",
+            "raw_service": "SetVolume",
+            "canonical_name": "Speaker_SetVolume",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Speak",
+            "raw_service": "Speak",
+            "canonical_name": "Speaker_Speak",
+            "type": "function",
+            "argument_type": "STRING",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_Stop",
+            "raw_service": "Stop",
+            "canonical_name": "Speaker_Stop",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "VOID",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeDown",
+            "raw_service": "VolumeDown",
+            "canonical_name": "Speaker_VolumeDown",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          },
+          {
+            "service": "Speaker_VolumeUp",
+            "raw_service": "VolumeUp",
+            "canonical_name": "Speaker_VolumeUp",
+            "type": "function",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "Speaker device for audio playback and media control"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "row_no": "20",
+    "service_schema_path": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_schema_label": "service_list_ver2.0.1.json",
+    "snippet_source": "service_schema_fallback",
+    "mode_label": "full schema fallback",
+    "retrieval_status": "disabled",
+    "retrieval_mode": "hybrid",
+    "requested_topk": 10,
+    "effective_topk": 0,
+    "device_count": 50,
+    "all_injected_category_count": 50,
+    "all_injected_categories": [
+      "AirConditioner",
+      "AirPurifier",
+      "AirQualitySensor",
+      "ArmRobot",
+      "AudioRecorder",
+      "Button",
+      "Camera",
+      "CarbonDioxideSensor",
+      "Charger",
+      "Clock",
+      "CloudServiceProvider",
+      "ColorControl",
+      "ContactSensor",
+      "Dehumidifier",
+      "DimmerSwitch",
+      "Dishwasher",
+      "Door",
+      "DoorLock",
+      "EmailProvider",
+      "FaceRecognizer",
+      "Humidifier",
+      "HumiditySensor",
+      "LaundryDryer",
+      "LeakSensor",
+      "LevelControl",
+      "Light",
+      "LightSensor",
+      "MenuProvider",
+      "MotionSensor",
+      "Oven",
+      "Plug",
+      "PresenceSensor",
+      "PresenceVitalSensor",
+      "PressureSensor",
+      "Pump",
+      "RainSensor",
+      "RiceCooker",
+      "RobotVacuumCleaner",
+      "Safe",
+      "Siren",
+      "SmokeDetector",
+      "SoundSensor",
+      "Speaker",
+      "Switch",
+      "TapDialSwitch",
+      "Television",
+      "TemperatureSensor",
+      "Valve",
+      "WeatherProvider",
+      "WindowCovering"
+    ],
+    "displayed_categories": [
+      "Light"
+    ],
+    "retrieval_categories": [],
+    "connected_categories": [],
+    "relevant_categories": [
+      "Light"
+    ],
+    "note": "Premapping was not used for this row. The prompt received the full schema fallback (50 categories) from service_list_ver2.0.1.json. For readability, the report shows only the schema categories directly relevant to the GT/generated code.",
+    "category_cards": [
+      {
+        "category": "Light",
+        "role": "relevant",
+        "rank": null,
+        "service_count": 15,
+        "value_count": 8,
+        "function_count": 7,
+        "values": [
+          {
+            "service": "Light_ColorMode",
+            "raw_service": "ColorMode",
+            "canonical_name": "Light_ColorMode",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "ENUM",
+            "descriptor": "A numerical representation of the brightness intensity"
+          },
+          {
+            "service": "Light_CurrentBrightness",
+            "raw_service": "CurrentBrightness",
+            "canonical_name": "Light_CurrentBrightness",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "A numerical representation of the brightness intensity"
+          },
+          {
+            "service": "Light_CurrentColorTemperature",
+            "raw_service": "CurrentColorTemperature",
+            "canonical_name": "Light_CurrentColorTemperature",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "INTEGER",
+            "descriptor": "A numerical representation of the brightness intensity"
+          },
+          {
+            "service": "Light_CurrentHue",
+            "raw_service": "CurrentHue",
+            "canonical_name": "Light_CurrentHue",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "A numerical representation of the brightness intensity"
+          },
+          {
+            "service": "Light_CurrentRGB",
+            "raw_service": "CurrentRGB",
+            "canonical_name": "Light_CurrentRGB",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "STRING",
+            "descriptor": "A numerical representation of the brightness intensity"
+          },
+          {
+            "service": "Light_CurrentSaturation",
+            "raw_service": "CurrentSaturation",
+            "canonical_name": "Light_CurrentSaturation",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "A numerical representation of the brightness intensity"
+          },
+          {
+            "service": "Light_CurrentX",
+            "raw_service": "CurrentX",
+            "canonical_name": "Light_CurrentX",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "A numerical representation of the brightness intensity"
+          },
+          {
+            "service": "Light_CurrentY",
+            "raw_service": "CurrentY",
+            "canonical_name": "Light_CurrentY",
+            "type": "value",
+            "argument_type": "-",
+            "return_type": "DOUBLE",
+            "descriptor": "A numerical representation of the brightness intensity"
+          }
+        ],
+        "functions": [
+          {
+            "service": "Light_MoveToBrightness",
+            "raw_service": "MoveToBrightness",
+            "canonical_name": "Light_MoveToBrightness",
+            "type": "function",
+            "argument_type": "DOUBLE | DOUBLE",
+            "return_type": "VOID",
+            "descriptor": "A numerical representation of the brightness intensity"
+          },
+          {
+            "service": "Light_MoveToColorTemperature",
+            "raw_service": "MoveToColorTemperature",
+            "canonical_name": "Light_MoveToColorTemperature",
+            "type": "function",
+            "argument_type": "INTEGER",
+            "return_type": "VOID",
+            "descriptor": "A numerical representation of the brightness intensity"
+          },
+          {
+            "service": "Light_MoveToHue",
+            "raw_service": "MoveToHue",
+            "canonical_name": "Light_MoveToHue",
+            "type": "function",
+            "argument_type": "DOUBLE",
+            "return_type": "VOID",
+            "descriptor": "A numerical representation of the brightness intensity"
+          },
+          {
+            "service": "Light_MoveToHueAndSaturation",
+            "raw_service": "MoveToHueAndSaturation",
+            "canonical_name": "Light_MoveToHueAndSaturation",
+            "type": "function",
+            "argument_type": "DOUBLE | DOUBLE",
+            "return_type": "VOID",
+            "descriptor": "A numerical representation of the brightness intensity"
+          },
+          {
+            "service": "Light_MoveToRGB",
+            "raw_service": "MoveToRGB",
+            "canonical_name": "Light_MoveToRGB",
+            "type": "function",
+            "argument_type": "INTEGER | INTEGER | INTEGER",
+            "return_type": "VOID",
+            "descriptor": "A numerical representation of the brightness intensity"
+          },
+          {
+            "service": "Light_MoveToSaturation",
+            "raw_service": "MoveToSaturation",
+            "canonical_name": "Light_MoveToSaturation",
+            "type": "function",
+            "argument_type": "DOUBLE",
+            "return_type": "VOID",
+            "descriptor": "A numerical representation of the brightness intensity"
+          },
+          {
+            "service": "Light_MoveToXY",
+            "raw_service": "MoveToXY",
+            "canonical_name": "Light_MoveToXY",
+            "type": "function",
+            "argument_type": "DOUBLE | DOUBLE",
+            "return_type": "VOID",
+            "descriptor": "A numerical representation of the brightness intensity"
+          }
+        ]
+      }
+    ]
+  }
+]
