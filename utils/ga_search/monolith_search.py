@@ -5,7 +5,7 @@ from typing import Any
 
 
 def build_monolith_search_input(rendered_package: dict[str, Any]) -> dict[str, Any]:
-    prompt = str(rendered_package.get("system_prompt") or "")
+    prompt = str(rendered_package.get("prompt_text") or rendered_package.get("system_prompt") or "")
     return {
         "search_mode": "monolith",
         "model_render_mode": rendered_package.get("model_render_mode", "monolith"),

@@ -108,7 +108,7 @@ def save_search_artifacts(
 ) -> dict[str, Any]:
     root = Path(run_dir)
     root.mkdir(parents=True, exist_ok=True)
-    write_text(root / "rendered_base_prompt.md", str(rendered_package.get("system_prompt") or ""))
+    write_text(root / "rendered_base_prompt.md", str(rendered_package.get("prompt_text") or rendered_package.get("system_prompt") or ""))
     render_metadata = {
         "created_at": utc_now(),
         "model_package": rendered_package.get("model_package"),

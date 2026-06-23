@@ -1,109 +1,98 @@
-# GA Search Foundation
+# GA Search
 
-`utils/ga_search` prepares repository-wide prompt search artifacts from a model package. It keeps service model folders focused on deployment-time prompt rendering and keeps GA/advisor/mutation artifacts outside model folders.
+`utils/ga_search` is the canonical repository-level runtime for JOILang prompt rendering, strict DET evaluation, smoke GA search, and advisor seed artifacts.
 
-## Boundaries
+Execution logic lives here, not inside model packages. Model packages provide prompt assets such as `config_loader.py`, `model_config.json`, `blocks/`, and `genomes/`.
 
-- `model_config.json` may declare only `prompt_render`.
-- GA search mode is a CLI option, not a model config setting.
-- Gene, genome, population, mutation, advisor, and search-space artifacts are written under `artifacts/ga_search/`.
-- `gpt_mg/version0_15_update20260413` remains a read-only legacy/reference workspace.
-- Strict DET remains the official metric. Cloud semantic judges are auxiliary diagnostics only.
+## Model Packages
 
-## Render And Search Modes
-
-Model render mode comes from `model_config.json`:
-
-```json
-{
-  "prompt_render": {
-    "mode": "monolith",
-    "loader": "config_loader.py",
-    "loader_function": "load_version_config",
-    "merged_prompt_output": "merged_system_prompt.md"
-  }
-}
-```
-
-GA search mode comes from CLI:
-
-- `--search-mode monolith`: use the merged system prompt as the search input.
-- `--search-mode blocks`: use provided block metadata if available; otherwise decompose the merged prompt into dynamic blocks.
-
-Supported combinations:
-
-| model render mode | GA search mode | behavior |
-|---|---|---|
-| monolith | monolith | use merged prompt |
-| monolith | blocks | decompose merged prompt |
-| blocks | monolith | use service-merged prompt |
-| blocks | blocks | use blocks metadata, else decompose |
-
-## Basic Smoke
+Both dotted modules and filesystem paths are supported:
 
 ```bash
-python utils/ga_search/cli.py \
-  --model-package gpt_mg/version0_16 \
-  --search-mode monolith \
-  --advisor-mode none \
-  --user-input "Turn on the light." \
-  --out-dir artifacts/ga_search/smoke_v16_monolith \
-  --print-summary
+python -m utils.ga_search.cli render --model gpt_mg.version0_13 --user-input "Turn on the light." --dry-run
+python -m utils.ga_search.cli render --model gpt_cap.stage_2 --user-input "Turn on the light." --dry-run
+python -m utils.ga_search.cli render --model-package gpt_mg/version0_13 --user-input "Turn on the light." --dry-run
 ```
+
+The resolver rejects the legacy v15 update folder as a canonical runtime dependency. That folder may remain as backup/reference material, but `utils/ga_search` must not import it.
+
+## Strict DET Policy
+
+- Official ground truth column: `gt`
+- `gt_raw` is not used for official evaluation.
+- Strict DET is the official metric.
+- Cloud semantic judge and cloud advisor output are auxiliary diagnostics only.
+
+## Render
 
 ```bash
-python utils/ga_search/cli.py \
-  --model-package gpt_mg/version0_16 \
-  --search-mode blocks \
-  --advisor-mode none \
+python -m utils.ga_search.cli render \
+  --model gpt_mg.version0_13 \
   --user-input "Turn on the light." \
-  --out-dir artifacts/ga_search/smoke_v16_blocks \
-  --print-summary
+  --dry-run
 ```
 
-Outputs:
+## Eval
 
-- `rendered_base_prompt.md`
-- `render_metadata.json`
-- `decomposed_blocks.json` for blocks mode
-- `search_input.json`
-- `manifest.json`
-- `candidates/candidates_manifest.json`
-
-## Advisor Modes
-
-`--advisor-mode local|cloud|hybrid` attaches feedback evidence and creates prompt mutation seed artifacts.
-
-| mode | input | policy |
-|---|---|---|
-| local | `local_det_failure_report.json` | strict DET is primary |
-| cloud | cloud judge CSV | auxiliary semantic diagnostics only |
-| hybrid | `advisor_rich_feedback.json` or strict+cloud inputs | strict DET primary, cloud auxiliary |
-
-Dry-run advisor does not call APIs. It deterministically maps evidence clusters to `prompt_patches.json`, then builds a seed mutation population and candidate manifest.
+Mock eval uses the official `gt` field as a deterministic candidate fixture. It is intended for pipeline health checks, not model quality claims.
 
 ```bash
-python utils/ga_search/cli.py \
-  --model-package gpt_mg/version0_16 \
-  --search-mode blocks \
-  --advisor-mode hybrid \
-  --advisor-rich-feedback artifacts/hybrid_strict_cloud_test/advisor_rich_feedback.json \
-  --dry-run-advisor \
-  --user-input "Turn on the light." \
-  --out-dir artifacts/ga_search/smoke_advisor_hybrid \
-  --print-summary
+python -m utils.ga_search.cli eval \
+  --model gpt_mg.version0_13 \
+  --dataset datasets/JOICommands-280.csv \
+  --row-no 1 \
+  --llm-mode mock \
+  --det-profile strict
 ```
 
-Advisor outputs:
+Outputs include:
 
-- `advisor/advisor_mode.json`
-- `advisor/advisor_evidence_packet.json`
-- `advisor/advisor_prompt.json`
-- `advisor/prompt_patches.json`
-- `advisor/mutation_population.json`
-- `advisor/mutation_population.csv`
-- `advisor/mutation_population.md`
-- `candidates/candidate_*.json`
-- `candidates/candidates_manifest.json`
+- `candidates/generation_000.csv`
+- `eval/row_evaluation.csv`
+- `eval/failure_reason_summary.csv`
+- `eval/category_summary.csv`
+- `eval/summary.json`
 
-The advisor never writes final generation prompt files and never generates JOILang code. Its output is a mutation proposal for later GA evaluation. Validate improvement by rerunning strict DET first, then use cloud semantic judges only for diagnostic explanation.
+## Search
+
+The current search command provides a lightweight smoke GA loop with population/generation artifacts. It is designed to validate the new repository-level execution path before migrating heavier optimization operators.
+
+```bash
+python -m utils.ga_search.cli search \
+  --model gpt_mg.version0_13 \
+  --dataset datasets/JOICommands-280.csv \
+  --category 5 \
+  --limit-per-category 1 \
+  --population 2 \
+  --gens 1 \
+  --llm-mode mock \
+  --det-profile strict
+```
+
+Outputs include:
+
+- `genomes/initial_population.json`
+- `genomes/generation_*.json`
+- `best_genome.json`
+- `ga_summary.json`
+- `ga_generation_progress.csv`
+- `ga_block_diffs.jsonl`
+
+## Advisor
+
+Advisor modes remain separate from official DET scoring:
+
+- `local`: strict DET/local report evidence
+- `cloud`: cloud judge CSV as auxiliary semantic evidence
+- `hybrid`: strict DET primary plus cloud reasoning auxiliary
+
+Dry-run advisor creates deterministic `prompt_patches.json` and mutation population artifacts without API calls.
+
+## Check Scripts
+
+```bash
+./run_eval_pipeline_check.sh smoke2
+./run_ga_search_check.sh smoke
+```
+
+Both scripts route through `python -m utils.ga_search.cli`.

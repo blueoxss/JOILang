@@ -253,3 +253,5 @@ artifacts/hybrid_strict_cloud*/
 artifacts/evaluation_cloud/
 artifacts/ga_search/
 artifacts/test_fixtures/
+artifacts/ga_search_checks_*/
+artifacts/eval_pipeline_checks_*/

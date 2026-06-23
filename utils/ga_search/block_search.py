@@ -38,7 +38,7 @@ def build_blocks_search_input(rendered_package: dict[str, Any]) -> dict[str, Any
         blocks = provided
         source = "provided_blocks"
     else:
-        blocks = decompose_prompt_to_blocks(str(rendered_package.get("system_prompt") or ""))
+        blocks = decompose_prompt_to_blocks(str(rendered_package.get("prompt_text") or rendered_package.get("system_prompt") or ""))
         source = "decomposed_from_monolith"
     family_distribution = Counter(str(block.get("family") or "misc") for block in blocks)
     return {
@@ -53,5 +53,5 @@ def build_blocks_search_input(rendered_package: dict[str, Any]) -> dict[str, Any
         "render_metadata": rendered_package.get("metadata", {}),
         "prompt_render": rendered_package.get("prompt_render", {}),
         "prompt_text_preserved": "".join(str(block.get("text") or "") for block in blocks)
-        == str(rendered_package.get("system_prompt") or ""),
+        == str(rendered_package.get("prompt_text") or rendered_package.get("system_prompt") or ""),
     }

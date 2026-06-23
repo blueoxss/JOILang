@@ -2,7 +2,13 @@
 
 __all__ = [
     "model_package_loader",
+    "model_resolver",
     "render_adapter",
+    "dataset_runner",
+    "candidate_generation",
+    "evaluation",
+    "ga_engine",
+    "checks",
     "prompt_decomposer",
     "monolith_search",
     "block_search",
