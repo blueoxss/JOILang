@@ -1,0 +1,572 @@
+{
+  "advisor_batch_id": "advisor_batch_g001_0cc56be3",
+  "generation": 1,
+  "model_key": "qwen25_coder_14b",
+  "advisor_model_key": "gpt41_mini",
+  "categories": [
+    1,
+    2
+  ],
+  "limit_per_category": 1,
+  "sample_size": 2,
+  "validation_size": 2,
+  "generation_phase": "ACCURACY_SEARCH",
+  "plateau_type": "warming_up",
+  "next_action": "continue_accuracy",
+  "overall": {
+    "best_DETPass": 100.0,
+    "best_AvgDET": 100.0,
+    "best_tokens": 27082.0,
+    "best_latency": 8.9198,
+    "best_so_far_DETPass": 100.0,
+    "accepted_best_DETPass": 0.0,
+    "pareto_archive_size": 1,
+    "top_failure_types": []
+  },
+  "category_diagnostics": [
+    {
+      "generation": 1,
+      "model_key": "qwen25_coder_14b",
+      "category": 1,
+      "group": "basic",
+      "row_count": 4,
+      "det_pass_count": 4,
+      "det_pass_rate": 100.0,
+      "avg_det_score": 100.0,
+      "failure_histogram": {},
+      "dominant_failure_type": "",
+      "likely_prompt_issue": "No deterministic failures observed; prompt grounding looks adequate.",
+      "recommended_mutation_family": "diversity",
+      "suggested_target_block": "06",
+      "suggested_target_block_family": "DET_Helper",
+      "suggested_mutation_type": "add_targeted_repair_hint",
+      "representative_failures": [],
+      "reasoning_budget_hint": {
+        "reasoning_budget": "none",
+        "draft_items_max": 0,
+        "policy": "No reasoning. Generate JOILang DSL only."
+      }
+    },
+    {
+      "generation": 1,
+      "model_key": "qwen25_coder_14b",
+      "category": 2,
+      "group": "basic",
+      "row_count": 4,
+      "det_pass_count": 4,
+      "det_pass_rate": 100.0,
+      "avg_det_score": 100.0,
+      "failure_histogram": {},
+      "dominant_failure_type": "",
+      "likely_prompt_issue": "No deterministic failures observed; prompt grounding looks adequate.",
+      "recommended_mutation_family": "diversity",
+      "suggested_target_block": "06",
+      "suggested_target_block_family": "DET_Helper",
+      "suggested_mutation_type": "add_targeted_repair_hint",
+      "representative_failures": [],
+      "reasoning_budget_hint": {
+        "reasoning_budget": "none",
+        "draft_items_max": 0,
+        "policy": "No reasoning. Generate JOILang DSL only."
+      }
+    }
+  ],
+  "group_diagnostics": {
+    "basic": {
+      "categories": [
+        1,
+        2
+      ],
+      "row_count": 8,
+      "det_pass_count": 8,
+      "det_pass_rate": 100.0,
+      "avg_det_score": 100.0,
+      "failure_histogram": {},
+      "dominant_failure_type": "",
+      "likely_prompt_issue": "No deterministic failures observed; prompt grounding looks adequate.",
+      "recommended_mutation_family": "diversity"
+    },
+    "temporal": {
+      "categories": [],
+      "row_count": 0,
+      "det_pass_count": 0,
+      "det_pass_rate": 0.0,
+      "avg_det_score": 0.0,
+      "failure_histogram": {},
+      "dominant_failure_type": "",
+      "likely_prompt_issue": "",
+      "recommended_mutation_family": ""
+    },
+    "complex": {
+      "categories": [],
+      "row_count": 0,
+      "det_pass_count": 0,
+      "det_pass_rate": 0.0,
+      "avg_det_score": 0.0,
+      "failure_histogram": {},
+      "dominant_failure_type": "",
+      "likely_prompt_issue": "",
+      "recommended_mutation_family": ""
+    }
+  },
+  "genome_diagnostics": {
+    "top_genomes": [
+      {
+        "rank": 1,
+        "genome_id": "gen-af17dfa2-8346-1468-fe4c-138bdd4e7245",
+        "det_pass_rate": 100.0,
+        "avg_det_score": 100.0,
+        "avg_prompt_tokens": 27082.0,
+        "blocks": [
+          "01",
+          "02",
+          "03"
+        ]
+      },
+      {
+        "rank": 2,
+        "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+        "det_pass_rate": 100.0,
+        "avg_det_score": 100.0,
+        "avg_prompt_tokens": 49557.0,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "05",
+          "06"
+        ]
+      },
+      {
+        "rank": 3,
+        "genome_id": "gen-bbf8b961-f83c-3169-009b-831460788576",
+        "det_pass_rate": 100.0,
+        "avg_det_score": 100.0,
+        "avg_prompt_tokens": 49604.0,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "05",
+          "06"
+        ]
+      }
+    ],
+    "bottom_genomes": [
+      {
+        "rank": 1,
+        "genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+        "det_pass_rate": 100.0,
+        "avg_det_score": 100.0,
+        "avg_prompt_tokens": 50876.0,
+        "blocks": [
+          "01",
+          "02",
+          "05",
+          "06"
+        ]
+      },
+      {
+        "rank": 2,
+        "genome_id": "gen-bbf8b961-f83c-3169-009b-831460788576",
+        "det_pass_rate": 100.0,
+        "avg_det_score": 100.0,
+        "avg_prompt_tokens": 49604.0,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "05",
+          "06"
+        ]
+      },
+      {
+        "rank": 3,
+        "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+        "det_pass_rate": 100.0,
+        "avg_det_score": 100.0,
+        "avg_prompt_tokens": 49557.0,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "05",
+          "06"
+        ]
+      }
+    ],
+    "pareto_candidates": [
+      {
+        "rank": 1,
+        "genome_id": "gen-af17dfa2-8346-1468-fe4c-138bdd4e7245",
+        "det_pass_rate": 100.0,
+        "avg_det_score": 100.0,
+        "avg_prompt_tokens": 27082.0,
+        "blocks": [
+          "01",
+          "02",
+          "03"
+        ]
+      }
+    ],
+    "compact_candidates": [
+      {
+        "rank": 1,
+        "genome_id": "gen-af17dfa2-8346-1468-fe4c-138bdd4e7245",
+        "det_pass_rate": 100.0,
+        "avg_det_score": 100.0,
+        "avg_prompt_tokens": 27082.0,
+        "blocks": [
+          "01",
+          "02",
+          "03"
+        ]
+      },
+      {
+        "rank": 2,
+        "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+        "det_pass_rate": 100.0,
+        "avg_det_score": 100.0,
+        "avg_prompt_tokens": 49557.0,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "05",
+          "06"
+        ]
+      }
+    ]
+  },
+  "representative_failures": [],
+  "current_prompt_artifact": {
+    "genome_id": "gen-af17dfa2-8346-1468-fe4c-138bdd4e7245",
+    "blocks": [
+      "01",
+      "02",
+      "03"
+    ],
+    "params": {
+      "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+      "temperature": 0.05,
+      "few_shot_count": 3,
+      "max_tokens": 1024,
+      "candidate_strategies": [
+        "compact_json",
+        "explicit_preconditions"
+      ]
+    },
+    "block_params_summary": {
+      "02": {
+        "few_shot_count": 2
+      },
+      "05": {
+        "repair_mode": "conservative",
+        "few_shot_count": 3
+      }
+    },
+    "micro_rules_by_block": {
+      "02": [
+        "Return exactly one JSON object only with keys name, cron, period, code.",
+        "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+      ]
+    },
+    "prompt_token_count": 27082.0,
+    "block_signature": "01,02,03",
+    "prompt_hash": "8c473916accbd4e8"
+  },
+  "prompt_token_breakdown": {
+    "generation": 1,
+    "model_key": "qwen25_coder_14b",
+    "total_prompt_token_estimate": 10800,
+    "block_token_total_estimate": 10756,
+    "genome_params_token_estimate": 44,
+    "measurement_method": "char_div_4_estimate",
+    "largest_token_component": "02",
+    "largest_token_component_tokens": 6883
+  },
+  "block_token_breakdown": [
+    {
+      "generation": 1,
+      "model_key": "qwen25_coder_14b",
+      "block_id": "01",
+      "block_family": "Core_System",
+      "block_role": "core",
+      "is_core_block": true,
+      "is_protected_block": true,
+      "char_count": 14148,
+      "token_estimate": 3537,
+      "few_shot_count": 0,
+      "micro_rule_count": 0,
+      "candidate_strategy_count": 0,
+      "optional_status": "",
+      "current_params": {},
+      "compression_allowed": false,
+      "safe_mutation_types": [],
+      "measurement_method": "char_div_4_estimate"
+    },
+    {
+      "generation": 1,
+      "model_key": "qwen25_coder_14b",
+      "block_id": "02",
+      "block_family": "Service_Mapping",
+      "block_role": "core",
+      "is_core_block": true,
+      "is_protected_block": true,
+      "char_count": 27529,
+      "token_estimate": 6883,
+      "few_shot_count": 2,
+      "micro_rule_count": 2,
+      "candidate_strategy_count": 0,
+      "optional_status": "",
+      "current_params": {
+        "few_shot_count": 2,
+        "micro_rules": [
+          "Return exactly one JSON object only with keys name, cron, period, code.",
+          "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+        ]
+      },
+      "compression_allowed": false,
+      "safe_mutation_types": [],
+      "measurement_method": "char_div_4_estimate"
+    },
+    {
+      "generation": 1,
+      "model_key": "qwen25_coder_14b",
+      "block_id": "03",
+      "block_family": "Output_Schema",
+      "block_role": "optional",
+      "is_core_block": false,
+      "is_protected_block": true,
+      "char_count": 1343,
+      "token_estimate": 336,
+      "few_shot_count": 0,
+      "micro_rule_count": 0,
+      "candidate_strategy_count": 0,
+      "optional_status": "active",
+      "current_params": {},
+      "compression_allowed": false,
+      "safe_mutation_types": [],
+      "measurement_method": "char_div_4_estimate"
+    }
+  ],
+  "token_reduction_guidance": {
+    "reasoning_budget_router": [
+      {
+        "task": "simple device command",
+        "reasoning_budget": "none",
+        "draft_items_max": 0,
+        "instruction": "No reasoning. DSL-only.",
+        "example": "Turn on the light => direct JOILang DSL."
+      },
+      {
+        "task": "single condition",
+        "reasoning_budget": "cod_1",
+        "draft_items_max": 1,
+        "instruction": "One short intent/device slot only if needed."
+      },
+      {
+        "task": "temporal/delay/wait",
+        "reasoning_budget": "cod_2",
+        "draft_items_max": 2,
+        "instruction": "Use intent + temporal/dataflow slots only."
+      },
+      {
+        "task": "loop/break/split+loop+delay",
+        "reasoning_budget": "cod_4",
+        "draft_items_max": 4,
+        "instruction": "Use at most 4 short decision slots internally."
+      }
+    ],
+    "compact_rule_cards": [
+      {
+        "name": "OUTPUT",
+        "card": "Return JOILang DSL/code only. No prose, no markdown."
+      },
+      {
+        "name": "DELAY",
+        "card": "delay => (#Clock).clock_delay(ms)"
+      },
+      {
+        "name": "WAIT",
+        "card": "wait => wait until <condition>"
+      },
+      {
+        "name": "BREAK",
+        "card": "break valid only when period > 0"
+      },
+      {
+        "name": "VAR_DECL",
+        "card": "var := only at block start"
+      },
+      {
+        "name": "FORBID",
+        "card": "FORBID={while,sleep,inner:=,explanation,markdown}"
+      },
+      {
+        "name": "SCHEMA",
+        "card": "Preserve required JOILang keys and output contract."
+      }
+    ],
+    "token_reduction_method_cards": [
+      {
+        "method": "Chain of Draft",
+        "apply_to": "reasoning instructions / DET helper / temporal skeleton",
+        "rewrite_pattern": "Replace verbose CoT with <= 2~4 short decision slots. Never ask final model to output reasoning.",
+        "example_before": "Think step by step and explain how to map the user command to devices, services, arguments, temporal constraints, and final code.",
+        "example_after": "Draft only if needed: intent | device/function | temporal/loop. Then output JOILang DSL only.",
+        "safe_operators": [
+          "compact_reasoning_skeleton",
+          "compact_block_params"
+        ]
+      },
+      {
+        "method": "TokenSkip approximation",
+        "apply_to": "verbose natural-language rules",
+        "rewrite_pattern": "Remove restatement, tutorial prose, obvious reasoning, repeated warnings; keep only decision-critical tokens.",
+        "example_before": "You should carefully consider whether the user may be referring to a device and then decide the appropriate action.",
+        "example_after": "Map device→function→args. No unrelated action.",
+        "safe_operators": [
+          "remove_redundant_hint_lines",
+          "template_compress_rule_family"
+        ]
+      },
+      {
+        "method": "Skeleton-of-Thought pipeline",
+        "apply_to": "internal prompt organization",
+        "rewrite_pattern": "Use internal pipeline: classify→select rules/devices/examples→generate→validate→repair. Do not expose skeleton unless debug.",
+        "example_before": "Long explanation of all possible categories and procedures.",
+        "example_after": "PIPE={classify,select,generate,validate,repair}; output=DSL-only.",
+        "safe_operators": [
+          "compact_reasoning_skeleton"
+        ]
+      },
+      {
+        "method": "Selective Context / LLMLingua-style",
+        "apply_to": "service context / device capabilities / examples",
+        "rewrite_pattern": "Keep only category-relevant devices, functions, enum values, temporal rules, and top examples.",
+        "example_before": "Render all device capabilities and all examples.",
+        "example_after": "Render only relevant device/function/value cards and top-1/top-2 examples.",
+        "safe_operators": [
+          "service_context_render_budget_down",
+          "compact_service_schema_fields",
+          "drop_unused_device_capabilities"
+        ]
+      },
+      {
+        "method": "Few-shot distillation",
+        "apply_to": "few-shot blocks",
+        "rewrite_pattern": "Replace many verbose examples with top-1/top-2 compact NL=>DSL prototypes.",
+        "example_before": "User command + explanation + notes + DSL for many categories.",
+        "example_after": "NL => DSL compact pair, selected by category.",
+        "safe_operators": [
+          "reduce_few_shot_count",
+          "reduce_few_shot_count_to_zero",
+          "reduce_few_shot_count_by_one"
+        ]
+      },
+      {
+        "method": "Schema-only compact prompting",
+        "apply_to": "rule-heavy blocks",
+        "rewrite_pattern": "Replace long natural-language rules with compact cards, sets, EBNF-like constraints.",
+        "example_before": "Do not use while. Do not use sleep. Do not declare variables inside nested scopes...",
+        "example_after": "FORBID={while,sleep,inner:=}; VAR_DECL=block-start only.",
+        "safe_operators": [
+          "compact_block_params",
+          "template_compress_rule_family"
+        ]
+      }
+    ],
+    "output_policy": {
+      "final_output": "JOILang DSL/code only",
+      "forbid": [
+        "markdown",
+        "explanation",
+        "analysis",
+        "reasoning text"
+      ],
+      "stop_markers": [
+        "Explanation:",
+        "Notes:",
+        "Reason:",
+        "Analysis:"
+      ]
+    }
+  },
+  "cloudless_feedback_summary": {
+    "structured_feedback_count": 0,
+    "applied_cloudless_mutations": [],
+    "active_failure_families": [],
+    "mutation_operator_credit": []
+  },
+  "advisor_request": {
+    "goal": "Generate structured mutation proposals for the next generation.",
+    "allowed_mutation_types": [
+      "activate_or_strengthen_temporal_rule",
+      "activate_temporal_skeleton",
+      "add_canonical_service_name_rule",
+      "add_micro_rule",
+      "add_schema_grounding_rule",
+      "add_sensor_to_action_flow_rule",
+      "add_targeted_repair_hint",
+      "category_example_budget_down",
+      "compact_block_params",
+      "compact_block_params_safe",
+      "compact_reasoning_skeleton",
+      "compact_service_schema_fields",
+      "compress_candidate_strategies_to_minimal",
+      "dedupe_duplicate_micro_rules",
+      "dedupe_service_value_enums",
+      "drop_optional_block",
+      "drop_optional_blocks_for_budget",
+      "drop_unused_device_capabilities",
+      "global_render_budget_down",
+      "lower_output_max_tokens",
+      "lower_output_max_tokens_aggressive",
+      "lower_output_max_tokens_safe",
+      "merge_duplicate_micro_rules",
+      "multi_block_compression_plan",
+      "prune_micro_rules_to_top_k",
+      "prune_micro_rules_to_top_k_safe",
+      "prune_stale_micro_rules",
+      "reduce_candidate_strategies",
+      "reduce_few_shot_count",
+      "reduce_few_shot_count_by_one",
+      "reduce_few_shot_count_to_zero",
+      "remove_redundant_hint_lines",
+      "service_context_render_budget_down",
+      "strengthen_enum_type_rule",
+      "strengthen_json_only_rule",
+      "strengthen_minimality_rule",
+      "strengthen_no_unrelated_action_rule",
+      "strengthen_owner_device_rule",
+      "strengthen_rule",
+      "strengthen_skeleton_rule",
+      "strengthen_temporal_rule",
+      "template_compress_rule_family"
+    ],
+    "compression_policy": {
+      "activate_when_detpass_ge": 90.0,
+      "compression_ready": true,
+      "compression_phase": "COMPRESSION_READY",
+      "prefer_compression_if_accuracy_saturated": true,
+      "target_token_reduction_ratio": 0.15,
+      "allow_aggressive_compression": false,
+      "preserve_core_blocks": true,
+      "preserve_output_schema": true,
+      "preserve_service_mapping": true
+    },
+    "constraints": [
+      "Do not rewrite the whole prompt.",
+      "Return structured JSON proposals only.",
+      "Prefer compact targeted changes.",
+      "Do not remove safety/output schema constraints.",
+      "Every proposal must specify target block/family and affected failure family.",
+      "If compression is proposed, specify expected token reduction and regression risk."
+    ]
+  },
+  "render_budget_hooks": {
+    "enabled": false,
+    "allowed_global_budget_operators": []
+  }
+}

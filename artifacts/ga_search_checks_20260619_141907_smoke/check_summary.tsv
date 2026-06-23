@@ -1,0 +1,22 @@
+GA script exists	PASS	/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/scripts/run_ga_search.py
+local model dir exists	PASS	/root/llm/local_models/qwen25_coder_14b
+compileall	PASS	utils + legacy scripts
+nvidia-smi	PASS	/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/_logs/nvidia_smi.txt
+ga_cloudless_small command	PASS	rc=0
+ga_cloudless_small ga_summary.json	PASS	/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_cloudless_small/ga_summary.json
+ga_cloudless_small best_genome.json	PASS	/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_cloudless_small/best_genome.json
+ga_cloudless_small candidate health	PASS	candidate_rows=40 non_empty=40 empty=0 oom=0
+ga_mock_advisor_small command	PASS	rc=0
+ga_mock_advisor_small ga_summary.json	PASS	/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_mock_advisor_small/ga_summary.json
+ga_mock_advisor_small best_genome.json	PASS	/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_mock_advisor_small/best_genome.json
+ga_mock_advisor_small candidate health	PASS	candidate_rows=40 non_empty=40 empty=0 oom=0
+ga_mock_advisor_small advisor files	PASS	count=21
+ga_mock_advisor_small block diffs	PASS	/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_mock_advisor_small/ga_block_diffs.jsonl
+ga_mock_advisor_small advisor health	PASS	advisor proposal/response evidence exists
+ga_real_cloud_advisor_small command	PASS	rc=0
+ga_real_cloud_advisor_small ga_summary.json	PASS	/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_real_cloud_advisor_small/ga_summary.json
+ga_real_cloud_advisor_small best_genome.json	PASS	/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_real_cloud_advisor_small/best_genome.json
+ga_real_cloud_advisor_small candidate health	PASS	candidate_rows=40 non_empty=40 empty=0 oom=0
+ga_real_cloud_advisor_small advisor files	PASS	count=23
+ga_real_cloud_advisor_small block diffs	PASS	/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_real_cloud_advisor_small/ga_block_diffs.jsonl
+ga_real_cloud_advisor_small advisor health	PASS	advisor proposal/response evidence exists

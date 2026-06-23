@@ -1,0 +1,63 @@
+{
+  "raw_content": "{\n  \"advisor_status\": \"accepted\",\n  \"compression_policy\": {\n    \"activate_when_detpass_ge\": 90.0,\n    \"compression_ready\": true,\n    \"compression_phase\": \"COMPRESSION_READY\",\n    \"prefer_compression_if_accuracy_saturated\": true,\n    \"target_token_reduction_ratio\": 0.15,\n    \"allow_aggressive_compression\": false,\n    \"preserve_core_blocks\": true,\n    \"preserve_output_schema\": true,\n    \"preserve_service_mapping\": true\n  },\n  \"prompt_token_breakdown_seen\": true,\n  \"block_token_breakdown_seen\": true,\n  \"proposals\": [],\n  \"micro_compression_proposals\": [],\n  \"block_compression_proposals\": [],\n  \"multi_block_compression_proposals\": [],\n  \"global_budget_compression_proposals\": []\n}",
+  "parsed": {
+    "advisor_status": "accepted",
+    "compression_policy": {
+      "activate_when_detpass_ge": 90.0,
+      "compression_ready": true,
+      "compression_phase": "COMPRESSION_READY",
+      "prefer_compression_if_accuracy_saturated": true,
+      "target_token_reduction_ratio": 0.15,
+      "allow_aggressive_compression": false,
+      "preserve_core_blocks": true,
+      "preserve_output_schema": true,
+      "preserve_service_mapping": true
+    },
+    "prompt_token_breakdown_seen": true,
+    "block_token_breakdown_seen": true,
+    "proposals": [],
+    "micro_compression_proposals": [],
+    "block_compression_proposals": [],
+    "multi_block_compression_proposals": [],
+    "global_budget_compression_proposals": []
+  },
+  "compression_policy": {
+    "activate_when_detpass_ge": 90.0,
+    "compression_ready": true,
+    "compression_phase": "COMPRESSION_READY",
+    "prefer_compression_if_accuracy_saturated": true,
+    "target_token_reduction_ratio": 0.15,
+    "allow_aggressive_compression": false,
+    "preserve_core_blocks": true,
+    "preserve_output_schema": true,
+    "preserve_service_mapping": true
+  },
+  "advisor_batch_id": "advisor_batch_g001_0cc56be3",
+  "accepted_proposals": [],
+  "rejected_proposals": [
+    {
+      "proposal_id": "advisor_g001_no_schema_diagnostic",
+      "schema_source": "no_schema",
+      "advisor_generation": 1,
+      "advisor_batch_id": "advisor_batch_g001_0cc56be3",
+      "mutation_family": "advisor_guided",
+      "compression_level": "",
+      "operator": "",
+      "mutation_type": "",
+      "target_block_id": "",
+      "target_block_family": "",
+      "expected_token_delta": 0,
+      "accepted": false,
+      "proposal_state": "rejected",
+      "rejection_reason": "no_advisor_proposals_parsed",
+      "raw_response_path": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_real_cloud_advisor_small/advisor_raw_responses/generation_001_raw.txt",
+      "advisor_prompt_path": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_real_cloud_advisor_small/advisor_prompt_generation_001.txt"
+    }
+  ],
+  "advisor_llm_mode": "openai",
+  "advisor_model_key": "gpt41_mini",
+  "advisor_model": "gpt-4.1-mini",
+  "cloud_advisor_prompt_path": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_real_cloud_advisor_small/cloud_advisor_prompt_generation_001.md",
+  "cloud_advisor_feedback_packet_path": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_real_cloud_advisor_small/cloud_advisor_feedback_packet_generation_001.json",
+  "cloud_advisor_prompt_meta_path": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_real_cloud_advisor_small/cloud_advisor_prompt_meta_generation_001.json"
+}

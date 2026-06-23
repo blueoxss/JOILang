@@ -1,0 +1,37 @@
+{
+  "genome_id": "gen-2b3a85ef-3b1e-a01c-673b-58d152daf6d4",
+  "core_blocks": [
+    "01",
+    "02"
+  ],
+  "optional_blocks": [
+    "03"
+  ],
+  "params": {
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+    "temperature": 0.05,
+    "few_shot_count": 3,
+    "max_tokens": 1024,
+    "candidate_strategies": [
+      "compact_json",
+      "explicit_preconditions"
+    ]
+  },
+  "block_params": {
+    "02": {
+      "few_shot_count": 0,
+      "micro_rules": [
+        "Return exactly one JSON object only with keys name, cron, period, code.",
+        "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+      ]
+    },
+    "05": {
+      "repair_mode": "conservative",
+      "few_shot_count": 0
+    }
+  },
+  "prompt_hash": "b50a8395d957c877",
+  "block_signature": "01,02,03",
+  "rule_signature": "d7c3c8779ca6fe58",
+  "full_prompt_printed": false
+}

@@ -1,0 +1,6 @@
+{
+  "stage": "full-run",
+  "status": "PASS",
+  "timestamp": "2026-06-19T14:31:08",
+  "output_root": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_cloudless_small"
+}

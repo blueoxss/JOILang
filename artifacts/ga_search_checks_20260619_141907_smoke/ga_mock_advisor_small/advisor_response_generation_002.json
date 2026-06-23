@@ -1,0 +1,162 @@
+{
+  "raw_content": "{\"advisor_status\": \"accepted\", \"generation\": 2, \"model_key\": \"qwen25_coder_14b\", \"compression_policy\": {\"compression_ready\": true, \"compression_phase\": \"COMPRESSION_READY\", \"allow_aggressive_compression\": false}, \"prompt_token_breakdown_seen\": true, \"block_token_breakdown_seen\": true, \"diagnosis\": [{\"category_group\": \"compression\", \"main_failure\": \"token_overbudget\", \"hypothesis\": \"Mock advisor sees saturated DETPass and proposes prompt compression.\"}], \"proposals\": [{\"proposal_id\": \"advisor_g002_compress_01\", \"target_block_id\": \"genome\", \"target_block_family\": \"Compression\", \"mutation_family\": \"compression\", \"mutation_type\": \"compress_candidate_strategies_to_minimal\", \"priority\": 3, \"reason\": \"Mock compression proposal generated for compression-ready smoke.\", \"affected_failure_families\": [\"token_overbudget\"], \"category_scope\": [1, 2], \"group_scope\": [\"basic\"], \"proposed_micro_rule\": \"\", \"expected_effect\": \"Reduce prompt tokens while preserving schema/service grounding.\", \"expected_token_delta\": -1000, \"regression_risk\": 0.25, \"apply_mode\": \"create_child\"}], \"block_compression_proposals\": [{\"proposal_id\": \"advisor_g002_block_01\", \"mutation_family\": \"compression\", \"compression_level\": \"block\", \"selected_block_id\": \"06\", \"selected_block_family\": \"DET_Helper\", \"exact_mutation_operator\": \"compact_reasoning_skeleton\", \"operator\": \"compact_reasoning_skeleton\", \"mutation_type\": \"compact_reasoning_skeleton\", \"original_token_estimate\": 400, \"proposed_token_estimate_after\": 280, \"expected_token_delta\": -120, \"preserved_content\": [\"schema/service/temporal validator-critical constraints\"], \"removable_content\": [\"duplicate micro-rules and verbose reasoning hints\"], \"why_safe\": \"Mock block proposal targets a non-core compression-allowed block.\", \"regression_risk\": 0.2, \"validation_requirement\": \"strict DETPass gate\"}], \"do_not_change\": [\"core blocks\", \"output schema\", \"retrieval pre-mapping\"], \"advisor_backend\": \"mock_schema\"}",
+  "parsed": {
+    "advisor_status": "accepted",
+    "generation": 2,
+    "model_key": "qwen25_coder_14b",
+    "compression_policy": {
+      "compression_ready": true,
+      "compression_phase": "COMPRESSION_READY",
+      "allow_aggressive_compression": false
+    },
+    "prompt_token_breakdown_seen": true,
+    "block_token_breakdown_seen": true,
+    "diagnosis": [
+      {
+        "category_group": "compression",
+        "main_failure": "token_overbudget",
+        "hypothesis": "Mock advisor sees saturated DETPass and proposes prompt compression."
+      }
+    ],
+    "proposals": [
+      {
+        "proposal_id": "advisor_g002_compress_01",
+        "target_block_id": "genome",
+        "target_block_family": "Compression",
+        "mutation_family": "compression",
+        "mutation_type": "compress_candidate_strategies_to_minimal",
+        "priority": 3,
+        "reason": "Mock compression proposal generated for compression-ready smoke.",
+        "affected_failure_families": [
+          "token_overbudget"
+        ],
+        "category_scope": [
+          1,
+          2
+        ],
+        "group_scope": [
+          "basic"
+        ],
+        "proposed_micro_rule": "",
+        "expected_effect": "Reduce prompt tokens while preserving schema/service grounding.",
+        "expected_token_delta": -1000,
+        "regression_risk": 0.25,
+        "apply_mode": "create_child"
+      }
+    ],
+    "block_compression_proposals": [
+      {
+        "proposal_id": "advisor_g002_block_01",
+        "mutation_family": "compression",
+        "compression_level": "block",
+        "selected_block_id": "06",
+        "selected_block_family": "DET_Helper",
+        "exact_mutation_operator": "compact_reasoning_skeleton",
+        "operator": "compact_reasoning_skeleton",
+        "mutation_type": "compact_reasoning_skeleton",
+        "original_token_estimate": 400,
+        "proposed_token_estimate_after": 280,
+        "expected_token_delta": -120,
+        "preserved_content": [
+          "schema/service/temporal validator-critical constraints"
+        ],
+        "removable_content": [
+          "duplicate micro-rules and verbose reasoning hints"
+        ],
+        "why_safe": "Mock block proposal targets a non-core compression-allowed block.",
+        "regression_risk": 0.2,
+        "validation_requirement": "strict DETPass gate"
+      }
+    ],
+    "do_not_change": [
+      "core blocks",
+      "output schema",
+      "retrieval pre-mapping"
+    ],
+    "advisor_backend": "mock_schema"
+  },
+  "compression_policy": {
+    "compression_ready": true,
+    "compression_phase": "COMPRESSION_READY",
+    "allow_aggressive_compression": false
+  },
+  "advisor_batch_id": "advisor_batch_g002_3360bc3b",
+  "accepted_proposals": [
+    {
+      "proposal_id": "advisor_g002_compress_01",
+      "target_block_id": "genome",
+      "target_block_family": "Compression",
+      "mutation_family": "compression",
+      "mutation_type": "compress_candidate_strategies_to_minimal",
+      "priority": 3,
+      "reason": "Mock compression proposal generated for compression-ready smoke.",
+      "affected_failure_families": [
+        "token_overbudget"
+      ],
+      "category_scope": [
+        1,
+        2
+      ],
+      "group_scope": [
+        "basic"
+      ],
+      "proposed_micro_rule": "",
+      "expected_effect": "Reduce prompt tokens while preserving schema/service grounding.",
+      "expected_token_delta": -1000,
+      "regression_risk": 0.25,
+      "apply_mode": "create_child",
+      "schema_source": "proposals",
+      "advisor_generation": 2,
+      "advisor_batch_id": "advisor_batch_g002_3360bc3b",
+      "proposal_state": "proposed",
+      "operator": "compress_candidate_strategies_to_minimal",
+      "compression_level": "micro",
+      "raw_response_path": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_mock_advisor_small/advisor_raw_responses/generation_002_raw.txt",
+      "advisor_prompt_path": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_mock_advisor_small/advisor_prompt_generation_002.txt",
+      "accepted": false,
+      "rejection_reason": ""
+    },
+    {
+      "proposal_id": "advisor_g002_block_01",
+      "mutation_family": "compression",
+      "compression_level": "block",
+      "selected_block_id": "06",
+      "selected_block_family": "DET_Helper",
+      "exact_mutation_operator": "compact_reasoning_skeleton",
+      "operator": "compact_reasoning_skeleton",
+      "mutation_type": "compact_reasoning_skeleton",
+      "original_token_estimate": 400,
+      "proposed_token_estimate_after": 280,
+      "expected_token_delta": -120,
+      "preserved_content": [
+        "schema/service/temporal validator-critical constraints"
+      ],
+      "removable_content": [
+        "duplicate micro-rules and verbose reasoning hints"
+      ],
+      "why_safe": "Mock block proposal targets a non-core compression-allowed block.",
+      "regression_risk": 0.2,
+      "validation_requirement": "strict DETPass gate",
+      "schema_source": "block_compression_proposals",
+      "advisor_generation": 2,
+      "advisor_batch_id": "advisor_batch_g002_3360bc3b",
+      "proposal_state": "proposed",
+      "target_block_id": "06",
+      "target_block_family": "DET_Helper",
+      "affected_failure_families": [
+        "token_overbudget"
+      ],
+      "raw_response_path": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_mock_advisor_small/advisor_raw_responses/generation_002_raw.txt",
+      "advisor_prompt_path": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_mock_advisor_small/advisor_prompt_generation_002.txt",
+      "accepted": false,
+      "rejection_reason": ""
+    }
+  ],
+  "rejected_proposals": [],
+  "advisor_llm_mode": "mock",
+  "advisor_model_key": "gpt41_mini",
+  "advisor_model": "gpt-4.1-mini",
+  "cloud_advisor_prompt_path": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_mock_advisor_small/cloud_advisor_prompt_generation_002.md",
+  "cloud_advisor_feedback_packet_path": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_mock_advisor_small/cloud_advisor_feedback_packet_generation_002.json",
+  "cloud_advisor_prompt_meta_path": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_mock_advisor_small/cloud_advisor_prompt_meta_generation_002.json"
+}

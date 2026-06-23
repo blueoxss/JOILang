@@ -1,0 +1,21 @@
+{
+  "advisor_status": "accepted",
+  "compression_policy": {
+    "activate_when_detpass_ge": 90.0,
+    "compression_ready": true,
+    "compression_phase": "COMPRESSION_READY",
+    "prefer_compression_if_accuracy_saturated": true,
+    "target_token_reduction_ratio": 0.15,
+    "allow_aggressive_compression": false,
+    "preserve_core_blocks": true,
+    "preserve_output_schema": true,
+    "preserve_service_mapping": true
+  },
+  "prompt_token_breakdown_seen": true,
+  "block_token_breakdown_seen": true,
+  "proposals": [],
+  "micro_compression_proposals": [],
+  "block_compression_proposals": [],
+  "multi_block_compression_proposals": [],
+  "global_budget_compression_proposals": []
+}

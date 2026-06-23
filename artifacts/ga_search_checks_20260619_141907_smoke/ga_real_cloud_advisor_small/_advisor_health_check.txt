@@ -1,0 +1,4 @@
+advisor_response_json_count 4
+advisor_mutation_proposals_jsonl True 3314
+advisor_raw_response_count 2
+STATUS|PASS|advisor proposal/response evidence exists

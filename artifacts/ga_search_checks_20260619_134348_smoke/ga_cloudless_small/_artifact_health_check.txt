@@ -1,0 +1,8 @@
+candidate_csv_count 24
+candidate_rows 40
+non_empty_candidates 40
+empty_candidates 0
+oom_rows 0
+error_types {'nan': 40}
+last_best_det 100.0 last_best_pass 100.0
+STATUS|PASS|candidate_rows=40 non_empty=40 empty=0 oom=0

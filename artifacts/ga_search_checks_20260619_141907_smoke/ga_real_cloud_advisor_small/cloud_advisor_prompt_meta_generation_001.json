@@ -1,0 +1,17 @@
+{
+  "generation": 1,
+  "advisor_model_key": "gpt41_mini",
+  "advisor_model": "gpt-4.1-mini",
+  "advisor_feedback_detail": "normal",
+  "generation_llm_mode": "worker",
+  "advisor_llm_mode": "openai",
+  "advisor_llm_endpoint": "",
+  "compression_ready": true,
+  "compression_phase": "COMPRESSION_READY",
+  "generation_phase": "ACCURACY_SEARCH",
+  "prompt_path": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_real_cloud_advisor_small/cloud_advisor_prompt_generation_001.md",
+  "feedback_packet_path": "/root/llm/JOILang-Server/artifacts/ga_search_checks_20260619_141907_smoke/ga_real_cloud_advisor_small/cloud_advisor_feedback_packet_generation_001.json",
+  "prompt_chars": 31138,
+  "prompt_est_tokens_char4": 7785,
+  "written_at": "2026-06-19T14:49:18"
+}
