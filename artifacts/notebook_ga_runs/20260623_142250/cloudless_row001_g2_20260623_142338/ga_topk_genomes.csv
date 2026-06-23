@@ -1,0 +1,7 @@
+generation,rank,model_key,genome_id,det,det_pass_rate,det_pass_count,row_count,tokens,core_blocks,optional_blocks,parent_ids,major_mutations,advisor_proposal_id,fitness,elite_reason,selection_reason,archive_membership,pareto_rank,prompt_hash,block_signature,rule_signature,mutation_family,mutation_operator
+1,1,qwen25_coder_14b,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,0.0,0.0,0,1,0.0,"01,02","05,06",,initial_random,,0.0,,,,999,f46bf2e71841352a,"01,02,05,06",c4d08f4d9268f2bc,,
+1,2,qwen25_coder_14b,gen-af17dfa2-8346-1468-fe4c-138bdd4e7245,0.0,0.0,0,1,0.0,"01,02",03,,initial_random,,0.0,,,,999,bf04ea331e632db9,"01,02,03",d7c3c8779ca6fe58,,
+1,3,qwen25_coder_14b,gen-bbf8b961-f83c-3169-009b-831460788576,0.0,0.0,0,1,0.0,"01,02","03,05,06",,initial_random,,0.0,,,,999,6e6e8c3aa0b75feb,"01,02,03,05,06",828da936fcacd0d1,,
+2,1,qwen25_coder_14b,gen-2e1069de-7225-be6c-3bf6-baf915e48f91,0.0,0.0,0,1,0.0,"01,02",06,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,drop_optional_blocks_for_budget,,0.0,,,,999,1d0d1e8f38945f48,"01,02,06",c4d08f4d9268f2bc,compression,drop_optional_blocks_for_budget
+2,2,qwen25_coder_14b,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,0.0,0.0,0,1,0.0,"01,02","05,06",,initial_random,,0.0,,,,999,f46bf2e71841352a,"01,02,05,06",c4d08f4d9268f2bc,,
+2,3,qwen25_coder_14b,gen-af17dfa2-8346-1468-fe4c-138bdd4e7245,0.0,0.0,0,1,0.0,"01,02",03,,initial_random,,0.0,,,,999,bf04ea331e632db9,"01,02,03",d7c3c8779ca6fe58,,

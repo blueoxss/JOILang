@@ -1,0 +1,8 @@
+strict runner exists	PASS	/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/scripts/run_benchmark.py
+prompt assets exist	PASS	/root/llm/JOILang-Server/gpt_mg/version0_13
+dataset exists	PASS	/root/llm/JOILang-Server/datasets/JOICommands-280.csv
+local model dir exists	PASS	/root/llm/local_models/qwen25_coder_14b
+dataset row count	PASS	rows >= EVAL_LIMIT
+preflight local model command	PASS	rc=0
+preflight status ready	PASS	status=ready
+preflight cuda available	PASS	cuda_available=True

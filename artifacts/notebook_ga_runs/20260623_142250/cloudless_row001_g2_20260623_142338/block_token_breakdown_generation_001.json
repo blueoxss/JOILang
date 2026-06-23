@@ -1,0 +1,101 @@
+{
+  "generation": 1,
+  "rows": [
+    {
+      "generation": 1,
+      "model_key": "qwen25_coder_14b",
+      "block_id": "01",
+      "block_family": "Core_System",
+      "block_role": "core",
+      "is_core_block": true,
+      "is_protected_block": true,
+      "char_count": 14148,
+      "token_estimate": 3537,
+      "few_shot_count": 0,
+      "micro_rule_count": 0,
+      "candidate_strategy_count": 0,
+      "optional_status": "",
+      "current_params": {},
+      "compression_allowed": false,
+      "safe_mutation_types": [],
+      "measurement_method": "char_div_4_estimate"
+    },
+    {
+      "generation": 1,
+      "model_key": "qwen25_coder_14b",
+      "block_id": "02",
+      "block_family": "Service_Mapping",
+      "block_role": "core",
+      "is_core_block": true,
+      "is_protected_block": true,
+      "char_count": 27454,
+      "token_estimate": 6864,
+      "few_shot_count": 3,
+      "micro_rule_count": 1,
+      "candidate_strategy_count": 0,
+      "optional_status": "",
+      "current_params": {
+        "few_shot_count": 3,
+        "micro_rules": [
+          "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+        ]
+      },
+      "compression_allowed": false,
+      "safe_mutation_types": [],
+      "measurement_method": "char_div_4_estimate"
+    },
+    {
+      "generation": 1,
+      "model_key": "qwen25_coder_14b",
+      "block_id": "05",
+      "block_family": "Repair_Clause",
+      "block_role": "optional",
+      "is_core_block": false,
+      "is_protected_block": false,
+      "char_count": 17880,
+      "token_estimate": 4470,
+      "few_shot_count": 3,
+      "micro_rule_count": 0,
+      "candidate_strategy_count": 0,
+      "optional_status": "active",
+      "current_params": {
+        "repair_mode": "conservative",
+        "few_shot_count": 3
+      },
+      "compression_allowed": true,
+      "safe_mutation_types": [
+        "reduce_few_shot_count_to_zero",
+        "prune_micro_rules_to_top_k",
+        "compact_block_params",
+        "compact_reasoning_skeleton",
+        "drop_optional_block"
+      ],
+      "measurement_method": "char_div_4_estimate"
+    },
+    {
+      "generation": 1,
+      "model_key": "qwen25_coder_14b",
+      "block_id": "06",
+      "block_family": "DET_Helper",
+      "block_role": "optional",
+      "is_core_block": false,
+      "is_protected_block": false,
+      "char_count": 848,
+      "token_estimate": 212,
+      "few_shot_count": 0,
+      "micro_rule_count": 0,
+      "candidate_strategy_count": 0,
+      "optional_status": "active",
+      "current_params": {},
+      "compression_allowed": true,
+      "safe_mutation_types": [
+        "reduce_few_shot_count_to_zero",
+        "prune_micro_rules_to_top_k",
+        "compact_block_params",
+        "compact_reasoning_skeleton",
+        "drop_optional_block"
+      ],
+      "measurement_method": "char_div_4_estimate"
+    }
+  ]
+}
