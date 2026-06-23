@@ -432,6 +432,18 @@ def run_advisor_for_ga_search(
         out_dir=root,
         population_size=population_size,
     )
+    prompt_patch_count = len(patches_output.get("prompt_patches", [])) if isinstance(patches_output, dict) else 0
+    population_count = len(population_manifest.get("candidates", []))
+    proposal_state = {
+        "created_at": utc_now(),
+        "accepted_proposal_count": prompt_patch_count,
+        "advisor_child_scheduled_count": population_count,
+        "advisor_backed_diff_count": prompt_patch_count,
+        "prompt_patches_count": prompt_patch_count,
+        "mutation_population_candidate_count": population_count,
+        "dry_run": dry_run,
+    }
+    write_json(root / "proposal_state.json", proposal_state)
     candidate_records = population_to_candidate_records(
         population_manifest,
         search_mode=search_mode,
@@ -449,8 +461,11 @@ def run_advisor_for_ga_search(
         "summary": {
             "evidence_rows": len(evidence.get("high_priority_rows", [])),
             "failure_clusters": len(evidence.get("failure_clusters", [])),
-            "prompt_patches": len(patches_output.get("prompt_patches", [])) if isinstance(patches_output, dict) else 0,
-            "population_candidates": len(population_manifest.get("candidates", [])),
+            "prompt_patches": prompt_patch_count,
+            "population_candidates": population_count,
+            "accepted_proposal_count": proposal_state["accepted_proposal_count"],
+            "advisor_child_scheduled_count": proposal_state["advisor_child_scheduled_count"],
+            "advisor_backed_diff_count": proposal_state["advisor_backed_diff_count"],
             "primary_signal": evidence.get("primary_signal"),
             "cloud_is_auxiliary": True,
         },

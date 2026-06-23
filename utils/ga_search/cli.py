@@ -16,9 +16,10 @@ try:
     from .checks import run_check
     from .dataset_runner import command_text, load_dataset_rows, select_dataset_rows
     from .evaluation import evaluate_candidate_records, write_evaluation_outputs
-    from .ga_engine import run_mock_search
+    from .ga_engine import run_search as run_ga_search
     from .model_resolver import ModelPackageSpec, resolve_model_package
     from .monolith_search import build_monolith_search_input
+    from .prompt_patch_apply import apply_prompt_patches
     from .render_adapter import render_model_spec
 except ImportError:
     from advisor_integration import run_advisor_for_ga_search  # type: ignore
@@ -29,9 +30,10 @@ except ImportError:
     from checks import run_check  # type: ignore
     from dataset_runner import command_text, load_dataset_rows, select_dataset_rows  # type: ignore
     from evaluation import evaluate_candidate_records, write_evaluation_outputs  # type: ignore
-    from ga_engine import run_mock_search  # type: ignore
+    from ga_engine import run_search as run_ga_search  # type: ignore
     from model_resolver import ModelPackageSpec, resolve_model_package  # type: ignore
     from monolith_search import build_monolith_search_input  # type: ignore
+    from prompt_patch_apply import apply_prompt_patches  # type: ignore
     from render_adapter import render_model_spec  # type: ignore
 
 
@@ -64,6 +66,7 @@ def add_common_model_args(parser: argparse.ArgumentParser) -> None:
 def add_dataset_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--dataset", default="datasets/JOICommands-280.csv")
     parser.add_argument("--service-schema", default="")
+    parser.add_argument("--service-context-mode", default="schema_fallback")
     parser.add_argument("--row-no", type=int, default=None)
     parser.add_argument("--start-row", type=int, default=1)
     parser.add_argument("--end-row", type=int, default=None)
@@ -83,9 +86,15 @@ def add_generation_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--det-profile", default="strict")
     parser.add_argument("--det-threshold", type=float, default=70.0)
     parser.add_argument("--print-mode", default="summary", choices=["summary", "compare", "none", "paths"])
+    parser.add_argument("--timeout-sec", type=int, default=1800)
+    parser.add_argument("--retries", type=int, default=0)
+    parser.add_argument("--llm-endpoint", default="")
+    parser.add_argument("--llm-extra-json", default="")
+    parser.add_argument("--genome-json", default="")
 
 
 def add_search_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--engine-mode", default="auto", choices=["auto", "mock", "real"])
     parser.add_argument("--population", type=int, default=2)
     parser.add_argument("--gens", type=int, default=1)
     parser.add_argument("--min-generations", type=int, default=None)
@@ -116,6 +125,8 @@ def add_advisor_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--advisor-top-k", type=int, default=20)
     parser.add_argument("--population-size", type=int, default=12)
     parser.add_argument("--dry-run-advisor", action="store_true")
+    parser.add_argument("--advisor-dir", default="")
+    parser.add_argument("--run-dir", default="")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -144,6 +155,9 @@ def build_parser() -> argparse.ArgumentParser:
     check = sub.add_parser("check", help="Run lightweight ga_search checks.")
     add_common_model_args(check)
     check.add_argument("--check", default="smoke")
+    check.add_argument("--advisor-dir", default="")
+    check.add_argument("--run-dir", default="")
+    check.add_argument("--strict-results-dir", default="")
 
     return parser
 
@@ -302,10 +316,18 @@ def run_eval(args: argparse.Namespace) -> int:
         rendered_package=rendered,
         out_dir=run_dir,
         llm_mode=args.llm_mode,
+        model_key=args.model_key,
         candidate_k=args.candidate_k,
         generation=0,
         genome_id="eval_base",
-        candidate_strategy="mock_gt_copy" if args.llm_mode == "mock" else "unsupported",
+        candidate_strategy="mock_gt_copy" if args.llm_mode == "mock" else f"{args.llm_mode}_direct",
+        service_schema=args.service_schema,
+        service_context_mode=args.service_context_mode,
+        timeout_sec=args.timeout_sec,
+        retries=args.retries,
+        llm_endpoint=args.llm_endpoint,
+        llm_extra=parse_json_arg(args.llm_extra_json, default={}),
+        repair_attempts=args.repair_attempts,
     )
     write_candidate_csv(run_dir / "candidates" / "generation_000.csv", candidate_records)
     eval_rows = evaluate_candidate_records(candidate_records, det_threshold=args.det_threshold)
@@ -324,6 +346,8 @@ def run_eval(args: argparse.Namespace) -> int:
     )
     if args.print_mode != "none":
         print(json.dumps({"out_dir": str(run_dir), **summary}, ensure_ascii=False, indent=2))
+    if args.llm_mode != "mock" and summary.get("generation_error_rate", 0.0) >= 1.0:
+        return 2
     return 0
 
 
@@ -338,7 +362,18 @@ def run_search(args: argparse.Namespace) -> int:
         rendered.get("model_package_id") or rendered.get("model_id") or "model",
         timestamp=args.timestamp or None,
     )
-    summary = run_mock_search(
+    initial_genomes = None
+    patch_application_result = None
+    if args.prompt_patches:
+        patch_application_result = apply_prompt_patches(
+            prompt_patches_path=args.prompt_patches,
+            out_dir=run_dir / "patch_application",
+            base_genome_path=args.genome_json or None,
+            rendered_package=rendered,
+            write_source_file=bool(args.write_model_package_artifacts),
+        )
+        initial_genomes = [patch_application_result["patched_genome"]]
+    summary = run_ga_search(
         rows=rows,
         rendered_package=rendered,
         out_dir=run_dir,
@@ -348,7 +383,23 @@ def run_search(args: argparse.Namespace) -> int:
         llm_mode=args.llm_mode,
         det_threshold=args.det_threshold,
         search_mode=search_mode,
+        engine_mode=args.engine_mode,
+        model_key=args.model_key,
+        service_schema=args.service_schema,
+        service_context_mode=args.service_context_mode,
+        timeout_sec=args.timeout_sec,
+        retries=args.retries,
+        llm_endpoint=args.llm_endpoint,
+        llm_extra=parse_json_arg(args.llm_extra_json, default={}),
+        repair_attempts=args.repair_attempts,
+        initial_genomes=initial_genomes,
+        seed=args.seed,
+        feedback_guided_mutation=args.feedback_guided_mutation,
+        compression_mutation=args.enable_compression_mutation,
     )
+    if patch_application_result:
+        summary["patch_application"] = patch_application_result["report"]
+        (run_dir / "ga_summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     search_input, decomposed_blocks = build_search_input(rendered, search_mode)
     advisor_result = None
     if args.advisor_mode != "none" or args.prompt_patches:
@@ -385,12 +436,20 @@ def run_search(args: argparse.Namespace) -> int:
     (run_dir / "ga_run_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     if args.print_mode != "none" or args.print_summary:
         print(json.dumps({"out_dir": str(run_dir), **summary}, ensure_ascii=False, indent=2))
+    if args.llm_mode != "mock" and summary.get("generation_error_rate", 0.0) >= 1.0:
+        return 2
     return 0
 
 
 def run_check_cmd(args: argparse.Namespace) -> int:
     out_dir = Path(args.out_dir) if args.out_dir else None
-    result = run_check(args.check, out_dir=out_dir)
+    result = run_check(
+        args.check,
+        out_dir=out_dir,
+        advisor_dir=args.advisor_dir or None,
+        run_dir=args.run_dir or None,
+        strict_results_dir=args.strict_results_dir or None,
+    )
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result["status"] in {"PASS", "WARN"} else 1
 

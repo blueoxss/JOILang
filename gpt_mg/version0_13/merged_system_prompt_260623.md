@@ -1349,10 +1349,6 @@ If no device type is explicitly mentioned and only "모든 장치" or "all devic
 
 
 
----
-[connected_devices]
- [#Door, #LevelControl, #Light, #Switch]
-
 
 ---
 # System Prompt – Response Steps

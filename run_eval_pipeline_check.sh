@@ -53,6 +53,13 @@ if [ -z "$BASE_DIR" ]; then
   echo "[ERROR] Could not auto-detect JOILang-Server path." >&2
   exit 1
 fi
+if [ -n "$ARG_BASE_DIR" ]; then
+  ARG_CANON="$(cd "$ARG_BASE_DIR" 2>/dev/null && pwd -P || true)"
+  BASE_CANON="$(cd "$BASE_DIR" 2>/dev/null && pwd -P || true)"
+  if [ -z "$ARG_CANON" ] || [ "$ARG_CANON" != "$BASE_CANON" ]; then
+    echo "[WARN] Requested base dir '$ARG_BASE_DIR' was not usable; falling back to '$BASE_DIR'." >&2
+  fi
+fi
 
 cd "$BASE_DIR" || exit 1
 source ~/.bashrc >/dev/null 2>&1 || true
@@ -78,6 +85,15 @@ record() {
   local detail="${3:-}"
   printf "%-42s : %-5s %s\n" "$name" "$status" "$detail"
   printf "%s\t%s\t%s\n" "$name" "$status" "$detail" >> "$SUMMARY_TSV"
+}
+
+print_cmd() {
+  printf '[COMMAND]'
+  local arg
+  for arg in "$@"; do
+    printf ' %q' "$arg"
+  done
+  printf '\n'
 }
 
 has_failures() {
@@ -121,6 +137,49 @@ PY
 "$PY" -m compileall "$BASE_DIR/utils/ga_search" "$BASE_DIR/utils/det_evaluator.py" > "$LOG_DIR/compileall.log" 2>&1
 [ "$?" -eq 0 ] && record "compileall eval path" "PASS" "$LOG_DIR/compileall.log" || record "compileall eval path" "FAIL" "$LOG_DIR/compileall.log"
 
+"$PY" - <<'PY' > "$LOG_DIR/import_origin.log" 2>&1
+import importlib.util
+names = [
+    "utils.ga_search.cli",
+    "utils.ga_search.model_resolver",
+    "utils.ga_search.render_adapter",
+    "utils.ga_search.candidate_generation",
+    "utils.ga_search.evaluation",
+    "utils.ga_search.ga_engine",
+    "utils.det_evaluator",
+]
+for name in names:
+    spec = importlib.util.find_spec(name)
+    print(name, "=>", spec.origin if spec else None)
+    assert spec is not None
+    legacy = "version0_15_update" + "20260413"
+    assert legacy not in str(spec.origin)
+PY
+[ "$?" -eq 0 ] && record "canonical import origins" "PASS" "$LOG_DIR/import_origin.log" || record "canonical import origins" "FAIL" "$LOG_DIR/import_origin.log"
+
+LEGACY_TOKEN='version0_15_update''20260413'
+LEGACY_MODULE='gpt_mg\.version0_15_update''20260413'
+LEGACY_RUNNER='run_ga_search''\.py'
+rg -n "$LEGACY_TOKEN|$LEGACY_MODULE|$LEGACY_RUNNER" \
+  utils/ga_search utils/det_evaluator.py run_ga_search_check.sh run_eval_pipeline_check.sh \
+  --glob '!**/__pycache__/**' > "$LOG_DIR/stale_reference_grep.log" 2>&1
+rg_rc=$?
+[ "$rg_rc" -eq 1 ] && record "canonical stale reference grep" "PASS" "no stale references" || record "canonical stale reference grep" "FAIL" "$LOG_DIR/stale_reference_grep.log"
+
+"$PY" -m utils.ga_search.cli render --model gpt_mg.version0_13 --user-input "Turn on the light." --dry-run > "$LOG_DIR/render_gpt_mg_v13.log" 2>&1
+[ "$?" -eq 0 ] && record "render gpt_mg.version0_13" "PASS" "$LOG_DIR/render_gpt_mg_v13.log" || record "render gpt_mg.version0_13" "FAIL" "$LOG_DIR/render_gpt_mg_v13.log"
+
+"$PY" - <<'PY' >/dev/null 2>&1
+import importlib.util
+raise SystemExit(0 if importlib.util.find_spec("gpt_cap.stage_2.config_loader") else 1)
+PY
+if [ "$?" -eq 0 ]; then
+  "$PY" -m utils.ga_search.cli render --model gpt_cap.stage_2 --user-input "Turn on the light." --dry-run > "$LOG_DIR/render_gpt_cap_stage2.log" 2>&1
+  [ "$?" -eq 0 ] && record "render gpt_cap.stage_2" "PASS" "$LOG_DIR/render_gpt_cap_stage2.log" || record "render gpt_cap.stage_2" "WARN" "$LOG_DIR/render_gpt_cap_stage2.log"
+else
+  record "render gpt_cap.stage_2" "WARN" "package absent"
+fi
+
 ARGS=(
   -m utils.ga_search.cli eval
   --model "$MODEL"
@@ -138,7 +197,7 @@ if [ -n "${EVAL_SAMPLE_SIZE:-}" ]; then
   ARGS+=(--sample-size "$EVAL_SAMPLE_SIZE")
 fi
 
-echo "[COMMAND] $PY ${ARGS[*]}"
+print_cmd "$PY" "${ARGS[@]}"
 "$PY" "${ARGS[@]}" > "$LOG_DIR/eval.log" 2>&1
 rc=$?
 [ "$rc" -eq 0 ] && record "strict eval command" "PASS" "rc=0" || record "strict eval command" "FAIL" "rc=$rc log=$LOG_DIR/eval.log"

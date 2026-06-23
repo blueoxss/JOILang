@@ -49,7 +49,21 @@ def evaluate_candidate_records(
                 "generation": record.get("generation", 0),
                 "candidate_strategy": record.get("candidate_strategy", ""),
                 "generation_error_type": record.get("generation_error_type", ""),
+                "generation_error_count": record.get("generation_error_count", 0),
+                "generation_prompt_tokens_total": record.get("generation_prompt_tokens_total", 0),
+                "generation_completion_tokens_total": record.get("generation_completion_tokens_total", 0),
+                "generation_total_tokens_total": record.get("generation_total_tokens_total", 0),
                 "latency_sec": record.get("latency_sec", ""),
+                "peak_vram_gb": record.get("peak_vram_gb", ""),
+                "raw_response_path": record.get("raw_response_path", ""),
+                "prompt_log_paths": record.get("prompt_log_paths", ""),
+                "service_schema_path": record.get("service_schema_path", ""),
+                "service_context_mode": record.get("service_context_mode", ""),
+                "service_context_source": record.get("service_context_source", ""),
+                "service_list_retrieval_scores": record.get("service_list_retrieval_scores", ""),
+                "repair_applied": record.get("repair_applied", ""),
+                "repair_actions": record.get("repair_actions", ""),
+                "backend": record.get("backend", ""),
             }
         )
         results.append(result)
@@ -107,9 +121,11 @@ def write_evaluation_outputs(out_dir: str | Path, eval_rows: list[dict[str, Any]
         "rows": len(eval_rows),
         "det_pass_rate": sum(1 for row in eval_rows if row.get("det_pass")) / len(eval_rows) if eval_rows else 0.0,
         "avg_det_score": sum(float(row.get("det_score") or 0) for row in eval_rows) / len(eval_rows) if eval_rows else 0.0,
+        "generation_error_rate": sum(1 for row in eval_rows if str(row.get("generation_error_type") or "").strip()) / len(eval_rows) if eval_rows else 0.0,
         "official_metric": "strict_det",
         "ground_truth_column": "gt",
         "cloud_is_auxiliary": True,
+        "service_context_sources": sorted({str(row.get("service_context_source") or "") for row in eval_rows if str(row.get("service_context_source") or "").strip()}),
     }
     (eval_dir / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     return summary

@@ -19,6 +19,9 @@ VALID_OPERATIONS = {
     "activate_optional_block",
     "deactivate_optional_block",
     "diversify_micro_rules",
+    "replace_block_text",
+    "reduce_few_shot",
+    "compress_candidate_strategies",
 }
 
 VALID_TARGET_BLOCK_IDS = {"01", "02", "03", "05", "06"}
