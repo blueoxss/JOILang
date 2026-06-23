@@ -1348,7 +1348,9 @@ code: {
 If no device type is explicitly mentioned and only "모든 장치" or "all devices" is present, you must resolve **all actual device categories** from `[connected_devices]` and `[service_list]`.
 
 
-
+---
+[userinfo]
+ {"service_schema":"datasets/service_list_ver2.0.1.json"}
 
 ---
 # System Prompt – Response Steps
