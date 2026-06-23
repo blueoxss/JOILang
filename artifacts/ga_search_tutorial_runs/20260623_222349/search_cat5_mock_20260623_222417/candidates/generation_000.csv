@@ -1,0 +1,91 @@
+﻿row_no,category,command_eng,command_kor,gt,genome_id,generation,candidate_index,candidate_strategy,prompt_render_mode,prompt_assets_dir,prompt_log_paths,raw_response_path,candidates,generated_code,generated_json,generation_error_type,generation_error_count,generation_prompt_tokens_total,generation_completion_tokens_total,generation_total_tokens_total,latency_sec,peak_vram_gb,service_context_source,service_context_mode,service_list_retrieval_scores,connected_devices_used,service_schema_path,repair_applied,repair_actions,backend
+121,5,Switch the TV to channel 7 and switch to channel 11 after 1 hour.,TV 채널을 7번으로 바꾸고 1시간 뒤에 11번으로 바꿔줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\n(#Television).television_setchannel(7)\n\ndelay(1 HOUR)\n\n(#Television).television_setchannel(11)""}",genome_000,0,0,mock_gt_copy,monolith,/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_121_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_121_cand_0_gen_000.json""]",/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/raw_responses/row_121_cand_0_gen_000.json,"[{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#Television).television_setchannel(7)\n\ndelay(1 HOUR)\n\n(#Television).television_setchannel(11)""}]","
+(#Television).television_setchannel(7)
+
+delay(1 HOUR)
+
+(#Television).television_setchannel(11)","{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#Television).television_setchannel(7)\n\ndelay(1 HOUR)\n\n(#Television).television_setchannel(11)""}",,0,0,0,0,3.2e-05,,provided_schema,schema_fallback,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",,/home/mgjeong/Desktop/llm/JOILang-Server/datasets/service_list_ver2.0.1.json,False,[],mock
+122,5,Set the air conditioner to cool mode and switch to auto mode after 30 minutes.,에어컨을 냉방 모드로 설정하고 30분 뒤에 자동 모드로 설정해줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\n(#AirConditioner).airconditioner_setairconditionermode(\""cool\"")\n\ndelay(30 MIN)\n\n(#AirConditioner).airconditioner_setairconditionermode(\""auto\"")""}",genome_000,0,0,mock_gt_copy,monolith,/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_122_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_122_cand_0_gen_000.json""]",/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/raw_responses/row_122_cand_0_gen_000.json,"[{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#AirConditioner).airconditioner_setairconditionermode(\""cool\"")\n\ndelay(30 MIN)\n\n(#AirConditioner).airconditioner_setairconditionermode(\""auto\"")""}]","
+(#AirConditioner).airconditioner_setairconditionermode(""cool"")
+
+delay(30 MIN)
+
+(#AirConditioner).airconditioner_setairconditionermode(""auto"")","{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#AirConditioner).airconditioner_setairconditionermode(\""cool\"")\n\ndelay(30 MIN)\n\n(#AirConditioner).airconditioner_setairconditionermode(\""auto\"")""}",,0,0,0,0,3.1e-05,,provided_schema,schema_fallback,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",,/home/mgjeong/Desktop/llm/JOILang-Server/datasets/service_list_ver2.0.1.json,False,[],mock
+123,5,Set the air purifier to auto mode and switch to sleep mode after 2 hours.,공기청정기를 자동 모드로 설정하고 2시간 뒤에 수면 모드로 설정해줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\n(#AirPurifier).airpurifier_setairpurifiermode(\""auto\"")\n\ndelay(2 HOUR)\n\n(#AirPurifier).airpurifier_setairpurifiermode(\""sleep\"")""}",genome_000,0,0,mock_gt_copy,monolith,/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_123_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_123_cand_0_gen_000.json""]",/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/raw_responses/row_123_cand_0_gen_000.json,"[{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#AirPurifier).airpurifier_setairpurifiermode(\""auto\"")\n\ndelay(2 HOUR)\n\n(#AirPurifier).airpurifier_setairpurifiermode(\""sleep\"")""}]","
+(#AirPurifier).airpurifier_setairpurifiermode(""auto"")
+
+delay(2 HOUR)
+
+(#AirPurifier).airpurifier_setairpurifiermode(""sleep"")","{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#AirPurifier).airpurifier_setairpurifiermode(\""auto\"")\n\ndelay(2 HOUR)\n\n(#AirPurifier).airpurifier_setairpurifiermode(\""sleep\"")""}",,0,0,0,0,3.1e-05,,provided_schema,schema_fallback,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",,/home/mgjeong/Desktop/llm/JOILang-Server/datasets/service_list_ver2.0.1.json,False,[],mock
+124,5,Set the air conditioner temperature to 24 degrees and change it to 26 degrees after 1 hour.,에어컨 온도를 24도로 설정하고 1시간 뒤에 26도로 설정해줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\n(#AirConditioner).airconditioner_settargettemperature(24)\n\ndelay(1 HOUR)\n\n(#AirConditioner).airconditioner_settargettemperature(26)""}",genome_000,0,0,mock_gt_copy,monolith,/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_124_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_124_cand_0_gen_000.json""]",/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/raw_responses/row_124_cand_0_gen_000.json,"[{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#AirConditioner).airconditioner_settargettemperature(24)\n\ndelay(1 HOUR)\n\n(#AirConditioner).airconditioner_settargettemperature(26)""}]","
+(#AirConditioner).airconditioner_settargettemperature(24)
+
+delay(1 HOUR)
+
+(#AirConditioner).airconditioner_settargettemperature(26)","{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#AirConditioner).airconditioner_settargettemperature(24)\n\ndelay(1 HOUR)\n\n(#AirConditioner).airconditioner_settargettemperature(26)""}",,0,0,0,0,3e-05,,provided_schema,schema_fallback,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",,/home/mgjeong/Desktop/llm/JOILang-Server/datasets/service_list_ver2.0.1.json,False,[],mock
+125,5,Set the oven mode to Bake and change it to warming mode after 10 minutes.,오븐 모드를 베이크로 설정하고 10분 뒤에 데우기 모드로 바꿔줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\n(#Oven).oven_setovenmode(\""Bake\"")\n\ndelay(10 MIN)\n\n(#Oven).oven_setovenmode(\""warming\"")""}",genome_000,0,0,mock_gt_copy,monolith,/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_125_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_125_cand_0_gen_000.json""]",/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/raw_responses/row_125_cand_0_gen_000.json,"[{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#Oven).oven_setovenmode(\""Bake\"")\n\ndelay(10 MIN)\n\n(#Oven).oven_setovenmode(\""warming\"")""}]","
+(#Oven).oven_setovenmode(""Bake"")
+
+delay(10 MIN)
+
+(#Oven).oven_setovenmode(""warming"")","{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#Oven).oven_setovenmode(\""Bake\"")\n\ndelay(10 MIN)\n\n(#Oven).oven_setovenmode(\""warming\"")""}",,0,0,0,0,3e-05,,provided_schema,schema_fallback,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",,/home/mgjeong/Desktop/llm/JOILang-Server/datasets/service_list_ver2.0.1.json,False,[],mock
+121,5,Switch the TV to channel 7 and switch to channel 11 after 1 hour.,TV 채널을 7번으로 바꾸고 1시간 뒤에 11번으로 바꿔줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\n(#Television).television_setchannel(7)\n\ndelay(1 HOUR)\n\n(#Television).television_setchannel(11)""}",genome_001,0,0,mock_gt_copy,monolith,/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_121_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_121_cand_0_gen_000.json""]",/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/raw_responses/row_121_cand_0_gen_000.json,"[{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#Television).television_setchannel(7)\n\ndelay(1 HOUR)\n\n(#Television).television_setchannel(11)""}]","
+(#Television).television_setchannel(7)
+
+delay(1 HOUR)
+
+(#Television).television_setchannel(11)","{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#Television).television_setchannel(7)\n\ndelay(1 HOUR)\n\n(#Television).television_setchannel(11)""}",,0,0,0,0,3.2e-05,,provided_schema,schema_fallback,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",,/home/mgjeong/Desktop/llm/JOILang-Server/datasets/service_list_ver2.0.1.json,False,[],mock
+122,5,Set the air conditioner to cool mode and switch to auto mode after 30 minutes.,에어컨을 냉방 모드로 설정하고 30분 뒤에 자동 모드로 설정해줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\n(#AirConditioner).airconditioner_setairconditionermode(\""cool\"")\n\ndelay(30 MIN)\n\n(#AirConditioner).airconditioner_setairconditionermode(\""auto\"")""}",genome_001,0,0,mock_gt_copy,monolith,/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_122_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_122_cand_0_gen_000.json""]",/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/raw_responses/row_122_cand_0_gen_000.json,"[{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#AirConditioner).airconditioner_setairconditionermode(\""cool\"")\n\ndelay(30 MIN)\n\n(#AirConditioner).airconditioner_setairconditionermode(\""auto\"")""}]","
+(#AirConditioner).airconditioner_setairconditionermode(""cool"")
+
+delay(30 MIN)
+
+(#AirConditioner).airconditioner_setairconditionermode(""auto"")","{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#AirConditioner).airconditioner_setairconditionermode(\""cool\"")\n\ndelay(30 MIN)\n\n(#AirConditioner).airconditioner_setairconditionermode(\""auto\"")""}",,0,0,0,0,3.3e-05,,provided_schema,schema_fallback,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",,/home/mgjeong/Desktop/llm/JOILang-Server/datasets/service_list_ver2.0.1.json,False,[],mock
+123,5,Set the air purifier to auto mode and switch to sleep mode after 2 hours.,공기청정기를 자동 모드로 설정하고 2시간 뒤에 수면 모드로 설정해줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\n(#AirPurifier).airpurifier_setairpurifiermode(\""auto\"")\n\ndelay(2 HOUR)\n\n(#AirPurifier).airpurifier_setairpurifiermode(\""sleep\"")""}",genome_001,0,0,mock_gt_copy,monolith,/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_123_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_123_cand_0_gen_000.json""]",/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/raw_responses/row_123_cand_0_gen_000.json,"[{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#AirPurifier).airpurifier_setairpurifiermode(\""auto\"")\n\ndelay(2 HOUR)\n\n(#AirPurifier).airpurifier_setairpurifiermode(\""sleep\"")""}]","
+(#AirPurifier).airpurifier_setairpurifiermode(""auto"")
+
+delay(2 HOUR)
+
+(#AirPurifier).airpurifier_setairpurifiermode(""sleep"")","{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#AirPurifier).airpurifier_setairpurifiermode(\""auto\"")\n\ndelay(2 HOUR)\n\n(#AirPurifier).airpurifier_setairpurifiermode(\""sleep\"")""}",,0,0,0,0,3.2e-05,,provided_schema,schema_fallback,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",,/home/mgjeong/Desktop/llm/JOILang-Server/datasets/service_list_ver2.0.1.json,False,[],mock
+124,5,Set the air conditioner temperature to 24 degrees and change it to 26 degrees after 1 hour.,에어컨 온도를 24도로 설정하고 1시간 뒤에 26도로 설정해줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\n(#AirConditioner).airconditioner_settargettemperature(24)\n\ndelay(1 HOUR)\n\n(#AirConditioner).airconditioner_settargettemperature(26)""}",genome_001,0,0,mock_gt_copy,monolith,/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_124_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_124_cand_0_gen_000.json""]",/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/raw_responses/row_124_cand_0_gen_000.json,"[{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#AirConditioner).airconditioner_settargettemperature(24)\n\ndelay(1 HOUR)\n\n(#AirConditioner).airconditioner_settargettemperature(26)""}]","
+(#AirConditioner).airconditioner_settargettemperature(24)
+
+delay(1 HOUR)
+
+(#AirConditioner).airconditioner_settargettemperature(26)","{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#AirConditioner).airconditioner_settargettemperature(24)\n\ndelay(1 HOUR)\n\n(#AirConditioner).airconditioner_settargettemperature(26)""}",,0,0,0,0,3.3e-05,,provided_schema,schema_fallback,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",,/home/mgjeong/Desktop/llm/JOILang-Server/datasets/service_list_ver2.0.1.json,False,[],mock
+125,5,Set the oven mode to Bake and change it to warming mode after 10 minutes.,오븐 모드를 베이크로 설정하고 10분 뒤에 데우기 모드로 바꿔줘.,"{""name"": """", 
+""cron"": """", 
+""period"": 0, 
+""script"": ""\n(#Oven).oven_setovenmode(\""Bake\"")\n\ndelay(10 MIN)\n\n(#Oven).oven_setovenmode(\""warming\"")""}",genome_001,0,0,mock_gt_copy,monolith,/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_125_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/prompts/row_125_cand_0_gen_000.json""]",/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/20260623_222349/search_cat5_mock_20260623_222417/raw_responses/row_125_cand_0_gen_000.json,"[{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#Oven).oven_setovenmode(\""Bake\"")\n\ndelay(10 MIN)\n\n(#Oven).oven_setovenmode(\""warming\"")""}]","
+(#Oven).oven_setovenmode(""Bake"")
+
+delay(10 MIN)
+
+(#Oven).oven_setovenmode(""warming"")","{""name"": """", ""cron"": """", ""period"": 0, ""code"": ""\n(#Oven).oven_setovenmode(\""Bake\"")\n\ndelay(10 MIN)\n\n(#Oven).oven_setovenmode(\""warming\"")""}",,0,0,0,0,3.3e-05,,provided_schema,schema_fallback,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",,/home/mgjeong/Desktop/llm/JOILang-Server/datasets/service_list_ver2.0.1.json,False,[],mock

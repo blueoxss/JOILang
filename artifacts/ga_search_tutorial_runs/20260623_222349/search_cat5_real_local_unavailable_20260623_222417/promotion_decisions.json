@@ -1,0 +1,11 @@
+{
+  "decisions": [
+    {
+      "generation": 0,
+      "promoted_genome_id": "genome_001",
+      "reason": "highest_strict_det_fitness",
+      "avg_det_score": 25.0
+    }
+  ],
+  "final_best_genome_id": "genome_001"
+}

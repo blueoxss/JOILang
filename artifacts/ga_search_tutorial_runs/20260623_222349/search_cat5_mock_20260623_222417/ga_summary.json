@@ -1,0 +1,30 @@
+{
+  "run_id": "search_cat5_mock_20260623_222417",
+  "model_id": "gpt_mg.version0_13",
+  "model_package_path": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13",
+  "model_key": "",
+  "search_mode": "monolith",
+  "ga_engine_mode": "mock_foundation",
+  "llm_mode": "mock",
+  "official_metric": "strict_det",
+  "ground_truth_column": "gt",
+  "rows": 5,
+  "best_DETPass": 1.0,
+  "best_avg_DET": 100.0,
+  "best_avg_prompt_tokens": 0,
+  "generation_error_rate": 0.0,
+  "stop_reason": "completed_requested_generations",
+  "best_history": [
+    {
+      "generation": 0,
+      "candidate_rows": 10,
+      "avg_det_score": 100.0,
+      "train_det_pass_rate": 1.0,
+      "best_genome_id": "genome_000"
+    }
+  ],
+  "cloud_is_auxiliary": true,
+  "known_limitations": [
+    "mock mode copies official gt as a deterministic pipeline fixture; do not use it for model quality claims"
+  ]
+}

@@ -140,6 +140,13 @@ def build_parser() -> argparse.ArgumentParser:
     add_common_model_args(ev)
     add_dataset_args(ev)
     add_generation_args(ev)
+    # Kept for older tutorial/notebook CLI compatibility; eval backend currently ignores this flag.
+    ev.add_argument(
+        "--engine-mode",
+        default=None,
+        choices=["mock", "real", "auto"],
+        help="Compatibility option for older tutorial notebooks; currently ignored unless supported by the eval backend.",
+    )
 
     search = sub.add_parser("search", help="Run a lightweight GA search/evaluation loop.")
     add_common_model_args(search)
