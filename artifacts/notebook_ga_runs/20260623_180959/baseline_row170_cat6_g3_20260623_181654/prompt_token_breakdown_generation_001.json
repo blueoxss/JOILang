@@ -1,0 +1,10 @@
+{
+  "generation": 1,
+  "model_key": "qwen25_coder_14b",
+  "total_prompt_token_estimate": 15451,
+  "block_token_total_estimate": 15402,
+  "genome_params_token_estimate": 49,
+  "measurement_method": "char_div_4_estimate",
+  "largest_token_component": "02",
+  "largest_token_component_tokens": 6847
+}

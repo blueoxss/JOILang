@@ -1,0 +1,87 @@
+{
+  "id": "gen-72e1069d-e722-5be6-c3bf-6baf915e48f9",
+  "seed": 573137329,
+  "blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ],
+  "params": {
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+    "temperature": 0.1,
+    "few_shot_count": 3,
+    "max_tokens": 1024,
+    "candidate_strategies": [
+      "compact_json",
+      "explicit_preconditions",
+      "direct",
+      "minimal"
+    ]
+  },
+  "block_params": {
+    "02": {
+      "few_shot_count": 2,
+      "micro_rules": [],
+      "source_file": "generated/02_generator_prompt__row170_cat6_manual_rules_20260623_182339.txt"
+    },
+    "05": {
+      "repair_mode": "conservative",
+      "few_shot_count": 3
+    }
+  },
+  "_ga_metadata": {
+    "parent_ids": [
+      "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e"
+    ],
+    "mutation_types": [
+      "drop_optional_block"
+    ],
+    "crossover_used": false,
+    "feedback_types_used": [],
+    "base_genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+    "prompt_hash": "edf2b30eb0b6627d",
+    "block_signature": "01,02,05,06",
+    "rule_signature": "28de14a34f971ccc",
+    "mutation_family": "compression",
+    "mutation_operator": "drop_optional_block",
+    "mutation_proposal_id": "block_compression_g002_ce9ba084",
+    "diffs": [
+      {
+        "block_id": "05",
+        "field": "blocks",
+        "old_value": "[\"01\", \"02\", \"03\", \"05\", \"06\"]",
+        "new_value": "[\"01\", \"02\", \"03\", \"06\"]",
+        "mutation_type": "drop_optional_block",
+        "mutation_family": "compression",
+        "compression_level": "block",
+        "selected_compression_target": "05",
+        "selected_block_id": "05",
+        "selected_block_ids": "[]",
+        "expected_token_delta": -1117,
+        "feedback_driven": false,
+        "llm_advised": false,
+        "advisor_proposal_id": "",
+        "advisor_batch_id": "",
+        "failure_type_source": "token_overbudget"
+      }
+    ]
+  },
+  "_notebook_manual_block_patch": {
+    "target_block_id": "02",
+    "source_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt",
+    "patched_block_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/generated/02_generator_prompt__row170_cat6_manual_rules_20260623_182339.txt",
+    "marker": "NOTEBOOK MANUAL FOCUS RULES"
+  },
+  "_notebook_manual_patch": {
+    "created_at": "2026-06-23T18:23:39",
+    "target_block_id": "02",
+    "rules": [
+      "For compound-condition commands, preserve all conditions and boolean connectors exactly.",
+      "Do not execute the action unless the complete condition is satisfied.",
+      "Map sensor values only in condition expressions and actuator functions only in action statements.",
+      "Prefer minimal schema-valid code with canonical device/function names."
+    ],
+    "base_genome_path": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/baseline_row170_cat6_g3_20260623_181654/best_genome.json"
+  }
+}

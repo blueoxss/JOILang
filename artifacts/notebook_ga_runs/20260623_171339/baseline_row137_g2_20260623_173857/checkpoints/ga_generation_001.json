@@ -1,0 +1,1416 @@
+{
+  "generation": 1,
+  "population": [
+    {
+      "genome": {
+        "id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+        "seed": 626297831,
+        "blocks": [
+          "01",
+          "02",
+          "05",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+          "temperature": 0.0,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "minimal",
+            "direct",
+            "canonical_names_first",
+            "compact_json"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 3,
+            "micro_rules": [
+              "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+            ]
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [],
+          "mutation_types": [
+            "initial_random"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": ""
+        }
+      },
+      "fitness": 118.6152,
+      "avg_det_score": 93.076,
+      "variance": 0.0,
+      "validation_avg_det_score": 93.076,
+      "train_metrics": {
+        "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_7846",
+        "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_7846.csv",
+        "rows": [
+          {
+            "row_no": 137,
+            "category": "5",
+            "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+            "det_score": 93.076,
+            "det_gt_exact": false,
+            "det_gt_similarity": 0.987931,
+            "failure_reasons": [
+              "extraneous",
+              "gt_mismatch",
+              "semantic"
+            ],
+            "output": "{\"name\":\"SoundEmergencySirensOnPresenceDetected\",\"cron\":\"\",\"period\":0,\"code\":\"wait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\ndelay(10 SEC)\\nall(#House #Siren).siren_setsirenmode(\\\"emergency\\\")\"}",
+            "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}"
+          }
+        ],
+        "avg_det_score": 93.076,
+        "variance": 0.0,
+        "failure_summary": {
+          "top_failure_types": [
+            [
+              "extraneous",
+              1
+            ],
+            [
+              "gt_mismatch",
+              1
+            ],
+            [
+              "semantic",
+              1
+            ]
+          ],
+          "count": 3
+        },
+        "generation_summary": {
+          "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_7846",
+          "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_7846.csv",
+          "jsonl_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_7846.jsonl",
+          "row_count": 1,
+          "rows": [
+            {
+              "index": "17",
+              "category": "5",
+              "command_kor": "집안의 재실 센서가 하나라도 감지되면 10초 뒤에 모든 긴급 사이렌을 울려줘.",
+              "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+              "gt_raw": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).Presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).SetSirenMode(\\\"emergency\\\")\"}",
+              "connected_devices": "{'House_Presence_1': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'House_Presence_2': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'Main_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}, 'Sub_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}}",
+              "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}",
+              "row_no": 137,
+              "profile": "version0_15",
+              "genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+              "genome_seed": 626297831,
+              "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_7846",
+              "candidate_count": 1,
+              "candidates": "[\"{\\\"name\\\":\\\"SoundEmergencySirensOnPresenceDetected\\\",\\\"cron\\\":\\\"\\\",\\\"period\\\":0,\\\"code\\\":\\\"wait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\\\ndelay(10 SEC)\\\\nall(#House #Siren).siren_setsirenmode(\\\\\\\"emergency\\\\\\\")\\\"}\"]",
+              "candidate_metadata": "[{\"candidate_index\": 0, \"strategy\": \"minimal\", \"prompt_chars\": 77317, \"prompt_tokens\": 19010, \"completion_tokens\": 80, \"total_tokens\": 19090, \"latency_sec\": 17.5977, \"peak_vram_gb\": 33.2034, \"load_sec\": 7.2081, \"generate_sec\": 7.0509, \"prompt_prep_sec\": 0.0573, \"decode_sec\": 0.0004, \"worker_pid\": 3490046, \"error_type\": \"\", \"oom_flag\": false, \"block_manifest\": [{\"id\": \"01\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/01_preamble.txt\", \"metadata\": {\"id\": \"01\", \"role\": \"preprocessor\", \"params\": \"temperature, micro_rules\", \"description\": \"Global deterministic JOILang generation rules and schema-faithful behavior.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"02\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt\", \"metadata\": {\"id\": \"02\", \"role\": \"generator\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Main JOILang generator block with deterministic JSON-only output and schema-grounded exemplars.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {candidate_strategy}\"}}, {\"id\": \"05\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/05_repair_prompt.txt\", \"metadata\": {\"id\": \"05\", \"role\": \"repair\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Targeted repair prompt that fixes schema mismatch, arg typing, and semantic drift with minimal edits.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {best_candidate}, {det_diagnostics}, {failure_summary}\"}}, {\"id\": \"06\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/06_det_helper.txt\", \"metadata\": {\"id\": \"06\", \"role\": \"helper\", \"params\": \"micro_rules\", \"description\": \"Diagnostic helper block enumerating the evaluator targets so the generator avoids common failures.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}]}]",
+              "prompt_log_paths": "[\"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/logs/ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_7846/row_137_cand_1.json\"]",
+              "generation_status": "ok",
+              "generation_total_pipeline_sec": 19.5624,
+              "llm_mode": "worker",
+              "llm_model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+              "prompt_render_mode": "blocks",
+              "prompt_assets_dir": "",
+              "service_list_snippet_source": "connected_devices_only",
+              "service_list_device_count": 4,
+              "service_list_retrieval_status": "skipped_connected_devices_present",
+              "service_list_retrieval_mode": "hybrid",
+              "service_list_retrieval_topk": 10,
+              "service_list_retrieval_device": "cpu",
+              "service_list_retrieval_categories": "[]",
+              "service_list_retrieval_scores": "[]",
+              "service_list_retrieval_fallback_reason": "",
+              "generation_call_count": 1,
+              "generation_error_count": 0,
+              "generation_error_type": "",
+              "generation_error_types": "[]",
+              "generation_oom_flag": false,
+              "generation_prompt_chars_total": 77317,
+              "generation_prompt_tokens_total": 19010,
+              "generation_completion_tokens_total": 80,
+              "generation_total_tokens_total": 19090,
+              "generation_llm_latency_sec": 17.5977,
+              "generation_peak_vram_gb": 33.2034
+            }
+          ],
+          "fieldnames": [
+            "index",
+            "category",
+            "command_kor",
+            "command_eng",
+            "gt_raw",
+            "connected_devices",
+            "gt",
+            "row_no",
+            "profile",
+            "genome_id",
+            "genome_seed",
+            "run_id",
+            "candidate_count",
+            "candidates",
+            "candidate_metadata",
+            "prompt_log_paths",
+            "generation_status",
+            "generation_total_pipeline_sec",
+            "llm_mode",
+            "llm_model",
+            "prompt_render_mode",
+            "prompt_assets_dir",
+            "service_list_snippet_source",
+            "service_list_device_count",
+            "service_list_retrieval_status",
+            "service_list_retrieval_mode",
+            "service_list_retrieval_topk",
+            "service_list_retrieval_device",
+            "service_list_retrieval_categories",
+            "service_list_retrieval_scores",
+            "service_list_retrieval_fallback_reason",
+            "generation_call_count",
+            "generation_error_count",
+            "generation_error_type",
+            "generation_error_types",
+            "generation_oom_flag",
+            "generation_prompt_chars_total",
+            "generation_prompt_tokens_total",
+            "generation_completion_tokens_total",
+            "generation_total_tokens_total",
+            "generation_llm_latency_sec",
+            "generation_peak_vram_gb"
+          ]
+        }
+      },
+      "validation_metrics": {
+        "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_507846",
+        "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_507846.csv",
+        "rows": [
+          {
+            "row_no": 137,
+            "category": "5",
+            "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+            "det_score": 93.076,
+            "det_gt_exact": false,
+            "det_gt_similarity": 0.987931,
+            "failure_reasons": [
+              "extraneous",
+              "gt_mismatch",
+              "semantic"
+            ],
+            "output": "{\"name\":\"SoundEmergencySirensOnPresenceDetected\",\"cron\":\"\",\"period\":0,\"code\":\"wait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\ndelay(10 SEC)\\nall(#House #Siren).siren_setsirenmode(\\\"emergency\\\")\"}",
+            "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}"
+          }
+        ],
+        "avg_det_score": 93.076,
+        "variance": 0.0,
+        "failure_summary": {
+          "top_failure_types": [
+            [
+              "extraneous",
+              1
+            ],
+            [
+              "gt_mismatch",
+              1
+            ],
+            [
+              "semantic",
+              1
+            ]
+          ],
+          "count": 3
+        },
+        "generation_summary": {
+          "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_507846",
+          "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_507846.csv",
+          "jsonl_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_507846.jsonl",
+          "row_count": 1,
+          "rows": [
+            {
+              "index": "17",
+              "category": "5",
+              "command_kor": "집안의 재실 센서가 하나라도 감지되면 10초 뒤에 모든 긴급 사이렌을 울려줘.",
+              "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+              "gt_raw": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).Presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).SetSirenMode(\\\"emergency\\\")\"}",
+              "connected_devices": "{'House_Presence_1': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'House_Presence_2': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'Main_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}, 'Sub_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}}",
+              "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}",
+              "row_no": 137,
+              "profile": "version0_15",
+              "genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+              "genome_seed": 626297831,
+              "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_507846",
+              "candidate_count": 1,
+              "candidates": "[\"{\\\"name\\\":\\\"SoundEmergencySirensOnPresenceDetected\\\",\\\"cron\\\":\\\"\\\",\\\"period\\\":0,\\\"code\\\":\\\"wait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\\\ndelay(10 SEC)\\\\nall(#House #Siren).siren_setsirenmode(\\\\\\\"emergency\\\\\\\")\\\"}\"]",
+              "candidate_metadata": "[{\"candidate_index\": 0, \"strategy\": \"minimal\", \"prompt_chars\": 77317, \"prompt_tokens\": 19010, \"completion_tokens\": 80, \"total_tokens\": 19090, \"latency_sec\": 6.9204, \"peak_vram_gb\": 33.2077, \"load_sec\": 0.0, \"generate_sec\": 6.8698, \"prompt_prep_sec\": 0.045, \"decode_sec\": 0.0003, \"worker_pid\": 3490046, \"error_type\": \"\", \"oom_flag\": false, \"block_manifest\": [{\"id\": \"01\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/01_preamble.txt\", \"metadata\": {\"id\": \"01\", \"role\": \"preprocessor\", \"params\": \"temperature, micro_rules\", \"description\": \"Global deterministic JOILang generation rules and schema-faithful behavior.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"02\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt\", \"metadata\": {\"id\": \"02\", \"role\": \"generator\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Main JOILang generator block with deterministic JSON-only output and schema-grounded exemplars.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {candidate_strategy}\"}}, {\"id\": \"05\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/05_repair_prompt.txt\", \"metadata\": {\"id\": \"05\", \"role\": \"repair\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Targeted repair prompt that fixes schema mismatch, arg typing, and semantic drift with minimal edits.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {best_candidate}, {det_diagnostics}, {failure_summary}\"}}, {\"id\": \"06\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/06_det_helper.txt\", \"metadata\": {\"id\": \"06\", \"role\": \"helper\", \"params\": \"micro_rules\", \"description\": \"Diagnostic helper block enumerating the evaluator targets so the generator avoids common failures.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}]}]",
+              "prompt_log_paths": "[\"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/logs/ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-378892e9-ecc3-87ab-8b45-85023a0286cc_507846/row_137_cand_1.json\"]",
+              "generation_status": "ok",
+              "generation_total_pipeline_sec": 8.8215,
+              "llm_mode": "worker",
+              "llm_model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+              "prompt_render_mode": "blocks",
+              "prompt_assets_dir": "",
+              "service_list_snippet_source": "connected_devices_only",
+              "service_list_device_count": 4,
+              "service_list_retrieval_status": "skipped_connected_devices_present",
+              "service_list_retrieval_mode": "hybrid",
+              "service_list_retrieval_topk": 10,
+              "service_list_retrieval_device": "cpu",
+              "service_list_retrieval_categories": "[]",
+              "service_list_retrieval_scores": "[]",
+              "service_list_retrieval_fallback_reason": "",
+              "generation_call_count": 1,
+              "generation_error_count": 0,
+              "generation_error_type": "",
+              "generation_error_types": "[]",
+              "generation_oom_flag": false,
+              "generation_prompt_chars_total": 77317,
+              "generation_prompt_tokens_total": 19010,
+              "generation_completion_tokens_total": 80,
+              "generation_total_tokens_total": 19090,
+              "generation_llm_latency_sec": 6.9204,
+              "generation_peak_vram_gb": 33.2077
+            }
+          ],
+          "fieldnames": [
+            "index",
+            "category",
+            "command_kor",
+            "command_eng",
+            "gt_raw",
+            "connected_devices",
+            "gt",
+            "row_no",
+            "profile",
+            "genome_id",
+            "genome_seed",
+            "run_id",
+            "candidate_count",
+            "candidates",
+            "candidate_metadata",
+            "prompt_log_paths",
+            "generation_status",
+            "generation_total_pipeline_sec",
+            "llm_mode",
+            "llm_model",
+            "prompt_render_mode",
+            "prompt_assets_dir",
+            "service_list_snippet_source",
+            "service_list_device_count",
+            "service_list_retrieval_status",
+            "service_list_retrieval_mode",
+            "service_list_retrieval_topk",
+            "service_list_retrieval_device",
+            "service_list_retrieval_categories",
+            "service_list_retrieval_scores",
+            "service_list_retrieval_fallback_reason",
+            "generation_call_count",
+            "generation_error_count",
+            "generation_error_type",
+            "generation_error_types",
+            "generation_oom_flag",
+            "generation_prompt_chars_total",
+            "generation_prompt_tokens_total",
+            "generation_completion_tokens_total",
+            "generation_total_tokens_total",
+            "generation_llm_latency_sec",
+            "generation_peak_vram_gb"
+          ]
+        }
+      },
+      "redesign_metrics": {
+        "genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+        "validation_det_pass_rate": 100.0,
+        "validation_avg_det_score": 93.076,
+        "avg_prompt_tokens": 19010.0,
+        "avg_latency_sec": 6.9204,
+        "det_score_variance": 0.0,
+        "basic_detpass": 100.0,
+        "temporal_detpass": 100.0,
+        "complex_detpass": 100.0,
+        "min_group_detpass": 100.0,
+        "harmonic_group_detpass": 100.0,
+        "category_gap": 0.0,
+        "token_penalty": 0.0,
+        "latency_penalty": 0.0,
+        "variance_penalty": 0.0,
+        "regression_penalty": 0.0,
+        "category_balance_score": 100.0,
+        "schema_robustness_score": 100.0,
+        "compression_gain": 0.0,
+        "pareto_rank": 999,
+        "pareto_frontier_member": false,
+        "score_accuracy": 118.6152,
+        "score_efficiency": 100.0,
+        "score_balanced": 118.6152,
+        "score_deployment": 118.6152,
+        "score_main": 118.6152,
+        "prompt_hash": "f46bf2e71841352a",
+        "block_signature": "01,02,05,06",
+        "rule_signature": "c4d08f4d9268f2bc",
+        "unavailable_metrics": ""
+      }
+    },
+    {
+      "genome": {
+        "id": "gen-af17dfa2-8346-1468-fe4c-138bdd4e7245",
+        "seed": 157367319,
+        "blocks": [
+          "01",
+          "02",
+          "03"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+          "temperature": 0.05,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "compact_json",
+            "explicit_preconditions"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 2,
+            "micro_rules": [
+              "Return exactly one JSON object only with keys name, cron, period, code.",
+              "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+            ]
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [],
+          "mutation_types": [
+            "initial_random"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": ""
+        }
+      },
+      "fitness": 118.5405,
+      "avg_det_score": 92.7025,
+      "variance": 0.0,
+      "validation_avg_det_score": 92.7025,
+      "train_metrics": {
+        "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245_7334",
+        "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245_7334.csv",
+        "rows": [
+          {
+            "row_no": 137,
+            "category": "5",
+            "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+            "det_score": 92.7025,
+            "det_gt_exact": false,
+            "det_gt_similarity": 0.91323,
+            "failure_reasons": [
+              "extraneous",
+              "gt_mismatch",
+              "semantic"
+            ],
+            "output": "{\"name\":\"SoundEmergencySirensWhenPresenceDetected\",\"cron\":\"\",\"period\":0,\"code\":\"if (all(#House #PresenceSensor).presencesensor_presence ==| true) { delay(10 SEC); all(#House #Siren).siren_setsirenmode(\\\"emergency\\\") }\"}",
+            "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}"
+          }
+        ],
+        "avg_det_score": 92.7025,
+        "variance": 0.0,
+        "failure_summary": {
+          "top_failure_types": [
+            [
+              "extraneous",
+              1
+            ],
+            [
+              "gt_mismatch",
+              1
+            ],
+            [
+              "semantic",
+              1
+            ]
+          ],
+          "count": 3
+        },
+        "generation_summary": {
+          "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245_7334",
+          "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245_7334.csv",
+          "jsonl_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245_7334.jsonl",
+          "row_count": 1,
+          "rows": [
+            {
+              "index": "17",
+              "category": "5",
+              "command_kor": "집안의 재실 센서가 하나라도 감지되면 10초 뒤에 모든 긴급 사이렌을 울려줘.",
+              "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+              "gt_raw": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).Presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).SetSirenMode(\\\"emergency\\\")\"}",
+              "connected_devices": "{'House_Presence_1': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'House_Presence_2': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'Main_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}, 'Sub_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}}",
+              "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}",
+              "row_no": 137,
+              "profile": "version0_15",
+              "genome_id": "gen-af17dfa2-8346-1468-fe4c-138bdd4e7245",
+              "genome_seed": 157367319,
+              "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245_7334",
+              "candidate_count": 1,
+              "candidates": "[\"{\\\"name\\\":\\\"SoundEmergencySirensWhenPresenceDetected\\\",\\\"cron\\\":\\\"\\\",\\\"period\\\":0,\\\"code\\\":\\\"if (all(#House #PresenceSensor).presencesensor_presence ==| true) { delay(10 SEC); all(#House #Siren).siren_setsirenmode(\\\\\\\"emergency\\\\\\\") }\\\"}\"]",
+              "candidate_metadata": "[{\"candidate_index\": 0, \"strategy\": \"compact_json\", \"prompt_chars\": 45921, \"prompt_tokens\": 11149, \"completion_tokens\": 79, \"total_tokens\": 11228, \"latency_sec\": 4.722, \"peak_vram_gb\": 30.8545, \"load_sec\": 0.0, \"generate_sec\": 4.6913, \"prompt_prep_sec\": 0.0266, \"decode_sec\": 0.0004, \"worker_pid\": 3490046, \"error_type\": \"\", \"oom_flag\": false, \"block_manifest\": [{\"id\": \"01\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/01_preamble.txt\", \"metadata\": {\"id\": \"01\", \"role\": \"preprocessor\", \"params\": \"temperature, micro_rules\", \"description\": \"Global deterministic JOILang generation rules and schema-faithful behavior.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"02\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt\", \"metadata\": {\"id\": \"02\", \"role\": \"generator\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Main JOILang generator block with deterministic JSON-only output and schema-grounded exemplars.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {candidate_strategy}\"}}, {\"id\": \"03\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/03_postprocessor.txt\", \"metadata\": {\"id\": \"03\", \"role\": \"postprocessor\", \"params\": \"max_tokens, micro_rules\", \"description\": \"Final JOILang output scrubber that enforces JSON shape and strips explanation drift.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}]}]",
+              "prompt_log_paths": "[\"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/logs/ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245_7334/row_137_cand_1.json\"]",
+              "generation_status": "ok",
+              "generation_total_pipeline_sec": 6.6365,
+              "llm_mode": "worker",
+              "llm_model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+              "prompt_render_mode": "blocks",
+              "prompt_assets_dir": "",
+              "service_list_snippet_source": "connected_devices_only",
+              "service_list_device_count": 4,
+              "service_list_retrieval_status": "skipped_connected_devices_present",
+              "service_list_retrieval_mode": "hybrid",
+              "service_list_retrieval_topk": 10,
+              "service_list_retrieval_device": "cpu",
+              "service_list_retrieval_categories": "[]",
+              "service_list_retrieval_scores": "[]",
+              "service_list_retrieval_fallback_reason": "",
+              "generation_call_count": 1,
+              "generation_error_count": 0,
+              "generation_error_type": "",
+              "generation_error_types": "[]",
+              "generation_oom_flag": false,
+              "generation_prompt_chars_total": 45921,
+              "generation_prompt_tokens_total": 11149,
+              "generation_completion_tokens_total": 79,
+              "generation_total_tokens_total": 11228,
+              "generation_llm_latency_sec": 4.722,
+              "generation_peak_vram_gb": 30.8545
+            }
+          ],
+          "fieldnames": [
+            "index",
+            "category",
+            "command_kor",
+            "command_eng",
+            "gt_raw",
+            "connected_devices",
+            "gt",
+            "row_no",
+            "profile",
+            "genome_id",
+            "genome_seed",
+            "run_id",
+            "candidate_count",
+            "candidates",
+            "candidate_metadata",
+            "prompt_log_paths",
+            "generation_status",
+            "generation_total_pipeline_sec",
+            "llm_mode",
+            "llm_model",
+            "prompt_render_mode",
+            "prompt_assets_dir",
+            "service_list_snippet_source",
+            "service_list_device_count",
+            "service_list_retrieval_status",
+            "service_list_retrieval_mode",
+            "service_list_retrieval_topk",
+            "service_list_retrieval_device",
+            "service_list_retrieval_categories",
+            "service_list_retrieval_scores",
+            "service_list_retrieval_fallback_reason",
+            "generation_call_count",
+            "generation_error_count",
+            "generation_error_type",
+            "generation_error_types",
+            "generation_oom_flag",
+            "generation_prompt_chars_total",
+            "generation_prompt_tokens_total",
+            "generation_completion_tokens_total",
+            "generation_total_tokens_total",
+            "generation_llm_latency_sec",
+            "generation_peak_vram_gb"
+          ]
+        }
+      },
+      "validation_metrics": {
+        "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245_507334",
+        "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245_507334.csv",
+        "rows": [
+          {
+            "row_no": 137,
+            "category": "5",
+            "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+            "det_score": 92.7025,
+            "det_gt_exact": false,
+            "det_gt_similarity": 0.91323,
+            "failure_reasons": [
+              "extraneous",
+              "gt_mismatch",
+              "semantic"
+            ],
+            "output": "{\"name\":\"SoundEmergencySirensWhenPresenceDetected\",\"cron\":\"\",\"period\":0,\"code\":\"if (all(#House #PresenceSensor).presencesensor_presence ==| true) { delay(10 SEC); all(#House #Siren).siren_setsirenmode(\\\"emergency\\\") }\"}",
+            "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}"
+          }
+        ],
+        "avg_det_score": 92.7025,
+        "variance": 0.0,
+        "failure_summary": {
+          "top_failure_types": [
+            [
+              "extraneous",
+              1
+            ],
+            [
+              "gt_mismatch",
+              1
+            ],
+            [
+              "semantic",
+              1
+            ]
+          ],
+          "count": 3
+        },
+        "generation_summary": {
+          "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245_507334",
+          "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245_507334.csv",
+          "jsonl_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245_507334.jsonl",
+          "row_count": 1,
+          "rows": [
+            {
+              "index": "17",
+              "category": "5",
+              "command_kor": "집안의 재실 센서가 하나라도 감지되면 10초 뒤에 모든 긴급 사이렌을 울려줘.",
+              "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+              "gt_raw": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).Presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).SetSirenMode(\\\"emergency\\\")\"}",
+              "connected_devices": "{'House_Presence_1': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'House_Presence_2': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'Main_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}, 'Sub_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}}",
+              "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}",
+              "row_no": 137,
+              "profile": "version0_15",
+              "genome_id": "gen-af17dfa2-8346-1468-fe4c-138bdd4e7245",
+              "genome_seed": 157367319,
+              "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245_507334",
+              "candidate_count": 1,
+              "candidates": "[\"{\\\"name\\\":\\\"SoundEmergencySirensWhenPresenceDetected\\\",\\\"cron\\\":\\\"\\\",\\\"period\\\":0,\\\"code\\\":\\\"if (all(#House #PresenceSensor).presencesensor_presence ==| true) { delay(10 SEC); all(#House #Siren).siren_setsirenmode(\\\\\\\"emergency\\\\\\\") }\\\"}\"]",
+              "candidate_metadata": "[{\"candidate_index\": 0, \"strategy\": \"compact_json\", \"prompt_chars\": 45921, \"prompt_tokens\": 11149, \"completion_tokens\": 79, \"total_tokens\": 11228, \"latency_sec\": 4.7293, \"peak_vram_gb\": 30.8545, \"load_sec\": 0.0, \"generate_sec\": 4.6951, \"prompt_prep_sec\": 0.0272, \"decode_sec\": 0.0004, \"worker_pid\": 3490046, \"error_type\": \"\", \"oom_flag\": false, \"block_manifest\": [{\"id\": \"01\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/01_preamble.txt\", \"metadata\": {\"id\": \"01\", \"role\": \"preprocessor\", \"params\": \"temperature, micro_rules\", \"description\": \"Global deterministic JOILang generation rules and schema-faithful behavior.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"02\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt\", \"metadata\": {\"id\": \"02\", \"role\": \"generator\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Main JOILang generator block with deterministic JSON-only output and schema-grounded exemplars.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {candidate_strategy}\"}}, {\"id\": \"03\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/03_postprocessor.txt\", \"metadata\": {\"id\": \"03\", \"role\": \"postprocessor\", \"params\": \"max_tokens, micro_rules\", \"description\": \"Final JOILang output scrubber that enforces JSON shape and strips explanation drift.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}]}]",
+              "prompt_log_paths": "[\"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/logs/ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245_507334/row_137_cand_1.json\"]",
+              "generation_status": "ok",
+              "generation_total_pipeline_sec": 6.6291,
+              "llm_mode": "worker",
+              "llm_model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+              "prompt_render_mode": "blocks",
+              "prompt_assets_dir": "",
+              "service_list_snippet_source": "connected_devices_only",
+              "service_list_device_count": 4,
+              "service_list_retrieval_status": "skipped_connected_devices_present",
+              "service_list_retrieval_mode": "hybrid",
+              "service_list_retrieval_topk": 10,
+              "service_list_retrieval_device": "cpu",
+              "service_list_retrieval_categories": "[]",
+              "service_list_retrieval_scores": "[]",
+              "service_list_retrieval_fallback_reason": "",
+              "generation_call_count": 1,
+              "generation_error_count": 0,
+              "generation_error_type": "",
+              "generation_error_types": "[]",
+              "generation_oom_flag": false,
+              "generation_prompt_chars_total": 45921,
+              "generation_prompt_tokens_total": 11149,
+              "generation_completion_tokens_total": 79,
+              "generation_total_tokens_total": 11228,
+              "generation_llm_latency_sec": 4.7293,
+              "generation_peak_vram_gb": 30.8545
+            }
+          ],
+          "fieldnames": [
+            "index",
+            "category",
+            "command_kor",
+            "command_eng",
+            "gt_raw",
+            "connected_devices",
+            "gt",
+            "row_no",
+            "profile",
+            "genome_id",
+            "genome_seed",
+            "run_id",
+            "candidate_count",
+            "candidates",
+            "candidate_metadata",
+            "prompt_log_paths",
+            "generation_status",
+            "generation_total_pipeline_sec",
+            "llm_mode",
+            "llm_model",
+            "prompt_render_mode",
+            "prompt_assets_dir",
+            "service_list_snippet_source",
+            "service_list_device_count",
+            "service_list_retrieval_status",
+            "service_list_retrieval_mode",
+            "service_list_retrieval_topk",
+            "service_list_retrieval_device",
+            "service_list_retrieval_categories",
+            "service_list_retrieval_scores",
+            "service_list_retrieval_fallback_reason",
+            "generation_call_count",
+            "generation_error_count",
+            "generation_error_type",
+            "generation_error_types",
+            "generation_oom_flag",
+            "generation_prompt_chars_total",
+            "generation_prompt_tokens_total",
+            "generation_completion_tokens_total",
+            "generation_total_tokens_total",
+            "generation_llm_latency_sec",
+            "generation_peak_vram_gb"
+          ]
+        }
+      },
+      "redesign_metrics": {
+        "genome_id": "gen-af17dfa2-8346-1468-fe4c-138bdd4e7245",
+        "validation_det_pass_rate": 100.0,
+        "validation_avg_det_score": 92.7025,
+        "avg_prompt_tokens": 11149.0,
+        "avg_latency_sec": 4.7293,
+        "det_score_variance": 0.0,
+        "basic_detpass": 100.0,
+        "temporal_detpass": 100.0,
+        "complex_detpass": 100.0,
+        "min_group_detpass": 100.0,
+        "harmonic_group_detpass": 100.0,
+        "category_gap": 0.0,
+        "token_penalty": 0.0,
+        "latency_penalty": 0.0,
+        "variance_penalty": 0.0,
+        "regression_penalty": 0.0,
+        "category_balance_score": 100.0,
+        "schema_robustness_score": 100.0,
+        "compression_gain": 0.0,
+        "pareto_rank": 999,
+        "pareto_frontier_member": false,
+        "score_accuracy": 118.5405,
+        "score_efficiency": 100.0,
+        "score_balanced": 118.5405,
+        "score_deployment": 118.5405,
+        "score_main": 118.5405,
+        "prompt_hash": "bf04ea331e632db9",
+        "block_signature": "01,02,03",
+        "rule_signature": "d7c3c8779ca6fe58",
+        "unavailable_metrics": ""
+      }
+    },
+    {
+      "genome": {
+        "id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+        "seed": 929273219,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "05",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+          "temperature": 0.1,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "compact_json",
+            "explicit_preconditions",
+            "direct",
+            "minimal"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 2,
+            "micro_rules": []
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [],
+          "mutation_types": [
+            "initial_random"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": ""
+        }
+      },
+      "fitness": 118.53408,
+      "avg_det_score": 92.6704,
+      "variance": 0.0,
+      "validation_avg_det_score": 92.6704,
+      "train_metrics": {
+        "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_3234",
+        "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_3234.csv",
+        "rows": [
+          {
+            "row_no": 137,
+            "category": "5",
+            "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+            "det_score": 92.6704,
+            "det_gt_exact": false,
+            "det_gt_similarity": 0.9068,
+            "failure_reasons": [
+              "extraneous",
+              "gt_mismatch",
+              "semantic"
+            ],
+            "output": "{\"name\":\"SoundEmergencySirensOnPresenceDetected\",\"cron\":\"\",\"period\":0,\"code\":\"if ((#House #PresenceSensor).presencesensor_presence == true) {\\n    delay(10 SEC)\\n    all(#House #Siren).siren_setsirenmode(\\\"emergency\\\")\\n}\"}",
+            "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}"
+          }
+        ],
+        "avg_det_score": 92.6704,
+        "variance": 0.0,
+        "failure_summary": {
+          "top_failure_types": [
+            [
+              "extraneous",
+              1
+            ],
+            [
+              "gt_mismatch",
+              1
+            ],
+            [
+              "semantic",
+              1
+            ]
+          ],
+          "count": 3
+        },
+        "generation_summary": {
+          "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_3234",
+          "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_3234.csv",
+          "jsonl_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_3234.jsonl",
+          "row_count": 1,
+          "rows": [
+            {
+              "index": "17",
+              "category": "5",
+              "command_kor": "집안의 재실 센서가 하나라도 감지되면 10초 뒤에 모든 긴급 사이렌을 울려줘.",
+              "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+              "gt_raw": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).Presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).SetSirenMode(\\\"emergency\\\")\"}",
+              "connected_devices": "{'House_Presence_1': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'House_Presence_2': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'Main_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}, 'Sub_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}}",
+              "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}",
+              "row_no": 137,
+              "profile": "version0_15",
+              "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+              "genome_seed": 929273219,
+              "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_3234",
+              "candidate_count": 1,
+              "candidates": "[\"{\\\"name\\\":\\\"SoundEmergencySirensOnPresenceDetected\\\",\\\"cron\\\":\\\"\\\",\\\"period\\\":0,\\\"code\\\":\\\"if ((#House #PresenceSensor).presencesensor_presence == true) {\\\\n    delay(10 SEC)\\\\n    all(#House #Siren).siren_setsirenmode(\\\\\\\"emergency\\\\\\\")\\\\n}\\\"}\"]",
+              "candidate_metadata": "[{\"candidate_index\": 0, \"strategy\": \"compact_json\", \"prompt_chars\": 72658, \"prompt_tokens\": 17691, \"completion_tokens\": 83, \"total_tokens\": 17774, \"latency_sec\": 6.6683, \"peak_vram_gb\": 32.8106, \"load_sec\": 0.0, \"generate_sec\": 6.6205, \"prompt_prep_sec\": 0.0425, \"decode_sec\": 0.0003, \"worker_pid\": 3490046, \"error_type\": \"\", \"oom_flag\": false, \"block_manifest\": [{\"id\": \"01\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/01_preamble.txt\", \"metadata\": {\"id\": \"01\", \"role\": \"preprocessor\", \"params\": \"temperature, micro_rules\", \"description\": \"Global deterministic JOILang generation rules and schema-faithful behavior.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"02\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt\", \"metadata\": {\"id\": \"02\", \"role\": \"generator\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Main JOILang generator block with deterministic JSON-only output and schema-grounded exemplars.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {candidate_strategy}\"}}, {\"id\": \"03\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/03_postprocessor.txt\", \"metadata\": {\"id\": \"03\", \"role\": \"postprocessor\", \"params\": \"max_tokens, micro_rules\", \"description\": \"Final JOILang output scrubber that enforces JSON shape and strips explanation drift.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"05\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/05_repair_prompt.txt\", \"metadata\": {\"id\": \"05\", \"role\": \"repair\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Targeted repair prompt that fixes schema mismatch, arg typing, and semantic drift with minimal edits.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {best_candidate}, {det_diagnostics}, {failure_summary}\"}}, {\"id\": \"06\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/06_det_helper.txt\", \"metadata\": {\"id\": \"06\", \"role\": \"helper\", \"params\": \"micro_rules\", \"description\": \"Diagnostic helper block enumerating the evaluator targets so the generator avoids common failures.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}]}]",
+              "prompt_log_paths": "[\"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/logs/ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_3234/row_137_cand_1.json\"]",
+              "generation_status": "ok",
+              "generation_total_pipeline_sec": 8.5868,
+              "llm_mode": "worker",
+              "llm_model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+              "prompt_render_mode": "blocks",
+              "prompt_assets_dir": "",
+              "service_list_snippet_source": "connected_devices_only",
+              "service_list_device_count": 4,
+              "service_list_retrieval_status": "skipped_connected_devices_present",
+              "service_list_retrieval_mode": "hybrid",
+              "service_list_retrieval_topk": 10,
+              "service_list_retrieval_device": "cpu",
+              "service_list_retrieval_categories": "[]",
+              "service_list_retrieval_scores": "[]",
+              "service_list_retrieval_fallback_reason": "",
+              "generation_call_count": 1,
+              "generation_error_count": 0,
+              "generation_error_type": "",
+              "generation_error_types": "[]",
+              "generation_oom_flag": false,
+              "generation_prompt_chars_total": 72658,
+              "generation_prompt_tokens_total": 17691,
+              "generation_completion_tokens_total": 83,
+              "generation_total_tokens_total": 17774,
+              "generation_llm_latency_sec": 6.6683,
+              "generation_peak_vram_gb": 32.8106
+            }
+          ],
+          "fieldnames": [
+            "index",
+            "category",
+            "command_kor",
+            "command_eng",
+            "gt_raw",
+            "connected_devices",
+            "gt",
+            "row_no",
+            "profile",
+            "genome_id",
+            "genome_seed",
+            "run_id",
+            "candidate_count",
+            "candidates",
+            "candidate_metadata",
+            "prompt_log_paths",
+            "generation_status",
+            "generation_total_pipeline_sec",
+            "llm_mode",
+            "llm_model",
+            "prompt_render_mode",
+            "prompt_assets_dir",
+            "service_list_snippet_source",
+            "service_list_device_count",
+            "service_list_retrieval_status",
+            "service_list_retrieval_mode",
+            "service_list_retrieval_topk",
+            "service_list_retrieval_device",
+            "service_list_retrieval_categories",
+            "service_list_retrieval_scores",
+            "service_list_retrieval_fallback_reason",
+            "generation_call_count",
+            "generation_error_count",
+            "generation_error_type",
+            "generation_error_types",
+            "generation_oom_flag",
+            "generation_prompt_chars_total",
+            "generation_prompt_tokens_total",
+            "generation_completion_tokens_total",
+            "generation_total_tokens_total",
+            "generation_llm_latency_sec",
+            "generation_peak_vram_gb"
+          ]
+        }
+      },
+      "validation_metrics": {
+        "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_503234",
+        "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_503234.csv",
+        "rows": [
+          {
+            "row_no": 137,
+            "category": "5",
+            "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+            "det_score": 92.6704,
+            "det_gt_exact": false,
+            "det_gt_similarity": 0.9068,
+            "failure_reasons": [
+              "extraneous",
+              "gt_mismatch",
+              "semantic"
+            ],
+            "output": "{\"name\":\"SoundEmergencySirensOnPresenceDetected\",\"cron\":\"\",\"period\":0,\"code\":\"if ((#House #PresenceSensor).presencesensor_presence == true) {\\n    delay(10 SEC)\\n    all(#House #Siren).siren_setsirenmode(\\\"emergency\\\")\\n}\"}",
+            "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}"
+          }
+        ],
+        "avg_det_score": 92.6704,
+        "variance": 0.0,
+        "failure_summary": {
+          "top_failure_types": [
+            [
+              "extraneous",
+              1
+            ],
+            [
+              "gt_mismatch",
+              1
+            ],
+            [
+              "semantic",
+              1
+            ]
+          ],
+          "count": 3
+        },
+        "generation_summary": {
+          "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_503234",
+          "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_503234.csv",
+          "jsonl_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_503234.jsonl",
+          "row_count": 1,
+          "rows": [
+            {
+              "index": "17",
+              "category": "5",
+              "command_kor": "집안의 재실 센서가 하나라도 감지되면 10초 뒤에 모든 긴급 사이렌을 울려줘.",
+              "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+              "gt_raw": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).Presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).SetSirenMode(\\\"emergency\\\")\"}",
+              "connected_devices": "{'House_Presence_1': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'House_Presence_2': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'Main_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}, 'Sub_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}}",
+              "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}",
+              "row_no": 137,
+              "profile": "version0_15",
+              "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+              "genome_seed": 929273219,
+              "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_503234",
+              "candidate_count": 1,
+              "candidates": "[\"{\\\"name\\\":\\\"SoundEmergencySirensOnPresenceDetected\\\",\\\"cron\\\":\\\"\\\",\\\"period\\\":0,\\\"code\\\":\\\"if ((#House #PresenceSensor).presencesensor_presence == true) {\\\\n    delay(10 SEC)\\\\n    all(#House #Siren).siren_setsirenmode(\\\\\\\"emergency\\\\\\\")\\\\n}\\\"}\"]",
+              "candidate_metadata": "[{\"candidate_index\": 0, \"strategy\": \"compact_json\", \"prompt_chars\": 72658, \"prompt_tokens\": 17691, \"completion_tokens\": 83, \"total_tokens\": 17774, \"latency_sec\": 6.6806, \"peak_vram_gb\": 32.8106, \"load_sec\": 0.0, \"generate_sec\": 6.6338, \"prompt_prep_sec\": 0.0414, \"decode_sec\": 0.0003, \"worker_pid\": 3490046, \"error_type\": \"\", \"oom_flag\": false, \"block_manifest\": [{\"id\": \"01\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/01_preamble.txt\", \"metadata\": {\"id\": \"01\", \"role\": \"preprocessor\", \"params\": \"temperature, micro_rules\", \"description\": \"Global deterministic JOILang generation rules and schema-faithful behavior.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"02\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt\", \"metadata\": {\"id\": \"02\", \"role\": \"generator\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Main JOILang generator block with deterministic JSON-only output and schema-grounded exemplars.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {candidate_strategy}\"}}, {\"id\": \"03\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/03_postprocessor.txt\", \"metadata\": {\"id\": \"03\", \"role\": \"postprocessor\", \"params\": \"max_tokens, micro_rules\", \"description\": \"Final JOILang output scrubber that enforces JSON shape and strips explanation drift.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"05\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/05_repair_prompt.txt\", \"metadata\": {\"id\": \"05\", \"role\": \"repair\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Targeted repair prompt that fixes schema mismatch, arg typing, and semantic drift with minimal edits.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {best_candidate}, {det_diagnostics}, {failure_summary}\"}}, {\"id\": \"06\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/06_det_helper.txt\", \"metadata\": {\"id\": \"06\", \"role\": \"helper\", \"params\": \"micro_rules\", \"description\": \"Diagnostic helper block enumerating the evaluator targets so the generator avoids common failures.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}]}]",
+              "prompt_log_paths": "[\"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/logs/ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e_503234/row_137_cand_1.json\"]",
+              "generation_status": "ok",
+              "generation_total_pipeline_sec": 8.5985,
+              "llm_mode": "worker",
+              "llm_model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+              "prompt_render_mode": "blocks",
+              "prompt_assets_dir": "",
+              "service_list_snippet_source": "connected_devices_only",
+              "service_list_device_count": 4,
+              "service_list_retrieval_status": "skipped_connected_devices_present",
+              "service_list_retrieval_mode": "hybrid",
+              "service_list_retrieval_topk": 10,
+              "service_list_retrieval_device": "cpu",
+              "service_list_retrieval_categories": "[]",
+              "service_list_retrieval_scores": "[]",
+              "service_list_retrieval_fallback_reason": "",
+              "generation_call_count": 1,
+              "generation_error_count": 0,
+              "generation_error_type": "",
+              "generation_error_types": "[]",
+              "generation_oom_flag": false,
+              "generation_prompt_chars_total": 72658,
+              "generation_prompt_tokens_total": 17691,
+              "generation_completion_tokens_total": 83,
+              "generation_total_tokens_total": 17774,
+              "generation_llm_latency_sec": 6.6806,
+              "generation_peak_vram_gb": 32.8106
+            }
+          ],
+          "fieldnames": [
+            "index",
+            "category",
+            "command_kor",
+            "command_eng",
+            "gt_raw",
+            "connected_devices",
+            "gt",
+            "row_no",
+            "profile",
+            "genome_id",
+            "genome_seed",
+            "run_id",
+            "candidate_count",
+            "candidates",
+            "candidate_metadata",
+            "prompt_log_paths",
+            "generation_status",
+            "generation_total_pipeline_sec",
+            "llm_mode",
+            "llm_model",
+            "prompt_render_mode",
+            "prompt_assets_dir",
+            "service_list_snippet_source",
+            "service_list_device_count",
+            "service_list_retrieval_status",
+            "service_list_retrieval_mode",
+            "service_list_retrieval_topk",
+            "service_list_retrieval_device",
+            "service_list_retrieval_categories",
+            "service_list_retrieval_scores",
+            "service_list_retrieval_fallback_reason",
+            "generation_call_count",
+            "generation_error_count",
+            "generation_error_type",
+            "generation_error_types",
+            "generation_oom_flag",
+            "generation_prompt_chars_total",
+            "generation_prompt_tokens_total",
+            "generation_completion_tokens_total",
+            "generation_total_tokens_total",
+            "generation_llm_latency_sec",
+            "generation_peak_vram_gb"
+          ]
+        }
+      },
+      "redesign_metrics": {
+        "genome_id": "gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e",
+        "validation_det_pass_rate": 100.0,
+        "validation_avg_det_score": 92.6704,
+        "avg_prompt_tokens": 17691.0,
+        "avg_latency_sec": 6.6806,
+        "det_score_variance": 0.0,
+        "basic_detpass": 100.0,
+        "temporal_detpass": 100.0,
+        "complex_detpass": 100.0,
+        "min_group_detpass": 100.0,
+        "harmonic_group_detpass": 100.0,
+        "category_gap": 0.0,
+        "token_penalty": 0.0,
+        "latency_penalty": 0.0,
+        "variance_penalty": 0.0,
+        "regression_penalty": 0.0,
+        "category_balance_score": 100.0,
+        "schema_robustness_score": 100.0,
+        "compression_gain": 0.0,
+        "pareto_rank": 999,
+        "pareto_frontier_member": false,
+        "score_accuracy": 118.53408,
+        "score_efficiency": 100.0,
+        "score_balanced": 118.53408,
+        "score_deployment": 118.53408,
+        "score_main": 118.53408,
+        "prompt_hash": "405e78ea3c6a6f8e",
+        "block_signature": "01,02,03,05,06",
+        "rule_signature": "da39a3ee5e6b4b0d",
+        "unavailable_metrics": ""
+      }
+    },
+    {
+      "genome": {
+        "id": "gen-bbf8b961-f83c-3169-009b-831460788576",
+        "seed": 648461145,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "05",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+          "temperature": 0.05,
+          "few_shot_count": 3,
+          "max_tokens": 512,
+          "candidate_strategies": [
+            "compact_json",
+            "minimal",
+            "explicit_preconditions"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 2,
+            "micro_rules": [
+              "Use value entries in conditions and function entries in actions.",
+              "Return exactly one JSON object only with keys name, cron, period, code.",
+              "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+            ]
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [],
+          "mutation_types": [
+            "initial_random"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": ""
+        }
+      },
+      "fitness": 118.53408,
+      "avg_det_score": 92.6704,
+      "variance": 0.0,
+      "validation_avg_det_score": 92.6704,
+      "train_metrics": {
+        "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-bbf8b961-f83c-3169-009b-831460788576_1160",
+        "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-bbf8b961-f83c-3169-009b-831460788576_1160.csv",
+        "rows": [
+          {
+            "row_no": 137,
+            "category": "5",
+            "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+            "det_score": 92.6704,
+            "det_gt_exact": false,
+            "det_gt_similarity": 0.9068,
+            "failure_reasons": [
+              "extraneous",
+              "gt_mismatch",
+              "semantic"
+            ],
+            "output": "{\"name\":\"SoundEmergencySirensOnPresenceDetected\",\"cron\":\"\",\"period\":0,\"code\":\"if ((#House #PresenceSensor).presencesensor_presence == true) {\\n    delay(10 SEC)\\n    all(#House #Siren).siren_setsirenmode(\\\"emergency\\\")\\n}\"}",
+            "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}"
+          }
+        ],
+        "avg_det_score": 92.6704,
+        "variance": 0.0,
+        "failure_summary": {
+          "top_failure_types": [
+            [
+              "extraneous",
+              1
+            ],
+            [
+              "gt_mismatch",
+              1
+            ],
+            [
+              "semantic",
+              1
+            ]
+          ],
+          "count": 3
+        },
+        "generation_summary": {
+          "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-bbf8b961-f83c-3169-009b-831460788576_1160",
+          "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-bbf8b961-f83c-3169-009b-831460788576_1160.csv",
+          "jsonl_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-bbf8b961-f83c-3169-009b-831460788576_1160.jsonl",
+          "row_count": 1,
+          "rows": [
+            {
+              "index": "17",
+              "category": "5",
+              "command_kor": "집안의 재실 센서가 하나라도 감지되면 10초 뒤에 모든 긴급 사이렌을 울려줘.",
+              "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+              "gt_raw": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).Presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).SetSirenMode(\\\"emergency\\\")\"}",
+              "connected_devices": "{'House_Presence_1': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'House_Presence_2': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'Main_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}, 'Sub_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}}",
+              "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}",
+              "row_no": 137,
+              "profile": "version0_15",
+              "genome_id": "gen-bbf8b961-f83c-3169-009b-831460788576",
+              "genome_seed": 648461145,
+              "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-bbf8b961-f83c-3169-009b-831460788576_1160",
+              "candidate_count": 1,
+              "candidates": "[\"{\\\"name\\\":\\\"SoundEmergencySirensOnPresenceDetected\\\",\\\"cron\\\":\\\"\\\",\\\"period\\\":0,\\\"code\\\":\\\"if ((#House #PresenceSensor).presencesensor_presence == true) {\\\\n    delay(10 SEC)\\\\n    all(#House #Siren).siren_setsirenmode(\\\\\\\"emergency\\\\\\\")\\\\n}\\\"}\"]",
+              "candidate_metadata": "[{\"candidate_index\": 0, \"strategy\": \"compact_json\", \"prompt_chars\": 72888, \"prompt_tokens\": 17738, \"completion_tokens\": 83, \"total_tokens\": 17821, \"latency_sec\": 6.6999, \"peak_vram_gb\": 32.8254, \"load_sec\": 0.0, \"generate_sec\": 6.6521, \"prompt_prep_sec\": 0.0426, \"decode_sec\": 0.0004, \"worker_pid\": 3490046, \"error_type\": \"\", \"oom_flag\": false, \"block_manifest\": [{\"id\": \"01\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/01_preamble.txt\", \"metadata\": {\"id\": \"01\", \"role\": \"preprocessor\", \"params\": \"temperature, micro_rules\", \"description\": \"Global deterministic JOILang generation rules and schema-faithful behavior.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"02\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt\", \"metadata\": {\"id\": \"02\", \"role\": \"generator\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Main JOILang generator block with deterministic JSON-only output and schema-grounded exemplars.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {candidate_strategy}\"}}, {\"id\": \"03\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/03_postprocessor.txt\", \"metadata\": {\"id\": \"03\", \"role\": \"postprocessor\", \"params\": \"max_tokens, micro_rules\", \"description\": \"Final JOILang output scrubber that enforces JSON shape and strips explanation drift.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"05\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/05_repair_prompt.txt\", \"metadata\": {\"id\": \"05\", \"role\": \"repair\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Targeted repair prompt that fixes schema mismatch, arg typing, and semantic drift with minimal edits.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {best_candidate}, {det_diagnostics}, {failure_summary}\"}}, {\"id\": \"06\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/06_det_helper.txt\", \"metadata\": {\"id\": \"06\", \"role\": \"helper\", \"params\": \"micro_rules\", \"description\": \"Diagnostic helper block enumerating the evaluator targets so the generator avoids common failures.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}]}]",
+              "prompt_log_paths": "[\"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/logs/ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-bbf8b961-f83c-3169-009b-831460788576_1160/row_137_cand_1.json\"]",
+              "generation_status": "ok",
+              "generation_total_pipeline_sec": 8.6113,
+              "llm_mode": "worker",
+              "llm_model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+              "prompt_render_mode": "blocks",
+              "prompt_assets_dir": "",
+              "service_list_snippet_source": "connected_devices_only",
+              "service_list_device_count": 4,
+              "service_list_retrieval_status": "skipped_connected_devices_present",
+              "service_list_retrieval_mode": "hybrid",
+              "service_list_retrieval_topk": 10,
+              "service_list_retrieval_device": "cpu",
+              "service_list_retrieval_categories": "[]",
+              "service_list_retrieval_scores": "[]",
+              "service_list_retrieval_fallback_reason": "",
+              "generation_call_count": 1,
+              "generation_error_count": 0,
+              "generation_error_type": "",
+              "generation_error_types": "[]",
+              "generation_oom_flag": false,
+              "generation_prompt_chars_total": 72888,
+              "generation_prompt_tokens_total": 17738,
+              "generation_completion_tokens_total": 83,
+              "generation_total_tokens_total": 17821,
+              "generation_llm_latency_sec": 6.6999,
+              "generation_peak_vram_gb": 32.8254
+            }
+          ],
+          "fieldnames": [
+            "index",
+            "category",
+            "command_kor",
+            "command_eng",
+            "gt_raw",
+            "connected_devices",
+            "gt",
+            "row_no",
+            "profile",
+            "genome_id",
+            "genome_seed",
+            "run_id",
+            "candidate_count",
+            "candidates",
+            "candidate_metadata",
+            "prompt_log_paths",
+            "generation_status",
+            "generation_total_pipeline_sec",
+            "llm_mode",
+            "llm_model",
+            "prompt_render_mode",
+            "prompt_assets_dir",
+            "service_list_snippet_source",
+            "service_list_device_count",
+            "service_list_retrieval_status",
+            "service_list_retrieval_mode",
+            "service_list_retrieval_topk",
+            "service_list_retrieval_device",
+            "service_list_retrieval_categories",
+            "service_list_retrieval_scores",
+            "service_list_retrieval_fallback_reason",
+            "generation_call_count",
+            "generation_error_count",
+            "generation_error_type",
+            "generation_error_types",
+            "generation_oom_flag",
+            "generation_prompt_chars_total",
+            "generation_prompt_tokens_total",
+            "generation_completion_tokens_total",
+            "generation_total_tokens_total",
+            "generation_llm_latency_sec",
+            "generation_peak_vram_gb"
+          ]
+        }
+      },
+      "validation_metrics": {
+        "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-bbf8b961-f83c-3169-009b-831460788576_501160",
+        "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-bbf8b961-f83c-3169-009b-831460788576_501160.csv",
+        "rows": [
+          {
+            "row_no": 137,
+            "category": "5",
+            "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+            "det_score": 92.6704,
+            "det_gt_exact": false,
+            "det_gt_similarity": 0.9068,
+            "failure_reasons": [
+              "extraneous",
+              "gt_mismatch",
+              "semantic"
+            ],
+            "output": "{\"name\":\"SoundEmergencySirensOnPresenceDetected\",\"cron\":\"\",\"period\":0,\"code\":\"if ((#House #PresenceSensor).presencesensor_presence == true) {\\n    delay(10 SEC)\\n    all(#House #Siren).siren_setsirenmode(\\\"emergency\\\")\\n}\"}",
+            "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}"
+          }
+        ],
+        "avg_det_score": 92.6704,
+        "variance": 0.0,
+        "failure_summary": {
+          "top_failure_types": [
+            [
+              "extraneous",
+              1
+            ],
+            [
+              "gt_mismatch",
+              1
+            ],
+            [
+              "semantic",
+              1
+            ]
+          ],
+          "count": 3
+        },
+        "generation_summary": {
+          "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-bbf8b961-f83c-3169-009b-831460788576_501160",
+          "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row137_g2_20260623_173857/candidates/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-bbf8b961-f83c-3169-009b-831460788576_501160.csv",
+          "jsonl_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-bbf8b961-f83c-3169-009b-831460788576_501160.jsonl",
+          "row_count": 1,
+          "rows": [
+            {
+              "index": "17",
+              "category": "5",
+              "command_kor": "집안의 재실 센서가 하나라도 감지되면 10초 뒤에 모든 긴급 사이렌을 울려줘.",
+              "command_eng": "When any presence sensor in the house detects presence, sound all emergency sirens after 10 seconds.",
+              "gt_raw": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).Presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).SetSirenMode(\\\"emergency\\\")\"}",
+              "connected_devices": "{'House_Presence_1': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'House_Presence_2': {'category': 'PresenceSensor', 'tags': ['House', 'PresenceSensor']}, 'Main_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}, 'Sub_Siren': {'category': 'Siren', 'tags': ['House', 'Siren']}}",
+              "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\nwait until (all(#House #PresenceSensor).presencesensor_presence ==| true)\\n\\ndelay(10 SEC)\\n\\nall(#Siren).siren_setsirenmode(\\\"emergency\\\")\"}",
+              "row_no": 137,
+              "profile": "version0_15",
+              "genome_id": "gen-bbf8b961-f83c-3169-009b-831460788576",
+              "genome_seed": 648461145,
+              "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-bbf8b961-f83c-3169-009b-831460788576_501160",
+              "candidate_count": 1,
+              "candidates": "[\"{\\\"name\\\":\\\"SoundEmergencySirensOnPresenceDetected\\\",\\\"cron\\\":\\\"\\\",\\\"period\\\":0,\\\"code\\\":\\\"if ((#House #PresenceSensor).presencesensor_presence == true) {\\\\n    delay(10 SEC)\\\\n    all(#House #Siren).siren_setsirenmode(\\\\\\\"emergency\\\\\\\")\\\\n}\\\"}\"]",
+              "candidate_metadata": "[{\"candidate_index\": 0, \"strategy\": \"compact_json\", \"prompt_chars\": 72888, \"prompt_tokens\": 17738, \"completion_tokens\": 83, \"total_tokens\": 17821, \"latency_sec\": 6.7153, \"peak_vram_gb\": 32.8254, \"load_sec\": 0.0, \"generate_sec\": 6.6661, \"prompt_prep_sec\": 0.0419, \"decode_sec\": 0.0003, \"worker_pid\": 3490046, \"error_type\": \"\", \"oom_flag\": false, \"block_manifest\": [{\"id\": \"01\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/01_preamble.txt\", \"metadata\": {\"id\": \"01\", \"role\": \"preprocessor\", \"params\": \"temperature, micro_rules\", \"description\": \"Global deterministic JOILang generation rules and schema-faithful behavior.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"02\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt\", \"metadata\": {\"id\": \"02\", \"role\": \"generator\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Main JOILang generator block with deterministic JSON-only output and schema-grounded exemplars.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {candidate_strategy}\"}}, {\"id\": \"03\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/03_postprocessor.txt\", \"metadata\": {\"id\": \"03\", \"role\": \"postprocessor\", \"params\": \"max_tokens, micro_rules\", \"description\": \"Final JOILang output scrubber that enforces JSON shape and strips explanation drift.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"05\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/05_repair_prompt.txt\", \"metadata\": {\"id\": \"05\", \"role\": \"repair\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Targeted repair prompt that fixes schema mismatch, arg typing, and semantic drift with minimal edits.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {best_candidate}, {det_diagnostics}, {failure_summary}\"}}, {\"id\": \"06\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/06_det_helper.txt\", \"metadata\": {\"id\": \"06\", \"role\": \"helper\", \"params\": \"micro_rules\", \"description\": \"Diagnostic helper block enumerating the evaluator targets so the generator avoids common failures.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}]}]",
+              "prompt_log_paths": "[\"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/logs/ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-bbf8b961-f83c-3169-009b-831460788576_501160/row_137_cand_1.json\"]",
+              "generation_status": "ok",
+              "generation_total_pipeline_sec": 8.6197,
+              "llm_mode": "worker",
+              "llm_model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+              "prompt_render_mode": "blocks",
+              "prompt_assets_dir": "",
+              "service_list_snippet_source": "connected_devices_only",
+              "service_list_device_count": 4,
+              "service_list_retrieval_status": "skipped_connected_devices_present",
+              "service_list_retrieval_mode": "hybrid",
+              "service_list_retrieval_topk": 10,
+              "service_list_retrieval_device": "cpu",
+              "service_list_retrieval_categories": "[]",
+              "service_list_retrieval_scores": "[]",
+              "service_list_retrieval_fallback_reason": "",
+              "generation_call_count": 1,
+              "generation_error_count": 0,
+              "generation_error_type": "",
+              "generation_error_types": "[]",
+              "generation_oom_flag": false,
+              "generation_prompt_chars_total": 72888,
+              "generation_prompt_tokens_total": 17738,
+              "generation_completion_tokens_total": 83,
+              "generation_total_tokens_total": 17821,
+              "generation_llm_latency_sec": 6.7153,
+              "generation_peak_vram_gb": 32.8254
+            }
+          ],
+          "fieldnames": [
+            "index",
+            "category",
+            "command_kor",
+            "command_eng",
+            "gt_raw",
+            "connected_devices",
+            "gt",
+            "row_no",
+            "profile",
+            "genome_id",
+            "genome_seed",
+            "run_id",
+            "candidate_count",
+            "candidates",
+            "candidate_metadata",
+            "prompt_log_paths",
+            "generation_status",
+            "generation_total_pipeline_sec",
+            "llm_mode",
+            "llm_model",
+            "prompt_render_mode",
+            "prompt_assets_dir",
+            "service_list_snippet_source",
+            "service_list_device_count",
+            "service_list_retrieval_status",
+            "service_list_retrieval_mode",
+            "service_list_retrieval_topk",
+            "service_list_retrieval_device",
+            "service_list_retrieval_categories",
+            "service_list_retrieval_scores",
+            "service_list_retrieval_fallback_reason",
+            "generation_call_count",
+            "generation_error_count",
+            "generation_error_type",
+            "generation_error_types",
+            "generation_oom_flag",
+            "generation_prompt_chars_total",
+            "generation_prompt_tokens_total",
+            "generation_completion_tokens_total",
+            "generation_total_tokens_total",
+            "generation_llm_latency_sec",
+            "generation_peak_vram_gb"
+          ]
+        }
+      },
+      "redesign_metrics": {
+        "genome_id": "gen-bbf8b961-f83c-3169-009b-831460788576",
+        "validation_det_pass_rate": 100.0,
+        "validation_avg_det_score": 92.6704,
+        "avg_prompt_tokens": 17738.0,
+        "avg_latency_sec": 6.7153,
+        "det_score_variance": 0.0,
+        "basic_detpass": 100.0,
+        "temporal_detpass": 100.0,
+        "complex_detpass": 100.0,
+        "min_group_detpass": 100.0,
+        "harmonic_group_detpass": 100.0,
+        "category_gap": 0.0,
+        "token_penalty": 0.0,
+        "latency_penalty": 0.0,
+        "variance_penalty": 0.0,
+        "regression_penalty": 0.0,
+        "category_balance_score": 100.0,
+        "schema_robustness_score": 100.0,
+        "compression_gain": 0.0,
+        "pareto_rank": 999,
+        "pareto_frontier_member": false,
+        "score_accuracy": 118.53408,
+        "score_efficiency": 100.0,
+        "score_balanced": 118.53408,
+        "score_deployment": 118.53408,
+        "score_main": 118.53408,
+        "prompt_hash": "6e6e8c3aa0b75feb",
+        "block_signature": "01,02,03,05,06",
+        "rule_signature": "828da936fcacd0d1",
+        "unavailable_metrics": ""
+      }
+    }
+  ]
+}

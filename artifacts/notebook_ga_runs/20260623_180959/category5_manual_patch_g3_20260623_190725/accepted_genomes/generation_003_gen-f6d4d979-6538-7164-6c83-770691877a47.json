@@ -1,0 +1,90 @@
+{
+  "id": "gen-f6d4d979-6538-7164-6c83-770691877a47",
+  "seed": 55769593,
+  "blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ],
+  "params": {
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+    "temperature": 0.0,
+    "few_shot_count": 3,
+    "max_tokens": 1024,
+    "candidate_strategies": [
+      "canonical_names_first",
+      "explicit_preconditions",
+      "compact_json",
+      "minimal"
+    ]
+  },
+  "block_params": {
+    "02": {
+      "few_shot_count": 1,
+      "micro_rules": [
+        "Keep the code minimal and remove unrelated actions."
+      ],
+      "source_file": "generated/02_generator_prompt__category5_manual_rules_20260623_190725.txt"
+    },
+    "05": {
+      "repair_mode": "conservative",
+      "few_shot_count": 3
+    }
+  },
+  "_ga_metadata": {
+    "parent_ids": [
+      "gen-acd8d60c-f7c3-7768-272e-1069de7225be"
+    ],
+    "mutation_types": [
+      "drop_optional_block"
+    ],
+    "crossover_used": false,
+    "feedback_types_used": [],
+    "base_genome_id": "gen-acd8d60c-f7c3-7768-272e-1069de7225be",
+    "prompt_hash": "19c338dcbb6aa912",
+    "block_signature": "01,02,03,05,06",
+    "rule_signature": "31df1da091e9c36c",
+    "mutation_family": "compression",
+    "mutation_operator": "drop_optional_block",
+    "mutation_proposal_id": "block_compression_g002_ffac2b3a",
+    "diffs": [
+      {
+        "block_id": "05",
+        "field": "blocks",
+        "old_value": "[\"01\", \"02\", \"03\", \"05\", \"06\"]",
+        "new_value": "[\"01\", \"02\", \"03\", \"06\"]",
+        "mutation_type": "drop_optional_block",
+        "mutation_family": "compression",
+        "compression_level": "block",
+        "selected_compression_target": "05",
+        "selected_block_id": "05",
+        "selected_block_ids": "[]",
+        "expected_token_delta": -1117,
+        "feedback_driven": false,
+        "llm_advised": false,
+        "advisor_proposal_id": "",
+        "advisor_batch_id": "",
+        "failure_type_source": "token_overbudget"
+      }
+    ]
+  },
+  "_notebook_manual_block_patch": {
+    "target_block_id": "02",
+    "source_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt",
+    "patched_block_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/generated/02_generator_prompt__category5_manual_rules_20260623_190725.txt",
+    "marker": "NOTEBOOK MANUAL FOCUS RULES"
+  },
+  "_notebook_manual_patch": {
+    "created_at": "2026-06-23T19:07:25",
+    "target_block_id": "02",
+    "rules": [
+      "For temporal/sequential commands, preserve the exact order of all requested actions.",
+      "If the command says after N seconds/minutes/hours, represent that interval explicitly with the canonical delay or clock form used by the dataset.",
+      "Do not merge two sequential actions into a single action.",
+      "Do not add unrelated conditions, loops, helper variables, or extra device actions.",
+      "For category-5 rows, prioritize action order and delay placement over prompt compression."
+    ],
+    "base_genome_path": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_baseline_g3_20260623_182734/best_genome.json"
+  }
+}

@@ -1,0 +1,4 @@
+generation,model_key,category,row_evaluations,avg_det_score,det_pass_count,det_pass_rate,failure_histogram
+1,qwen25_coder_14b,6,4,98.5601,4,100.0,"{""gt_mismatch"": 2}"
+2,qwen25_coder_14b,6,4,98.5798,4,100.0,"{""gt_mismatch"": 2}"
+3,qwen25_coder_14b,6,4,97.8645,4,100.0,"{""gt_mismatch"": 3}"

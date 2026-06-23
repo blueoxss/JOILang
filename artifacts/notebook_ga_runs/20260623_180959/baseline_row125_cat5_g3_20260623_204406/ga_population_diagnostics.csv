@@ -1,0 +1,4 @@
+generation,model_key,category,row_evaluations,avg_det_score,det_pass_count,det_pass_rate,failure_histogram
+1,qwen25_coder_14b,5,4,98.6146,4,100.0,"{""enum_grounding"": 1, ""gt_mismatch"": 1}"
+2,qwen25_coder_14b,5,4,98.6146,4,100.0,"{""enum_grounding"": 1, ""gt_mismatch"": 1}"
+3,qwen25_coder_14b,5,4,95.844,4,100.0,"{""enum_grounding"": 3, ""gt_mismatch"": 3}"

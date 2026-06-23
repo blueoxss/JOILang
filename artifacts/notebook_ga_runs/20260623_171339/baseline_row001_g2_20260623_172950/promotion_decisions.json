@@ -1,0 +1,32 @@
+{
+  "rows": [
+    {
+      "generation": 1,
+      "candidate_id": "gen-af17dfa2-8346-1468-fe4c-138bdd4e7245",
+      "model_key": "qwen25_coder_14b",
+      "DETPass": 100.0,
+      "SDET": 100.0,
+      "avg_prompt_tokens": 40043.0,
+      "replay_gate_pass": true,
+      "regression_gate_pass": true,
+      "promoted": true,
+      "rejection_reason": "",
+      "accepted_prompt_path": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row001_g2_20260623_172950/accepted_genomes/generation_001_gen-af17dfa2-8346-1468-fe4c-138bdd4e7245.json",
+      "previous_accepted_prompt": ""
+    },
+    {
+      "generation": 2,
+      "candidate_id": "gen-2b3a85ef-3b1e-a01c-673b-58d152daf6d4",
+      "model_key": "qwen25_coder_14b",
+      "DETPass": 100.0,
+      "SDET": 100.0,
+      "avg_prompt_tokens": 39286.0,
+      "replay_gate_pass": true,
+      "regression_gate_pass": true,
+      "promoted": true,
+      "rejection_reason": "",
+      "accepted_prompt_path": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_171339/baseline_row001_g2_20260623_172950/accepted_genomes/generation_002_gen-2b3a85ef-3b1e-a01c-673b-58d152daf6d4.json",
+      "previous_accepted_prompt": "gen-af17dfa2-8346-1468-fe4c-138bdd4e7245"
+    }
+  ]
+}

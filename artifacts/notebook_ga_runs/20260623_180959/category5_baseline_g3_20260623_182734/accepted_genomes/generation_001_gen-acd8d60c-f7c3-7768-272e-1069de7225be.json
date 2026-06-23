@@ -1,0 +1,44 @@
+{
+  "id": "gen-acd8d60c-f7c3-7768-272e-1069de7225be",
+  "seed": 742100707,
+  "blocks": [
+    "01",
+    "02",
+    "03",
+    "05",
+    "06"
+  ],
+  "params": {
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+    "temperature": 0.0,
+    "few_shot_count": 3,
+    "max_tokens": 1024,
+    "candidate_strategies": [
+      "canonical_names_first",
+      "explicit_preconditions",
+      "compact_json",
+      "minimal"
+    ]
+  },
+  "block_params": {
+    "02": {
+      "few_shot_count": 1,
+      "micro_rules": [
+        "Keep the code minimal and remove unrelated actions."
+      ]
+    },
+    "05": {
+      "repair_mode": "conservative",
+      "few_shot_count": 3
+    }
+  },
+  "_ga_metadata": {
+    "parent_ids": [],
+    "mutation_types": [
+      "initial_random"
+    ],
+    "crossover_used": false,
+    "feedback_types_used": [],
+    "base_genome_id": ""
+  }
+}

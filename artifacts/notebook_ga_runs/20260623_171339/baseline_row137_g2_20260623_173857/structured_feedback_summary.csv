@@ -1,0 +1,7 @@
+failure_type,affected_block_family,suggested_mutation_type,prompt_block_id,failure_count,original_failure_reasons,rule,priority,generation,model_key
+extraneous_action,Minimality,strengthen_no_unrelated_action_rule,03,4,extraneous,"Emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers.",2,1,qwen25_coder_14b
+semantic_error,DET_Helper,add_targeted_repair_hint,06,4,gt_mismatch,"If code is schema-valid but not target-equivalent, repair receiver coverage, service coverage, dataflow, numeric, and enum grounding.",3,1,qwen25_coder_14b
+semantic_error,Skeleton,strengthen_skeleton_rule,06,4,semantic,"Choose the smallest JOILang skeleton that matches the command verb, timing, target receiver, and side effect.",3,1,qwen25_coder_14b
+extraneous_action,Minimality,strengthen_no_unrelated_action_rule,03,4,extraneous,"Emit only actions required by the command; remove unrelated reads, duplicate actions, and invented wrappers.",2,2,qwen25_coder_14b
+semantic_error,DET_Helper,add_targeted_repair_hint,06,4,gt_mismatch,"If code is schema-valid but not target-equivalent, repair receiver coverage, service coverage, dataflow, numeric, and enum grounding.",3,2,qwen25_coder_14b
+semantic_error,Skeleton,strengthen_skeleton_rule,06,4,semantic,"Choose the smallest JOILang skeleton that matches the command verb, timing, target receiver, and side effect.",3,2,qwen25_coder_14b

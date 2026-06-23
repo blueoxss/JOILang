@@ -1,0 +1,426 @@
+{
+  "best_history": [
+    {
+      "generation": 1,
+      "genome_id": "gen-acd8d60c-f7c3-7768-272e-1069de7225be",
+      "fitness": 120.0,
+      "avg_det_score": 100.0,
+      "validation_avg_det_score": 100.0,
+      "train_det_pass_rate": 100.0,
+      "train_gt_exact_rate": 0.0,
+      "validation_det_pass_rate": 100.0,
+      "validation_gt_exact_rate": 100.0,
+      "genome": {
+        "id": "gen-acd8d60c-f7c3-7768-272e-1069de7225be",
+        "seed": 742100707,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "05",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+          "temperature": 0.0,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "canonical_names_first",
+            "explicit_preconditions",
+            "compact_json",
+            "minimal"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 1,
+            "micro_rules": [
+              "Keep the code minimal and remove unrelated actions."
+            ],
+            "source_file": "generated/02_generator_prompt__category5_manual_rules_20260623_190725.txt"
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [],
+          "mutation_types": [
+            "initial_random"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": "",
+          "prompt_hash": "19c338dcbb6aa912",
+          "block_signature": "01,02,03,05,06",
+          "rule_signature": "31df1da091e9c36c"
+        },
+        "_notebook_manual_block_patch": {
+          "target_block_id": "02",
+          "source_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt",
+          "patched_block_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/generated/02_generator_prompt__category5_manual_rules_20260623_190725.txt",
+          "marker": "NOTEBOOK MANUAL FOCUS RULES"
+        },
+        "_notebook_manual_patch": {
+          "created_at": "2026-06-23T19:07:25",
+          "target_block_id": "02",
+          "rules": [
+            "For temporal/sequential commands, preserve the exact order of all requested actions.",
+            "If the command says after N seconds/minutes/hours, represent that interval explicitly with the canonical delay or clock form used by the dataset.",
+            "Do not merge two sequential actions into a single action.",
+            "Do not add unrelated conditions, loops, helper variables, or extra device actions.",
+            "For category-5 rows, prioritize action order and delay placement over prompt compression."
+          ],
+          "base_genome_path": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_baseline_g3_20260623_182734/best_genome.json"
+        }
+      }
+    },
+    {
+      "generation": 2,
+      "genome_id": "gen-f6d4d979-6538-7164-6c83-770691877a47",
+      "fitness": 123.827898,
+      "avg_det_score": 95.6106,
+      "validation_avg_det_score": 95.6106,
+      "train_det_pass_rate": 100.0,
+      "train_gt_exact_rate": 0.0,
+      "validation_det_pass_rate": 100.0,
+      "validation_gt_exact_rate": 0.0,
+      "genome": {
+        "id": "gen-f6d4d979-6538-7164-6c83-770691877a47",
+        "seed": 55769593,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+          "temperature": 0.0,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "canonical_names_first",
+            "explicit_preconditions",
+            "compact_json",
+            "minimal"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 1,
+            "micro_rules": [
+              "Keep the code minimal and remove unrelated actions."
+            ],
+            "source_file": "generated/02_generator_prompt__category5_manual_rules_20260623_190725.txt"
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [
+            "gen-acd8d60c-f7c3-7768-272e-1069de7225be"
+          ],
+          "mutation_types": [
+            "drop_optional_block"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": "gen-acd8d60c-f7c3-7768-272e-1069de7225be",
+          "prompt_hash": "19c338dcbb6aa912",
+          "block_signature": "01,02,03,05,06",
+          "rule_signature": "31df1da091e9c36c",
+          "mutation_family": "compression",
+          "mutation_operator": "drop_optional_block",
+          "mutation_proposal_id": "block_compression_g002_ffac2b3a",
+          "diffs": [
+            {
+              "block_id": "05",
+              "field": "blocks",
+              "old_value": "[\"01\", \"02\", \"03\", \"05\", \"06\"]",
+              "new_value": "[\"01\", \"02\", \"03\", \"06\"]",
+              "mutation_type": "drop_optional_block",
+              "mutation_family": "compression",
+              "compression_level": "block",
+              "selected_compression_target": "05",
+              "selected_block_id": "05",
+              "selected_block_ids": "[]",
+              "expected_token_delta": -1117,
+              "feedback_driven": false,
+              "llm_advised": false,
+              "advisor_proposal_id": "",
+              "advisor_batch_id": "",
+              "failure_type_source": "token_overbudget"
+            }
+          ]
+        },
+        "_notebook_manual_block_patch": {
+          "target_block_id": "02",
+          "source_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt",
+          "patched_block_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/generated/02_generator_prompt__category5_manual_rules_20260623_190725.txt",
+          "marker": "NOTEBOOK MANUAL FOCUS RULES"
+        },
+        "_notebook_manual_patch": {
+          "created_at": "2026-06-23T19:07:25",
+          "target_block_id": "02",
+          "rules": [
+            "For temporal/sequential commands, preserve the exact order of all requested actions.",
+            "If the command says after N seconds/minutes/hours, represent that interval explicitly with the canonical delay or clock form used by the dataset.",
+            "Do not merge two sequential actions into a single action.",
+            "Do not add unrelated conditions, loops, helper variables, or extra device actions.",
+            "For category-5 rows, prioritize action order and delay placement over prompt compression."
+          ],
+          "base_genome_path": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_baseline_g3_20260623_182734/best_genome.json"
+        }
+      }
+    },
+    {
+      "generation": 3,
+      "genome_id": "gen-f6d4d979-6538-7164-6c83-770691877a47",
+      "fitness": 123.827898,
+      "avg_det_score": 95.6106,
+      "validation_avg_det_score": 95.6106,
+      "train_det_pass_rate": 100.0,
+      "train_gt_exact_rate": 0.0,
+      "validation_det_pass_rate": 100.0,
+      "validation_gt_exact_rate": 0.0,
+      "genome": {
+        "id": "gen-f6d4d979-6538-7164-6c83-770691877a47",
+        "seed": 55769593,
+        "blocks": [
+          "01",
+          "02",
+          "03",
+          "06"
+        ],
+        "params": {
+          "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+          "temperature": 0.0,
+          "few_shot_count": 3,
+          "max_tokens": 1024,
+          "candidate_strategies": [
+            "canonical_names_first",
+            "explicit_preconditions",
+            "compact_json",
+            "minimal"
+          ]
+        },
+        "block_params": {
+          "02": {
+            "few_shot_count": 1,
+            "micro_rules": [
+              "Keep the code minimal and remove unrelated actions."
+            ],
+            "source_file": "generated/02_generator_prompt__category5_manual_rules_20260623_190725.txt"
+          },
+          "05": {
+            "repair_mode": "conservative",
+            "few_shot_count": 3
+          }
+        },
+        "_ga_metadata": {
+          "parent_ids": [
+            "gen-acd8d60c-f7c3-7768-272e-1069de7225be"
+          ],
+          "mutation_types": [
+            "drop_optional_block"
+          ],
+          "crossover_used": false,
+          "feedback_types_used": [],
+          "base_genome_id": "gen-acd8d60c-f7c3-7768-272e-1069de7225be",
+          "prompt_hash": "19c338dcbb6aa912",
+          "block_signature": "01,02,03,05,06",
+          "rule_signature": "31df1da091e9c36c",
+          "mutation_family": "compression",
+          "mutation_operator": "drop_optional_block",
+          "mutation_proposal_id": "block_compression_g002_ffac2b3a",
+          "diffs": [
+            {
+              "block_id": "05",
+              "field": "blocks",
+              "old_value": "[\"01\", \"02\", \"03\", \"05\", \"06\"]",
+              "new_value": "[\"01\", \"02\", \"03\", \"06\"]",
+              "mutation_type": "drop_optional_block",
+              "mutation_family": "compression",
+              "compression_level": "block",
+              "selected_compression_target": "05",
+              "selected_block_id": "05",
+              "selected_block_ids": "[]",
+              "expected_token_delta": -1117,
+              "feedback_driven": false,
+              "llm_advised": false,
+              "advisor_proposal_id": "",
+              "advisor_batch_id": "",
+              "failure_type_source": "token_overbudget"
+            }
+          ]
+        },
+        "_notebook_manual_block_patch": {
+          "target_block_id": "02",
+          "source_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt",
+          "patched_block_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/generated/02_generator_prompt__category5_manual_rules_20260623_190725.txt",
+          "marker": "NOTEBOOK MANUAL FOCUS RULES"
+        },
+        "_notebook_manual_patch": {
+          "created_at": "2026-06-23T19:07:25",
+          "target_block_id": "02",
+          "rules": [
+            "For temporal/sequential commands, preserve the exact order of all requested actions.",
+            "If the command says after N seconds/minutes/hours, represent that interval explicitly with the canonical delay or clock form used by the dataset.",
+            "Do not merge two sequential actions into a single action.",
+            "Do not add unrelated conditions, loops, helper variables, or extra device actions.",
+            "For category-5 rows, prioritize action order and delay placement over prompt compression."
+          ],
+          "base_genome_path": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_baseline_g3_20260623_182734/best_genome.json"
+        }
+      }
+    }
+  ],
+  "output_root": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725",
+  "generation_progress_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/ga_generation_progress.csv",
+  "generation_progress_jsonl": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/ga_generation_progress.jsonl",
+  "topk_genomes_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/ga_topk_genomes.csv",
+  "block_diffs_jsonl": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/ga_block_diffs.jsonl",
+  "population_diagnostics_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/ga_population_diagnostics.csv",
+  "population_diagnostics_jsonl": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/ga_population_diagnostics.jsonl",
+  "advisor_feedback_batches_jsonl": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/advisor_feedback_batches.jsonl",
+  "advisor_mutation_proposals_jsonl": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/advisor_mutation_proposals.jsonl",
+  "advisor_mutation_summary_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/advisor_mutation_summary.csv",
+  "structured_feedback_jsonl": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/structured_feedback.jsonl",
+  "structured_feedback_summary_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/structured_feedback_summary.csv",
+  "population_transitions_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/population_transitions.csv",
+  "promotion_decisions_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/promotion_decisions.csv",
+  "mutation_proposals_jsonl": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/mutation_proposals.jsonl",
+  "pareto_archive_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/pareto_archive.csv",
+  "mutation_operator_credit_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/mutation_operator_credit.csv",
+  "best_genome": {
+    "id": "gen-acd8d60c-f7c3-7768-272e-1069de7225be",
+    "seed": 742100707,
+    "blocks": [
+      "01",
+      "02",
+      "03",
+      "05",
+      "06"
+    ],
+    "params": {
+      "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+      "temperature": 0.0,
+      "few_shot_count": 3,
+      "max_tokens": 1024,
+      "candidate_strategies": [
+        "canonical_names_first",
+        "explicit_preconditions",
+        "compact_json",
+        "minimal"
+      ]
+    },
+    "block_params": {
+      "02": {
+        "few_shot_count": 1,
+        "micro_rules": [
+          "Keep the code minimal and remove unrelated actions."
+        ],
+        "source_file": "generated/02_generator_prompt__category5_manual_rules_20260623_190725.txt"
+      },
+      "05": {
+        "repair_mode": "conservative",
+        "few_shot_count": 3
+      }
+    },
+    "_ga_metadata": {
+      "parent_ids": [],
+      "mutation_types": [
+        "initial_random"
+      ],
+      "crossover_used": false,
+      "feedback_types_used": [],
+      "base_genome_id": "",
+      "prompt_hash": "19c338dcbb6aa912",
+      "block_signature": "01,02,03,05,06",
+      "rule_signature": "31df1da091e9c36c"
+    },
+    "_notebook_manual_block_patch": {
+      "target_block_id": "02",
+      "source_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt",
+      "patched_block_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/generated/02_generator_prompt__category5_manual_rules_20260623_190725.txt",
+      "marker": "NOTEBOOK MANUAL FOCUS RULES"
+    },
+    "_notebook_manual_patch": {
+      "created_at": "2026-06-23T19:07:25",
+      "target_block_id": "02",
+      "rules": [
+        "For temporal/sequential commands, preserve the exact order of all requested actions.",
+        "If the command says after N seconds/minutes/hours, represent that interval explicitly with the canonical delay or clock form used by the dataset.",
+        "Do not merge two sequential actions into a single action.",
+        "Do not add unrelated conditions, loops, helper variables, or extra device actions.",
+        "For category-5 rows, prioritize action order and delay placement over prompt compression."
+      ],
+      "base_genome_path": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_baseline_g3_20260623_182734/best_genome.json"
+    }
+  },
+  "best_fitness": 120.0,
+  "best_validation_avg_det_score": 100.0,
+  "best_DETPass": 100.0,
+  "best_avg_DET": 100.0,
+  "best_genome_id": "gen-acd8d60c-f7c3-7768-272e-1069de7225be",
+  "best_generation": 1,
+  "fitness_formula": "phase-aware DETPass + AvgDET + category/compression - token/variance/regression penalties",
+  "retrieval_policy": "fixed runtime service-context construction; not mutated by GA",
+  "stage": "full-run",
+  "advisor_status": "skipped",
+  "final_phase": "FINAL_SELECTION",
+  "stop_reason": "max generations reached",
+  "best_so_far_DETPass": 100.0,
+  "accepted_best": "gen-f6d4d979-6538-7164-6c83-770691877a47",
+  "accepted_best_genome_id": "gen-f6d4d979-6538-7164-6c83-770691877a47",
+  "accepted_best_DETPass": 100.0,
+  "accepted_best_avg_DET": 95.6106,
+  "accepted_best_tokens": 39788.5,
+  "compact_best": "gen-43710534-37f6-561f-a40d-e353f756afa5",
+  "compact_best_genome_id": "gen-43710534-37f6-561f-a40d-e353f756afa5",
+  "compact_best_DETPass": 100.0,
+  "compact_best_tokens": 39663.5,
+  "compact_best_eligible": true,
+  "compact_best_reason": "within_detpass_margin",
+  "token_minimal_unconstrained_genome_id": "",
+  "pareto_archive_size": 5,
+  "cloudless_mutation_used": true,
+  "advisor_used": false,
+  "advisor_proposals_generated": 0,
+  "advisor_proposals_accepted_applied": 0,
+  "advisor_proposals_accepted_not_scheduled": 0,
+  "advisor_proposals_rejected": 0,
+  "advisor_children_scheduled": 0,
+  "compression_ready_final": true,
+  "compression_detpass_threshold": 90.0,
+  "aggressive_compression_after_target": false,
+  "compression_token_reduction_target": 0.15,
+  "advisor_compression_proposals_generated": 0,
+  "advisor_compression_children_scheduled": 0,
+  "cloudless_compression_fallback_scheduled": 9,
+  "new_by_compression_fallback": 9,
+  "new_by_micro_compression": 3,
+  "new_by_block_compression": 6,
+  "new_by_multi_block_compression": 0,
+  "new_by_global_budget_compression": 0,
+  "prompt_token_breakdown_json": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/prompt_token_breakdown.json",
+  "block_token_breakdown_json": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_manual_patch_g3_20260623_190725/block_token_breakdown.json",
+  "category_balance_mode": "guard",
+  "token_penalty_mode": "hybrid",
+  "mutation_family_counts": {
+    "compression": 9
+  },
+  "compression_success_count": 9,
+  "compression_rejection_count": 0,
+  "summary_consistency_check": {
+    "promotion_consistent": true,
+    "compact_best_eligible": true,
+    "best_fields_complete": true,
+    "errors": []
+  }
+}

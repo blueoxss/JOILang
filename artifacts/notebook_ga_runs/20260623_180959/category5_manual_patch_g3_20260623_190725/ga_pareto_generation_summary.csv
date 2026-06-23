@@ -1,0 +1,4 @@
+generation,model_key,new_frontier,frontier_size,best_det,best_det_genome_id,best_tokens,best_tokens_genome_id,knee_candidate,pareto_status,oom_resolved,overbudget_children
+1,qwen25_coder_14b,2,2,100.0,gen-acd8d60c-f7c3-7768-272e-1069de7225be,40070.5,gen-af17dfa2-8346-1468-fe4c-138bdd4e7245,gen-af17dfa2-8346-1468-fe4c-138bdd4e7245,full_metrics,,
+2,qwen25_coder_14b,2,3,100.0,gen-acd8d60c-f7c3-7768-272e-1069de7225be,39788.5,gen-f6d4d979-6538-7164-6c83-770691877a47,gen-f6d4d979-6538-7164-6c83-770691877a47,full_metrics,,
+3,qwen25_coder_14b,1,2,100.0,gen-acd8d60c-f7c3-7768-272e-1069de7225be,39663.5,gen-43710534-37f6-561f-a40d-e353f756afa5,gen-43710534-37f6-561f-a40d-e353f756afa5,full_metrics,,

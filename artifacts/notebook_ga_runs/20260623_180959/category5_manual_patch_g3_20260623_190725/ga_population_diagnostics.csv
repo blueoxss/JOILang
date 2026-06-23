@@ -1,0 +1,4 @@
+generation,model_key,category,row_evaluations,avg_det_score,det_pass_count,det_pass_rate,failure_histogram
+1,qwen25_coder_14b,5,24,99.2684,24,100.0,"{""enum_grounding"": 2, ""gt_mismatch"": 4}"
+2,qwen25_coder_14b,5,24,94.2627,23,95.8333,"{""arg_type"": 1, ""enum_grounding"": 6, ""extraneous"": 1, ""gt_mismatch"": 13, ""gt_receiver_coverage"": 1, ""gt_service_coverage"": 1, ""numeric_grounding"": 2, ""precondition"": 1, ""semantic"": 1, ""service_match"": 1}"
+3,qwen25_coder_14b,5,24,96.8106,24,100.0,"{""enum_grounding"": 8, ""gt_mismatch"": 17, ""numeric_grounding"": 1}"

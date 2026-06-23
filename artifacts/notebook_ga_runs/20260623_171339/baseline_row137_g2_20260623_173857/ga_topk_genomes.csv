@@ -1,0 +1,7 @@
+generation,rank,model_key,genome_id,det,det_pass_rate,det_pass_count,row_count,tokens,core_blocks,optional_blocks,parent_ids,major_mutations,advisor_proposal_id,fitness,elite_reason,selection_reason,archive_membership,pareto_rank,prompt_hash,block_signature,rule_signature,mutation_family,mutation_operator
+1,1,qwen25_coder_14b,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,93.076,100.0,1,1,19010.0,"01,02","05,06",,initial_random,,118.6152,,,,999,f46bf2e71841352a,"01,02,05,06",c4d08f4d9268f2bc,,
+1,2,qwen25_coder_14b,gen-af17dfa2-8346-1468-fe4c-138bdd4e7245,92.7025,100.0,1,1,11149.0,"01,02",03,,initial_random,,118.5405,,,,999,bf04ea331e632db9,"01,02,03",d7c3c8779ca6fe58,,
+1,3,qwen25_coder_14b,gen-e6f98332-8830-5d32-df5c-e9fedd38fc7e,92.6704,100.0,1,1,17691.0,"01,02","03,05,06",,initial_random,,118.53408,,,,999,405e78ea3c6a6f8e,"01,02,03,05,06",da39a3ee5e6b4b0d,,
+2,1,qwen25_coder_14b,gen-72e1069d-e722-5be6-c3bf-6baf915e48f9,93.076,100.0,1,1,12558.0,"01,02",06,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,drop_optional_block,,122.0092,,,,999,1d0d1e8f38945f48,"01,02,06",c4d08f4d9268f2bc,compression,drop_optional_block
+2,2,qwen25_coder_14b,gen-378892e9-ecc3-87ab-8b45-85023a0286cc,93.076,100.0,1,1,19010.0,"01,02","05,06",,initial_random,,118.6152,,,,999,f46bf2e71841352a,"01,02,05,06",c4d08f4d9268f2bc,,
+2,3,qwen25_coder_14b,gen-3b1ea01c-673b-58d1-52da-f6d4d9796538,93.076,100.0,1,1,19010.0,"01,02","05,06","gen-378892e9-ecc3-87ab-8b45-85023a0286cc,gen-378892e9-ecc3-87ab-8b45-85023a0286cc",,,118.6152,,,,999,a428e304b3c0deaa,"01,02,05,06",c4d08f4d9268f2bc,,

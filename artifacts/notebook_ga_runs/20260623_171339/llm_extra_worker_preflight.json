@@ -1,0 +1,8 @@
+{
+  "local_model_name": "/root/llm/local_models/qwen25_coder_14b",
+  "local_files_only": true,
+  "local_device": "cuda:0",
+  "local_dtype": "bf16",
+  "local_load_in_4bit": false,
+  "local_trust_remote_code": true
+}

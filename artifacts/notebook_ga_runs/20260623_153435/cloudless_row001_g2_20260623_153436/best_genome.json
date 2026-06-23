@@ -1,0 +1,69 @@
+{
+  "id": "gen-2b3a85ef-3b1e-a01c-673b-58d152daf6d4",
+  "seed": 821549922,
+  "blocks": [
+    "01",
+    "02",
+    "03"
+  ],
+  "params": {
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+    "temperature": 0.05,
+    "few_shot_count": 3,
+    "max_tokens": 1024,
+    "candidate_strategies": [
+      "compact_json",
+      "explicit_preconditions"
+    ]
+  },
+  "block_params": {
+    "02": {
+      "few_shot_count": 0,
+      "micro_rules": [
+        "Return exactly one JSON object only with keys name, cron, period, code.",
+        "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+      ]
+    },
+    "05": {
+      "repair_mode": "conservative",
+      "few_shot_count": 0
+    }
+  },
+  "_ga_metadata": {
+    "parent_ids": [
+      "gen-af17dfa2-8346-1468-fe4c-138bdd4e7245"
+    ],
+    "mutation_types": [
+      "reduce_few_shot_count_to_zero"
+    ],
+    "crossover_used": false,
+    "feedback_types_used": [],
+    "base_genome_id": "gen-af17dfa2-8346-1468-fe4c-138bdd4e7245",
+    "mutation_family": "compression",
+    "mutation_operator": "reduce_few_shot_count_to_zero",
+    "mutation_proposal_id": "compression_g002_b132d315",
+    "diffs": [
+      {
+        "block_id": "genome",
+        "field": "block_params",
+        "old_value": "{\"02\": {\"few_shot_count\": 2, \"micro_rules\": [\"Return exactly one JSON object only with keys name, cron, period, code.\", \"For INTEGER and DOUBLE arguments, avoid quoted numeric literals.\"]}, \"05\": {\"few_shot_count\": 3, \"repair_mode\": \"conservative\"}}",
+        "new_value": "{\"02\": {\"few_shot_count\": 0, \"micro_rules\": [\"Return exactly one JSON object only with keys name, cron, period, code.\", \"For INTEGER and DOUBLE arguments, avoid quoted numeric literals.\"]}, \"05\": {\"few_shot_count\": 0, \"repair_mode\": \"conservative\"}}",
+        "mutation_type": "reduce_few_shot_count_to_zero",
+        "mutation_family": "compression",
+        "compression_level": "",
+        "selected_compression_target": "",
+        "selected_block_id": "",
+        "selected_block_ids": "[]",
+        "expected_token_delta": 0,
+        "feedback_driven": false,
+        "llm_advised": false,
+        "advisor_proposal_id": "",
+        "advisor_batch_id": "",
+        "failure_type_source": ""
+      }
+    ],
+    "prompt_hash": "b50a8395d957c877",
+    "block_signature": "01,02,03",
+    "rule_signature": "d7c3c8779ca6fe58"
+  }
+}

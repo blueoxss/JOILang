@@ -1,0 +1,308 @@
+{
+  "genome": {
+    "id": "gen-3b1ea01c-673b-58d1-52da-f6d4d9796538",
+    "seed": 260598245,
+    "blocks": [
+      "01",
+      "02",
+      "05",
+      "06"
+    ],
+    "params": {
+      "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+      "temperature": 0.0,
+      "few_shot_count": 3,
+      "max_tokens": 1024,
+      "candidate_strategies": [
+        "minimal",
+        "direct",
+        "canonical_names_first"
+      ]
+    },
+    "block_params": {
+      "02": {
+        "few_shot_count": 3,
+        "micro_rules": [
+          "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+        ]
+      },
+      "05": {
+        "repair_mode": "conservative",
+        "few_shot_count": 3
+      }
+    },
+    "_ga_metadata": {
+      "parent_ids": [
+        "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+        "gen-378892e9-ecc3-87ab-8b45-85023a0286cc"
+      ],
+      "mutation_types": [],
+      "crossover_used": true,
+      "feedback_types_used": [],
+      "base_genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+      "crossover": {
+        "parent_a": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+        "parent_b": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+        "inherited_core_blocks": [
+          "01",
+          "02"
+        ],
+        "optional_from_a": [
+          "05",
+          "06"
+        ],
+        "optional_from_b": [],
+        "inherited_optional_blocks": [
+          "05",
+          "06"
+        ],
+        "inherited_params": {
+          "max_tokens": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+          "temperature": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+          "model": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+          "candidate_strategies": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+          "few_shot_count": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc"
+        },
+        "crossover_type": "block_artifact_uniform"
+      }
+    }
+  },
+  "fitness": 100.0,
+  "avg_det_score": 100.0,
+  "variance": 0.0,
+  "validation_avg_det_score": 100.0,
+  "train_metrics": {
+    "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-3b1ea01c-673b-58d1-52da-f6d4d9796538_8261",
+    "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/baseline_row125_cat5_g3_20260623_204406/candidates/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-3b1ea01c-673b-58d1-52da-f6d4d9796538_8261.csv",
+    "rows": [
+      {
+        "row_no": 125,
+        "category": "5",
+        "command_eng": "Set the oven mode to Bake and change it to warming mode after 10 minutes.",
+        "det_score": 100.0,
+        "det_gt_exact": true,
+        "det_gt_similarity": 1.0,
+        "failure_reasons": [],
+        "output": "{\"name\":\"SetOvenModeAndChangeAfter10Minutes\",\"cron\":\"\",\"period\":0,\"code\":\"(#Oven).oven_setovenmode(\\\"Bake\\\")\\ndelay(10 MIN)\\n(#Oven).oven_setovenmode(\\\"warming\\\")\"}",
+        "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\n(#Oven).oven_setovenmode(\\\"Bake\\\")\\n\\ndelay(10 MIN)\\n\\n(#Oven).oven_setovenmode(\\\"warming\\\")\"}"
+      }
+    ],
+    "avg_det_score": 100.0,
+    "variance": 0.0,
+    "failure_summary": {
+      "top_failure_types": [],
+      "count": 0
+    },
+    "generation_summary": {
+      "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-3b1ea01c-673b-58d1-52da-f6d4d9796538_8261",
+      "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/baseline_row125_cat5_g3_20260623_204406/candidates/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-3b1ea01c-673b-58d1-52da-f6d4d9796538_8261.csv",
+      "jsonl_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/candidates_ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-3b1ea01c-673b-58d1-52da-f6d4d9796538_8261.jsonl",
+      "row_count": 1,
+      "rows": [
+        {
+          "index": "5",
+          "category": "5",
+          "command_kor": "오븐 모드를 베이크로 설정하고 10분 뒤에 데우기 모드로 바꿔줘.",
+          "command_eng": "Set the oven mode to Bake and change it to warming mode after 10 minutes.",
+          "connected_devices": "",
+          "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\n(#Oven).oven_setovenmode(\\\"Bake\\\")\\n\\ndelay(10 MIN)\\n\\n(#Oven).oven_setovenmode(\\\"warming\\\")\"}",
+          "row_no": 125,
+          "profile": "version0_15",
+          "genome_id": "gen-3b1ea01c-673b-58d1-52da-f6d4d9796538",
+          "genome_seed": 260598245,
+          "run_id": "ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-3b1ea01c-673b-58d1-52da-f6d4d9796538_8261",
+          "candidate_count": 1,
+          "candidates": "[\"{\\\"name\\\":\\\"SetOvenModeAndChangeAfter10Minutes\\\",\\\"cron\\\":\\\"\\\",\\\"period\\\":0,\\\"code\\\":\\\"(#Oven).oven_setovenmode(\\\\\\\"Bake\\\\\\\")\\\\ndelay(10 MIN)\\\\n(#Oven).oven_setovenmode(\\\\\\\"warming\\\\\\\")\\\"}\"]",
+          "candidate_metadata": "[{\"candidate_index\": 0, \"strategy\": \"minimal\", \"prompt_chars\": 359521, \"prompt_tokens\": 76852, \"completion_tokens\": 74, \"total_tokens\": 76926, \"latency_sec\": 33.6623, \"peak_vram_gb\": 50.5014, \"load_sec\": 0.0, \"generate_sec\": 33.4522, \"prompt_prep_sec\": 0.1846, \"decode_sec\": 0.0003, \"worker_pid\": 3514663, \"error_type\": \"\", \"oom_flag\": false, \"block_manifest\": [{\"id\": \"01\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/01_preamble.txt\", \"metadata\": {\"id\": \"01\", \"role\": \"preprocessor\", \"params\": \"temperature, micro_rules\", \"description\": \"Global deterministic JOILang generation rules and schema-faithful behavior.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"02\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt\", \"metadata\": {\"id\": \"02\", \"role\": \"generator\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Main JOILang generator block with deterministic JSON-only output and schema-grounded exemplars.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {candidate_strategy}\"}}, {\"id\": \"05\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/05_repair_prompt.txt\", \"metadata\": {\"id\": \"05\", \"role\": \"repair\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Targeted repair prompt that fixes schema mismatch, arg typing, and semantic drift with minimal edits.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {best_candidate}, {det_diagnostics}, {failure_summary}\"}}, {\"id\": \"06\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/06_det_helper.txt\", \"metadata\": {\"id\": \"06\", \"role\": \"helper\", \"params\": \"micro_rules\", \"description\": \"Diagnostic helper block enumerating the evaluator targets so the generator avoids common failures.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}]}]",
+          "prompt_log_paths": "[\"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/logs/ga_quick_Qwen_Qwen2.5-Coder-14B-Instruct_gen-3b1ea01c-673b-58d1-52da-f6d4d9796538_8261/row_125_cand_1.json\"]",
+          "generation_status": "ok",
+          "generation_total_pipeline_sec": 35.5836,
+          "llm_mode": "worker",
+          "llm_model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+          "prompt_render_mode": "blocks",
+          "prompt_assets_dir": "",
+          "service_list_snippet_source": "service_schema_fallback",
+          "service_list_device_count": 50,
+          "service_list_retrieval_status": "disabled",
+          "service_list_retrieval_mode": "hybrid",
+          "service_list_retrieval_topk": 10,
+          "service_list_retrieval_device": "cpu",
+          "service_list_retrieval_categories": "[]",
+          "service_list_retrieval_scores": "[]",
+          "service_list_retrieval_fallback_reason": "",
+          "generation_call_count": 1,
+          "generation_error_count": 0,
+          "generation_error_type": "",
+          "generation_error_types": "[]",
+          "generation_oom_flag": false,
+          "generation_prompt_chars_total": 359521,
+          "generation_prompt_tokens_total": 76852,
+          "generation_completion_tokens_total": 74,
+          "generation_total_tokens_total": 76926,
+          "generation_llm_latency_sec": 33.6623,
+          "generation_peak_vram_gb": 50.5014
+        }
+      ],
+      "fieldnames": [
+        "index",
+        "category",
+        "command_kor",
+        "command_eng",
+        "connected_devices",
+        "gt",
+        "row_no",
+        "profile",
+        "genome_id",
+        "genome_seed",
+        "run_id",
+        "candidate_count",
+        "candidates",
+        "candidate_metadata",
+        "prompt_log_paths",
+        "generation_status",
+        "generation_total_pipeline_sec",
+        "llm_mode",
+        "llm_model",
+        "prompt_render_mode",
+        "prompt_assets_dir",
+        "service_list_snippet_source",
+        "service_list_device_count",
+        "service_list_retrieval_status",
+        "service_list_retrieval_mode",
+        "service_list_retrieval_topk",
+        "service_list_retrieval_device",
+        "service_list_retrieval_categories",
+        "service_list_retrieval_scores",
+        "service_list_retrieval_fallback_reason",
+        "generation_call_count",
+        "generation_error_count",
+        "generation_error_type",
+        "generation_error_types",
+        "generation_oom_flag",
+        "generation_prompt_chars_total",
+        "generation_prompt_tokens_total",
+        "generation_completion_tokens_total",
+        "generation_total_tokens_total",
+        "generation_llm_latency_sec",
+        "generation_peak_vram_gb"
+      ]
+    }
+  },
+  "validation_metrics": {
+    "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-3b1ea01c-673b-58d1-52da-f6d4d9796538_508261",
+    "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/baseline_row125_cat5_g3_20260623_204406/candidates/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-3b1ea01c-673b-58d1-52da-f6d4d9796538_508261.csv",
+    "rows": [
+      {
+        "row_no": 125,
+        "category": "5",
+        "command_eng": "Set the oven mode to Bake and change it to warming mode after 10 minutes.",
+        "det_score": 100.0,
+        "det_gt_exact": true,
+        "det_gt_similarity": 1.0,
+        "failure_reasons": [],
+        "output": "{\"name\":\"SetOvenModeAndChangeAfter10Minutes\",\"cron\":\"\",\"period\":0,\"code\":\"(#Oven).oven_setovenmode(\\\"Bake\\\")\\ndelay(10 MIN)\\n(#Oven).oven_setovenmode(\\\"warming\\\")\"}",
+        "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\n(#Oven).oven_setovenmode(\\\"Bake\\\")\\n\\ndelay(10 MIN)\\n\\n(#Oven).oven_setovenmode(\\\"warming\\\")\"}"
+      }
+    ],
+    "avg_det_score": 100.0,
+    "variance": 0.0,
+    "failure_summary": {
+      "top_failure_types": [],
+      "count": 0
+    },
+    "generation_summary": {
+      "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-3b1ea01c-673b-58d1-52da-f6d4d9796538_508261",
+      "output_csv": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/baseline_row125_cat5_g3_20260623_204406/candidates/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-3b1ea01c-673b-58d1-52da-f6d4d9796538_508261.csv",
+      "jsonl_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/results/candidates_ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-3b1ea01c-673b-58d1-52da-f6d4d9796538_508261.jsonl",
+      "row_count": 1,
+      "rows": [
+        {
+          "index": "5",
+          "category": "5",
+          "command_kor": "오븐 모드를 베이크로 설정하고 10분 뒤에 데우기 모드로 바꿔줘.",
+          "command_eng": "Set the oven mode to Bake and change it to warming mode after 10 minutes.",
+          "connected_devices": "",
+          "gt": "{\"name\": \"\", \n\"cron\": \"\", \n\"period\": 0, \n\"script\": \"\\n(#Oven).oven_setovenmode(\\\"Bake\\\")\\n\\ndelay(10 MIN)\\n\\n(#Oven).oven_setovenmode(\\\"warming\\\")\"}",
+          "row_no": 125,
+          "profile": "version0_15",
+          "genome_id": "gen-3b1ea01c-673b-58d1-52da-f6d4d9796538",
+          "genome_seed": 260598245,
+          "run_id": "ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-3b1ea01c-673b-58d1-52da-f6d4d9796538_508261",
+          "candidate_count": 1,
+          "candidates": "[\"{\\\"name\\\":\\\"SetOvenModeAndChangeAfter10Minutes\\\",\\\"cron\\\":\\\"\\\",\\\"period\\\":0,\\\"code\\\":\\\"(#Oven).oven_setovenmode(\\\\\\\"Bake\\\\\\\")\\\\ndelay(10 MIN)\\\\n(#Oven).oven_setovenmode(\\\\\\\"warming\\\\\\\")\\\"}\"]",
+          "candidate_metadata": "[{\"candidate_index\": 0, \"strategy\": \"minimal\", \"prompt_chars\": 359521, \"prompt_tokens\": 76852, \"completion_tokens\": 74, \"total_tokens\": 76926, \"latency_sec\": 33.6152, \"peak_vram_gb\": 50.5014, \"load_sec\": 0.0, \"generate_sec\": 33.4115, \"prompt_prep_sec\": 0.1856, \"decode_sec\": 0.0003, \"worker_pid\": 3514663, \"error_type\": \"\", \"oom_flag\": false, \"block_manifest\": [{\"id\": \"01\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/01_preamble.txt\", \"metadata\": {\"id\": \"01\", \"role\": \"preprocessor\", \"params\": \"temperature, micro_rules\", \"description\": \"Global deterministic JOILang generation rules and schema-faithful behavior.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}, {\"id\": \"02\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt\", \"metadata\": {\"id\": \"02\", \"role\": \"generator\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Main JOILang generator block with deterministic JSON-only output and schema-grounded exemplars.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {candidate_strategy}\"}}, {\"id\": \"05\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/05_repair_prompt.txt\", \"metadata\": {\"id\": \"05\", \"role\": \"repair\", \"params\": \"temperature, few_shot_count, max_tokens, micro_rules\", \"description\": \"Targeted repair prompt that fixes schema mismatch, arg typing, and semantic drift with minimal edits.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}, {best_candidate}, {det_diagnostics}, {failure_summary}\"}}, {\"id\": \"06\", \"path\": \"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/06_det_helper.txt\", \"metadata\": {\"id\": \"06\", \"role\": \"helper\", \"params\": \"micro_rules\", \"description\": \"Diagnostic helper block enumerating the evaluator targets so the generator avoids common failures.\", \"placeholders\": \"{command_eng}, {connected_devices}, {service_list_snippet}, {optional_cron}, {optional_period}\"}}]}]",
+          "prompt_log_paths": "[\"/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/logs/ga_validation_Qwen_Qwen2.5-Coder-14B-Instruct_gen-3b1ea01c-673b-58d1-52da-f6d4d9796538_508261/row_125_cand_1.json\"]",
+          "generation_status": "ok",
+          "generation_total_pipeline_sec": 35.5955,
+          "llm_mode": "worker",
+          "llm_model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+          "prompt_render_mode": "blocks",
+          "prompt_assets_dir": "",
+          "service_list_snippet_source": "service_schema_fallback",
+          "service_list_device_count": 50,
+          "service_list_retrieval_status": "disabled",
+          "service_list_retrieval_mode": "hybrid",
+          "service_list_retrieval_topk": 10,
+          "service_list_retrieval_device": "cpu",
+          "service_list_retrieval_categories": "[]",
+          "service_list_retrieval_scores": "[]",
+          "service_list_retrieval_fallback_reason": "",
+          "generation_call_count": 1,
+          "generation_error_count": 0,
+          "generation_error_type": "",
+          "generation_error_types": "[]",
+          "generation_oom_flag": false,
+          "generation_prompt_chars_total": 359521,
+          "generation_prompt_tokens_total": 76852,
+          "generation_completion_tokens_total": 74,
+          "generation_total_tokens_total": 76926,
+          "generation_llm_latency_sec": 33.6152,
+          "generation_peak_vram_gb": 50.5014
+        }
+      ],
+      "fieldnames": [
+        "index",
+        "category",
+        "command_kor",
+        "command_eng",
+        "connected_devices",
+        "gt",
+        "row_no",
+        "profile",
+        "genome_id",
+        "genome_seed",
+        "run_id",
+        "candidate_count",
+        "candidates",
+        "candidate_metadata",
+        "prompt_log_paths",
+        "generation_status",
+        "generation_total_pipeline_sec",
+        "llm_mode",
+        "llm_model",
+        "prompt_render_mode",
+        "prompt_assets_dir",
+        "service_list_snippet_source",
+        "service_list_device_count",
+        "service_list_retrieval_status",
+        "service_list_retrieval_mode",
+        "service_list_retrieval_topk",
+        "service_list_retrieval_device",
+        "service_list_retrieval_categories",
+        "service_list_retrieval_scores",
+        "service_list_retrieval_fallback_reason",
+        "generation_call_count",
+        "generation_error_count",
+        "generation_error_type",
+        "generation_error_types",
+        "generation_oom_flag",
+        "generation_prompt_chars_total",
+        "generation_prompt_tokens_total",
+        "generation_completion_tokens_total",
+        "generation_total_tokens_total",
+        "generation_llm_latency_sec",
+        "generation_peak_vram_gb"
+      ]
+    }
+  }
+}

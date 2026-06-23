@@ -1,0 +1,70 @@
+{
+  "id": "gen-72e1069d-e722-5be6-c3bf-6baf915e48f9",
+  "seed": 573137329,
+  "blocks": [
+    "01",
+    "02",
+    "06"
+  ],
+  "params": {
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+    "temperature": 0.0,
+    "few_shot_count": 3,
+    "max_tokens": 1024,
+    "candidate_strategies": [
+      "minimal",
+      "direct",
+      "canonical_names_first",
+      "compact_json"
+    ]
+  },
+  "block_params": {
+    "02": {
+      "few_shot_count": 3,
+      "micro_rules": [
+        "For INTEGER and DOUBLE arguments, avoid quoted numeric literals."
+      ]
+    },
+    "05": {
+      "repair_mode": "conservative",
+      "few_shot_count": 3
+    }
+  },
+  "_ga_metadata": {
+    "parent_ids": [
+      "gen-378892e9-ecc3-87ab-8b45-85023a0286cc"
+    ],
+    "mutation_types": [
+      "drop_optional_block"
+    ],
+    "crossover_used": false,
+    "feedback_types_used": [],
+    "base_genome_id": "gen-378892e9-ecc3-87ab-8b45-85023a0286cc",
+    "mutation_family": "compression",
+    "mutation_operator": "drop_optional_block",
+    "mutation_proposal_id": "block_compression_g002_ce9ba084",
+    "diffs": [
+      {
+        "block_id": "05",
+        "field": "blocks",
+        "old_value": "[\"01\", \"02\", \"05\", \"06\"]",
+        "new_value": "[\"01\", \"02\", \"06\"]",
+        "mutation_type": "drop_optional_block",
+        "mutation_family": "compression",
+        "compression_level": "block",
+        "selected_compression_target": "05",
+        "selected_block_id": "05",
+        "selected_block_ids": "[]",
+        "expected_token_delta": -1117,
+        "feedback_driven": false,
+        "llm_advised": false,
+        "advisor_proposal_id": "",
+        "advisor_batch_id": "",
+        "failure_type_source": "token_overbudget"
+      }
+    ],
+    "prompt_hash": "1d0d1e8f38945f48",
+    "block_signature": "01,02,06",
+    "rule_signature": "c4d08f4d9268f2bc"
+  }
+}

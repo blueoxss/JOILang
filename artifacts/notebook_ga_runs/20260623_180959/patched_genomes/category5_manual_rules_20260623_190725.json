@@ -1,0 +1,71 @@
+{
+  "id": "gen-acd8d60c-f7c3-7768-272e-1069de7225be__category5_manual_rules_20260623_190725",
+  "seed": 742100707,
+  "blocks": [
+    "01",
+    "02",
+    "03",
+    "05",
+    "06"
+  ],
+  "params": {
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+    "temperature": 0.0,
+    "few_shot_count": 3,
+    "max_tokens": 1024,
+    "candidate_strategies": [
+      "canonical_names_first",
+      "explicit_preconditions",
+      "compact_json",
+      "minimal"
+    ]
+  },
+  "block_params": {
+    "02": {
+      "few_shot_count": 1,
+      "micro_rules": [
+        "Keep the code minimal and remove unrelated actions.",
+        "For temporal/sequential commands, preserve the exact order of all requested actions.",
+        "If the command says after N seconds/minutes/hours, represent that interval explicitly with the canonical delay or clock form used by the dataset.",
+        "Do not merge two sequential actions into a single action.",
+        "Do not add unrelated conditions, loops, helper variables, or extra device actions.",
+        "For category-5 rows, prioritize action order and delay placement over prompt compression."
+      ],
+      "source_file": "generated/02_generator_prompt__category5_manual_rules_20260623_190725.txt"
+    },
+    "05": {
+      "repair_mode": "conservative",
+      "few_shot_count": 3
+    }
+  },
+  "_ga_metadata": {
+    "parent_ids": [],
+    "mutation_types": [
+      "initial_random"
+    ],
+    "crossover_used": false,
+    "feedback_types_used": [],
+    "base_genome_id": "",
+    "prompt_hash": "19c338dcbb6aa912",
+    "block_signature": "01,02,03,05,06",
+    "rule_signature": "31df1da091e9c36c"
+  },
+  "_notebook_manual_block_patch": {
+    "target_block_id": "02",
+    "source_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/02_generator_prompt.txt",
+    "patched_block_path": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/blocks/generated/02_generator_prompt__category5_manual_rules_20260623_190725.txt",
+    "marker": "NOTEBOOK MANUAL FOCUS RULES"
+  },
+  "_notebook_manual_patch": {
+    "created_at": "2026-06-23T19:07:25",
+    "target_block_id": "02",
+    "rules": [
+      "For temporal/sequential commands, preserve the exact order of all requested actions.",
+      "If the command says after N seconds/minutes/hours, represent that interval explicitly with the canonical delay or clock form used by the dataset.",
+      "Do not merge two sequential actions into a single action.",
+      "Do not add unrelated conditions, loops, helper variables, or extra device actions.",
+      "For category-5 rows, prioritize action order and delay placement over prompt compression."
+    ],
+    "base_genome_path": "/root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_180959/category5_baseline_g3_20260623_182734/best_genome.json"
+  }
+}

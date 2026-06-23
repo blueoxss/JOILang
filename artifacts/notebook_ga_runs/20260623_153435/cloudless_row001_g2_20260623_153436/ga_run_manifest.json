@@ -1,0 +1,46 @@
+{
+  "profile": "version0_15",
+  "model_key": "qwen25_coder_14b",
+  "model_label": "Qwen2.5-Coder-14B-Instruct",
+  "dataset": "/root/llm/JOILang-Server/datasets/JOICommands-280.csv",
+  "service_schema": "/root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+  "selected_row_count": 1,
+  "categories": [
+    "1"
+  ],
+  "stage": "full-run",
+  "full_run": true,
+  "resume": false,
+  "force": true,
+  "limit_per_category": null,
+  "core_blocks": [
+    "01",
+    "02"
+  ],
+  "optional_blocks": [
+    "03",
+    "05",
+    "06"
+  ],
+  "retrieval_policy": "fixed runtime service-context construction; not mutated by GA",
+  "fitness": "AvgDET - 0.5 * VarDET",
+  "redesign_modes": {
+    "selection_mode": "redesign",
+    "fitness_mode": "phase_aware",
+    "mutation_mode": "cloudless_decompiler",
+    "stop_controller_mode": "active",
+    "category_balance_mode": "guard",
+    "token_penalty_mode": "hybrid"
+  },
+  "budget_snapshot": {
+    "run_id": "cloudless_row001_g2_20260623_153436",
+    "timestamp": "2026-06-23T15:34:37",
+    "model_key": "qwen25_coder_14b",
+    "baseline_token_budget": null,
+    "budget_source": "none",
+    "model_token_budget_json": "",
+    "fallback_used": false,
+    "fallback_reason": ""
+  },
+  "command": "/root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/scripts/run_ga_search.py --profile version0_15 --genome-json /root/llm/JOILang-Server/gpt_mg/version0_15_update20260413/genomes/example_genome.json --dataset /root/llm/JOILang-Server/datasets/JOICommands-280.csv --service-schema /root/llm/JOILang-Server/datasets/service_list_ver2.0.1.json --model-key qwen25_coder_14b --llm-mode worker --candidate-k 1 --repair-attempts 0 --det-profile strict --selection-mode redesign --fitness-mode phase_aware --mutation-mode cloudless_decompiler --category-balance-mode guard --token-penalty-mode hybrid --stop-controller-mode active --reasoning-mutation-mode auto --intent-hint-mode auto --feedback-guided-mutation --enable-compression-mutation --enable-prompt-decompiler --enable-rendered-prompt-dedupe --enable-pareto-archive --enable-group-specialist-archives --full-run --force --progress verbose --retries 0 --target-detpass 90 --start-row 1 --end-row 1 --population 4 --gens 2 --min-generations 2 --max-generations 2 --sample-size 1 --validation-size 1 --cheap-eval-limit 1 --plateau-window 1 --disruptive-max-attempts 1 --timeout-sec 2400 --output-root /root/llm/JOILang-Server/artifacts/notebook_ga_runs/20260623_153435/cloudless_row001_g2_20260623_153436"
+}

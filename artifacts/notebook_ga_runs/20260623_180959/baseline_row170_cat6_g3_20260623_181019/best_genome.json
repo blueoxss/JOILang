@@ -1,0 +1,48 @@
+{
+  "id": "gen-442856f6-c8cd-a33f-a37d-5ce08b9fdc88",
+  "seed": 500353188,
+  "blocks": [
+    "01",
+    "02",
+    "05",
+    "06"
+  ],
+  "params": {
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+    "temperature": 0.0,
+    "few_shot_count": 3,
+    "max_tokens": 768,
+    "candidate_strategies": [
+      "explicit_preconditions",
+      "compact_json",
+      "minimal",
+      "direct",
+      "canonical_names_first"
+    ]
+  },
+  "block_params": {
+    "02": {
+      "few_shot_count": 2,
+      "micro_rules": [
+        "Use value entries in conditions and function entries in actions.",
+        "Prefer canonical_name exactly when available."
+      ]
+    },
+    "05": {
+      "repair_mode": "conservative",
+      "few_shot_count": 3
+    }
+  },
+  "_ga_metadata": {
+    "parent_ids": [],
+    "mutation_types": [
+      "initial_random"
+    ],
+    "crossover_used": false,
+    "feedback_types_used": [],
+    "base_genome_id": "",
+    "prompt_hash": "edf2b30eb0b6627d",
+    "block_signature": "01,02,05,06",
+    "rule_signature": "28de14a34f971ccc"
+  }
+}

@@ -1,0 +1,10 @@
+generation,mutation_family,mutation_operator,parent_genome_id,child_genome_id,delta_DETPass,delta_AvgDET,delta_tokens,delta_latency,delta_basic_DETPass,delta_temporal_DETPass,delta_complex_DETPass,accepted,elite_reason,operator_credit
+2,compression,drop_optional_block,gen-acd8d60c-f7c3-7768-272e-1069de7225be,gen-f6d4d979-6538-7164-6c83-770691877a47,,,,,,,,True,,
+2,compression,drop_optional_block,gen-acd8d60c-f7c3-7768-272e-1069de7225be,gen-850d8fe7-1f4e-6869-3fc0-fada9a20a275,,,,,,,,True,,
+2,compression,merge_duplicate_micro_rules,gen-acd8d60c-f7c3-7768-272e-1069de7225be,gen-e8efcc0c-7292-6fde-abcf-8c8b50493ff1,,,,,,,,True,,
+3,compression,drop_optional_block,gen-f6d4d979-6538-7164-6c83-770691877a47,gen-43710534-37f6-561f-a40d-e353f756afa5,,,,,,,,True,,
+3,compression,drop_optional_block,gen-f6d4d979-6538-7164-6c83-770691877a47,gen-b8f87d97-8b21-6ec9-200e-ff762bd04ac9,,,,,,,,True,,
+3,compression,compact_reasoning_skeleton,gen-f6d4d979-6538-7164-6c83-770691877a47,gen-9d101c11-e714-18e4-8348-3a7925dce09d,,,,,,,,True,,
+4,compression,drop_optional_block,gen-f6d4d979-6538-7164-6c83-770691877a47,gen-c438bc25-ee93-3184-a609-2feef606284a,,,,,,,,True,,
+4,compression,drop_optional_block,gen-f6d4d979-6538-7164-6c83-770691877a47,gen-112ae69c-6543-8867-9586-c88c781b9883,,,,,,,,True,,
+4,compression,merge_duplicate_micro_rules,gen-f6d4d979-6538-7164-6c83-770691877a47,gen-8584f7e6-51ea-8cb3-9153-be830b604aa2,,,,,,,,True,,
