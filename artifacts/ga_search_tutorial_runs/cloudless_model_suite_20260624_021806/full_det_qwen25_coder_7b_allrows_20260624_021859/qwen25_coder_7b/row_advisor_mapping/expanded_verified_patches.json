@@ -1,0 +1,230 @@
+{
+  "schema_version": "v1",
+  "source_advisor_rich_feedback": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/full_det_qwen25_coder_7b_allrows_20260624_021859/qwen25_coder_7b/row_advisor_mapping/advisor_rich_feedback.json",
+  "official_metric": "strict_det",
+  "cloud_is_auxiliary": true,
+  "mutated_blocks": [
+    {
+      "target_block_id": "06",
+      "target_block_family": "Skeleton",
+      "rationale": "Expanded Skeleton rule from 280 empirical row(s). Representative diagnostics: output collapse: same generated code reused across unrelated rows.",
+      "suggested_patch_text": "Solve each dataset row independently from the current command only. Never reuse a previous row's JSON name, receiver, service, enum argument, numeric argument, or code skeleton.",
+      "verification": {
+        "localized_patch_only": true,
+        "uses_concrete_diagnostics": true,
+        "imperative_rule": true,
+        "json_schema_safe": true,
+        "does_not_rewrite_entire_prompt": true,
+        "no_markdown_fence": true
+      },
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "output collapse: same generated code reused across unrelated rows."
+      ]
+    },
+    {
+      "target_block_id": "02",
+      "target_block_family": "Service_Mapping",
+      "rationale": "Expanded Service_Mapping rule from 280 empirical row(s). Representative diagnostics: service mismatch: expected canonical schema service but generated service differs or is hallucinated.",
+      "suggested_patch_text": "Never invent service/member names. Copy the exact canonical device-prefixed service member from the injected schema, preserving lowercase, underscores, and device prefix. If a generated member looks camelCase, class-style, capitalized, or paraphrased, replace it with the nearest schema-valid canonical member before final JSON.",
+      "verification": {
+        "localized_patch_only": true,
+        "uses_concrete_diagnostics": true,
+        "imperative_rule": true,
+        "json_schema_safe": true,
+        "does_not_rewrite_entire_prompt": true,
+        "no_markdown_fence": true
+      },
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "service mismatch: expected canonical schema service but generated service differs or is hallucinated."
+      ]
+    },
+    {
+      "target_block_id": "06",
+      "target_block_family": "Temporal_Rule",
+      "rationale": "Expanded Temporal_Rule rule from 280 empirical row(s). Representative diagnostics: schedule mismatch: cron/period policy differs from GT.",
+      "suggested_patch_text": "Classify schedule type before writing JSON: one-shot action, fixed cron trigger, repeated period loop, delay sequence, or trigger-then-repeat. Use period=0 for one-shot or scheduled one-shot commands, preserve explicit cron triggers, and use positive period only when repeated monitoring is explicit.",
+      "verification": {
+        "localized_patch_only": true,
+        "uses_concrete_diagnostics": true,
+        "imperative_rule": true,
+        "json_schema_safe": true,
+        "does_not_rewrite_entire_prompt": true,
+        "no_markdown_fence": true
+      },
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "schedule mismatch: cron/period policy differs from GT."
+      ]
+    },
+    {
+      "target_block_id": "06",
+      "target_block_family": "DET_Helper",
+      "rationale": "Expanded DET_Helper rule from 280 empirical row(s). Representative diagnostics: overall GT mismatch: perform component-wise final verification.",
+      "suggested_patch_text": "When code is schema-valid but not target-equivalent, compare schedule, receiver, service, numeric, enum, dataflow, and action order before final output. Verify schedule, receiver, service, numeric, enum, dataflow, and output schema before final JSON.",
+      "verification": {
+        "localized_patch_only": true,
+        "uses_concrete_diagnostics": true,
+        "imperative_rule": false,
+        "json_schema_safe": true,
+        "does_not_rewrite_entire_prompt": true,
+        "no_markdown_fence": true
+      },
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "overall GT mismatch: perform component-wise final verification."
+      ]
+    },
+    {
+      "target_block_id": "02",
+      "target_block_family": "Receiver_Tag_Preservation",
+      "rationale": "Expanded Receiver_Tag_Preservation rule from 279 empirical row(s). Representative diagnostics: receiver mismatch: generated receiver differs from command/GT receiver.",
+      "suggested_patch_text": "Select the receiver tag from the current command target before choosing any service. Preserve owner/location/group/sector tags exactly and choose only services attached to that receiver; never reuse a receiver from a previous row.",
+      "verification": {
+        "localized_patch_only": true,
+        "uses_concrete_diagnostics": true,
+        "imperative_rule": true,
+        "json_schema_safe": true,
+        "does_not_rewrite_entire_prompt": true,
+        "no_markdown_fence": true
+      },
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "receiver mismatch: generated receiver differs from command/GT receiver."
+      ]
+    },
+    {
+      "target_block_id": "06",
+      "target_block_family": "Numeric_Unit_Grounding",
+      "rationale": "Expanded Numeric_Unit_Grounding rule from 161 empirical row(s). Representative diagnostics: numeric mismatch: required numeric literal or converted unit is missing or incorrect.",
+      "suggested_patch_text": "Preserve every numeric literal required by the current command and bind it to the selected service argument. Convert units using the service descriptor, such as minutes to seconds for seconds-based arguments, and never drop numeric thresholds or durations.",
+      "verification": {
+        "localized_patch_only": true,
+        "uses_concrete_diagnostics": true,
+        "imperative_rule": true,
+        "json_schema_safe": true,
+        "does_not_rewrite_entire_prompt": true,
+        "no_markdown_fence": true
+      },
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "numeric mismatch: required numeric literal or converted unit is missing or incorrect."
+      ]
+    },
+    {
+      "target_block_id": "02",
+      "target_block_family": "Enum_Grounding",
+      "rationale": "Expanded Enum_Grounding rule from 161 empirical row(s). Representative diagnostics: enum/string mismatch: generated enum argument differs from selected service descriptor.",
+      "suggested_patch_text": "For enum-valued services, copy the allowed enum string exactly from the selected service descriptor. Do not translate, paraphrase, or borrow enum values from another device or previous row.",
+      "verification": {
+        "localized_patch_only": true,
+        "uses_concrete_diagnostics": true,
+        "imperative_rule": true,
+        "json_schema_safe": true,
+        "does_not_rewrite_entire_prompt": true,
+        "no_markdown_fence": true
+      },
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "264",
+        "174",
+        "280",
+        "259",
+        "150",
+        "114",
+        "170"
+      ],
+      "evidence_diagnostics": [
+        "enum/string mismatch: generated enum argument differs from selected service descriptor."
+      ]
+    }
+  ],
+  "verification_summary": {
+    "errors": [],
+    "warnings": [],
+    "ok": true
+  }
+}
