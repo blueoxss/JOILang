@@ -1,0 +1,7 @@
+﻿failure_reason,count
+missing_generated_code,1
+gt_mismatch,1
+gt_service_coverage,1
+gt_receiver_coverage,1
+numeric_grounding,1
+enum_grounding,1

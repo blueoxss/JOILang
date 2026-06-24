@@ -1,0 +1,882 @@
+diff --git a/utils/ga_search/local_model_registry.py b/utils/ga_search/local_model_registry.py
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/utils/ga_search/local_model_registry.py
+@@ -0,0 +1,146 @@
++#!/usr/bin/env python3
++from __future__ import annotations
++
++import os
++from pathlib import Path
++from typing import Any
++
++
++MODEL_SPECS: dict[str, dict[str, str]] = {
++    "phi35_mini": {
++        "label": "Phi-3.5-mini-instruct",
++        "hf_id": "microsoft/Phi-3.5-mini-instruct",
++        "local_dir": "phi35_mini",
++    },
++    "qwen25_coder_7b": {
++        "label": "Qwen2.5-Coder-7B-Instruct",
++        "hf_id": "Qwen/Qwen2.5-Coder-7B-Instruct",
++        "local_dir": "qwen25_coder_7b",
++    },
++    "llama31_8b": {
++        "label": "Llama-3.1-8B-Instruct",
++        "hf_id": "meta-llama/Llama-3.1-8B-Instruct",
++        "local_dir": "llama31_8b",
++    },
++    "gemma2_9b_it": {
++        "label": "Gemma-2-9B-it",
++        "hf_id": "google/gemma-2-9b-it",
++        "local_dir": "gemma2_9b_it",
++    },
++    "qwen25_coder_14b": {
++        "label": "Qwen2.5-Coder-14B-Instruct",
++        "hf_id": "Qwen/Qwen2.5-Coder-14B-Instruct",
++        "local_dir": "qwen25_coder_14b",
++    },
++}
++
++_HF_TO_KEY = {
++    spec["hf_id"].lower(): key
++    for key, spec in MODEL_SPECS.items()
++}
++
++
++def repo_root() -> Path:
++    return Path(__file__).resolve().parents[2]
++
++
++def default_local_model_base_dir() -> Path:
++    raw = (
++        os.environ.get("JOI_GA_LOCAL_MODEL_BASE_DIR")
++        or os.environ.get("JOI_V15_LOCAL_MODEL_BASE_DIR")
++        or os.environ.get("JOI_V14_LOCAL_MODEL_BASE_DIR")
++        or ""
++    )
++    if raw:
++        return Path(raw).expanduser()
++    return repo_root().parent / "local_models"
++
++
++def canonical_model_id(model_key_or_id: str) -> str:
++    token = str(model_key_or_id or "").strip()
++    if not token:
++        return token
++    spec = MODEL_SPECS.get(token)
++    if spec:
++        return spec["hf_id"]
++    return token
++
++
++def model_key_from_id(model_key_or_id: str) -> str:
++    token = str(model_key_or_id or "").strip()
++    if not token:
++        return token
++    if token in MODEL_SPECS:
++        return token
++    return _HF_TO_KEY.get(token.lower(), token)
++
++
++def local_dir_name_for_model(model_key_or_id: str) -> str:
++    key = model_key_from_id(model_key_or_id)
++    spec = MODEL_SPECS.get(key)
++    if spec:
++        return spec["local_dir"]
++    cleaned = str(model_key_or_id or "").strip()
++    if "/" in cleaned:
++        return cleaned.rsplit("/", 1)[-1]
++    return cleaned
++
++
++def resolve_local_model_name(
++    model_key_or_id: str,
++    *,
++    explicit_model_name: str | None = None,
++    base_dir: str | Path | None = None,
++) -> str:
++    """Resolve benchmark model keys to JOILang-Server/../local_models folders.
++
++    This replaces the old version0_15_update local model mapping while keeping
++    the same local folder convention, e.g. qwen25_coder_14b.
++    """
++    explicit = str(explicit_model_name or "").strip()
++    if explicit:
++        path = Path(explicit).expanduser()
++        return str(path.resolve()) if path.exists() else explicit
++
++    base = Path(base_dir).expanduser() if base_dir else default_local_model_base_dir()
++    folder = local_dir_name_for_model(model_key_or_id)
++    if folder:
++        candidate = base / folder
++        if candidate.exists():
++            return str(candidate.resolve())
++
++    canonical = canonical_model_id(model_key_or_id)
++    return canonical or str(model_key_or_id or "")
++
++
++def worker_extra_payload_for_model(
++    model_key_or_id: str,
++    *,
++    base_dir: str | Path | None = None,
++    worker_python: str = "",
++    local_device: str = "",
++    local_dtype: str = "",
++    local_files_only: bool | None = None,
++    local_trust_remote_code: bool | None = None,
++    local_load_in_4bit: bool | None = None,
++    local_max_new_tokens: int | None = None,
++    extra: dict[str, Any] | None = None,
++) -> dict[str, Any]:
++    payload: dict[str, Any] = dict(extra or {})
++    payload.setdefault("local_model_name", resolve_local_model_name(model_key_or_id, base_dir=base_dir))
++    payload.setdefault("local_worker", str((repo_root() / "utils" / "ga_search" / "local_worker.py").resolve()))
++    if worker_python:
++        payload.setdefault("worker_python", worker_python)
++    if local_device:
++        payload.setdefault("local_device", local_device)
++    if local_dtype:
++        payload.setdefault("local_dtype", local_dtype)
++    if local_files_only is not None:
++        payload.setdefault("local_files_only", bool(local_files_only))
++    if local_trust_remote_code is not None:
++        payload.setdefault("local_trust_remote_code", bool(local_trust_remote_code))
++    if local_load_in_4bit is not None:
++        payload.setdefault("local_load_in_4bit", bool(local_load_in_4bit))
++    if local_max_new_tokens is not None:
++        payload.setdefault("local_max_new_tokens", int(local_max_new_tokens))
++    return payload
+diff --git a/utils/ga_search/local_worker.py b/utils/ga_search/local_worker.py
+new file mode 100644
+index 0000000..2222222
+--- /dev/null
++++ b/utils/ga_search/local_worker.py
+@@ -0,0 +1,300 @@
++#!/usr/bin/env python3
++from __future__ import annotations
++
++import json
++import os
++import sys
++import time
++import traceback
++from pathlib import Path
++from typing import Any
++
++os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
++os.environ.setdefault("TRANSFORMERS_NO_ADVISORY_WARNINGS", "1")
++os.environ.setdefault("HF_HUB_OFFLINE", "1")
++os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
++os.environ.setdefault("HF_MODULES_CACHE", os.getenv("JOI_GA_HF_MODULES_CACHE", "/tmp/joi_ga_hf_modules"))
++Path(os.environ["HF_MODULES_CACHE"]).mkdir(parents=True, exist_ok=True)
++
++import torch
++from transformers import AutoModelForCausalLM, AutoTokenizer
++
++try:
++    from transformers.cache_utils import DynamicCache
++except Exception:
++    DynamicCache = None
++
++try:
++    from transformers import BitsAndBytesConfig
++except Exception:
++    BitsAndBytesConfig = None
++
++
++def _parse_bool(value: Any, default: bool) -> bool:
++    if value is None:
++        return default
++    if isinstance(value, bool):
++        return value
++    return str(value).strip().lower() in {"1", "true", "yes", "y", "on"}
++
++
++def _resolve_dtype(dtype_name: str):
++    normalized = (dtype_name or "bf16").strip().lower()
++    if normalized == "bf16":
++        return torch.bfloat16
++    if normalized == "fp16":
++        return torch.float16
++    if normalized == "fp32":
++        return torch.float32
++    raise ValueError(f"Unsupported local_dtype: {dtype_name}")
++
++
++def _resolve_device_map(local_device: str):
++    device_name = (local_device or "cuda").strip().lower()
++    if device_name == "cpu":
++        return None
++    if device_name == "auto":
++        return "auto"
++    if torch.cuda.is_available():
++        gpu_count = torch.cuda.device_count()
++        if device_name.startswith("cuda:"):
++            requested_id = int(device_name.split(":", 1)[1])
++            return {"": requested_id if requested_id < gpu_count else 0}
++        return {"": 0}
++    return None
++
++
++def _ensure_dynamic_cache_compat() -> None:
++    if DynamicCache is None:
++        return
++    if not hasattr(DynamicCache, "seen_tokens"):
++        def _seen_tokens(self):
++            try:
++                return int(self.get_seq_length())
++            except Exception:
++                return 0
++        DynamicCache.seen_tokens = property(_seen_tokens)
++    if not hasattr(DynamicCache, "get_max_length"):
++        DynamicCache.get_max_length = lambda self: None
++    if not hasattr(DynamicCache, "get_usable_length"):
++        def _get_usable_length(self, new_seq_length=0, layer_idx=0):
++            try:
++                previous_seq_length = int(self.get_seq_length())
++            except Exception:
++                previous_seq_length = 0
++            try:
++                max_length = self.get_max_length()
++            except Exception:
++                max_length = None
++            if max_length is not None and previous_seq_length + int(new_seq_length or 0) > int(max_length):
++                return max(int(max_length) - int(new_seq_length or 0), 0)
++            return previous_seq_length
++        DynamicCache.get_usable_length = _get_usable_length
++
++
++def _classify_exception(exc: Exception) -> str:
++    lowered = str(exc or "").lower()
++    if "out of memory" in lowered or "cuda oom" in lowered:
++        return "cuda_oom"
++    if "local_files_only" in lowered or "not cached locally" in lowered:
++        return "missing_cache"
++    if "gated repo" in lowered or "access to model" in lowered:
++        return "gated_model"
++    if "no module named" in lowered or "unsupported local_dtype" in lowered:
++        return "incompatible_runtime"
++    if "timed out" in lowered or "timeout" in lowered:
++        return "timeout"
++    return "model_load_error"
++
++
++def _maybe_sync_cuda() -> None:
++    if torch.cuda.is_available():
++        try:
++            torch.cuda.synchronize()
++        except Exception:
++            pass
++
++
++def _reset_cuda_peak_stats() -> None:
++    if not torch.cuda.is_available():
++        return
++    for index in range(torch.cuda.device_count()):
++        try:
++            torch.cuda.reset_peak_memory_stats(index)
++        except Exception:
++            pass
++
++
++def _cuda_peak_stats() -> dict[str, Any]:
++    if not torch.cuda.is_available():
++        return {"peak_vram_bytes": 0, "peak_vram_gb": 0.0, "peak_vram_by_device": {}}
++    peak_by_device: dict[str, int] = {}
++    peak_bytes = 0
++    for index in range(torch.cuda.device_count()):
++        try:
++            device_peak = int(torch.cuda.max_memory_allocated(index))
++        except Exception:
++            device_peak = 0
++        peak_by_device[str(index)] = device_peak
++        peak_bytes = max(peak_bytes, device_peak)
++    return {
++        "peak_vram_bytes": peak_bytes,
++        "peak_vram_gb": round(float(peak_bytes) / (1024**3), 4),
++        "peak_vram_by_device": peak_by_device,
++    }
++
++
++def _extract_first_json_block(text: str) -> str:
++    stripped = str(text or "").strip()
++    if stripped.startswith("```json"):
++        stripped = stripped[len("```json"):].strip()
++        if stripped.endswith("```"):
++            stripped = stripped[:-3].strip()
++    elif stripped.startswith("```"):
++        stripped = stripped[3:].strip()
++        if stripped.endswith("```"):
++            stripped = stripped[:-3].strip()
++    start = stripped.find("{")
++    if start < 0:
++        return stripped
++    depth = 0
++    in_string = False
++    escaped = False
++    for idx in range(start, len(stripped)):
++        ch = stripped[idx]
++        if escaped:
++            escaped = False
++            continue
++        if ch == "\\":
++            escaped = True
++            continue
++        if ch == '"':
++            in_string = not in_string
++            continue
++        if in_string:
++            continue
++        if ch == "{":
++            depth += 1
++        elif ch == "}":
++            depth -= 1
++            if depth == 0:
++                return stripped[start:idx + 1].strip()
++    return stripped[start:].strip()
++
++
++def _read_payload() -> dict[str, Any]:
++    raw = sys.stdin.read()
++    if not raw.strip():
++        raise RuntimeError("No payload was provided to local_worker.py")
++    return json.loads(raw)
++
++
++def main() -> None:
++    payload = _read_payload()
++    request_started = time.perf_counter()
++    _ensure_dynamic_cache_compat()
++    try:
++        local_model_name = str(payload["local_model_name"])
++        local_device = str(payload.get("local_device", "cuda"))
++        local_dtype = str(payload.get("local_dtype", "bf16"))
++        local_files_only = _parse_bool(payload.get("local_files_only"), True)
++        local_trust_remote_code = _parse_bool(payload.get("local_trust_remote_code"), False)
++        local_load_in_4bit = _parse_bool(payload.get("local_load_in_4bit"), False)
++        local_attn_implementation = str(payload.get("local_attn_implementation", "") or "").strip()
++        local_max_new_tokens = int(payload.get("local_max_new_tokens", 512))
++        messages = payload.get("messages", [])
++
++        tokenizer = AutoTokenizer.from_pretrained(
++            local_model_name,
++            trust_remote_code=local_trust_remote_code,
++            local_files_only=local_files_only,
++        )
++        if tokenizer.pad_token is None and tokenizer.eos_token is not None:
++            tokenizer.pad_token = tokenizer.eos_token
++
++        model_kwargs: dict[str, Any] = {
++            "trust_remote_code": local_trust_remote_code,
++            "local_files_only": local_files_only,
++        }
++        if local_attn_implementation:
++            model_kwargs["attn_implementation"] = local_attn_implementation
++        if local_load_in_4bit:
++            if BitsAndBytesConfig is None:
++                raise RuntimeError("bitsandbytes is not installed, but local_load_in_4bit=true was requested.")
++            model_kwargs["quantization_config"] = BitsAndBytesConfig(
++                load_in_4bit=True,
++                bnb_4bit_compute_dtype=_resolve_dtype(local_dtype),
++                bnb_4bit_use_double_quant=True,
++                bnb_4bit_quant_type="nf4",
++            )
++            model_kwargs["device_map"] = _resolve_device_map(local_device)
++        else:
++            model_kwargs["torch_dtype"] = _resolve_dtype(local_dtype)
++            if local_device != "cpu":
++                model_kwargs["device_map"] = _resolve_device_map(local_device)
++
++        load_started = time.perf_counter()
++        _reset_cuda_peak_stats()
++        model = AutoModelForCausalLM.from_pretrained(local_model_name, **model_kwargs)
++        model.eval()
++        _maybe_sync_cuda()
++        load_sec = round(time.perf_counter() - load_started, 4)
++        load_stats = _cuda_peak_stats()
++
++        _reset_cuda_peak_stats()
++        prompt_started = time.perf_counter()
++        prompt_tokens = tokenizer.apply_chat_template(
++            messages,
++            add_generation_prompt=True,
++            tokenize=True,
++            return_tensors="pt",
++        )
++        prompt_tokens = prompt_tokens.to(next(model.parameters()).device)
++        prompt_prep_sec = round(time.perf_counter() - prompt_started, 4)
++
++        generation_started = time.perf_counter()
++        with torch.no_grad():
++            generated = model.generate(
++                prompt_tokens,
++                max_new_tokens=local_max_new_tokens,
++                do_sample=False,
++                pad_token_id=tokenizer.pad_token_id or tokenizer.eos_token_id,
++                eos_token_id=tokenizer.eos_token_id,
++            )
++        _maybe_sync_cuda()
++        generate_sec = round(time.perf_counter() - generation_started, 4)
++
++        completion_tokens = max(0, generated.shape[-1] - prompt_tokens.shape[-1])
++        content = tokenizer.decode(generated[0][prompt_tokens.shape[-1]:], skip_special_tokens=True).strip()
++        content = _extract_first_json_block(content)
++        peak_stats = _cuda_peak_stats()
++        if torch.cuda.is_available():
++            torch.cuda.empty_cache()
++
++        sys.stdout.write(json.dumps({
++            "ok": True,
++            "content": content,
++            "prompt_tokens": int(prompt_tokens.shape[-1]),
++            "completion_tokens": int(completion_tokens),
++            "prompt_prep_sec": prompt_prep_sec,
++            "generate_sec": generate_sec,
++            "total_worker_sec": round(time.perf_counter() - request_started, 4),
++            "worker_pid": int(os.getpid()),
++            "load_sec": load_sec,
++            "load_peak_vram_gb": load_stats.get("peak_vram_gb", 0.0),
++            "peak_vram_gb": peak_stats.get("peak_vram_gb", 0.0),
++            "peak_vram_by_device": peak_stats.get("peak_vram_by_device", {}),
++        }, ensure_ascii=False))
++    except Exception as exc:
++        if torch.cuda.is_available():
++            torch.cuda.empty_cache()
++        sys.stdout.write(json.dumps({
++            "ok": False,
++            "error": str(exc),
++            "error_type": _classify_exception(exc),
++            "traceback": traceback.format_exc(limit=8),
++        }, ensure_ascii=False))
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/utils/ga_search/model_suite_benchmark.py b/utils/ga_search/model_suite_benchmark.py
+new file mode 100644
+index 0000000..3333333
+--- /dev/null
++++ b/utils/ga_search/model_suite_benchmark.py
+@@ -0,0 +1,257 @@
++#!/usr/bin/env python3
++from __future__ import annotations
++
++import argparse
++import csv
++import json
++from datetime import datetime
++from pathlib import Path
++from statistics import fmean
++from typing import Any
++
++try:
++    from .candidate_generation import generate_candidates_for_rows, write_candidate_csv
++    from .dataset_runner import command_text, load_dataset_rows, select_dataset_rows
++    from .evaluation import evaluate_candidate_records, write_evaluation_outputs
++    from .local_model_registry import MODEL_SPECS, canonical_model_id, default_local_model_base_dir, resolve_local_model_name, worker_extra_payload_for_model
++    from .model_resolver import resolve_model_package
++    from .render_adapter import render_model_spec
++except ImportError:
++    from candidate_generation import generate_candidates_for_rows, write_candidate_csv  # type: ignore
++    from dataset_runner import command_text, load_dataset_rows, select_dataset_rows  # type: ignore
++    from evaluation import evaluate_candidate_records, write_evaluation_outputs  # type: ignore
++    from local_model_registry import MODEL_SPECS, canonical_model_id, default_local_model_base_dir, resolve_local_model_name, worker_extra_payload_for_model  # type: ignore
++    from model_resolver import resolve_model_package  # type: ignore
++    from render_adapter import render_model_spec  # type: ignore
++
++
++def _read_json_arg(value: str | None) -> dict[str, Any]:
++    text = str(value or "").strip()
++    if not text:
++        return {}
++    path = Path(text).expanduser()
++    if path.exists():
++        text = path.read_text(encoding="utf-8")
++    parsed = json.loads(text)
++    if not isinstance(parsed, dict):
++        raise SystemExit("--llm-extra-json must be a JSON object or a path to one.")
++    return parsed
++
++
++def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    if not rows:
++        path.write_text("", encoding="utf-8")
++        return
++    columns: list[str] = []
++    for row in rows:
++        for key in row:
++            if key not in columns:
++                columns.append(key)
++    with path.open("w", encoding="utf-8-sig", newline="") as handle:
++        writer = csv.DictWriter(handle, fieldnames=columns)
++        writer.writeheader()
++        for row in rows:
++            writer.writerow(row)
++
++
++def _mean(values: list[float]) -> float:
++    return round(fmean(values), 4) if values else 0.0
++
++
++def build_parser() -> argparse.ArgumentParser:
++    parser = argparse.ArgumentParser(
++        description="Canonical JOILang local model suite benchmark. This replaces version0_15_update script dependency."
++    )
++    parser.add_argument("--model", default="gpt_mg.version0_13", help="Prompt/model package to render.")
++    parser.add_argument("--model-package", default="")
++    parser.add_argument("--suite", default="paper_local5", choices=["paper_local5"])
++    parser.add_argument("--model-key", action="append", default=[], help="Model key subset, e.g. qwen25_coder_14b.")
++    parser.add_argument("--dataset", default="datasets/JOICommands-280.csv")
++    parser.add_argument("--service-schema", default="datasets/service_list_ver2.0.1.json")
++    parser.add_argument("--service-context-mode", default="schema_fallback")
++    parser.add_argument("--row-no", action="append", type=int, default=[])
++    parser.add_argument("--start-row", type=int, default=1)
++    parser.add_argument("--end-row", type=int, default=None)
++    parser.add_argument("--category", action="append", default=[])
++    parser.add_argument("--limit-per-category", type=int, default=None)
++    parser.add_argument("--sample-size", type=int, default=None)
++    parser.add_argument("--seed", type=int, default=0)
++    parser.add_argument("--candidate-k", type=int, default=1)
++    parser.add_argument("--llm-mode", default="worker", choices=["worker", "local", "openai", "mock"])
++    parser.add_argument("--llm-endpoint", default="")
++    parser.add_argument("--llm-extra-json", default="", help="Inline JSON or a path to a JSON file.")
++    parser.add_argument("--worker-python", default="")
++    parser.add_argument("--local-model-base-dir", default=str(default_local_model_base_dir()))
++    parser.add_argument("--local-device", default="cuda:0")
++    parser.add_argument("--local-dtype", default="bf16")
++    parser.add_argument("--local-files-only", default="true")
++    parser.add_argument("--local-trust-remote-code", default="true")
++    parser.add_argument("--local-load-in-4bit", default="false")
++    parser.add_argument("--local-max-new-tokens", type=int, default=512)
++    parser.add_argument("--det-threshold", type=float, default=70.0)
++    parser.add_argument("--timeout-sec", type=int, default=1800)
++    parser.add_argument("--retries", type=int, default=0)
++    parser.add_argument("--output-dir", default="")
++    parser.add_argument("--preflight", action="store_true")
++    parser.add_argument("--preflight-only", action="store_true")
++    return parser
++
++
++def _bool_text(value: str) -> bool:
++    return str(value or "").strip().lower() in {"1", "true", "yes", "y", "on"}
++
++
++def _select_rows(args: argparse.Namespace) -> list[tuple[int, dict[str, Any]]]:
++    rows = load_dataset_rows(args.dataset)
++    selected: list[tuple[int, dict[str, Any]]] = []
++    if args.row_no:
++        for row_no in args.row_no:
++            selected.extend(
++                select_dataset_rows(
++                    rows,
++                    row_no=row_no,
++                    start_row=args.start_row,
++                    end_row=args.end_row,
++                    categories=args.category,
++                    limit_per_category=args.limit_per_category,
++                    sample_size=None,
++                    seed=args.seed,
++                )
++            )
++        dedup: dict[int, dict[str, Any]] = {}
++        for row_no, row in selected:
++            dedup[int(row_no)] = row
++        return sorted(dedup.items(), key=lambda item: item[0])
++    return select_dataset_rows(
++        rows,
++        row_no=None,
++        start_row=args.start_row,
++        end_row=args.end_row,
++        categories=args.category,
++        limit_per_category=args.limit_per_category,
++        sample_size=args.sample_size,
++        seed=args.seed,
++    )
++
++
++def _model_keys(args: argparse.Namespace) -> list[str]:
++    if args.model_key:
++        return list(dict.fromkeys(str(item).strip() for item in args.model_key if str(item).strip()))
++    return list(MODEL_SPECS)
++
++
++def _preflight_rows(args: argparse.Namespace, model_keys: list[str]) -> list[dict[str, Any]]:
++    base_dir = Path(args.local_model_base_dir).expanduser()
++    rows = []
++    for key in model_keys:
++        model_id = canonical_model_id(key)
++        local_model = resolve_local_model_name(model_id, base_dir=base_dir)
++        rows.append({
++            "model_key": key,
++            "model_id": model_id,
++            "local_model_name": local_model,
++            "local_model_exists": Path(local_model).exists(),
++            "local_model_base_dir": str(base_dir),
++        })
++    return rows
++
++
++def _render_for_rows(args: argparse.Namespace, rows: list[tuple[int, dict[str, Any]]]) -> dict[str, Any]:
++    spec = resolve_model_package(model=args.model or None, model_package=args.model_package or None)
++    user_input = command_text(rows[0][1]) if rows else "Turn on the light."
++    other_params: dict[str, Any] = {}
++    if args.service_schema:
++        other_params["service_schema"] = args.service_schema
++    return render_model_spec(spec, user_input or "Turn on the light.", connected_devices={}, other_params=other_params)
++
++
++def run_model(args: argparse.Namespace, model_key: str, rows: list[tuple[int, dict[str, Any]]], root: Path) -> dict[str, Any]:
++    model_id = canonical_model_id(model_key)
++    rendered = _render_for_rows(args, rows)
++    extra_payload = _read_json_arg(args.llm_extra_json)
++    extra_payload = worker_extra_payload_for_model(
++        model_id,
++        base_dir=args.local_model_base_dir,
++        worker_python=args.worker_python,
++        local_device=args.local_device,
++        local_dtype=args.local_dtype,
++        local_files_only=_bool_text(args.local_files_only),
++        local_trust_remote_code=_bool_text(args.local_trust_remote_code),
++        local_load_in_4bit=_bool_text(args.local_load_in_4bit),
++        local_max_new_tokens=args.local_max_new_tokens,
++        extra=extra_payload,
++    )
++    model_dir = root / model_key
++    records = generate_candidates_for_rows(
++        rows=rows,
++        rendered_package=rendered,
++        out_dir=model_dir,
++        llm_mode=args.llm_mode,
++        model_key=model_id,
++        candidate_k=args.candidate_k,
++        generation=0,
++        genome_id="suite_base",
++        candidate_strategy="mock_gt_copy" if args.llm_mode == "mock" else f"{args.llm_mode}_direct",
++        service_schema=args.service_schema,
++        service_context_mode=args.service_context_mode,
++        timeout_sec=args.timeout_sec,
++        retries=args.retries,
++        llm_endpoint=args.llm_endpoint,
++        llm_extra=extra_payload,
++        repair_attempts=0,
++    )
++    write_candidate_csv(model_dir / "candidates" / "generation_000.csv", records)
++    eval_rows = evaluate_candidate_records(records, det_threshold=args.det_threshold)
++    summary = write_evaluation_outputs(model_dir, eval_rows)
++    det_scores = [float(row.get("det_score") or 0.0) for row in eval_rows]
++    prompt_tokens = [float(row.get("generation_prompt_tokens_total") or 0.0) for row in eval_rows]
++    completion_tokens = [float(row.get("generation_completion_tokens_total") or 0.0) for row in eval_rows]
++    latency = [float(row.get("latency_sec") or 0.0) for row in eval_rows]
++    error_types = [str(row.get("generation_error_type") or "") for row in eval_rows if str(row.get("generation_error_type") or "")]
++    model_summary = {
++        "model_key": model_key,
++        "model_id": model_id,
++        "out_dir": str(model_dir),
++        "rows": len(eval_rows),
++        "det_pass_rate": summary.get("det_pass_rate", 0.0),
++        "avg_det_score": _mean(det_scores),
++        "generation_error_rate": summary.get("generation_error_rate", 0.0),
++        "avg_prompt_tokens": _mean(prompt_tokens),
++        "avg_completion_tokens": _mean(completion_tokens),
++        "avg_latency_sec": _mean(latency),
++        "local_model_name": str(extra_payload.get("local_model_name", "")),
++        "local_model_exists": Path(str(extra_payload.get("local_model_name", ""))).exists(),
++        "top_generation_error_type": error_types[0] if error_types else "",
++    }
++    (model_dir / "model_summary.json").write_text(json.dumps(model_summary, ensure_ascii=False, indent=2), encoding="utf-8")
++    return model_summary
++
++
++def main() -> int:
++    args = build_parser().parse_args()
++    model_keys = _model_keys(args)
++    output_root = Path(args.output_dir or f"artifacts/model_suite_benchmark_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
++    output_root.mkdir(parents=True, exist_ok=True)
++
++    preflight = _preflight_rows(args, model_keys)
++    _write_csv(output_root / "preflight.csv", preflight)
++    print(json.dumps({"output_root": str(output_root), "preflight": preflight}, ensure_ascii=False, indent=2))
++    if args.preflight_only:
++        return 0
++
++    rows = _select_rows(args)
++    if not rows:
++        raise SystemExit("no dataset rows selected")
++
++    summaries = []
++    for model_key in model_keys:
++        summaries.append(run_model(args, model_key, rows, output_root))
++    _write_csv(output_root / "suite_summary.csv", summaries)
++    (output_root / "suite_summary.json").write_text(json.dumps(summaries, ensure_ascii=False, indent=2), encoding="utf-8")
++    print(json.dumps({"output_root": str(output_root), "models": summaries}, ensure_ascii=False, indent=2))
++    return 2 if any(float(row.get("generation_error_rate") or 0.0) >= 1.0 for row in summaries) else 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/utils/ga_search/llm_backends.py b/utils/ga_search/llm_backends.py
+index 3afc29a..4444444 100644
+--- a/utils/ga_search/llm_backends.py
++++ b/utils/ga_search/llm_backends.py
+@@ -13,6 +13,13 @@ import urllib.request
+ from pathlib import Path
+ from typing import Any
+
++try:
++    from .local_model_registry import canonical_model_id, repo_root, resolve_local_model_name
++except ImportError:
++    from local_model_registry import canonical_model_id, repo_root, resolve_local_model_name  # type: ignore
++
++
++CANONICAL_LOCAL_WORKER = repo_root() / "utils" / "ga_search" / "local_worker.py"
+
+ class LLMBackendError(RuntimeError):
+@@ -87,18 +94,28 @@ def _usage(prompt_tokens: Any = 0, completion_tokens: Any = 0, total_tokens: Any
+ def _worker_path(rendered_package: dict[str, Any], extra_payload: dict[str, Any]) -> Path:
+     model_input = rendered_package.get("model_input") if isinstance(rendered_package.get("model_input"), dict) else {}
+     raw = (
+         extra_payload.get("local_worker")
+         or os.environ.get("JOI_GA_WORKER_PATH")
++        or os.environ.get("JOI_V15_WORKER_PATH")
++        or os.environ.get("JOI_V14_WORKER_PATH")
+         or model_input.get("local_worker")
+-        or ""
++        or str(CANONICAL_LOCAL_WORKER)
+     )
+-    if not raw:
+-        raise LLMBackendError("worker mode requires a local_worker path from render metadata, --llm-extra-json, or JOI_GA_WORKER_PATH", "model_load_error")
+     path = Path(str(raw)).expanduser()
+     if not path.is_absolute():
+-        package_path = Path(str(rendered_package.get("source_model_package") or "."))
+-        path = package_path / path
+-    path = path.resolve()
+-    if not path.exists():
+-        raise LLMBackendError(f"worker script not found: {path}", "model_load_error")
+-    return path
++        package_path = Path(str(rendered_package.get("source_model_package") or "."))
++        candidates = [
++            Path.cwd() / path,
++            repo_root() / path,
++            package_path / path,
++        ]
++    else:
++        candidates = [path]
++    for candidate in candidates:
++        resolved = candidate.resolve()
++        if resolved.exists():
++            return resolved
++    raise LLMBackendError(
++        f"worker script not found: {path}; checked {[str(item) for item in candidates]}",
++        "model_load_error",
++    )
+@@ -116,17 +133,35 @@ def _call_worker(
+     worker_python = (
+         str(extra_payload.get("worker_python") or "")
+         or os.environ.get("JOI_GA_WORKER_PYTHON", "")
++        or os.environ.get("JOI_V15_WORKER_PYTHON", "")
++        or os.environ.get("JOI_V14_WORKER_PYTHON", "")
+         or os.environ.get("JOI_VERSION013_PYTHON", "")
+         or sys.executable
+         or "python"
+     )
+     model_input = rendered_package.get("model_input") if isinstance(rendered_package.get("model_input"), dict) else {}
+     model_config = rendered_package.get("model_config") if isinstance(rendered_package.get("model_config"), dict) else {}
+     messages = messages_from_rendered(rendered_package)
++    canonical_model = canonical_model_id(model_key or model_config.get("model_name") or "local-model")
++    explicit_local_model = (
++        extra_payload.get("local_model_name")
++        or os.environ.get("JOI_GA_LOCAL_MODEL_NAME")
++        or os.environ.get("JOI_V15_LOCAL_MODEL_NAME")
++        or os.environ.get("JOI_V14_LOCAL_MODEL_NAME")
++        or model_input.get("local_model_name")
++        or ""
++    )
++    local_model_base_dir = (
++        extra_payload.get("local_model_base_dir")
++        or os.environ.get("JOI_GA_LOCAL_MODEL_BASE_DIR")
++        or os.environ.get("JOI_V15_LOCAL_MODEL_BASE_DIR")
++        or os.environ.get("JOI_V14_LOCAL_MODEL_BASE_DIR")
++        or ""
++    )
+     payload = {
+-        "model": model_key or model_config.get("model_name") or "local-model",
+-        "local_model_name": extra_payload.get("local_model_name") or model_input.get("local_model_name") or model_key or model_config.get("model_name") or "",
++        "model": canonical_model,
++        "local_model_name": resolve_local_model_name(
++            canonical_model,
++            explicit_model_name=str(explicit_local_model or ""),
++            base_dir=str(local_model_base_dir or "") or None,
++        ),
+         "messages": messages,
+         "local_device": extra_payload.get("local_device") or os.environ.get("JOI_GA_LOCAL_DEVICE", "cuda"),
+         "local_dtype": extra_payload.get("local_dtype") or os.environ.get("JOI_GA_LOCAL_DTYPE", "bf16"),
+diff --git a/utils/ga_search/cli.py b/utils/ga_search/cli.py
+index 5555555..6666666 100644
+--- a/utils/ga_search/cli.py
++++ b/utils/ga_search/cli.py
+@@ -40,6 +40,10 @@ def parse_json_arg(value: str | None, *, default: Any) -> Any:
+     if value is None or str(value).strip() == "":
+         return default
++    candidate_path = Path(str(value)).expanduser()
++    if candidate_path.exists():
++        value = candidate_path.read_text(encoding="utf-8")
+     try:
+         return json.loads(value)
+     except json.JSONDecodeError as exc:
+@@ -81,6 +85,15 @@ def add_generation_args(parser: argparse.ArgumentParser) -> None:
+     parser.add_argument("--llm-endpoint", default="")
+     parser.add_argument("--llm-extra-json", default="")
+     parser.add_argument("--genome-json", default="")
++    parser.add_argument("--local-model-base-dir", default="")
++    parser.add_argument("--local-model-name", default="")
++    parser.add_argument("--local-worker", default="")
++    parser.add_argument("--worker-python", default="")
++    parser.add_argument("--local-device", default="")
++    parser.add_argument("--local-dtype", default="")
++    parser.add_argument("--local-max-new-tokens", type=int, default=None)
++    parser.add_argument("--local-files-only", default="")
++    parser.add_argument("--local-trust-remote-code", default="")
++    parser.add_argument("--local-load-in-4bit", default="")
++
++
++def llm_extra_for_args(args: argparse.Namespace) -> dict[str, Any]:
++    extra = parse_json_arg(getattr(args, "llm_extra_json", ""), default={})
++    mapping = {
++        "local_model_base_dir": "local_model_base_dir",
++        "local_model_name": "local_model_name",
++        "local_worker": "local_worker",
++        "worker_python": "worker_python",
++        "local_device": "local_device",
++        "local_dtype": "local_dtype",
++        "local_files_only": "local_files_only",
++        "local_trust_remote_code": "local_trust_remote_code",
++        "local_load_in_4bit": "local_load_in_4bit",
++    }
++    for arg_name, payload_name in mapping.items():
++        value = getattr(args, arg_name, "")
++        if str(value or "").strip():
++            extra[payload_name] = value
++    if getattr(args, "local_max_new_tokens", None) is not None:
++        extra["local_max_new_tokens"] = int(args.local_max_new_tokens)
++    return extra
+@@ -320,7 +354,7 @@ def run_eval(args: argparse.Namespace) -> int:
+         timeout_sec=args.timeout_sec,
+         retries=args.retries,
+         llm_endpoint=args.llm_endpoint,
+-        llm_extra=parse_json_arg(args.llm_extra_json, default={}),
++        llm_extra=llm_extra_for_args(args),
+         repair_attempts=args.repair_attempts,
+     )
+@@ -377,7 +411,7 @@ def run_search(args: argparse.Namespace) -> int:
+         timeout_sec=args.timeout_sec,
+         retries=args.retries,
+         llm_endpoint=args.llm_endpoint,
+-        llm_extra=parse_json_arg(args.llm_extra_json, default={}),
++        llm_extra=llm_extra_for_args(args),
+         repair_attempts=args.repair_attempts,
+         initial_genomes=initial_genomes,

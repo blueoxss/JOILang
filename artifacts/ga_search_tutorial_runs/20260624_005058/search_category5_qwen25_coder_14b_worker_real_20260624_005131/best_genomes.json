@@ -1,0 +1,11 @@
+[
+  {
+    "generation": 0,
+    "candidate_rows": 6,
+    "avg_det_score": 21.666666666666668,
+    "train_det_pass_rate": 0.0,
+    "best_genome_id": "genome_001",
+    "best_avg_det_score": 21.666666666666668,
+    "best_fitness": 21.66666566
+  }
+]

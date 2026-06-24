@@ -1,0 +1,34 @@
+{
+  "run_id": "search_category5_qwen25_coder_14b_worker_real_20260624_005131",
+  "model_id": "gpt_mg.version0_13",
+  "model_package_path": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13",
+  "model_key": "qwen25_coder_14b",
+  "search_mode": "monolith",
+  "ga_engine_mode": "real_generation_skeleton",
+  "requested_engine_mode": "real",
+  "llm_mode": "worker",
+  "official_metric": "strict_det",
+  "ground_truth_column": "gt",
+  "rows": 3,
+  "best_DETPass": 0.0,
+  "best_avg_DET": 21.666666666666668,
+  "best_avg_prompt_tokens": 0.0,
+  "generation_error_rate": 1.0,
+  "stop_reason": "completed_requested_generations",
+  "best_history": [
+    {
+      "generation": 0,
+      "candidate_rows": 6,
+      "avg_det_score": 21.666666666666668,
+      "train_det_pass_rate": 0.0,
+      "best_genome_id": "genome_001",
+      "best_avg_det_score": 21.666666666666668,
+      "best_fitness": 21.66666566
+    }
+  ],
+  "cloud_is_auxiliary": true,
+  "known_limitations": [
+    "real engine skeleton evaluates genomes with strict DET and records selection/mutation artifacts",
+    "advanced crossover, pareto archive, and compression mutation policies are hooks, not full legacy parity"
+  ]
+}

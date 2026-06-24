@@ -1,0 +1,52 @@
+{
+  "llm_mode": "worker",
+  "candidate": {
+    "name": "",
+    "cron": "",
+    "period": 0,
+    "code": ""
+  },
+  "generation_error_type": "worker_crash",
+  "backend_response": {
+    "content": "",
+    "usage": {
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0
+    },
+    "latency_sec": 26.29851,
+    "peak_vram_gb": "",
+    "raw": {
+      "ok": false,
+      "error": "name 'prompt_tokens' is not defined",
+      "error_type": "worker_crash",
+      "oom_flag": false,
+      "traceback": "Traceback (most recent call last):\n  File \"/home/mgjeong/Desktop/llm/JOILang-Server/utils/ga_search/local_worker.py\", line 353, in main\n    \"prompt_tokens\": int(prompt_tokens.shape[-1]),\nNameError: name 'prompt_tokens' is not defined\n"
+    },
+    "backend": "worker",
+    "error": "name 'prompt_tokens' is not defined",
+    "error_type": "worker_crash"
+  },
+  "repair": {
+    "ok": false,
+    "candidate": {
+      "name": "",
+      "cron": "",
+      "period": 0,
+      "code": ""
+    },
+    "error_type": "worker_crash",
+    "repair_applied": false,
+    "repair_actions": [],
+    "error": "name 'prompt_tokens' is not defined"
+  },
+  "service_context": {
+    "service_schema_path": "datasets/service_list_ver2.0.1.json",
+    "service_context_mode": "schema_fallback",
+    "service_context_source": "provided_schema",
+    "service_list_retrieval_scores": {
+      "status": "retrieval_disabled",
+      "reason": "canonical ga_search has not enabled service retrieval yet"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "llm_mode": "worker",
+  "candidate": {
+    "name": "",
+    "cron": "",
+    "period": 0,
+    "code": ""
+  },
+  "generation_error_type": "worker_crash",
+  "backend_response": {
+    "content": "",
+    "usage": {
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0
+    },
+    "latency_sec": 16.255669,
+    "peak_vram_gb": "",
+    "raw": {
+      "ok": false,
+      "error": "",
+      "error_type": "worker_crash",
+      "oom_flag": false,
+      "traceback": "Traceback (most recent call last):\n  File \"/home/mgjeong/miniconda3/envs/joi/lib/python3.10/site-packages/transformers/tokenization_utils_base.py\", line 287, in __getattr__\n    return self.data[item]\nKeyError: 'shape'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13/qwen_local_worker.py\", line 296, in main\n    generated = model.generate(\n  File \"/home/mgjeong/miniconda3/envs/joi/lib/python3.10/site-packages/torch/utils/_contextlib.py\", line 116, in decorate_context\n    return func(*args, **kwargs)\n  File \"/home/mgjeong/miniconda3/envs/joi/lib/python3.10/site-packages/transformers/generation/utils.py\", line 2439, in generate\n    batch_size = inputs_tensor.shape[0]\n  File \"/home/mgjeong/miniconda3/envs/joi/lib/python3.10/site-packages/transformers/tokenization_utils_base.py\", line 289, in __getattr__\n    raise AttributeError\nAttributeError\n"
+    },
+    "backend": "worker",
+    "error": "worker failed",
+    "error_type": "worker_crash"
+  },
+  "repair": {
+    "ok": false,
+    "candidate": {
+      "name": "",
+      "cron": "",
+      "period": 0,
+      "code": ""
+    },
+    "error_type": "worker_crash",
+    "repair_applied": false,
+    "repair_actions": [],
+    "error": "worker failed"
+  },
+  "service_context": {
+    "service_schema_path": "/home/mgjeong/Desktop/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_context_mode": "schema_fallback",
+    "service_context_source": "provided_schema",
+    "service_list_retrieval_scores": {
+      "status": "retrieval_disabled",
+      "reason": "canonical ga_search has not enabled service retrieval yet"
+    }
+  }
+}

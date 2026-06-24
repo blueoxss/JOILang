@@ -1,0 +1,10 @@
+{
+  "run_root": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/full_det_qwen25_coder_7b_allrows_20260624_021859",
+  "model_key": "qwen25_coder_7b",
+  "suite_summary": {},
+  "model_summary": {},
+  "candidate_rows": 0,
+  "eval_rows": 0,
+  "failure_rows": 0,
+  "export_dir": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/full_det_qwen25_coder_7b_allrows_20260624_021859/excel_exports"
+}

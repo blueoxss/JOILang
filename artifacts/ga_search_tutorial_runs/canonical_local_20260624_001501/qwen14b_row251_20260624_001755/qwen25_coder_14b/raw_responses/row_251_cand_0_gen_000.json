@@ -1,0 +1,85 @@
+{
+  "llm_mode": "worker",
+  "candidate": {
+    "name": "",
+    "cron": "",
+    "period": 0,
+    "code": ""
+  },
+  "generation_error_type": "invalid_json",
+  "backend_response": {
+    "content": "{\n  \"name\": \"MidnightDoorAndLightControl\",\n  \"cron\": \"0 0 * * *\",\n  \"period\": 3600000,\n  \"code\": \"\n    if ((#Clock).clock_hour >= 6) {\n      break\n    }\n    (#Door).door_close()\n    lightBrightness = (#LightSensor).lightLevel_light\n    if (lightBrightness > 30) {\n      (#Light).switchLevel_setLevel(10)\n    }\n  \"\n}",
+    "usage": {
+      "prompt_tokens": 53156,
+      "completion_tokens": 113,
+      "total_tokens": 0
+    },
+    "latency_sec": 56.20139,
+    "peak_vram_gb": 43.4172,
+    "raw": {
+      "ok": true,
+      "content": "{\n  \"name\": \"MidnightDoorAndLightControl\",\n  \"cron\": \"0 0 * * *\",\n  \"period\": 3600000,\n  \"code\": \"\n    if ((#Clock).clock_hour >= 6) {\n      break\n    }\n    (#Door).door_close()\n    lightBrightness = (#LightSensor).lightLevel_light\n    if (lightBrightness > 30) {\n      (#Light).switchLevel_setLevel(10)\n    }\n  \"\n}",
+      "prompt_tokens": 53156,
+      "completion_tokens": 113,
+      "prompt_prep_sec": 0.1668,
+      "generate_sec": 39.3536,
+      "decode_sec": 0.0005,
+      "total_worker_sec": 51.9336,
+      "worker_pid": 4099223,
+      "load_sec": 11.7173,
+      "load_peak_vram_bytes": 29540483072,
+      "load_peak_vram_gb": 27.5117,
+      "peak_vram_bytes": 46618856448,
+      "peak_vram_gb": 43.4172,
+      "peak_vram_by_device": {
+        "0": 46618856448
+      }
+    },
+    "backend": "worker",
+    "request": {
+      "worker_path": "/home/mgjeong/Desktop/llm/JOILang-Server/utils/ga_search/local_worker.py",
+      "worker_python": "/home/mgjeong/miniconda3/envs/joi/bin/python3.10",
+      "payload": {
+        "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+        "local_model_name": "/data/mgjeong/cache/huggingface/hub/models--Qwen--Qwen2.5-Coder-14B-Instruct/snapshots/aedcc2d42b622764e023cf882b6652e646b95671",
+        "local_device": "cuda:0",
+        "local_dtype": "bf16",
+        "local_max_new_tokens": 512,
+        "local_files_only": true,
+        "local_trust_remote_code": true,
+        "local_load_in_4bit": false,
+        "local_worker": "/home/mgjeong/Desktop/llm/JOILang-Server/utils/ga_search/local_worker.py"
+      }
+    }
+  },
+  "repair": {
+    "ok": false,
+    "error_type": "invalid_json",
+    "candidate": {
+      "name": "",
+      "cron": "",
+      "period": 0,
+      "code": ""
+    },
+    "before": "{\n  \"name\": \"MidnightDoorAndLightControl\",\n  \"cron\": \"0 0 * * *\",\n  \"period\": 3600000,\n  \"code\": \"\n    if ((#Clock).clock_hour >= 6) {\n      break\n    }\n    (#Door).door_close()\n    lightBrightness = (#LightSensor).lightLevel_light\n    if (lightBrightness > 30) {\n      (#Light).switchLevel_setLevel(10)\n    }\n  \"\n}",
+    "after": "{\n  \"name\": \"MidnightDoorAndLightControl\",\n  \"cron\": \"0 0 * * *\",\n  \"period\": 3600000,\n  \"code\": \"\n    if ((#Clock).clock_hour >= 6) {\n      break\n    }\n    (#Door).door_close()\n    lightBrightness = (#LightSensor).lightLevel_light\n    if (lightBrightness > 30) {\n      (#Light).switchLevel_setLevel(10)\n    }\n  \"\n}",
+    "repair_applied": false,
+    "repair_actions": [],
+    "missing_required_keys": [
+      "name",
+      "cron",
+      "period",
+      "code"
+    ],
+    "error": "Invalid control character at: line 5 column 12 (char 98)"
+  },
+  "service_context": {
+    "service_schema_path": "datasets/service_list_ver2.0.1.json",
+    "service_context_mode": "schema_fallback",
+    "service_context_source": "provided_schema",
+    "service_list_retrieval_scores": {
+      "status": "retrieval_disabled",
+      "reason": "canonical ga_search has not enabled service retrieval yet"
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "llm_mode": "worker",
+  "candidate": {
+    "name": "MeetingRoomAction",
+    "cron": "",
+    "period": -1,
+    "code": "if ((#MeetingRoomDoor).doorControl_door == \"closed\") {\n  wait until ((#MeetingRoomDoor).doorControl_door == \"closed\")\n  wait until (#Clock).clock_delay(3000)\n  (#MeetingRoomCamera).camera_take()\n}"
+  },
+  "generation_error_type": "",
+  "backend_response": {
+    "content": "{\n  \"name\": \"MeetingRoomAction\",\n  \"cron\": \"\",\n  \"period\": -1,\n  \"code\": \"if ((#MeetingRoomDoor).doorControl_door == \\\"closed\\\") {\\n  wait until ((#MeetingRoomDoor).doorControl_door == \\\"closed\\\")\\n  wait until (#Clock).clock_delay(3000)\\n  (#MeetingRoomCamera).camera_take()\\n}\"\n}",
+    "usage": {
+      "prompt_tokens": 53141,
+      "completion_tokens": 93,
+      "total_tokens": 0
+    },
+    "latency_sec": 28.201498,
+    "peak_vram_gb": 24.1057,
+    "raw": {
+      "ok": true,
+      "content": "{\n  \"name\": \"MeetingRoomAction\",\n  \"cron\": \"\",\n  \"period\": -1,\n  \"code\": \"if ((#MeetingRoomDoor).doorControl_door == \\\"closed\\\") {\\n  wait until ((#MeetingRoomDoor).doorControl_door == \\\"closed\\\")\\n  wait until (#Clock).clock_delay(3000)\\n  (#MeetingRoomCamera).camera_take()\\n}\"\n}",
+      "prompt_tokens": 53141,
+      "completion_tokens": 93,
+      "prompt_prep_sec": 0.1629,
+      "generate_sec": 17.3462,
+      "decode_sec": 0.0004,
+      "total_worker_sec": 24.3694,
+      "worker_pid": 222341,
+      "load_sec": 6.3176,
+      "load_peak_vram_bytes": 15232282624,
+      "load_peak_vram_gb": 14.1862,
+      "peak_vram_bytes": 25883265024,
+      "peak_vram_gb": 24.1057,
+      "peak_vram_by_device": {
+        "0": 25883265024
+      }
+    },
+    "backend": "worker",
+    "request": {
+      "worker_path": "/home/mgjeong/Desktop/llm/JOILang-Server/utils/ga_search/local_worker.py",
+      "worker_python": "/home/mgjeong/miniconda3/envs/joi/bin/python3.10",
+      "payload": {
+        "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+        "local_model_name": "/data/mgjeong/cache/huggingface/hub/models--Qwen--Qwen2.5-Coder-7B-Instruct/snapshots/c03e6d358207e414f1eca0bb1891e29f1db0e242",
+        "local_device": "cuda:0",
+        "local_dtype": "bf16",
+        "local_max_new_tokens": 512,
+        "local_files_only": true,
+        "local_trust_remote_code": true,
+        "local_load_in_4bit": false,
+        "local_worker": "/home/mgjeong/Desktop/llm/JOILang-Server/utils/ga_search/local_worker.py"
+      }
+    }
+  },
+  "repair": {
+    "ok": true,
+    "error_type": "",
+    "candidate": {
+      "name": "MeetingRoomAction",
+      "cron": "",
+      "period": -1,
+      "code": "if ((#MeetingRoomDoor).doorControl_door == \"closed\") {\n  wait until ((#MeetingRoomDoor).doorControl_door == \"closed\")\n  wait until (#Clock).clock_delay(3000)\n  (#MeetingRoomCamera).camera_take()\n}"
+    },
+    "before": "{\n  \"name\": \"MeetingRoomAction\",\n  \"cron\": \"\",\n  \"period\": -1,\n  \"code\": \"if ((#MeetingRoomDoor).doorControl_door == \\\"closed\\\") {\\n  wait until ((#MeetingRoomDoor).doorControl_door == \\\"closed\\\")\\n  wait until (#Clock).clock_delay(3000)\\n  (#MeetingRoomCamera).camera_take()\\n}\"\n}",
+    "after": "{\"name\": \"MeetingRoomAction\", \"cron\": \"\", \"period\": -1, \"code\": \"if ((#MeetingRoomDoor).doorControl_door == \\\"closed\\\") {\\n  wait until ((#MeetingRoomDoor).doorControl_door == \\\"closed\\\")\\n  wait until (#Clock).clock_delay(3000)\\n  (#MeetingRoomCamera).camera_take()\\n}\"}",
+    "repair_applied": false,
+    "repair_actions": [],
+    "missing_required_keys": []
+  },
+  "service_context": {
+    "service_schema_path": "datasets/service_list_ver2.0.1.json",
+    "service_context_mode": "schema_fallback",
+    "service_context_source": "provided_schema",
+    "service_list_retrieval_scores": {
+      "status": "retrieval_disabled",
+      "reason": "canonical ga_search has not enabled service retrieval yet"
+    }
+  }
+}

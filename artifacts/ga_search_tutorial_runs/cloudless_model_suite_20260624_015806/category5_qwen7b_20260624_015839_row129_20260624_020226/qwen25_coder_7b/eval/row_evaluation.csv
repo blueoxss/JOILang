@@ -1,0 +1,18 @@
+﻿row_no,category,genome_id,candidate_index,det_score,det_pass,gt_exact,gt_similarity,schedule_match,cron_match,period_match,code_match,service_valid,receiver_valid,gt_service_coverage,gt_service_precision,gt_receiver_coverage,dataflow_score,numeric_grounding,enum_grounding,failure_reasons,diff_summary,gt_code,generated_code,gt_json,generated_json,generation,candidate_strategy,generation_error_type,generation_error_count,generation_prompt_tokens_total,generation_completion_tokens_total,generation_total_tokens_total,latency_sec,peak_vram_gb,raw_response_path,prompt_log_paths,service_schema_path,service_context_mode,service_context_source,service_list_retrieval_scores,repair_applied,repair_actions,backend
+129,5,suite_base,0,66.3409,False,False,0.636364,False,True,False,False,False,False,0.75,0.6,0.75,1.0,1.0,0.0,"[""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""enum_grounding""]","{""gt_services"":[""door_close"",""door_open"",""rainsensor_rain"",""weatherprovider_weather""],""generated_services"":[""clock_hour"",""door_close"",""door_open"",""rainsensor_rain""],""gt_receivers"":[""#Door"",""(#RainSensor"",""(#WeatherProvider""],""generated_receivers"":[""#Door"",""(#Clock"",""(#RainSensor""],""gt_numeric_literals"":[""1""],""generated_numeric_literals"":[""1""],""gt_string_args"":[""rain""],""generated_string_args"":[]}","
+wait until ((#RainSensor).rainsensor_rain == true)
+
+(#Door).door_close()
+delay(1 HOUR)
+
+if ((#WeatherProvider).weatherprovider_weather != ""rain"") {
+
+    (#Door).door_open()
+
+}","if ((#RainSensor).rainsensor_rain == true) {
+  (#Door).door_close()
+  wait until ((#Clock).clock_hour == 1)
+  if ((#RainSensor).rainsensor_rain == false) {
+    (#Door).door_open()
+  }
+}","{""name"":"""",""cron"":"""",""period"":0,""script"":""\nwait until ((#RainSensor).rainsensor_rain == true)\n\n(#Door).door_close()\ndelay(1 HOUR)\n\nif ((#WeatherProvider).weatherprovider_weather != \""rain\"") {\n\n    (#Door).door_open()\n\n}""}","{""name"":""RainTrigger"",""cron"":"""",""period"":-1,""code"":""if ((#RainSensor).rainsensor_rain == true) {\n  (#Door).door_close()\n  wait until ((#Clock).clock_hour == 1)\n  if ((#RainSensor).rainsensor_rain == false) {\n    (#Door).door_open()\n  }\n}""}",0,worker_direct,,0,53149,99,0,28.493375,24.107,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_015806/category5_qwen7b_20260624_015839_row129_20260624_020226/qwen25_coder_7b/raw_responses/row_129_cand_0_gen_000.json,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_015806/category5_qwen7b_20260624_015839_row129_20260624_020226/qwen25_coder_7b/prompts/row_129_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_015806/category5_qwen7b_20260624_015839_row129_20260624_020226/qwen25_coder_7b/prompts/row_129_cand_0_gen_000.json""]",datasets/service_list_ver2.0.1.json,schema_fallback,provided_schema,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",False,[],worker

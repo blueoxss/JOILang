@@ -1,0 +1,12 @@
+{
+  "rows": 1,
+  "det_pass_rate": 0.0,
+  "avg_det_score": 46.3158,
+  "generation_error_rate": 0.0,
+  "official_metric": "strict_det",
+  "ground_truth_column": "gt",
+  "cloud_is_auxiliary": true,
+  "service_context_sources": [
+    "provided_schema"
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "llm_mode": "worker",
+  "candidate": {
+    "name": "CloseAndOpenBlinds",
+    "cron": "",
+    "period": 7200000,
+    "code": "if ((#Blind #Bedroom).windowShade_currentposition == 0) {\n  (#Blind #Bedroom).windowShade_close()\n  wait until ((#Blind #Bedroom).windowShade_currentposition == 0)\n  (#Blind #Bedroom).windowShade_open()\n}"
+  },
+  "generation_error_type": "",
+  "backend_response": {
+    "content": "{\n  \"name\": \"CloseAndOpenBlinds\",\n  \"cron\": \"\",\n  \"period\": 7200000,\n  \"code\": \"if ((#Blind #Bedroom).windowShade_currentposition == 0) {\\n  (#Blind #Bedroom).windowShade_close()\\n  wait until ((#Blind #Bedroom).windowShade_currentposition == 0)\\n  (#Blind #Bedroom).windowShade_open()\\n}\"\n}",
+    "usage": {
+      "prompt_tokens": 53137,
+      "completion_tokens": 111,
+      "total_tokens": 0
+    },
+    "latency_sec": 29.411633,
+    "peak_vram_gb": 24.105,
+    "raw": {
+      "ok": true,
+      "content": "{\n  \"name\": \"CloseAndOpenBlinds\",\n  \"cron\": \"\",\n  \"period\": 7200000,\n  \"code\": \"if ((#Blind #Bedroom).windowShade_currentposition == 0) {\\n  (#Blind #Bedroom).windowShade_close()\\n  wait until ((#Blind #Bedroom).windowShade_currentposition == 0)\\n  (#Blind #Bedroom).windowShade_open()\\n}\"\n}",
+      "prompt_tokens": 53137,
+      "completion_tokens": 111,
+      "prompt_prep_sec": 0.1711,
+      "generate_sec": 18.1181,
+      "decode_sec": 0.0004,
+      "total_worker_sec": 25.4429,
+      "worker_pid": 208190,
+      "load_sec": 6.5952,
+      "load_peak_vram_bytes": 15232282624,
+      "load_peak_vram_gb": 14.1862,
+      "peak_vram_bytes": 25882597376,
+      "peak_vram_gb": 24.105,
+      "peak_vram_by_device": {
+        "0": 25882597376
+      }
+    },
+    "backend": "worker",
+    "request": {
+      "worker_path": "/home/mgjeong/Desktop/llm/JOILang-Server/utils/ga_search/local_worker.py",
+      "worker_python": "/home/mgjeong/miniconda3/envs/joi/bin/python3.10",
+      "payload": {
+        "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+        "local_model_name": "/data/mgjeong/cache/huggingface/hub/models--Qwen--Qwen2.5-Coder-7B-Instruct/snapshots/c03e6d358207e414f1eca0bb1891e29f1db0e242",
+        "local_device": "cuda:0",
+        "local_dtype": "bf16",
+        "local_max_new_tokens": 512,
+        "local_files_only": true,
+        "local_trust_remote_code": true,
+        "local_load_in_4bit": false,
+        "local_worker": "/home/mgjeong/Desktop/llm/JOILang-Server/utils/ga_search/local_worker.py"
+      }
+    }
+  },
+  "repair": {
+    "ok": true,
+    "error_type": "",
+    "candidate": {
+      "name": "CloseAndOpenBlinds",
+      "cron": "",
+      "period": 7200000,
+      "code": "if ((#Blind #Bedroom).windowShade_currentposition == 0) {\n  (#Blind #Bedroom).windowShade_close()\n  wait until ((#Blind #Bedroom).windowShade_currentposition == 0)\n  (#Blind #Bedroom).windowShade_open()\n}"
+    },
+    "before": "{\n  \"name\": \"CloseAndOpenBlinds\",\n  \"cron\": \"\",\n  \"period\": 7200000,\n  \"code\": \"if ((#Blind #Bedroom).windowShade_currentposition == 0) {\\n  (#Blind #Bedroom).windowShade_close()\\n  wait until ((#Blind #Bedroom).windowShade_currentposition == 0)\\n  (#Blind #Bedroom).windowShade_open()\\n}\"\n}",
+    "after": "{\"name\": \"CloseAndOpenBlinds\", \"cron\": \"\", \"period\": 7200000, \"code\": \"if ((#Blind #Bedroom).windowShade_currentposition == 0) {\\n  (#Blind #Bedroom).windowShade_close()\\n  wait until ((#Blind #Bedroom).windowShade_currentposition == 0)\\n  (#Blind #Bedroom).windowShade_open()\\n}\"}",
+    "repair_applied": false,
+    "repair_actions": [],
+    "missing_required_keys": []
+  },
+  "service_context": {
+    "service_schema_path": "datasets/service_list_ver2.0.1.json",
+    "service_context_mode": "schema_fallback",
+    "service_context_source": "provided_schema",
+    "service_list_retrieval_scores": {
+      "status": "retrieval_disabled",
+      "reason": "canonical ga_search has not enabled service retrieval yet"
+    }
+  }
+}

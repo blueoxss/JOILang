@@ -1,0 +1,45 @@
+{
+  "llm_mode": "mock",
+  "candidate": {
+    "name": "",
+    "cron": "",
+    "period": 0,
+    "code": "\nif ((#Bathroom #HumiditySensor).humiditysensor_humidity >= 85 and (#Bathroom #Door).door_doorstate == \"closed\") {\n\n    (#Bathroom #Light).switch_on()\n\n    (#Bathroom #Door).door_open()\n\n}"
+  },
+  "generation_error_type": "",
+  "backend_response": {
+    "content": "{\"name\": \"\", \"cron\": \"\", \"period\": 0, \"code\": \"\\nif ((#Bathroom #HumiditySensor).humiditysensor_humidity >= 85 and (#Bathroom #Door).door_doorstate == \\\"closed\\\") {\\n\\n    (#Bathroom #Light).switch_on()\\n\\n    (#Bathroom #Door).door_open()\\n\\n}\"}",
+    "usage": {
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0
+    },
+    "latency_sec": 0.0,
+    "peak_vram_gb": "",
+    "raw": {
+      "mock": true
+    },
+    "backend": "mock"
+  },
+  "repair": {
+    "ok": true,
+    "candidate": {
+      "name": "",
+      "cron": "",
+      "period": 0,
+      "code": "\nif ((#Bathroom #HumiditySensor).humiditysensor_humidity >= 85 and (#Bathroom #Door).door_doorstate == \"closed\") {\n\n    (#Bathroom #Light).switch_on()\n\n    (#Bathroom #Door).door_open()\n\n}"
+    },
+    "error_type": "",
+    "repair_applied": false,
+    "repair_actions": []
+  },
+  "service_context": {
+    "service_schema_path": "/home/mgjeong/Desktop/llm/JOILang-Server/datasets/service_list_ver2.0.1.json",
+    "service_context_mode": "schema_fallback",
+    "service_context_source": "provided_schema",
+    "service_list_retrieval_scores": {
+      "status": "retrieval_disabled",
+      "reason": "canonical ga_search has not enabled service retrieval yet"
+    }
+  }
+}
