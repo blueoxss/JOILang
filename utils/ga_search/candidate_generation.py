@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import csv
 import json
+import re
 import time
 from pathlib import Path
 from typing import Any
@@ -50,9 +51,21 @@ def _write_raw_response(path: Path, payload: Any) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
-def _write_prompt_logs(prompt_dir: Path, row_no: int, candidate_index: int, generation: int, rendered_package: dict[str, Any]) -> list[str]:
+def _safe_token(value: Any, default: str = "item") -> str:
+    token = re.sub(r"[^A-Za-z0-9_.-]+", "_", str(value or "").strip()).strip("_")
+    return token or default
+
+
+def _write_prompt_logs(
+    prompt_dir: Path,
+    row_no: int,
+    candidate_index: int,
+    generation: int,
+    genome_id: str,
+    rendered_package: dict[str, Any],
+) -> list[str]:
     prompt_dir.mkdir(parents=True, exist_ok=True)
-    stem = f"row_{row_no}_cand_{candidate_index}_gen_{generation:03d}"
+    stem = f"row_{row_no}_{_safe_token(genome_id, 'genome')}_cand_{candidate_index}_gen_{generation:03d}"
     md_path = prompt_dir / f"{stem}.md"
     json_path = prompt_dir / f"{stem}.json"
     md_path.write_text(str(rendered_package.get("prompt_text") or ""), encoding="utf-8")
@@ -135,7 +148,7 @@ def generate_candidates_for_rows(
     extra_payload = llm_extra or {}
     for row_no, row in rows:
         for candidate_index in range(max(1, candidate_k)):
-            prompt_log_paths = _write_prompt_logs(prompt_dir, row_no, candidate_index, generation, rendered_package)
+            prompt_log_paths = _write_prompt_logs(prompt_dir, row_no, candidate_index, generation, genome_id, rendered_package)
             started = time.perf_counter()
             generation_error_type = ""
             generation_error_count = 0
@@ -201,7 +214,7 @@ def generate_candidates_for_rows(
                         "error": str(last_error),
                     }
             latency = time.perf_counter() - started
-            raw_response_path = raw_dir / f"row_{row_no}_cand_{candidate_index}_gen_{generation:03d}.json"
+            raw_response_path = raw_dir / f"row_{row_no}_{_safe_token(genome_id, 'genome')}_cand_{candidate_index}_gen_{generation:03d}.json"
             usage = _raw_usage(backend_response)
             _write_raw_response(
                 raw_response_path,

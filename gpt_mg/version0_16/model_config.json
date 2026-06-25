@@ -1,31 +1,36 @@
 {
-  "model_name": "gen_baseline_cot",
+  "model_name": "dynamic_atomic_block_space",
   "device_name": "qwen2.5-Coder-7B-Instruct",
-  "model_version": "0.13",
-  "model_description": "Baseline-CoT full-context JOILang prompting profile for single-call gpt_mg execution. Uses full grammar and full service catalogs, requires hidden step-by-step reasoning, and returns JSON-only for parser compatibility.",
-  "model_create": "2026-03-27",
+  "model_version": "0.16",
+  "model_description": "Generation-dynamic atomic prompt block-space JOILang package. The canonical prompt source is segmented into generation-local semantic atoms; genomes reference block_space_id plus active atom IDs rather than permanent fixed block IDs.",
+  "model_create": "2026-06-24",
   "author": {
     "first_name": "Mingi",
     "last_name": "Jeong"
   },
   "prompt_render": {
-    "mode": "monolith",
+    "mode": "blocks",
     "loader": "config_loader.py",
     "loader_function": "load_version_config",
-    "merged_prompt_output": "merged_system_prompt.md"
+    "source_prompt": "prompts/source/merged_system_prompt_260413.md",
+    "default_manifest": "registries/generation_block_space_g000.json",
+    "default_genome": "genomes/base_genome_g000.json",
+    "supports_dynamic_block_space": true,
+    "local_ids_are_generation_specific": true,
+    "seed_block_count_is_not_fixed_api": true
   },
   "model_input": {
     "model": "qwen2.5-Coder-7B-Instruct",
-    "backend": "local_qwen",
+    "backend": "local_worker",
     "local_model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
-    "local_python": "/home/mgjeong/miniconda3/envs/nas_new/bin/python",
-    "local_worker": "/home/mgjeong/Desktop/llm/ModelMagementApp/gpt_mg/version0_13/qwen_local_worker.py",
+    "local_python": "/root/llm/je/bin/python",
+    "local_worker": "utils/ga_search/local_worker.py",
     "temperature": 0.0,
-    "local_device": "cuda:1",
+    "local_device": "cuda:0",
     "local_dtype": "bf16",
-    "local_max_new_tokens": 256,
+    "local_max_new_tokens": 1024,
     "local_files_only": true,
-    "local_trust_remote_code": false,
+    "local_trust_remote_code": true,
     "local_load_in_4bit": false,
     "messages": [
       {

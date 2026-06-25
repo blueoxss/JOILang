@@ -1,0 +1,857 @@
+{
+  "generation": 1,
+  "block_space_id": "seg_001",
+  "source_prompt": "prompts/source/merged_system_prompt_260413.md",
+  "segmentation_method": "deterministic_fixture_merge_seed_atoms",
+  "created_from": {
+    "source_file": "merged_system_prompt_260413.md",
+    "source_hash": "sha256:a16344fe21113c7441d821281bd4f3b61b3aa83826368f351d0d5c7e7a94bb4e",
+    "parent_block_space_id": "seg_000"
+  },
+  "local_ids_are_generation_specific": true,
+  "seed_segmentation_only": false,
+  "atoms": [
+    {
+      "local_id": "00",
+      "name": "contract_core",
+      "semantic_family": "Contract",
+      "semantic_role": "contract_core",
+      "behavior_tags": [
+        "role",
+        "task_scope",
+        "json_only",
+        "required_keys",
+        "valid_json"
+      ],
+      "source_span": {
+        "start_line": 1,
+        "end_line": 40
+      },
+      "content_hash": "sha256:c5906465b3eccad76f3b509568a03cd154e7c9f6258b858d91f7bf1eb901bcc2",
+      "path": "blocks/generated/g001/00_contract_core.md",
+      "required": true,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": false,
+      "order_group": "contract",
+      "render_order": 0,
+      "lineage": {
+        "op": "merge",
+        "parents": [
+          "g000_00",
+          "g000_01"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "missing_generated_code",
+        "invalid_json",
+        "missing_required_key"
+      ]
+    },
+    {
+      "local_id": "01",
+      "name": "schema_authority_and_service_names",
+      "semantic_family": "Service_Grounding",
+      "semantic_role": "schema_authority_and_service_names",
+      "behavior_tags": [
+        "schema_authority",
+        "service_schema",
+        "canonical_name",
+        "canonical_service_name",
+        "no_invented_service",
+        "member_lowercase"
+      ],
+      "source_span": {
+        "start_line": 33,
+        "end_line": 3887
+      },
+      "content_hash": "sha256:b65674bf6ca9e766c3fbdb7160c0d418b20afd36b7263c47c6da8e18260f6f4a",
+      "path": "blocks/generated/g001/01_schema_authority_and_service_names.md",
+      "required": true,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "service_grounding",
+      "render_order": 1,
+      "lineage": {
+        "op": "merge",
+        "parents": [
+          "g000_05",
+          "g000_06"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "unknown_service",
+        "gt_service_coverage",
+        "service_match"
+      ]
+    },
+    {
+      "local_id": "02",
+      "name": "receiver_and_connected_scope",
+      "semantic_family": "Receiver_Grounding",
+      "semantic_role": "receiver_and_connected_scope",
+      "behavior_tags": [
+        "receiver_tag",
+        "selector_tag",
+        "uppercase_tag",
+        "connected_devices",
+        "selector_tags",
+        "schema_fallback",
+        "any_all",
+        "group_receiver",
+        "all_receiver",
+        "owner",
+        "location"
+      ],
+      "source_span": {
+        "start_line": 17,
+        "end_line": 3921
+      },
+      "content_hash": "sha256:073510af01e5b3d76a28b1ad326fa3f2c8ecdac575e9e9c73ca44fb10e9e4319",
+      "path": "blocks/generated/g001/02_receiver_and_connected_scope.md",
+      "required": true,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "receiver_grounding",
+      "render_order": 2,
+      "lineage": {
+        "op": "merge",
+        "parents": [
+          "g000_03",
+          "g000_04",
+          "g000_18",
+          "g000_19"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "gt_receiver_coverage",
+        "receiver",
+        "unknown_service"
+      ]
+    },
+    {
+      "local_id": "03",
+      "name": "joi_syntax_and_output",
+      "semantic_family": "Grammar",
+      "semantic_role": "joi_syntax_and_output",
+      "behavior_tags": [
+        "joi_syntax",
+        "allowed_constructs",
+        "no_while",
+        "repair_contract",
+        "empty_code_if_unsafe",
+        "retry"
+      ],
+      "source_span": {
+        "start_line": 85,
+        "end_line": 4018
+      },
+      "content_hash": "sha256:c12bf41de2d1d835565f52b9f6d02f944f9d397a5fc4f455035b13a89c4490c8",
+      "path": "blocks/generated/g001/03_joi_syntax_and_output.md",
+      "required": true,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "grammar",
+      "render_order": 3,
+      "lineage": {
+        "op": "merge",
+        "parents": [
+          "g000_02",
+          "g000_22"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "invalid_json",
+        "missing_generated_code",
+        "gt_mismatch"
+      ]
+    },
+    {
+      "local_id": "04",
+      "name": "temporal_cron_period",
+      "semantic_family": "Temporal",
+      "semantic_role": "temporal_cron_period",
+      "behavior_tags": [
+        "cron",
+        "schedule",
+        "wall_clock",
+        "period",
+        "monitoring",
+        "polling"
+      ],
+      "source_span": {
+        "start_line": 63,
+        "end_line": 68
+      },
+      "content_hash": "sha256:75b24837c539d95bb1ae9f5adf1b0e336050edfe90b6a3d896d372634053de9c",
+      "path": "blocks/generated/g001/04_temporal_cron_period.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "temporal",
+      "render_order": 4,
+      "lineage": {
+        "op": "merge",
+        "parents": [
+          "g000_11",
+          "g000_12"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "cron_mismatch",
+        "numeric_grounding",
+        "period_mismatch",
+        "loop_policy_error"
+      ]
+    },
+    {
+      "local_id": "05",
+      "name": "delay_wait_break",
+      "semantic_family": "Temporal",
+      "semantic_role": "delay_wait_break",
+      "behavior_tags": [
+        "delay",
+        "wait_until",
+        "one_shot_trigger",
+        "loop_constraints",
+        "break_policy",
+        "no_unsupported_while"
+      ],
+      "source_span": {
+        "start_line": 3934,
+        "end_line": 3940
+      },
+      "content_hash": "sha256:1cb41d2867964915ada3541e5506dd17236c9771aba433d6fe6a75002c74ca90",
+      "path": "blocks/generated/g001/05_delay_wait_break.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "temporal",
+      "render_order": 5,
+      "lineage": {
+        "op": "merge",
+        "parents": [
+          "g000_13",
+          "g000_14"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "cron_mismatch",
+        "period_mismatch",
+        "gt_mismatch",
+        "loop_policy_error"
+      ]
+    },
+    {
+      "local_id": "06",
+      "name": "event_and_snapshot_skeletons",
+      "semantic_family": "Control_Flow",
+      "semantic_role": "event_and_snapshot_skeletons",
+      "behavior_tags": [
+        "edge_trigger",
+        "prev_curr",
+        "triggered_state",
+        "snapshot",
+        "recheck",
+        "delay"
+      ],
+      "source_span": {
+        "start_line": 66,
+        "end_line": 68
+      },
+      "content_hash": "sha256:a93d3b620d6ddf60f718b967cb242b817f5faef81c5052840b1d8c48304f52a6",
+      "path": "blocks/generated/g001/06_event_and_snapshot_skeletons.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "control_flow",
+      "render_order": 6,
+      "lineage": {
+        "op": "merge",
+        "parents": [
+          "g000_15",
+          "g000_16"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "gt_mismatch",
+        "period_mismatch",
+        "dataflow"
+      ]
+    },
+    {
+      "local_id": "07",
+      "name": "value_function_dataflow",
+      "semantic_family": "Dataflow",
+      "semantic_role": "value_function_dataflow",
+      "behavior_tags": [
+        "function_service",
+        "value_service",
+        "sensor_action",
+        "read_bind_use",
+        "variable_scope",
+        "actuator_target",
+        "read_vs_act"
+      ],
+      "source_span": {
+        "start_line": 41,
+        "end_line": 3941
+      },
+      "content_hash": "sha256:e0ee8d9f19ee6103e583f12fbc309261052b480129eaba46dffa18366f30cc61",
+      "path": "blocks/generated/g001/07_value_function_dataflow.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "dataflow",
+      "render_order": 7,
+      "lineage": {
+        "op": "merge",
+        "parents": [
+          "g000_07",
+          "g000_17",
+          "g000_20"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "gt_service_coverage",
+        "unknown_service",
+        "dataflow"
+      ]
+    },
+    {
+      "local_id": "08",
+      "name": "numeric_enum_arguments",
+      "semantic_family": "Argument_Grounding",
+      "semantic_role": "numeric_enum_arguments",
+      "behavior_tags": [
+        "argument_type",
+        "argument_order",
+        "bounds",
+        "enum_value",
+        "allowed_values",
+        "numeric_value",
+        "unit_conversion"
+      ],
+      "source_span": {
+        "start_line": 50,
+        "end_line": 3928
+      },
+      "content_hash": "sha256:dae4477a18124553fc556f585a5a446e73c990ffe002bb3a166e4e640b663b6c",
+      "path": "blocks/generated/g001/08_numeric_enum_arguments.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "argument_grounding",
+      "render_order": 8,
+      "lineage": {
+        "op": "merge",
+        "parents": [
+          "g000_08",
+          "g000_09",
+          "g000_10"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "arg_type",
+        "numeric_grounding",
+        "enum_grounding",
+        "unknown_service"
+      ]
+    },
+    {
+      "local_id": "09",
+      "name": "minimality",
+      "semantic_family": "Minimality",
+      "semantic_role": "minimality",
+      "behavior_tags": [
+        "minimality",
+        "no_extraneous",
+        "smallest_program"
+      ],
+      "source_span": {
+        "start_line": 3929,
+        "end_line": 3933
+      },
+      "content_hash": "sha256:1ea050f2e2b7e594aa20a40d9c145aa54dd823d19853411f0a16e9ae2acba60b",
+      "path": "blocks/generated/g001/09_minimality.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "minimality",
+      "render_order": 9,
+      "lineage": {
+        "op": "rewrite",
+        "parents": [
+          "g000_21"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "extraneous",
+        "gt_mismatch"
+      ]
+    },
+    {
+      "local_id": "10",
+      "name": "det_self_check",
+      "semantic_family": "DET_Self_Check",
+      "semantic_role": "det_self_check",
+      "behavior_tags": [
+        "self_check",
+        "schema_match",
+        "semantic_diff"
+      ],
+      "source_span": {
+        "start_line": 3946,
+        "end_line": 3955
+      },
+      "content_hash": "sha256:9dfa6a09b0a4dc1b108e02eae1f29b6d9020b50fc5db039e9cece3eb05cd8b39",
+      "path": "blocks/generated/g001/10_det_self_check.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "det_self_check",
+      "render_order": 10,
+      "lineage": {
+        "op": "rewrite",
+        "parents": [
+          "g000_23"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "gt_mismatch",
+        "unknown_service",
+        "numeric_grounding",
+        "enum_grounding"
+      ]
+    },
+    {
+      "local_id": "11",
+      "name": "language_preservation",
+      "semantic_family": "Language",
+      "semantic_role": "language_preservation",
+      "behavior_tags": [
+        "korean",
+        "literal_preservation",
+        "speaker_text"
+      ],
+      "source_span": {
+        "start_line": 73,
+        "end_line": 74
+      },
+      "content_hash": "sha256:dc6faa18d19665a17453ab0bdb9164e1483a561886e6cba0ea0cd66534fbb934",
+      "path": "blocks/generated/g001/11_language_preservation.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "language",
+      "render_order": 11,
+      "lineage": {
+        "op": "rewrite",
+        "parents": [
+          "g000_24"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "gt_mismatch",
+        "semantic"
+      ]
+    },
+    {
+      "local_id": "12",
+      "name": "domain_cases",
+      "semantic_family": "Domain_Cases",
+      "semantic_role": "domain_cases",
+      "behavior_tags": [
+        "domain_cases",
+        "canonical_actions",
+        "dataset_cases"
+      ],
+      "source_span": {
+        "start_line": 75,
+        "end_line": 82
+      },
+      "content_hash": "sha256:764f8ff10b1653a7a353ecad788f86a6c6599f300a950a93f8407c35ab660e79",
+      "path": "blocks/generated/g001/12_domain_cases.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "domain_cases",
+      "render_order": 12,
+      "lineage": {
+        "op": "rewrite",
+        "parents": [
+          "g000_25"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "unknown_service",
+        "gt_service_coverage",
+        "enum_grounding"
+      ]
+    },
+    {
+      "local_id": "13",
+      "name": "runtime_binding_rules",
+      "semantic_family": "Service_Grounding",
+      "semantic_role": "runtime_binding_rules",
+      "behavior_tags": [
+        "connected_devices",
+        "selector_tags",
+        "schema_fallback",
+        "schema_authority",
+        "service_schema",
+        "canonical_name"
+      ],
+      "source_span": {
+        "start_line": 17,
+        "end_line": 3887
+      },
+      "content_hash": "sha256:2524c71732a3744f7424563ccc77e1c88437a12b2f8f188eab4f761a7a4e70d4",
+      "path": "blocks/generated/g001/13_runtime_binding_rules.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "service_grounding",
+      "render_order": 13,
+      "lineage": {
+        "op": "merge",
+        "parents": [
+          "g000_04",
+          "g000_05"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "gt_receiver_coverage",
+        "unknown_service",
+        "gt_service_coverage",
+        "service_match"
+      ]
+    },
+    {
+      "local_id": "14",
+      "name": "examples_basic",
+      "semantic_family": "Examples",
+      "semantic_role": "examples_basic",
+      "behavior_tags": [
+        "self_check",
+        "schema_match",
+        "semantic_diff"
+      ],
+      "source_span": {
+        "start_line": 3946,
+        "end_line": 3955
+      },
+      "content_hash": "sha256:a7f9dfd5803fb85c5c0f884ebb2e6830a1cdac3d31a82795feef5904742453f7",
+      "path": "blocks/generated/g001/14_examples_basic.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "examples",
+      "render_order": 14,
+      "lineage": {
+        "op": "rewrite",
+        "parents": [
+          "g000_23"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "gt_mismatch",
+        "unknown_service",
+        "numeric_grounding",
+        "enum_grounding"
+      ]
+    },
+    {
+      "local_id": "15",
+      "name": "examples_temporal",
+      "semantic_family": "Examples",
+      "semantic_role": "examples_temporal",
+      "behavior_tags": [
+        "cron",
+        "schedule",
+        "wall_clock",
+        "period",
+        "monitoring",
+        "polling",
+        "delay",
+        "wait_until",
+        "one_shot_trigger"
+      ],
+      "source_span": {
+        "start_line": 63,
+        "end_line": 3936
+      },
+      "content_hash": "sha256:7ed1cee3d76697272e52e2e0c646b30ade93ff81c3947c51920ccc516b53d123",
+      "path": "blocks/generated/g001/15_examples_temporal.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "rewrite",
+        "split",
+        "merge",
+        "retire"
+      ],
+      "crossover_enabled": true,
+      "order_group": "examples",
+      "render_order": 15,
+      "lineage": {
+        "op": "merge",
+        "parents": [
+          "g000_11",
+          "g000_12",
+          "g000_13"
+        ],
+        "reason": "fixture demonstrating generation-local atom IDs and non-seed atom count"
+      },
+      "failure_targets": [
+        "cron_mismatch",
+        "numeric_grounding",
+        "period_mismatch",
+        "loop_policy_error",
+        "gt_mismatch"
+      ]
+    }
+  ],
+  "block_operations": [
+    {
+      "op": "merge_atoms",
+      "parents": [
+        "00",
+        "01"
+      ],
+      "child": "g001_00",
+      "reason": "g001 fixture"
+    },
+    {
+      "op": "merge_atoms",
+      "parents": [
+        "05",
+        "06"
+      ],
+      "child": "g001_01",
+      "reason": "g001 fixture"
+    },
+    {
+      "op": "merge_atoms",
+      "parents": [
+        "03",
+        "04",
+        "18",
+        "19"
+      ],
+      "child": "g001_02",
+      "reason": "g001 fixture"
+    },
+    {
+      "op": "merge_atoms",
+      "parents": [
+        "02",
+        "22"
+      ],
+      "child": "g001_03",
+      "reason": "g001 fixture"
+    },
+    {
+      "op": "merge_atoms",
+      "parents": [
+        "11",
+        "12"
+      ],
+      "child": "g001_04",
+      "reason": "g001 fixture"
+    },
+    {
+      "op": "merge_atoms",
+      "parents": [
+        "13",
+        "14"
+      ],
+      "child": "g001_05",
+      "reason": "g001 fixture"
+    },
+    {
+      "op": "merge_atoms",
+      "parents": [
+        "15",
+        "16"
+      ],
+      "child": "g001_06",
+      "reason": "g001 fixture"
+    },
+    {
+      "op": "merge_atoms",
+      "parents": [
+        "07",
+        "17",
+        "20"
+      ],
+      "child": "g001_07",
+      "reason": "g001 fixture"
+    },
+    {
+      "op": "merge_atoms",
+      "parents": [
+        "08",
+        "09",
+        "10"
+      ],
+      "child": "g001_08",
+      "reason": "g001 fixture"
+    },
+    {
+      "op": "merge_atoms",
+      "parents": [
+        "04",
+        "05"
+      ],
+      "child": "g001_13",
+      "reason": "g001 fixture"
+    },
+    {
+      "op": "merge_atoms",
+      "parents": [
+        "11",
+        "12",
+        "13"
+      ],
+      "child": "g001_15",
+      "reason": "g001 fixture"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+17. If the command says to do one action and then another action after some duration, keep the first action immediately, then use `delay(...)` with the requested duration, then emit the follow-up action.
+17a. Use the JOILang helper `delay(N SEC|MIN|HOUR)` for between-action waits. Do not emit `(#Clock).clock_delay(...)` for these delays.
+18. If the command describes a threshold crossing such as "drops below", "rises above", or "becomes X or higher", do not collapse it to a single unconditional action. Use an explicit condition, wait-until, or `prev/curr` edge-detection pattern that preserves the trigger semantics.

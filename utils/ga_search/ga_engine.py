@@ -10,12 +10,12 @@ from typing import Any
 try:
     from .candidate_generation import generate_candidates_for_rows, write_candidate_csv
     from .evaluation import evaluate_candidate_records, write_evaluation_outputs
-    from .prompt_patch_apply import rendered_prompt_with_genome
+    from .prompt_patch_apply import is_v16_dynamic_package, rendered_package_with_genome
     from .rerank import aggregate_genome_scores
 except ImportError:
     from candidate_generation import generate_candidates_for_rows, write_candidate_csv  # type: ignore
     from evaluation import evaluate_candidate_records, write_evaluation_outputs  # type: ignore
-    from prompt_patch_apply import rendered_prompt_with_genome  # type: ignore
+    from prompt_patch_apply import is_v16_dynamic_package, rendered_package_with_genome  # type: ignore
     from rerank import aggregate_genome_scores  # type: ignore
 
 
@@ -59,34 +59,53 @@ def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
 
 
 def _render_for_genome(rendered_package: dict[str, Any], genome: dict[str, Any]) -> dict[str, Any]:
-    patched = _copy_json(rendered_package)
-    prompt = rendered_prompt_with_genome(rendered_package, genome)
-    patched["prompt_text"] = prompt
-    patched["system_prompt"] = prompt if not patched.get("user_prompt") else patched.get("system_prompt", "")
-    patched["genome"] = genome
-    messages = patched.get("messages")
-    if isinstance(messages, list) and messages:
-        new_messages = _copy_json(messages)
-        for message in new_messages:
-            if isinstance(message, dict) and message.get("role") == "system":
-                message["content"] = prompt if not patched.get("user_prompt") else str(message.get("content") or "") + "\n\n" + prompt.split("[GA Prompt Patch Overlay]", 1)[-1]
-                break
-        else:
-            new_messages.insert(0, {"role": "system", "content": prompt})
-        patched["messages"] = new_messages
-    return patched
+    return rendered_package_with_genome(rendered_package, genome)
 
 
-def _initial_population(population: int, initial_genomes: list[dict[str, Any]] | None = None) -> list[dict[str, Any]]:
+def _dynamic_base_genome(rendered_package: dict[str, Any], genome_id: str) -> dict[str, Any]:
+    base = _copy_json(rendered_package.get("genome") if isinstance(rendered_package.get("genome"), dict) else {})
+    if not base:
+        manifest = rendered_package.get("prompt_manifest") if isinstance(rendered_package.get("prompt_manifest"), dict) else {}
+        active = [str(atom.get("local_id")) for atom in manifest.get("atoms", []) if atom.get("required") or atom.get("default_active", True)]
+        base = {
+            "genome_id": genome_id,
+            "generation": manifest.get("generation", 0),
+            "block_space_id": manifest.get("block_space_id", "seg_000"),
+            "active_atoms": active,
+            "atom_params": {},
+            "block_variants": {},
+            "block_operations": [],
+            "metadata": {"schema": "v16_dynamic_genome.v1", "local_ids_are_generation_specific": True},
+        }
+    base["id"] = genome_id
+    base["genome_id"] = genome_id
+    base.setdefault("atom_params", {})
+    base.setdefault("block_variants", {})
+    base.setdefault("block_operations", [])
+    base.setdefault("metadata", {})["local_ids_are_generation_specific"] = True
+    return base
+
+
+def _initial_population(
+    population: int,
+    initial_genomes: list[dict[str, Any]] | None = None,
+    rendered_package: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
     if initial_genomes:
         out = []
         for index, genome in enumerate(initial_genomes[: max(1, population)]):
             item = _copy_json(genome)
-            item["id"] = str(item.get("id") or f"genome_{index:03d}")
+            item["id"] = str(item.get("id") or item.get("genome_id") or f"genome_{index:03d}")
+            item.setdefault("genome_id", item["id"])
             out.append(item)
         while len(out) < max(1, population):
-            out.append(fallback_genome(f"genome_{len(out):03d}"))
+            if rendered_package and is_v16_dynamic_package(rendered_package):
+                out.append(_dynamic_base_genome(rendered_package, f"genome_{len(out):03d}"))
+            else:
+                out.append(fallback_genome(f"genome_{len(out):03d}"))
         return out
+    if rendered_package and is_v16_dynamic_package(rendered_package):
+        return [_dynamic_base_genome(rendered_package, f"genome_{idx:03d}") for idx in range(max(1, population))]
     return [fallback_genome(f"genome_{idx:03d}") for idx in range(max(1, population))]
 
 
@@ -99,7 +118,148 @@ MUTATION_RULES = [
 ]
 
 
-def _mutate_genome(parent: dict[str, Any], rng: random.Random, generation: int, index: int) -> tuple[dict[str, Any], dict[str, Any]]:
+SEMANTIC_MUTATION_RULES = [
+    {
+        "families": ["Service_Grounding"],
+        "rule": "Use only canonical service and function names present in the active service schema.",
+    },
+    {
+        "families": ["Receiver_Grounding"],
+        "rule": "Preserve every user receiver tag and bind it only to connected device candidates.",
+    },
+    {
+        "families": ["Temporal"],
+        "rule": "Resolve cron, period, delay, and wait-until semantics before emitting JOILang code.",
+    },
+    {
+        "families": ["Argument_Grounding"],
+        "rule": "Keep numeric literals, units, and enum values grounded to schema argument constraints.",
+    },
+    {
+        "families": ["Output_Schema", "Repair"],
+        "rule": "Return one valid JSON object with non-empty code and the required keys only.",
+    },
+]
+
+
+def _manifest_atoms(rendered_package: dict[str, Any] | None) -> list[dict[str, Any]]:
+    manifest = (rendered_package or {}).get("prompt_manifest") if isinstance((rendered_package or {}).get("prompt_manifest"), dict) else {}
+    atoms = manifest.get("atoms") if isinstance(manifest, dict) else []
+    return [atom for atom in atoms if isinstance(atom, dict)]
+
+
+def _mutate_dynamic_genome(
+    parent: dict[str, Any],
+    rng: random.Random,
+    generation: int,
+    index: int,
+    rendered_package: dict[str, Any] | None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    child = _copy_json(parent)
+    child_id = f"{parent.get('genome_id') or parent.get('id') or 'genome'}_g{generation:03d}_m{index:03d}"
+    child["id"] = child_id
+    child["genome_id"] = child_id
+    child.setdefault("active_atoms", [])
+    child.setdefault("atom_params", {})
+    child.setdefault("block_variants", {})
+    child.setdefault("block_operations", [])
+    atoms = _manifest_atoms(rendered_package)
+    atom_by_id = {str(atom.get("local_id")): atom for atom in atoms}
+    active = [str(atom_id) for atom_id in child.get("active_atoms", []) if str(atom_id) in atom_by_id]
+    required = {str(atom.get("local_id")) for atom in atoms if atom.get("required")}
+    optional_active = [atom_id for atom_id in active if atom_id not in required]
+    inactive_optional = [
+        str(atom.get("local_id"))
+        for atom in atoms
+        if str(atom.get("local_id")) not in set(active) and not atom.get("required")
+    ]
+    mutation_type = rng.choice(["semantic_micro_rule", "toggle_atom", "variant", "reorder_hook", "split_merge_hook"])
+    details: dict[str, Any] = {"block_space_id": child.get("block_space_id")}
+    if mutation_type == "semantic_micro_rule":
+        rule_spec = rng.choice(SEMANTIC_MUTATION_RULES)
+        candidates = [
+            atom
+            for atom in atoms
+            if str(atom.get("semantic_family")) in set(rule_spec["families"])
+        ] or atoms
+        atom = rng.choice(candidates) if candidates else {}
+        atom_id = str(atom.get("local_id") or "")
+        if atom_id:
+            if atom_id not in active:
+                active.append(atom_id)
+            rules = child.setdefault("atom_params", {}).setdefault(atom_id, {}).setdefault("micro_rules", [])
+            if rule_spec["rule"] not in rules:
+                rules.append(rule_spec["rule"])
+            details = {
+                **details,
+                "atom_id": atom_id,
+                "semantic_family": atom.get("semantic_family"),
+                "semantic_role": atom.get("semantic_role"),
+                "rule": rule_spec["rule"],
+            }
+    elif mutation_type == "toggle_atom" and (optional_active or inactive_optional):
+        activate = bool(inactive_optional) and (not optional_active or rng.random() < 0.55)
+        atom_id = rng.choice(inactive_optional if activate else optional_active)
+        if activate and atom_id not in active:
+            active.append(atom_id)
+            op = "activate_atom"
+        else:
+            active = [item for item in active if item != atom_id]
+            op = "deactivate_atom"
+        atom = atom_by_id.get(atom_id, {})
+        details = {
+            **details,
+            "atom_id": atom_id,
+            "semantic_family": atom.get("semantic_family"),
+            "semantic_role": atom.get("semantic_role"),
+            "op": op,
+        }
+        child.setdefault("block_operations", []).append({"op": op, "atom_id": atom_id, "reason": "ga_dynamic_atom_mutation"})
+    elif mutation_type == "variant" and active:
+        atom_id = rng.choice(active)
+        atom = atom_by_id.get(atom_id, {})
+        variant = rng.choice(["compact", "strict", "schema_first"])
+        child.setdefault("block_variants", {})[atom_id] = variant
+        details = {
+            **details,
+            "atom_id": atom_id,
+            "semantic_family": atom.get("semantic_family"),
+            "semantic_role": atom.get("semantic_role"),
+            "variant": variant,
+        }
+        child.setdefault("block_operations", []).append({"op": "replace_atom_variant", "atom_id": atom_id, "variant": variant, "reason": "ga_variant_mutation"})
+    elif mutation_type == "reorder_hook" and len(active) > 1:
+        first, second = rng.sample(active, 2)
+        first_idx, second_idx = active.index(first), active.index(second)
+        active[first_idx], active[second_idx] = active[second_idx], active[first_idx]
+        details = {**details, "ordered_pair": [first, second], "op": "reorder_atoms"}
+        child.setdefault("block_operations", []).append({"op": "reorder_atoms", "ordered_pair": [first, second], "reason": "ga_order_hook"})
+    else:
+        families = sorted({str(atom.get("semantic_family")) for atom in atoms if atom.get("semantic_family")})
+        details = {**details, "op": "split_merge_hook", "families": families[:8]}
+        child.setdefault("block_operations", []).append({"op": "split_merge_hook", "reason": "hook recorded for generation-dynamic block-space mutation"})
+    child["active_atoms"] = list(dict.fromkeys([*sorted(required), *active]))
+    child.setdefault("metadata", {})["local_ids_are_generation_specific"] = True
+    return child, {
+        "generation": generation,
+        "parent_id": parent.get("id") or parent.get("genome_id", ""),
+        "child_id": child["id"],
+        "mutation_type": mutation_type,
+        "details": details,
+        "active_atoms": child.get("active_atoms", []),
+        "block_operations": child.get("block_operations", []),
+    }
+
+
+def _mutate_genome(
+    parent: dict[str, Any],
+    rng: random.Random,
+    generation: int,
+    index: int,
+    rendered_package: dict[str, Any] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    if rendered_package and is_v16_dynamic_package(rendered_package) and "active_atoms" in parent:
+        return _mutate_dynamic_genome(parent, rng, generation, index, rendered_package)
     child = _copy_json(parent)
     child["id"] = f"{parent.get('id', 'genome')}_g{generation:03d}_m{index:03d}"
     child.setdefault("params", {})
@@ -158,6 +318,7 @@ def run_mock_search(
     search_mode: str = "monolith",
     service_schema: str | Path | None = None,
     service_context_mode: str = "schema_fallback",
+    initial_genomes: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     root = Path(out_dir)
     genomes_dir = root / "genomes"
@@ -165,7 +326,7 @@ def run_mock_search(
     genomes_dir.mkdir(parents=True, exist_ok=True)
     candidates_dir.mkdir(parents=True, exist_ok=True)
 
-    initial_population = [fallback_genome(f"genome_{idx:03d}") for idx in range(max(1, population))]
+    initial_population = _initial_population(population, initial_genomes=initial_genomes, rendered_package=rendered_package)
     _write_json(genomes_dir / "initial_population.json", initial_population)
     all_eval_rows: list[dict[str, Any]] = []
     progress_rows: list[dict[str, Any]] = []
@@ -176,9 +337,10 @@ def run_mock_search(
         _write_json(genomes_dir / f"generation_{generation:03d}.json", initial_population)
         generation_records = []
         for genome in initial_population:
+            rendered_for_genome = _render_for_genome(rendered_package, genome)
             records = generate_candidates_for_rows(
                 rows=rows,
-                rendered_package=rendered_package,
+                rendered_package=rendered_for_genome,
                 out_dir=root,
                 llm_mode=llm_mode,
                 candidate_k=candidate_k,
@@ -284,6 +446,7 @@ def run_search(
             search_mode=search_mode,
             service_schema=service_schema,
             service_context_mode=service_context_mode,
+            initial_genomes=initial_genomes,
         )
 
     root = Path(out_dir)
@@ -292,7 +455,7 @@ def run_search(
     genomes_dir.mkdir(parents=True, exist_ok=True)
     candidates_dir.mkdir(parents=True, exist_ok=True)
     rng = random.Random(seed)
-    current_population = _initial_population(population, initial_genomes=initial_genomes)
+    current_population = _initial_population(population, initial_genomes=initial_genomes, rendered_package=rendered_package)
     _write_json(genomes_dir / "initial_population.json", current_population)
 
     all_eval_rows: list[dict[str, Any]] = []
@@ -369,7 +532,7 @@ def run_search(
             next_population = [_copy_json(ranked_genomes[0])]
             while len(next_population) < max(1, population):
                 parent = rng.choice(ranked_genomes[: max(1, min(3, len(ranked_genomes)))])
-                child, event = _mutate_genome(parent, rng, generation + 1, len(next_population))
+                child, event = _mutate_genome(parent, rng, generation + 1, len(next_population), rendered_package=rendered_package)
                 mutation_events.append(event)
                 next_population.append(child)
             current_population = next_population

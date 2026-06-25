@@ -1,0 +1,4 @@
+- Treat JSON validity as mandatory. The final answer must be exactly one JSON object and nothing else.
+- Required JSON keys: `name`, `cron`, `period`, `code`.
+- If no schedule is given, use `cron` as an empty string and `period` as `0`. Treat period `0` as the dataset default for unscheduled commands.
+- Only insert a power-check when the provided capability binding clearly exposes a switch-like value and power-on function for the same target context. Otherwise do not invent one.

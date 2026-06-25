@@ -1,323 +1,148 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
 import copy
 import json
 import os
 import sys
-from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 try:
-    from version0_13.qwen_local_backend import ensure_version013_backend_installed
+    from .tools.block_space_ops import (
+        load_genome,
+        load_manifest,
+        make_default_genome,
+        render_from_manifest,
+    )
 except ImportError:
-    from gpt_mg.version0_13.qwen_local_backend import ensure_version013_backend_installed
+    from tools.block_space_ops import (  # type: ignore
+        load_genome,
+        load_manifest,
+        make_default_genome,
+        render_from_manifest,
+    )
+
+
+def _resolve_base_path(base_path: str = ".") -> Path:
+    raw = Path(str(base_path))
+    if raw.is_absolute():
+        return raw
+    if raw.exists():
+        return raw.resolve()
+    return Path(__file__).resolve().parent
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    with path.open(encoding="utf-8") as handle:
+        data = json.load(handle)
+    if not isinstance(data, dict):
+        raise ValueError(f"expected JSON object in {path}")
+    return data
 
 
 def _default_local_python() -> str:
-    env_python = os.getenv("JOI_VERSION013_PYTHON", "").strip()
-    if env_python:
-        return env_python
-    return sys.executable or "python"
+    return (
+        os.environ.get("JOI_PY", "").strip()
+        or os.environ.get("JOI_V16_PYTHON", "").strip()
+        or sys.executable
+        or "python"
+    )
 
 
-def _default_local_worker() -> str:
-    env_worker = os.getenv("JOI_VERSION013_WORKER", "").strip()
-    if env_worker:
-        return env_worker
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "qwen_local_worker.py")
+def _default_local_worker(base_path: Path) -> str:
+    repo_root = base_path.parents[1]
+    return str((repo_root / "utils" / "ga_search" / "local_worker.py").resolve())
 
 
-def parse_selected_device(connected_devices: dict, s_l: dict):
-    if not connected_devices:
-        return None, [], {}
-
-    all_categories = set()
-    cnt_others_tags = set()
-
-    """
-    if isinstance(connected_devices, str):
-        try:
-            connected_devices = json.loads(connected_devices.replace("'", '"'))
-        except:
-            return None, [], {}
-    """
-    for device_info in connected_devices.values():
-        category = device_info.get('category')
-        if category:
-            if isinstance(category, list):
-                all_categories.update(category)
-            else:
-                all_categories.add(category)
-
-        tags = device_info.get('tags', [])
-        if isinstance(tags, str):
-            tags = [tags]
-        cat_set = set(category) if isinstance(category, list) else {category} if category else set()
-        cnt_others_tags.update(tag for tag in tags if tag not in cat_set)
-
-    # ✅ 문자열 리스트 형태로 결합: "[#Light, #Alarm, #Fan]"
-    category_tags_str = "[" + ", ".join(f"#{cat}" for cat in sorted(all_categories)) + "]"
-
-    # 선택된 장치 서비스
-    selected_devices = {}
-    for cat in all_categories:
-        if cat in s_l:
-            selected_devices[cat] = s_l[cat]
-
-    return category_tags_str, list(cnt_others_tags), selected_devices
-
-def parse_selected_device_simple(connected_devices: dict):
-    if not connected_devices:
-        return None, [], {}
-
-    all_categories = set()
-    cnt_others_tags = set()
-
-    """
-    if isinstance(connected_devices, str):
-        try:
-            connected_devices = json.loads(connected_devices.replace("'", '"'))
-        except:
-            return None, [], {}
-    """
-    for device_info in connected_devices.values():
-        category = device_info.get('category')
-        if category:
-            if isinstance(category, list):
-                all_categories.update(category)
-            else:
-                all_categories.add(category)
-
-        tags = device_info.get('tags', [])
-        if isinstance(tags, str):
-            tags = [tags]
-        cat_set = set(category) if isinstance(category, list) else {category} if category else set()
-        cnt_others_tags.update(tag for tag in tags if tag not in cat_set)
-
-    # ✅ 문자열 리스트 형태로 결합: "[#Light, #Alarm, #Fan]"
-    category_tags_str = "[" + ", ".join(f"#{cat}" for cat in sorted(all_categories)) + "]"
-
-    # 선택된 장치 서비스
-    """
-    selected_devices = {}
-    for cat in all_categories:
-        if cat in s_l:
-            selected_devices[cat] = s_l[cat]
-    """
-    return category_tags_str, list(cnt_others_tags), all_categories
-
-
-def _resolve_base_path(base_path: str = ".") -> str:
-    if os.path.isabs(str(base_path)):
-        return str(base_path)
-    if os.path.exists(str(base_path)):
-        return os.path.abspath(str(base_path))
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), str(base_path))
-
-
-def get_prompt_render_config(config: dict) -> dict:
-    raw = config.get("prompt_render") if isinstance(config, dict) else None
-    raw = raw if isinstance(raw, dict) else {}
-    mode = str(raw.get("mode") or "monolith").strip().lower()
-    if mode not in {"monolith", "blocks", "auto"}:
-        mode = "monolith"
+def _prompt_render_config(config: dict[str, Any]) -> dict[str, Any]:
+    raw = config.get("prompt_render") if isinstance(config.get("prompt_render"), dict) else {}
     return {
-        "mode": mode,
+        "mode": str(raw.get("mode") or "blocks"),
         "loader": str(raw.get("loader") or "config_loader.py"),
         "loader_function": str(raw.get("loader_function") or "load_version_config"),
-        "merged_prompt_output": str(raw.get("merged_prompt_output") or "merged_system_prompt.md"),
-        **{k: v for k, v in raw.items() if k not in {"mode", "loader", "loader_function", "merged_prompt_output"}},
+        "source_prompt": str(raw.get("source_prompt") or "prompts/source/merged_system_prompt_260413.md"),
+        "default_manifest": str(raw.get("default_manifest") or "registries/generation_block_space_g000.json"),
+        "default_genome": str(raw.get("default_genome") or "genomes/base_genome_g000.json"),
+        "supports_dynamic_block_space": True,
+        **{k: v for k, v in raw.items() if k not in {"mode", "loader", "loader_function"}},
     }
 
 
-def render_prompt_package(user_input, connected_devices: dict=None, other_params: dict=None, base_path: str="."):
-    # 1. 모델 구성 정보 로드
-    base_path = _resolve_base_path(base_path)
-    ensure_version013_backend_installed()
+def _select_manifest_and_genome(base_path: Path, other_params: dict[str, Any] | None) -> tuple[dict[str, Any], dict[str, Any]]:
+    other_params = other_params if isinstance(other_params, dict) else {}
+    generation = other_params.get("generation")
+    if generation is not None:
+        try:
+            generation = int(generation)
+        except Exception:
+            generation = None
+    block_space_id = other_params.get("block_space_id")
+    genome_path = other_params.get("genome_json") or other_params.get("genome_path")
+    genome_payload = other_params.get("genome") if isinstance(other_params.get("genome"), dict) else None
+    manifest = load_manifest(base_path, generation=generation, block_space_id=block_space_id)
+    if genome_payload:
+        genome = copy.deepcopy(genome_payload)
+    elif genome_path:
+        genome = load_genome(base_path, genome_path)
+    else:
+        default = base_path / "genomes" / f"base_genome_g{int(manifest.get('generation', 0)):03d}.json"
+        genome = load_genome(base_path, default) if default.exists() else make_default_genome(manifest)
+    return manifest, genome
 
-    with open(os.path.join(base_path, "model_config.json"), "r", encoding="utf-8") as f:
-        config = json.load(f)
-    prompt_render = get_prompt_render_config(config)
-    model_input = copy.deepcopy(config["model_input"])
+
+def render_prompt_package(
+    user_input: str,
+    connected_devices: dict[str, Any] | None = None,
+    other_params: dict[str, Any] | None = None,
+    base_path: str = ".",
+) -> dict[str, Any]:
+    root = _resolve_base_path(base_path)
+    config = _read_json(root / "model_config.json")
+    prompt_render = _prompt_render_config(config)
+    manifest, genome = _select_manifest_and_genome(root, other_params)
+    rendered = render_from_manifest(
+        base_path=root,
+        manifest=manifest,
+        genome=genome,
+        user_input=str(user_input or ""),
+        connected_devices=connected_devices or {},
+        other_params=other_params or {},
+    )
+
+    model_input = copy.deepcopy(config.get("model_input", {}))
     model_input["local_python"] = _default_local_python()
-    model_input["local_worker"] = _default_local_worker()
-
-    # 2. knowledge 파일 로드
-
-    with open(os.path.join(base_path, "grammar_ver1.5.10.md"), "r", encoding="utf-8") as f:
-        grammar = f.read()
-    with open(os.path.join(base_path, "service_prompt_10.md"), "r", encoding="utf-8") as f:
-        service_prompt = f.read()
-    with open(os.path.join(base_path, "service_list_ver1.5.4_value.json"), "r", encoding="utf-8") as f:
-        service_list_value = json.load(f)
-    with open(os.path.join(base_path, "service_list_ver1.5.4_function.json"), "r", encoding="utf-8") as f:
-        service_list_function = json.load(f)
-    with open(os.path.join(base_path, "tempo_prompt_9.md"), "r", encoding="utf-8") as f:
-        tempo = f.read()
-    with open(os.path.join(base_path, "caution_prompt_8.md"), "r", encoding="utf-8") as f:
-        caution = f.read()
-
-    category_tags_str, _cnt_others_tag, _service_list = parse_selected_device_simple(connected_devices)
-    if category_tags_str:
-        connected_devices_str = f"\n\n---\n[connected_devices]\n {category_tags_str}"
-    else:
-        connected_devices_str = ""
-
-    if other_params:
-        other_params_str = json.dumps(other_params, separators=(",", ":"), ensure_ascii=False)
-        other_params_str = f"\n\n---\n[userinfo]\n {other_params_str}"
-        other_params_str = (
-            other_params_str
-            .replace('\\"', '"')
-            .replace('\\n', '')
-            .replace('    ', '')
-            .replace('   ', '')
-            .strip()
-        )
-    else:
-        other_params_str = ""
-
-    with open(os.path.join(base_path, "response_prompt_baseline_cot.md"), "r", encoding="utf-8") as f:
-        responsestep = f.read()
-
-    reasoning_contract = """
----
-[Baseline-CoT Internal Reasoning Contract]
-This version corresponds to the `gen_baseline_cot` profile.
-
-Before writing the final answer, reason step by step internally using this hidden checklist:
-[REASONING]
-INTENT: <one sentence>
-DEVICES_AND_SERVICES:
-- <device/service candidates>
-TIMING:
-- <cron/period implications or none>
-CONDITIONS:
-- <if / wait until logic or none>
-STATE:
-- <persistent vars, flags, reset rules, or none>
-PLAN:
-- <ordered JOILang construction plan>
-[/REASONING]
-
-Output rules:
-- Keep the reasoning completely hidden.
-- Return ONLY one final JOILang JSON object.
-- Do not print markdown fences, analysis, bullet lists, or explanations.
-- The final JSON must be directly parseable by Python json.loads().
-"""
-
-    # 3. 시스템 프롬프트 구성
-    system_prompt = f"""
-You are a JOILang programmer. JOILang is a programming language used to control IoT devices.
-Use the following knowledge to convert natural language into valid JOILang code.
-This prompt uses a baseline-CoT style workflow, but the chain-of-thought must stay private.
-
-Make sure to follow syntax rules strictly. Only use allowed keywords:
-if, else if, else, >=, <=, ==, !=, not, and, or, wait until, (#Clock).clock_delay() 
-The delay function (#Clock).clock_delay() only accepts values in milliseconds (ms).
-Do not use while or any unlisted constructs. 
-**Never use `while` in code**
-[Incorrect Example]
-while (blinkCount < 10)
-
----
-
-[Device and Service Mapping]
-IMPORTANT: You MUST extract **all device tags mentioned as subjects or objects in the input sentence**, including those connected by conjunctions such as "and" or "with".  
-For each extracted device tag, retrieve **all associated services** (both value and function names) exactly as defined in the [Service List].  
-**Do not omit any device or service even if their names overlap or repeat.**  
-If multiple devices share similar service names (e.g., "alarm" function on both Alarm and Siren devices), include the services for each device separately and comprehensively.  
-{service_prompt}
-[service_list_value]
-{service_list_value}
-[service_list_function]
-{service_list_function}
-
----
-[Grammar]
-{grammar}
-
-
----
-[Condition Combination Rules]
-{tempo}
-
-
----
-[Important Cautions]
-{caution}
-{connected_devices_str}
-{other_params_str}
-
----
-{responsestep}
-{reasoning_contract}
-- **Never use `while` in code**
-
---- JOILang Code Output Format Guide ---
-Every scenario generated will follow this structure:
-```json
-{{
-  "name": "<명령의 의도를 한국어로 **축약하여**, 띄어쓰기 없이 간결한 형태로 작성하세요. 너무 길게 쓰지 말고, 조합된 단어로 의미만 담아내세요.>",
-  "cron": "<Time-based trigger to start execution>",
-  "period": <Execution interval in milliseconds or -1>,
-  "code": "<Main logic block written in JOILang>"
-}}
-```
-
-"""
-    #  "name": "<A brief and intuitive name describing the command in korean>",
-
-    # 4. messages 가공: content_from을 기준으로 content 채움
-    final_messages = []
-    for msg in model_input["messages"]:
-        role = msg["role"]
-        content_key = msg.get("content")
-
-        if content_key == "system_prompt":
-            content = system_prompt
-        elif content_key == "sentence":
-            content = user_input
-        else:
-            content = ""  # fallback 처리
-        final_messages.append({
-            "role": role,
-            "content": content
-        })
-
-
-    # 5. messages 교체
-    model_input["messages"] = final_messages
-
-    today_str = datetime.now().strftime("%y%m%d")
-    merged_prompt_path = os.path.join(base_path, f"merged_system_prompt_{today_str}.md")
-
-    with open(merged_prompt_path, "w", encoding="utf-8") as f:
-        f.write(system_prompt)
-
-    return {
-        "mode": prompt_render["mode"],
-        "system_prompt": system_prompt,
-        "messages": final_messages,
-        "merged_prompt_path": merged_prompt_path,
-        "blocks": None,
-        "metadata": {
+    model_input["local_worker"] = _default_local_worker(root)
+    model_input["messages"] = rendered["messages"]
+    rendered["mode"] = prompt_render["mode"]
+    rendered["prompt_render"] = prompt_render
+    rendered["merged_prompt_path"] = str(root / prompt_render["source_prompt"])
+    rendered["source_prompt_path"] = str(root / prompt_render["source_prompt"])
+    rendered["metadata"].update(
+        {
             "model_name": config.get("model_name"),
             "model_version": config.get("model_version"),
-            "base_path": base_path,
+            "base_path": str(root),
             "prompt_render": prompt_render,
-            "debug_prompt_output": merged_prompt_path,
-        },
-        "config": config,
-        "model_input": model_input,
-    }
+            "genome_id": rendered["genome"].get("genome_id"),
+            "gpt_mg.version0_15_update20260413.scripts_runtime_dependency": False,
+        }
+    )
+    rendered["config"] = {**config, "prompt_render": prompt_render, "resolved_block_manifest": manifest}
+    rendered["model_input"] = model_input
+    return rendered
 
 
-def load_version_config(user_input, connected_devices: dict=None, other_params: dict=None, base_path: str="."):
+def load_version_config(
+    user_input: str,
+    connected_devices: dict[str, Any] | None = None,
+    other_params: dict[str, Any] | None = None,
+    base_path: str = ".",
+) -> tuple[dict[str, Any], dict[str, Any]]:
     package = render_prompt_package(
         user_input,
         connected_devices=connected_devices,
         other_params=other_params,
         base_path=base_path,
     )
-    config = package["config"]
-    model_input = package["model_input"]
-    return config, model_input
+    return package["config"], package["model_input"]

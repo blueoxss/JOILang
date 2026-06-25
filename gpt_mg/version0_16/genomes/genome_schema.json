@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JOILang v16 dynamic atom genome",
+  "type": "object",
+  "required": [
+    "genome_id",
+    "generation",
+    "block_space_id",
+    "active_atoms"
+  ],
+  "properties": {
+    "genome_id": {
+      "type": "string"
+    },
+    "generation": {
+      "type": "integer"
+    },
+    "block_space_id": {
+      "type": "string"
+    },
+    "active_atoms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Generation-local atom IDs valid only with block_space_id."
+    },
+    "atom_params": {
+      "type": "object"
+    },
+    "block_variants": {
+      "type": "object"
+    },
+    "block_operations": {
+      "type": "array"
+    },
+    "metadata": {
+      "type": "object"
+    }
+  }
+}

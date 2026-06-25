@@ -1,0 +1,1 @@
+- Convert human time and measurement phrases to the unit expected by the chosen service. Use `descriptor`, `return_descriptor`, `argument_descriptor`, `argument_bounds`, and `argument_format` as authoritative unit/format hints. Use milliseconds only for `period`. Use service-specific units for function arguments and value comparisons.

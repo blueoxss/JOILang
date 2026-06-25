@@ -124,11 +124,13 @@ def render_model_spec(
     merged_prompt_path = ""
     blocks = None
     manifest: dict[str, Any] = {}
+    genome: dict[str, Any] = {}
     metadata: dict[str, Any] = {}
     if isinstance(loader_result, dict):
         merged_prompt_path = str(loader_result.get("merged_prompt_path") or "")
         blocks = loader_result.get("blocks") or loader_result.get("blocks_metadata")
         manifest = loader_result.get("prompt_manifest") if isinstance(loader_result.get("prompt_manifest"), dict) else {}
+        genome = loader_result.get("genome") if isinstance(loader_result.get("genome"), dict) else {}
         metadata = loader_result.get("metadata") if isinstance(loader_result.get("metadata"), dict) else {}
     if isinstance(config.get("resolved_block_manifest"), dict):
         manifest = config["resolved_block_manifest"]
@@ -158,6 +160,7 @@ def render_model_spec(
         "blocks": blocks,
         "blocks_metadata": blocks,
         "prompt_manifest": manifest,
+        "genome": genome,
         "model_config": config,
         "source_model_package": spec.package_path,
         "metadata": metadata,

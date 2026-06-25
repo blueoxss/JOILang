@@ -1,0 +1,1 @@
+23. Read values from sensors and send side effects to actuators. Never call `Speaker_Speak` on a `TemperatureSensor`, never call camera functions on a `PresenceSensor`, and never set charging state through an invented service if the schema offers `Switch_Off` for the charger.

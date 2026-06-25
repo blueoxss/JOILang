@@ -1,0 +1,41 @@
+{
+  "genome_id": "v16_g000_base",
+  "generation": 0,
+  "block_space_id": "seg_000",
+  "active_atoms": [
+    "00",
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24",
+    "25"
+  ],
+  "atom_params": {},
+  "block_variants": {},
+  "block_operations": [],
+  "metadata": {
+    "schema": "v16_dynamic_genome.v1",
+    "local_ids_are_generation_specific": true,
+    "note": "Do not compare local IDs across generations without block_space_id and lineage."
+  }
+}

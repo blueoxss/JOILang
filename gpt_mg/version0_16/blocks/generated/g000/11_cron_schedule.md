@@ -1,0 +1,3 @@
+- Encode wall-clock start/day filters in `cron` and repeated intervals in `period`. Do not wrap the whole code in duplicate weekday/hour checks when `cron` already anchors the start/day. For time windows ending at midnight, use `if ((#Clock).clock_hour == 0) { break }`.
+- For "from now until 3 PM" / "오후 3시까지", use `if ((#Clock).clock_hour == 15) { break }`, not `>= 15`.
+- For two wall-clock actions in one scenario, use the first time as `cron` and a blocking `delay(...)` for the later action. Example: 8 AM odd blinds then 9 AM even blinds -> `delay(1 HOUR)`, not `wait until clock_hour == 9`.

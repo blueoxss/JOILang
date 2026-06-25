@@ -1,0 +1,950 @@
+{
+  "generation": 0,
+  "block_space_id": "seg_000",
+  "source_prompt": "prompts/source/merged_system_prompt_260413.md",
+  "segmentation_method": "manual_seed_from_monolith_line_spans",
+  "created_from": {
+    "source_file": "merged_system_prompt_260413.md",
+    "source_hash": "sha256:a16344fe21113c7441d821281bd4f3b61b3aa83826368f351d0d5c7e7a94bb4e"
+  },
+  "local_ids_are_generation_specific": true,
+  "seed_segmentation_only": true,
+  "atoms": [
+    {
+      "local_id": "00",
+      "name": "system_contract",
+      "semantic_family": "Contract",
+      "semantic_role": "system_contract",
+      "behavior_tags": [
+        "role",
+        "task_scope",
+        "json_only"
+      ],
+      "source_span": {
+        "start_line": 1,
+        "end_line": 16
+      },
+      "content_hash": "sha256:d6f771f3f74149fe8dbe4390378b9871709dc40373afc86a892e3e9a3e3ad75e",
+      "path": "blocks/generated/g000/00_system_contract.md",
+      "required": true,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "split"
+      ],
+      "crossover_enabled": false,
+      "order_group": "contract",
+      "render_order": 0,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "missing_generated_code",
+        "invalid_json"
+      ]
+    },
+    {
+      "local_id": "01",
+      "name": "json_output_schema",
+      "semantic_family": "Output_Schema",
+      "semantic_role": "json_output_contract",
+      "behavior_tags": [
+        "json_only",
+        "required_keys",
+        "valid_json"
+      ],
+      "source_span": {
+        "start_line": 37,
+        "end_line": 40
+      },
+      "content_hash": "sha256:c3ee889e277d543228dba614ea2f55f1fd1af4ceb1b698ad844be602bf99bab3",
+      "path": "blocks/generated/g000/01_json_output_schema.md",
+      "required": true,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "split"
+      ],
+      "crossover_enabled": false,
+      "order_group": "contract",
+      "render_order": 1,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "invalid_json",
+        "missing_required_key",
+        "missing_generated_code"
+      ]
+    },
+    {
+      "local_id": "02",
+      "name": "joi_grammar_core",
+      "semantic_family": "Grammar",
+      "semantic_role": "joi_core_syntax",
+      "behavior_tags": [
+        "joi_syntax",
+        "allowed_constructs",
+        "no_while"
+      ],
+      "source_span": {
+        "start_line": 85,
+        "end_line": 92
+      },
+      "content_hash": "sha256:ff4edee6220506f8b1d527c7d0bcd103e7466395a0854d4ce825a9b00e8b6603",
+      "path": "blocks/generated/g000/02_joi_grammar_core.md",
+      "required": true,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "split"
+      ],
+      "crossover_enabled": false,
+      "order_group": "grammar",
+      "render_order": 2,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "invalid_json",
+        "missing_generated_code",
+        "gt_mismatch"
+      ]
+    },
+    {
+      "local_id": "03",
+      "name": "receiver_tag_preservation",
+      "semantic_family": "Receiver_Grounding",
+      "semantic_role": "receiver_tag_preservation",
+      "behavior_tags": [
+        "receiver_tag",
+        "selector_tag",
+        "uppercase_tag"
+      ],
+      "source_span": {
+        "start_line": 45,
+        "end_line": 49
+      },
+      "content_hash": "sha256:183d83d469dd838ec01bd9d1cc41872df6128535a001124ff01e651314dd25b7",
+      "path": "blocks/generated/g000/03_receiver_tag_preservation.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "split",
+        "merge"
+      ],
+      "crossover_enabled": true,
+      "order_group": "receiver",
+      "render_order": 3,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "gt_receiver_coverage",
+        "receiver"
+      ]
+    },
+    {
+      "local_id": "04",
+      "name": "connected_device_scope",
+      "semantic_family": "Receiver_Grounding",
+      "semantic_role": "connected_device_scope",
+      "behavior_tags": [
+        "connected_devices",
+        "selector_tags",
+        "schema_fallback"
+      ],
+      "source_span": {
+        "start_line": 17,
+        "end_line": 36
+      },
+      "content_hash": "sha256:4a992bf2466ed896f576c7e27aad27deddc6dbf3f1d6f9e245153bd6acfec728",
+      "path": "blocks/generated/g000/04_connected_device_scope.md",
+      "required": true,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "split",
+        "merge"
+      ],
+      "crossover_enabled": true,
+      "order_group": "receiver",
+      "render_order": 4,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "gt_receiver_coverage",
+        "unknown_service"
+      ]
+    },
+    {
+      "local_id": "05",
+      "name": "service_schema_authority",
+      "semantic_family": "Service_Grounding",
+      "semantic_role": "service_schema_authority",
+      "behavior_tags": [
+        "schema_authority",
+        "service_schema",
+        "canonical_name"
+      ],
+      "source_span": {
+        "start_line": 93,
+        "end_line": 3887
+      },
+      "content_hash": "sha256:84cf819a7d49cd99466ab230dae180a9c8d38806b1e72e413e56df2ef4cb6f2c",
+      "path": "blocks/generated/g000/05_service_schema_authority.md",
+      "required": true,
+      "default_active": true,
+      "mutation_allowed": [
+        "compress",
+        "split",
+        "merge"
+      ],
+      "crossover_enabled": false,
+      "order_group": "service",
+      "render_order": 5,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "unknown_service",
+        "gt_service_coverage",
+        "service_match"
+      ]
+    },
+    {
+      "local_id": "06",
+      "name": "canonical_service_name",
+      "semantic_family": "Service_Grounding",
+      "semantic_role": "canonical_service_name",
+      "behavior_tags": [
+        "canonical_service_name",
+        "no_invented_service",
+        "member_lowercase"
+      ],
+      "source_span": {
+        "start_line": 33,
+        "end_line": 36
+      },
+      "content_hash": "sha256:9bc038ed5bca5e69fb48cd7208ede0f3a2a24c7f77dfcc7dcf61bde09f1aabfa",
+      "path": "blocks/generated/g000/06_canonical_service_name.md",
+      "required": true,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "merge"
+      ],
+      "crossover_enabled": true,
+      "order_group": "service",
+      "render_order": 6,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "unknown_service",
+        "service_match"
+      ]
+    },
+    {
+      "local_id": "07",
+      "name": "value_vs_function",
+      "semantic_family": "Service_Grounding",
+      "semantic_role": "value_vs_function",
+      "behavior_tags": [
+        "function_service",
+        "value_service",
+        "sensor_action"
+      ],
+      "source_span": {
+        "start_line": 41,
+        "end_line": 44
+      },
+      "content_hash": "sha256:5017d2f57a08f441a2bec2122aec60ca42114ab35ed19f3676b538d993007873",
+      "path": "blocks/generated/g000/07_value_vs_function.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "split",
+        "merge"
+      ],
+      "crossover_enabled": true,
+      "order_group": "service",
+      "render_order": 7,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "gt_service_coverage",
+        "unknown_service"
+      ]
+    },
+    {
+      "local_id": "08",
+      "name": "argument_type_and_order",
+      "semantic_family": "Argument_Grounding",
+      "semantic_role": "argument_type_and_order",
+      "behavior_tags": [
+        "argument_type",
+        "argument_order",
+        "bounds"
+      ],
+      "source_span": {
+        "start_line": 3912,
+        "end_line": 3928
+      },
+      "content_hash": "sha256:a5dc58438f8e4dd422ad18ffcc1ca3836c3c18347b1b84465fd8ec9c383cb425",
+      "path": "blocks/generated/g000/08_argument_type_and_order.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "split"
+      ],
+      "crossover_enabled": true,
+      "order_group": "argument",
+      "render_order": 8,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "arg_type",
+        "numeric_grounding",
+        "enum_grounding"
+      ]
+    },
+    {
+      "local_id": "09",
+      "name": "enum_grounding",
+      "semantic_family": "Argument_Grounding",
+      "semantic_role": "enum_grounding",
+      "behavior_tags": [
+        "enum_value",
+        "allowed_values"
+      ],
+      "source_span": {
+        "start_line": 75,
+        "end_line": 82
+      },
+      "content_hash": "sha256:5bbc9fd652e494700b9fb69171317f44c8411213b138fd8860ad3fc0ec58e4a0",
+      "path": "blocks/generated/g000/09_enum_grounding.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress"
+      ],
+      "crossover_enabled": true,
+      "order_group": "argument",
+      "render_order": 9,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "enum_grounding",
+        "unknown_service"
+      ]
+    },
+    {
+      "local_id": "10",
+      "name": "numeric_unit_conversion",
+      "semantic_family": "Argument_Grounding",
+      "semantic_role": "numeric_unit_conversion",
+      "behavior_tags": [
+        "numeric_value",
+        "unit_conversion",
+        "bounds"
+      ],
+      "source_span": {
+        "start_line": 50,
+        "end_line": 50
+      },
+      "content_hash": "sha256:9355e05ede09016da3db5f0931add6f8c65496a35e06ec7110b7611f10c10a68",
+      "path": "blocks/generated/g000/10_numeric_unit_conversion.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "split"
+      ],
+      "crossover_enabled": true,
+      "order_group": "argument",
+      "render_order": 10,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "numeric_grounding"
+      ]
+    },
+    {
+      "local_id": "11",
+      "name": "cron_schedule",
+      "semantic_family": "Temporal",
+      "semantic_role": "cron_schedule",
+      "behavior_tags": [
+        "cron",
+        "schedule",
+        "wall_clock"
+      ],
+      "source_span": {
+        "start_line": 63,
+        "end_line": 65
+      },
+      "content_hash": "sha256:8b6041c8afea2fd1ab817513a280063475ebe2ec7036d298e6154a595394e773",
+      "path": "blocks/generated/g000/11_cron_schedule.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "split",
+        "merge"
+      ],
+      "crossover_enabled": true,
+      "order_group": "temporal",
+      "render_order": 11,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "cron_mismatch",
+        "numeric_grounding"
+      ]
+    },
+    {
+      "local_id": "12",
+      "name": "period_policy",
+      "semantic_family": "Temporal",
+      "semantic_role": "period_policy",
+      "behavior_tags": [
+        "period",
+        "monitoring",
+        "polling"
+      ],
+      "source_span": {
+        "start_line": 66,
+        "end_line": 68
+      },
+      "content_hash": "sha256:ad8f7ef3b098f4003f9597a701c742fe8a3b17fcb3799c6dffd86d39fdc8448f",
+      "path": "blocks/generated/g000/12_period_policy.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "merge"
+      ],
+      "crossover_enabled": true,
+      "order_group": "temporal",
+      "render_order": 12,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "period_mismatch",
+        "loop_policy_error"
+      ]
+    },
+    {
+      "local_id": "13",
+      "name": "delay_and_wait",
+      "semantic_family": "Temporal",
+      "semantic_role": "delay_and_wait",
+      "behavior_tags": [
+        "delay",
+        "wait_until",
+        "one_shot_trigger"
+      ],
+      "source_span": {
+        "start_line": 3934,
+        "end_line": 3936
+      },
+      "content_hash": "sha256:56d9fb754874cb41265cae5ef8feee49bf151be319c766693b799c566c5ab5bb",
+      "path": "blocks/generated/g000/13_delay_and_wait.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "split"
+      ],
+      "crossover_enabled": true,
+      "order_group": "temporal",
+      "render_order": 13,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "cron_mismatch",
+        "period_mismatch",
+        "gt_mismatch"
+      ]
+    },
+    {
+      "local_id": "14",
+      "name": "loop_and_break_constraints",
+      "semantic_family": "Loop",
+      "semantic_role": "loop_constraints",
+      "behavior_tags": [
+        "loop_constraints",
+        "break_policy",
+        "no_unsupported_while"
+      ],
+      "source_span": {
+        "start_line": 3937,
+        "end_line": 3940
+      },
+      "content_hash": "sha256:300859d8e7dc85b5c27933b0a6be17ad486e004a1ceb05f8f19180b63e03eee2",
+      "path": "blocks/generated/g000/14_loop_and_break_constraints.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "split",
+        "merge"
+      ],
+      "crossover_enabled": true,
+      "order_group": "temporal",
+      "render_order": 14,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "loop_policy_error",
+        "period_mismatch"
+      ]
+    },
+    {
+      "local_id": "15",
+      "name": "event_trigger_skeleton",
+      "semantic_family": "Control_Flow",
+      "semantic_role": "event_trigger_skeleton",
+      "behavior_tags": [
+        "edge_trigger",
+        "prev_curr",
+        "triggered_state"
+      ],
+      "source_span": {
+        "start_line": 66,
+        "end_line": 67
+      },
+      "content_hash": "sha256:77c585e0f6090cfc926121e860f7a20de5ef35856a0fd51d1d748dc3a877bd90",
+      "path": "blocks/generated/g000/15_event_trigger_skeleton.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "split",
+        "merge"
+      ],
+      "crossover_enabled": true,
+      "order_group": "control_flow",
+      "render_order": 15,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "gt_mismatch",
+        "period_mismatch"
+      ]
+    },
+    {
+      "local_id": "16",
+      "name": "snapshot_recheck_pattern",
+      "semantic_family": "Control_Flow",
+      "semantic_role": "snapshot_recheck_pattern",
+      "behavior_tags": [
+        "snapshot",
+        "recheck",
+        "delay"
+      ],
+      "source_span": {
+        "start_line": 68,
+        "end_line": 68
+      },
+      "content_hash": "sha256:0bf7df174d9c416a1a8731e62ce5f4e4f2c13675e1ff8ef9238177a4211a6767",
+      "path": "blocks/generated/g000/16_snapshot_recheck_pattern.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress"
+      ],
+      "crossover_enabled": true,
+      "order_group": "control_flow",
+      "render_order": 16,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "gt_mismatch",
+        "dataflow"
+      ]
+    },
+    {
+      "local_id": "17",
+      "name": "dataflow_read_bind_use",
+      "semantic_family": "Dataflow",
+      "semantic_role": "read_bind_use",
+      "behavior_tags": [
+        "read_bind_use",
+        "variable_scope",
+        "sensor_action"
+      ],
+      "source_span": {
+        "start_line": 3941,
+        "end_line": 3941
+      },
+      "content_hash": "sha256:087e704b6385a5da3553c5fb3b69ef7eae5499fc8f78280d026cca8c378881a8",
+      "path": "blocks/generated/g000/17_dataflow_read_bind_use.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "split"
+      ],
+      "crossover_enabled": true,
+      "order_group": "dataflow",
+      "render_order": 17,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "dataflow",
+        "gt_service_coverage"
+      ]
+    },
+    {
+      "local_id": "18",
+      "name": "any_all_group_receiver",
+      "semantic_family": "Receiver_Grounding",
+      "semantic_role": "any_all_group_receiver",
+      "behavior_tags": [
+        "any_all",
+        "group_receiver",
+        "all_receiver"
+      ],
+      "source_span": {
+        "start_line": 69,
+        "end_line": 72
+      },
+      "content_hash": "sha256:3c8be7813f475d06623fe15d1f699c00a5c050ae33f0df603a743c8f1e78328e",
+      "path": "blocks/generated/g000/18_any_all_group_receiver.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress"
+      ],
+      "crossover_enabled": true,
+      "order_group": "receiver",
+      "render_order": 18,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "gt_receiver_coverage"
+      ]
+    },
+    {
+      "local_id": "19",
+      "name": "owner_location_selector",
+      "semantic_family": "Receiver_Grounding",
+      "semantic_role": "owner_location_selector",
+      "behavior_tags": [
+        "owner",
+        "location",
+        "selector_tag"
+      ],
+      "source_span": {
+        "start_line": 3917,
+        "end_line": 3921
+      },
+      "content_hash": "sha256:6edb80e75310d1f5993b737bed6fb6581ef3ac22d0428fedc0ff4caf8d912690",
+      "path": "blocks/generated/g000/19_owner_location_selector.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "merge"
+      ],
+      "crossover_enabled": true,
+      "order_group": "receiver",
+      "render_order": 19,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "gt_receiver_coverage"
+      ]
+    },
+    {
+      "local_id": "20",
+      "name": "sensor_action_separation",
+      "semantic_family": "Dataflow",
+      "semantic_role": "sensor_action_separation",
+      "behavior_tags": [
+        "sensor_action",
+        "actuator_target",
+        "read_vs_act"
+      ],
+      "source_span": {
+        "start_line": 59,
+        "end_line": 62
+      },
+      "content_hash": "sha256:4566d240f27a75d091d131b9a761b1ac84dacf2c4d7b85dfb2de67744f224de8",
+      "path": "blocks/generated/g000/20_sensor_action_separation.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress"
+      ],
+      "crossover_enabled": true,
+      "order_group": "dataflow",
+      "render_order": 20,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "dataflow",
+        "gt_service_coverage"
+      ]
+    },
+    {
+      "local_id": "21",
+      "name": "minimality_no_extraneous",
+      "semantic_family": "Minimality",
+      "semantic_role": "no_extraneous_actions",
+      "behavior_tags": [
+        "minimality",
+        "no_extraneous",
+        "smallest_program"
+      ],
+      "source_span": {
+        "start_line": 3929,
+        "end_line": 3933
+      },
+      "content_hash": "sha256:662bea923f42545ae5711d50ec98bd5432a1f05084f6039a5ac2bfbae7c8066b",
+      "path": "blocks/generated/g000/21_minimality_no_extraneous.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress"
+      ],
+      "crossover_enabled": true,
+      "order_group": "minimality",
+      "render_order": 21,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "extraneous",
+        "gt_mismatch"
+      ]
+    },
+    {
+      "local_id": "22",
+      "name": "repair_contract",
+      "semantic_family": "Repair",
+      "semantic_role": "safe_fallback_contract",
+      "behavior_tags": [
+        "repair_contract",
+        "empty_code_if_unsafe",
+        "retry"
+      ],
+      "source_span": {
+        "start_line": 4016,
+        "end_line": 4018
+      },
+      "content_hash": "sha256:09f619361d66ae95b98a65e37b1eade3895914be1e1f3606f9f8ced40230e20a",
+      "path": "blocks/generated/g000/22_repair_contract.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress"
+      ],
+      "crossover_enabled": true,
+      "order_group": "repair",
+      "render_order": 22,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "missing_generated_code",
+        "invalid_json"
+      ]
+    },
+    {
+      "local_id": "23",
+      "name": "det_self_check",
+      "semantic_family": "DET_Self_Check",
+      "semantic_role": "strict_det_self_check",
+      "behavior_tags": [
+        "self_check",
+        "schema_match",
+        "semantic_diff"
+      ],
+      "source_span": {
+        "start_line": 3946,
+        "end_line": 3955
+      },
+      "content_hash": "sha256:dbdba267156776ed87c8c3083c09f033a20c5c3d7cbf11a8decc7c7c2af2095d",
+      "path": "blocks/generated/g000/23_det_self_check.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "split"
+      ],
+      "crossover_enabled": true,
+      "order_group": "self_check",
+      "render_order": 23,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "gt_mismatch",
+        "unknown_service",
+        "numeric_grounding",
+        "enum_grounding"
+      ]
+    },
+    {
+      "local_id": "24",
+      "name": "korean_literal_preservation",
+      "semantic_family": "Language",
+      "semantic_role": "korean_literal_preservation",
+      "behavior_tags": [
+        "korean",
+        "literal_preservation",
+        "speaker_text"
+      ],
+      "source_span": {
+        "start_line": 73,
+        "end_line": 74
+      },
+      "content_hash": "sha256:c15d6d2a8cc1b8584f073515a78de5b5eabeed0af2e781a8123672a715917fed",
+      "path": "blocks/generated/g000/24_korean_literal_preservation.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress"
+      ],
+      "crossover_enabled": true,
+      "order_group": "language",
+      "render_order": 24,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "gt_mismatch",
+        "semantic"
+      ]
+    },
+    {
+      "local_id": "25",
+      "name": "domain_special_cases",
+      "semantic_family": "Domain_Cases",
+      "semantic_role": "domain_special_cases",
+      "behavior_tags": [
+        "domain_cases",
+        "canonical_actions",
+        "dataset_cases"
+      ],
+      "source_span": {
+        "start_line": 75,
+        "end_line": 82
+      },
+      "content_hash": "sha256:5bbc9fd652e494700b9fb69171317f44c8411213b138fd8860ad3fc0ec58e4a0",
+      "path": "blocks/generated/g000/25_domain_special_cases.md",
+      "required": false,
+      "default_active": true,
+      "mutation_allowed": [
+        "strengthen",
+        "compress",
+        "split"
+      ],
+      "crossover_enabled": true,
+      "order_group": "domain",
+      "render_order": 25,
+      "lineage": {
+        "op": "seed",
+        "parents": [],
+        "source": "merged_system_prompt_260413.md"
+      },
+      "failure_targets": [
+        "unknown_service",
+        "gt_service_coverage",
+        "enum_grounding"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+[Derived generation g001 atom: domain_cases]
+Lineage parents: 25
+
+- For dehumidifier "internal care" / "내부케어" in this dataset, use `Dehumidifier_SetDehumidifierMode("auto")` unless the snippet has an explicit internal-care enum.
+- If a light color is specified by name and the snippet exposes `Light_MoveToRGB` or equivalent RGB control, convert the named color to explicit RGB values instead of drifting to a generic `SetColor` call.
+- If the schema exposes an exact capture or close or lock action such as `Camera_CaptureImage`, `Switch_Off`, `Valve_Close`, or `DoorLock_Lock`, prefer that exact canonical action over invented synonyms such as `TakePicture` or `SetChargingState`.
+- For `#Light` color actions, prefer `Light_MoveToRGB(r, g, b)` over `ColorControl_SetColor("r,g,b")` when `Light_MoveToRGB` is available.
+- Do not use invalid off enums such as `Siren_SetSirenMode("off")`; use `Switch_Off()` when a siren must stop after a duration.
+- Do not use empty siren mode strings such as `siren_setsirenmode("")`; use `switch_off()` when the siren must stop.
+- For multi-button button 2, use `DimmerSwitch_Button2 == "pushed"` when available; do not invent `MultiButton_Button2` or `"pressed"`.
+- Never emit lowercase receiver tags such as `#bedroom`, `#sector1`, `#entrance`, or `#temperaturesensor`. Use `#Bedroom`, `#Sector1`, `#Entrance`, and schema category tags such as `#TemperatureSensor`. Only lowercase the service or value member token after the receiver dot.

@@ -1,0 +1,4 @@
+- Never invent devices, categories, tags, locations, values, functions, enum values, helper methods, or argument formats.
+- Prefer `canonical_name` exactly when the snippet provides it.
+- Use `canonical_name` only as the schema-matching reference. In final JOILang code, every receiver tag after `#` must start with an uppercase English letter; schema category tags must use the exact schema CamelCase. Lowercase only the member token after `).` or `all(...).`. Example: `(#kitchen #light).Light_MoveToRGB(255,255,0)` must be emitted as `(#Kitchen #Light).light_movetorgb(255,255,0)`.
+- Never use raw connected-device ids such as `tc1_...` in the final JOILang code. Use tag-based receivers instead.

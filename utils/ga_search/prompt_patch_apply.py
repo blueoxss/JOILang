@@ -30,10 +30,82 @@ except Exception:  # pragma: no cover - fallback for standalone use
 CORE_BLOCKS = ("01", "02")
 OPTIONAL_BLOCKS = ("03", "05", "06")
 BLOCK_ORDER = ("01", "02", "03", "05", "06")
+V16_MODEL_ID = "gpt_mg.version0_16"
 
 
 def read_json(path: str | Path) -> Any:
     return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def is_v16_dynamic_package(rendered_package: dict[str, Any] | None) -> bool:
+    if not isinstance(rendered_package, dict):
+        return False
+    manifest = rendered_package.get("prompt_manifest")
+    metadata = rendered_package.get("metadata") if isinstance(rendered_package.get("metadata"), dict) else {}
+    prompt_render = rendered_package.get("prompt_render") if isinstance(rendered_package.get("prompt_render"), dict) else {}
+    model_id = str(rendered_package.get("model_id") or metadata.get("model_id") or "")
+    if model_id == V16_MODEL_ID:
+        return True
+    if isinstance(manifest, dict) and manifest.get("local_ids_are_generation_specific") is True:
+        return True
+    return bool(prompt_render.get("supports_dynamic_block_space") and "version0_16" in str(rendered_package.get("source_model_package") or ""))
+
+
+def _v16_base_path(rendered_package: dict[str, Any]) -> Path:
+    metadata = rendered_package.get("metadata") if isinstance(rendered_package.get("metadata"), dict) else {}
+    for key in ("base_path",):
+        value = metadata.get(key)
+        if value:
+            return Path(str(value))
+    for key in ("source_model_package", "model_package"):
+        value = rendered_package.get(key)
+        if value:
+            return Path(str(value))
+    return Path("gpt_mg/version0_16").resolve()
+
+
+def _render_v16_with_genome(rendered_package: dict[str, Any], genome: dict[str, Any]) -> dict[str, Any]:
+    from gpt_mg.version0_16.tools.block_space_ops import load_manifest, render_from_manifest
+
+    base_path = _v16_base_path(rendered_package)
+    manifest = rendered_package.get("prompt_manifest") if isinstance(rendered_package.get("prompt_manifest"), dict) else {}
+    generation = genome.get("generation") if isinstance(genome, dict) else None
+    block_space_id = genome.get("block_space_id") if isinstance(genome, dict) else None
+    if not manifest or (
+        block_space_id
+        and str(manifest.get("block_space_id") or "") != str(block_space_id)
+    ):
+        try:
+            manifest = load_manifest(base_path, generation=int(generation) if generation is not None else None, block_space_id=str(block_space_id or ""))
+        except Exception:
+            manifest = load_manifest(base_path, generation=0)
+    user_input = str(rendered_package.get("user_prompt") or "")
+    rendered = render_from_manifest(
+        base_path=base_path,
+        manifest=manifest,
+        genome=genome,
+        user_input=user_input,
+        connected_devices={},
+        other_params={"rendered_from_genome": True},
+    )
+    patched = copy.deepcopy(rendered_package)
+    patched.update(
+        {
+            "prompt_text": rendered["prompt_text"],
+            "system_prompt": rendered["system_prompt"],
+            "user_prompt": rendered["user_prompt"],
+            "messages": rendered["messages"],
+            "blocks": rendered["blocks"],
+            "blocks_metadata": rendered["blocks"],
+            "prompt_manifest": rendered["prompt_manifest"],
+            "genome": rendered["genome"],
+        }
+    )
+    metadata = dict(patched.get("metadata") or {})
+    metadata.update(rendered.get("metadata", {}))
+    metadata["rendered_from_v16_dynamic_genome"] = True
+    patched["metadata"] = metadata
+    return patched
 
 
 def fallback_genome() -> dict[str, Any]:
@@ -159,6 +231,8 @@ def apply_patch_to_genome(genome: dict[str, Any], patch: dict[str, Any]) -> dict
 
 
 def rendered_prompt_with_genome(rendered_package: dict[str, Any] | None, genome: dict[str, Any]) -> str:
+    if is_v16_dynamic_package(rendered_package) and isinstance(genome, dict) and "active_atoms" in genome:
+        return str(_render_v16_with_genome(rendered_package or {}, genome).get("prompt_text") or "")
     base = str((rendered_package or {}).get("prompt_text") or "")
     lines = []
     for block_id, params in (genome.get("block_params") or {}).items():
@@ -175,6 +249,105 @@ def rendered_prompt_with_genome(rendered_package: dict[str, Any] | None, genome:
     return base.rstrip() + "\n\n---\n[GA Prompt Patch Overlay]\n" + "\n".join(lines) + "\n"
 
 
+def rendered_package_with_genome(rendered_package: dict[str, Any], genome: dict[str, Any]) -> dict[str, Any]:
+    if is_v16_dynamic_package(rendered_package) and isinstance(genome, dict) and "active_atoms" in genome:
+        return _render_v16_with_genome(rendered_package, genome)
+    patched = copy.deepcopy(rendered_package)
+    prompt = rendered_prompt_with_genome(rendered_package, genome)
+    patched["prompt_text"] = prompt
+    patched["system_prompt"] = prompt if not patched.get("user_prompt") else patched.get("system_prompt", "")
+    patched["genome"] = genome
+    messages = patched.get("messages")
+    if isinstance(messages, list) and messages:
+        new_messages = copy.deepcopy(messages)
+        for message in new_messages:
+            if isinstance(message, dict) and message.get("role") == "system":
+                message["content"] = prompt if not patched.get("user_prompt") else str(message.get("content") or "") + "\n\n" + prompt.split("[GA Prompt Patch Overlay]", 1)[-1]
+                break
+        else:
+            new_messages.insert(0, {"role": "system", "content": prompt})
+        patched["messages"] = new_messages
+    return patched
+
+
+def _apply_v16_prompt_patches(
+    *,
+    prompt_patches_path: str | Path,
+    out_dir: str | Path,
+    base_genome_path: str | Path | None,
+    rendered_package: dict[str, Any],
+) -> dict[str, Any]:
+    from gpt_mg.version0_16.tools.block_space_ops import apply_dynamic_patch_output, load_genome, write_json
+
+    root = Path(out_dir)
+    root.mkdir(parents=True, exist_ok=True)
+    base_path = _v16_base_path(rendered_package)
+    patches_output = read_json(prompt_patches_path)
+    manifest = rendered_package.get("prompt_manifest") if isinstance(rendered_package.get("prompt_manifest"), dict) else {}
+    if not manifest:
+        from gpt_mg.version0_16.tools.block_space_ops import load_manifest
+
+        manifest = load_manifest(base_path, generation=0)
+    if base_genome_path:
+        genome = load_genome(base_path, base_genome_path)
+    elif isinstance(rendered_package.get("genome"), dict):
+        genome = copy.deepcopy(rendered_package["genome"])
+    else:
+        genome = load_genome(base_path, None)
+    result = apply_dynamic_patch_output(
+        patches_output=patches_output,
+        base_path=base_path,
+        manifest=manifest,
+        genome=genome,
+        create_on_unresolved=True,
+    )
+    patched_package = _render_v16_with_genome(rendered_package, result["patched_genome"])
+    prompt_preview = str(patched_package.get("prompt_text") or "")
+    write_json(root / "patched_genome.json", result["patched_genome"])
+    write_json(root / "patched_block_space_manifest.json", result["manifest"])
+    report = {
+        "created_at": utc_now(),
+        "dynamic_block_space": True,
+        "model_id": V16_MODEL_ID,
+        "prompt_patches_path": str(prompt_patches_path),
+        "base_genome_path": str(base_genome_path or "rendered_package.genome"),
+        "patched_genome_path": str(root / "patched_genome.json"),
+        "patched_manifest_path": str(root / "patched_block_space_manifest.json"),
+        "accepted_proposal_count": int(result["summary"].get("accepted_count") or 0),
+        "advisor_child_scheduled_count": 1 if int(result["summary"].get("accepted_count") or 0) > 0 else 0,
+        "advisor_backed_diff_count": int(result["summary"].get("accepted_count") or 0),
+        "patch_count": int(result["summary"].get("patch_count") or 0),
+        "patch_visibility_ok": True,
+        "before_active_atoms": list(genome.get("active_atoms") or []),
+        "after_active_atoms": list(result["patched_genome"].get("active_atoms") or []),
+        "summary": result["summary"],
+        "applications": result["applications"],
+        "unresolved_patches": result["unresolved_patches"],
+        "policy": {
+            "target_block_id_is_fallback_only": True,
+            "silent_fallback_count": 0,
+            "unresolved_policy": "create_new_atom_with_lineage_or_record_unresolved",
+        },
+    }
+    write_json(root / "patch_application_report.json", report)
+    diff_lines = ["# V16 Dynamic Prompt Patch Diff", "", "## Applications"]
+    for item in result["applications"]:
+        diff_lines.append(
+            "- `{}` status={} accepted={} selected_atom={} created_atom={} fallback_hint={}".format(
+                item.get("patch_id"),
+                item.get("resolution_status"),
+                item.get("accepted"),
+                item.get("selected_atom_id") or "-",
+                item.get("created_atom_id") or "-",
+                item.get("fallback_block_id") or "-",
+            )
+        )
+    diff_lines.extend(["", "## Policy", "- silent_fallback_count: `0`", "- numeric block ids are fallback hints only", ""])
+    (root / "patch_diff.md").write_text("\n".join(diff_lines) + "\n", encoding="utf-8")
+    (root / "patched_prompt_preview.md").write_text(prompt_preview, encoding="utf-8")
+    return {"patched_genome": result["patched_genome"], "report": report, "prompt_preview": prompt_preview}
+
+
 def apply_prompt_patches(
     *,
     prompt_patches_path: str | Path,
@@ -185,6 +358,13 @@ def apply_prompt_patches(
 ) -> dict[str, Any]:
     root = Path(out_dir)
     root.mkdir(parents=True, exist_ok=True)
+    if is_v16_dynamic_package(rendered_package):
+        return _apply_v16_prompt_patches(
+            prompt_patches_path=prompt_patches_path,
+            out_dir=root,
+            base_genome_path=base_genome_path,
+            rendered_package=rendered_package or {},
+        )
     patches_output = read_json(prompt_patches_path)
     genome = load_base_genome(base_genome_path)
     before = copy.deepcopy(genome)

@@ -1,0 +1,4 @@
+- Keep the code minimal and directly aligned with the command.
+- Separate trigger devices from action devices. Read values from sensors, but call actions on the actual actuator. For example, read temperature from `TemperatureSensor` and speak through `Speaker_Speak`, not through a sensor device.
+- For weather reports through speaker, use `WeatherProvider_Weather` in a spoken sentence; do not call `WeatherProvider_GetWeatherInfo(0, 0)` without explicit latitude/longitude.
+- For current-time reports through speaker, use `Clock_Hour` and `Clock_Minute` in the spoken text rather than only `Clock_Time`.
