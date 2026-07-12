@@ -1,0 +1,21 @@
+﻿row_no,category,genome_id,candidate_index,det_score,det_pass,gt_exact,gt_similarity,schedule_match,cron_match,period_match,code_match,service_valid,receiver_valid,gt_service_coverage,gt_service_precision,gt_receiver_coverage,dataflow_score,numeric_grounding,enum_grounding,failure_reasons,diff_summary,gt_code,generated_code,gt_json,generated_json,generation,candidate_strategy,generation_error_type,generation_error_count,generation_prompt_tokens_total,generation_completion_tokens_total,generation_total_tokens_total,latency_sec,peak_vram_gb,raw_response_path,prompt_log_paths,service_schema_path,service_context_mode,service_context_source,service_list_retrieval_scores,repair_applied,repair_actions,backend
+211,7,suite_base,0,100.0,True,True,1.0,True,True,True,True,True,True,1.0,1.0,1.0,1.0,1.0,1.0,[],"{""gt_services"":[""presencesensor_presence"",""switch_off""],""generated_services"":[""presencesensor_presence"",""switch_off""],""gt_receivers"":[""#Floor1#Light"",""#Floor2#Light"",""(#Floor1#PresenceSensor"",""(#Floor2#PresenceSensor""],""generated_receivers"":[""#Floor1#Light"",""#Floor2#Light"",""(#Floor1#PresenceSensor"",""(#Floor2#PresenceSensor""],""gt_numeric_literals"":[""1""],""generated_numeric_literals"":[""1""],""gt_string_args"":[],""generated_string_args"":[]}","
+if ((#Floor1 #PresenceSensor).presencesensor_presence == false) {
+
+    all(#Floor1 #Light).switch_off()
+
+}
+
+delay(1 HOUR)
+
+if ((#Floor2 #PresenceSensor).presencesensor_presence == false) {
+
+    all(#Floor2 #Light).switch_off()
+
+}","if ((#Floor1 #PresenceSensor).presencesensor_presence == false) {
+  all(#Floor1 #Light).switch_off()
+}
+delay(1 HOUR)
+if ((#Floor2 #PresenceSensor).presencesensor_presence == false) {
+  all(#Floor2 #Light).switch_off()
+}","{""name"":"""",""cron"":""0 19 * * *"",""period"":0,""script"":""\nif ((#Floor1 #PresenceSensor).presencesensor_presence == false) {\n\n    all(#Floor1 #Light).switch_off()\n\n}\n\ndelay(1 HOUR)\n\nif ((#Floor2 #PresenceSensor).presencesensor_presence == false) {\n\n    all(#Floor2 #Light).switch_off()\n\n}""}","{""name"":""LightOffSchedule"",""cron"":""0 19 * * *"",""period"":0,""code"":""if ((#Floor1 #PresenceSensor).presencesensor_presence == false) {\n  all(#Floor1 #Light).switch_off()\n}\ndelay(1 HOUR)\nif ((#Floor2 #PresenceSensor).presencesensor_presence == false) {\n  all(#Floor2 #Light).switch_off()\n}""}",0,worker_direct,,0,53168,110,0,28.201939,24.1136,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/pair_dpmar_rulebased_gen_n_row211_20260626_153258/qwen25_coder_7b/raw_responses/row_211_cand_0_gen_000.json,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/pair_dpmar_rulebased_gen_n_row211_20260626_153258/qwen25_coder_7b/prompts/row_211_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/pair_dpmar_rulebased_gen_n_row211_20260626_153258/qwen25_coder_7b/prompts/row_211_cand_0_gen_000.json""]",datasets/service_list_ver2.0.1.json,schema_fallback,provided_schema,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",False,[],worker

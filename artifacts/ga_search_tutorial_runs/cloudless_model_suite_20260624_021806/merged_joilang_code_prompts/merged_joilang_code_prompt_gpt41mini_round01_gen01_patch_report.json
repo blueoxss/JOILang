@@ -1,0 +1,90 @@
+{
+  "created_at": "2026-06-25T03:09:28.938633+00:00",
+  "prompt_patches_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/gpt41mini_advisor/advisor_prompt_patches_gpt41mini_round01.json",
+  "base_genome_path": "fallback",
+  "patched_genome_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/patch_apply_gpt41mini_round01_gen01_20260625_120928/patched_genome.json",
+  "accepted_proposal_count": 7,
+  "advisor_child_scheduled_count": 1,
+  "advisor_backed_diff_count": 7,
+  "patch_count": 7,
+  "visible_patch_ids": [
+    "gpt41mini_round01_service_mapping_02",
+    "gpt41mini_round01_receiver_tag_preservation_02",
+    "gpt41mini_round01_enum_grounding_02",
+    "gpt41mini_round01_temporal_rule_06",
+    "gpt41mini_round01_numeric_unit_grounding_06",
+    "gpt41mini_round01_skeleton_06",
+    "gpt41mini_round01_det_helper_06"
+  ],
+  "patch_visibility_ok": true,
+  "applications": [
+    {
+      "patch_id": "gpt41mini_round01_service_mapping_02",
+      "operation": "append_micro_rule",
+      "target_block_id": "02",
+      "target_block_family": "Service_Mapping",
+      "changed": true,
+      "patch_text": "Always copy exact canonical service names from the schema with device prefixes and underscores; reject camelCase or paraphrased service names and replace them with schema-valid names before output."
+    },
+    {
+      "patch_id": "gpt41mini_round01_receiver_tag_preservation_02",
+      "operation": "append_micro_rule",
+      "target_block_id": "02",
+      "target_block_family": "Receiver_Tag_Preservation",
+      "changed": true,
+      "patch_text": "Select and preserve the receiver tag exactly from the current command target; do not reuse receivers from previous rows and ensure services are attached only to the current receiver."
+    },
+    {
+      "patch_id": "gpt41mini_round01_enum_grounding_02",
+      "operation": "append_micro_rule",
+      "target_block_id": "02",
+      "target_block_family": "Enum_Grounding",
+      "changed": true,
+      "patch_text": "Copy enum string arguments exactly from the selected service descriptor; do not translate, paraphrase, or borrow enum values from other devices or previous rows."
+    },
+    {
+      "patch_id": "gpt41mini_round01_temporal_rule_06",
+      "operation": "append_micro_rule",
+      "target_block_id": "06",
+      "target_block_family": "Temporal_Rule",
+      "changed": true,
+      "patch_text": "Classify schedule type precisely before JSON generation: use period=0 for one-shot or scheduled one-shot commands, preserve explicit cron triggers, and use positive period only for explicit repeated monitoring; never omit or misrepresent cron or period fields."
+    },
+    {
+      "patch_id": "gpt41mini_round01_numeric_unit_grounding_06",
+      "operation": "append_micro_rule",
+      "target_block_id": "06",
+      "target_block_family": "DET_Helper",
+      "changed": true,
+      "patch_text": "Preserve all numeric literals required by the command and bind them to the correct service arguments; convert units as specified by the service descriptor and never drop numeric thresholds or durations."
+    },
+    {
+      "patch_id": "gpt41mini_round01_skeleton_06",
+      "operation": "append_micro_rule",
+      "target_block_id": "06",
+      "target_block_family": "Skeleton",
+      "changed": true,
+      "patch_text": "Generate each dataset row independently using only the current command; never reuse JSON names, receivers, services, enum arguments, numeric arguments, or code skeletons from previous rows."
+    },
+    {
+      "patch_id": "gpt41mini_round01_det_helper_06",
+      "operation": "append_micro_rule",
+      "target_block_id": "06",
+      "target_block_family": "DET_Helper",
+      "changed": true,
+      "patch_text": "Before final output, verify component-wise equivalence: schedule, receiver, service, numeric, enum, dataflow, and output schema must match target exactly; perform detailed component comparison if schema-valid but not target-equivalent."
+    }
+  ],
+  "before_blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ],
+  "after_blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ]
+}

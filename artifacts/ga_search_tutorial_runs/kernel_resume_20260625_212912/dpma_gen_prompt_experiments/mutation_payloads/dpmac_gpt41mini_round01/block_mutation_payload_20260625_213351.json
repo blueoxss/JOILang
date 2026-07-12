@@ -1,0 +1,42 @@
+{
+  "advisor_meta": {
+    "schema_version": "block_mutation_payload_v1",
+    "source": "gpt41mini_round01",
+    "advisor_mode": "cloud",
+    "source_model": "gpt-4.1-mini",
+    "target_prompt_transition": "gen_n_to_gen_n+1",
+    "official_metric": "strict_det"
+  },
+  "mutations": [
+    {
+      "mutation_id": "gpt41mini_round01_block02_service_mapping",
+      "target_block_id": "02",
+      "target_block_family": "Service_Mapping",
+      "operation": "append_micro_rule",
+      "mutation_text": "Never invent service/member names. Copy the exact canonical device-prefixed service member from the injected schema, preserving lowercase, underscores, and device prefix. If a generated member looks camelCase, class-style, capitalized, or paraphrased, replace it with the nearest schema-valid canonical member before final JSON.",
+      "rationale": "Representative diagnostics show frequent hallucination of non-canonical service names with camelCase or class-style formatting, causing unknown_service errors and GT service coverage failures.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216"
+      ],
+      "evidence_diagnostics": [
+        "service mismatch: gt services=['door_doorstate', 'levelcontrol_movetolevel'], generated services=['dishwasherMode_setDishwasherMode']; generated service 'dishwasherMode_setDishwasherMode' looks camelCase/class-style; copy schema canonical lowercase_underscore member"
+      ],
+      "expected_effect": [
+        "reduce unknown_service",
+        "improve gt_service_coverage",
+        "improve strict_det pass rate"
+      ],
+      "risk": "May over-constrain service aliasing if schema aliases or synonyms are valid but not canonical; requires schema completeness.",
+      "token_delta_estimate": 60
+    }
+  ]
+}

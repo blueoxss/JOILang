@@ -1,0 +1,21 @@
+﻿row_no,category,genome_id,candidate_index,det_score,det_pass,gt_exact,gt_similarity,schedule_match,cron_match,period_match,code_match,service_valid,receiver_valid,gt_service_coverage,gt_service_precision,gt_receiver_coverage,dataflow_score,numeric_grounding,enum_grounding,failure_reasons,diff_summary,gt_code,generated_code,gt_json,generated_json,generation,candidate_strategy,generation_error_type,generation_error_count,generation_prompt_tokens_total,generation_completion_tokens_total,generation_total_tokens_total,latency_sec,peak_vram_gb,raw_response_path,prompt_log_paths,service_schema_path,service_context_mode,service_context_source,service_list_retrieval_scores,repair_applied,repair_actions,backend
+264,8,suite_base,0,37.7459,False,False,0.508197,False,True,False,False,False,False,0.0,0.0,0.0,1.0,1.0,0.0,"[""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""enum_grounding""]","{""gt_services"":[""doorlock_doorlockstate"",""levelcontrol_movetolevel"",""switch_off""],""generated_services"":[""doorControl_lockStatus"",""light_control_setLevel""],""gt_receivers"":[""#DoorLock"",""#Entrance#Light""],""generated_receivers"":[""#Light#Entrance"",""(#DoorLock""],""gt_numeric_literals"":[""100"",""0"",""10""],""generated_numeric_literals"":[""100"",""10"",""0""],""gt_string_args"":[""closed"",""closed""],""generated_string_args"":[""locked""]}","
+prev := (#DoorLock).doorlock_doorlockstate
+
+curr = (#DoorLock).doorlock_doorlockstate
+
+if (prev != ""closed"" and curr == ""closed"") {
+
+    (#Entrance #Light).levelcontrol_movetolevel(100, 0)
+
+    delay(10 SEC)
+
+    (#Entrance #Light).switch_off()
+
+}
+
+prev = curr","if ((#DoorLock).doorControl_lockStatus == ""locked"") {
+  (#Light #Entrance).light_control_setLevel(100)
+  delay(10 SEC)
+  (#Light #Entrance).light_control_setLevel(0)
+}","{""name"":"""",""cron"":"""",""period"":100,""script"":""\nprev := (#DoorLock).doorlock_doorlockstate\n\ncurr = (#DoorLock).doorlock_doorlockstate\n\nif (prev != \""closed\"" and curr == \""closed\"") {\n\n    (#Entrance #Light).levelcontrol_movetolevel(100, 0)\n\n    delay(10 SEC)\n\n    (#Entrance #Light).switch_off()\n\n}\n\nprev = curr""}","{""name"":""DoorLockUnlockAlert"",""cron"":"""",""period"":-1,""code"":""if ((#DoorLock).doorControl_lockStatus == \""locked\"") {\n  (#Light #Entrance).light_control_setLevel(100)\n  delay(10 SEC)\n  (#Light #Entrance).light_control_setLevel(0)\n}""}",0,worker_direct,,0,53148,91,0,27.564195,24.1068,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_loop_cloud_gen00_row264_20260625_225802/qwen25_coder_7b/raw_responses/row_264_cand_0_gen_000.json,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_loop_cloud_gen00_row264_20260625_225802/qwen25_coder_7b/prompts/row_264_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_loop_cloud_gen00_row264_20260625_225802/qwen25_coder_7b/prompts/row_264_cand_0_gen_000.json""]",datasets/service_list_ver2.0.1.json,schema_fallback,provided_schema,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",False,[],worker

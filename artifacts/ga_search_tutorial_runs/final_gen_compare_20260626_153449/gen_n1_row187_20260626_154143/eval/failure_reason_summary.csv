@@ -1,0 +1,5 @@
+﻿failure_reason,count
+gt_mismatch,1
+gt_service_coverage,1
+gt_receiver_coverage,1
+numeric_grounding,1

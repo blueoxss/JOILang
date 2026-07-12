@@ -1,0 +1,243 @@
+﻿row_no,category_before,det_score_before,det_pass_before,failure_reasons_before,generated_code_before,gt_code_before,generation_error_type_before,generation_error_count_before,gt_similarity_before,schedule_match_before,cron_match_before,period_match_before,gt_service_coverage_before,gt_receiver_coverage_before,numeric_grounding_before,enum_grounding_before,_run_dir_before,_eval_csv_before,category_after,det_score_after,det_pass_after,failure_reasons_after,generated_code_after,gt_code_after,generation_error_type_after,generation_error_count_after,gt_similarity_after,schedule_match_after,cron_match_after,period_match_after,gt_service_coverage_after,gt_receiver_coverage_after,numeric_grounding_after,enum_grounding_after,_run_dir_after,_eval_csv_after,det_score_delta,generated_code_before_nonempty,generated_code_after_nonempty
+218,7,43.3514,False,"[""cron_mismatch"",""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""numeric_grounding""]","if (any(#Hallway #Door).doorControl_door == ""open"") {
+  all(#Hallway #Light).light_control_setLevel(50)
+}","
+if (all(#Door).door_doorstate ==| ""open"") {
+
+    all(#Hallway #Light).levelcontrol_movetolevel(50, 0)
+
+}",,0,0.778378,False,False,False,0.0,0.5,0.5,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row218_20260626_153449,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row218_20260626_153449/eval/row_evaluation.csv,7,43.3514,False,"[""cron_mismatch"",""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""numeric_grounding""]","if (any(#Hallway #Door).doorControl_door == ""open"") {
+  all(#Hallway #Light).light_control_setLevel(50)
+}","
+if (all(#Door).door_doorstate ==| ""open"") {
+
+    all(#Hallway #Light).levelcontrol_movetolevel(50, 0)
+
+}",,0,0.778378,False,False,False,0.0,0.5,0.5,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row218_20260626_153516,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row218_20260626_153516/eval/row_evaluation.csv,0.0,True,True
+222,7,38.4697,False,"[""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""numeric_grounding"",""enum_grounding""]","if ((#Window).windowControl_window == ""closed"") {
+  (#Window).windowControl_open()
+}
+(#Speaker).speaker_speak(""Get up"")","
+(#Speaker).speaker_speak(""일어나세요"")
+
+if ((#Window).armrobot_currentposition == 0) {
+
+    (#Window).windowcovering_uporopen()
+
+}",,0,0.254545,False,True,False,0.333333,1.0,0.0,0.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row222_20260626_153544,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row222_20260626_153544/eval/row_evaluation.csv,7,38.4697,False,"[""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""numeric_grounding"",""enum_grounding""]","if ((#Window).windowControl_window == ""closed"") {
+  (#Window).windowControl_open()
+}
+(#Speaker).speaker_speak(""Get up"")","
+(#Speaker).speaker_speak(""일어나세요"")
+
+if ((#Window).armrobot_currentposition == 0) {
+
+    (#Window).windowcovering_uporopen()
+
+}",,0,0.254545,False,True,False,0.333333,1.0,0.0,0.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row222_20260626_153611,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row222_20260626_153611/eval/row_evaluation.csv,0.0,True,True
+195,7,56.2745,False,"[""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""enum_grounding""]","(#Speaker).speaker_speak(""301동 식당 점심 메뉴는 "" + (#MenuProvider).menuProvider_getMenu(""오늘 301동식당 점심"") + ""입니다"")","
+menu = (#MenuProvider).menuprovider_getmenu(""오늘 301동식당 점심"")
+
+(#Speaker).speaker_speak(""오늘 301동식당의 점심 메뉴는"" + menu + ""입니다"")",,0,0.431373,False,True,False,0.5,0.5,1.0,0.666667,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row195_20260626_153639,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row195_20260626_153639/eval/row_evaluation.csv,7,56.2745,False,"[""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""enum_grounding""]","(#Speaker).speaker_speak(""301동 식당 점심 메뉴는 "" + (#MenuProvider).menuProvider_getMenu(""오늘 301동식당 점심"") + ""입니다"")","
+menu = (#MenuProvider).menuprovider_getmenu(""오늘 301동식당 점심"")
+
+(#Speaker).speaker_speak(""오늘 301동식당의 점심 메뉴는"" + menu + ""입니다"")",,0,0.431373,False,True,False,0.5,0.5,1.0,0.666667,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row195_20260626_153706,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row195_20260626_153706/eval/row_evaluation.csv,0.0,True,True
+251,8,57.492,False,"[""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""numeric_grounding""]","if ((#Clock).clock_hour == 0) {
+  (#DoorLock).doorControl_close()
+}
+
+brightness = (#LightSensor).lightLevel_light
+if (brightness > 30) {
+  (#Light).light_moveToRGB(10, 10, 10)
+}","
+active := 0
+
+if (active == 0) {
+
+    (#Door).door_close()
+
+    active = 1
+
+}
+
+if ((#Clock).clock_hour == 6) {
+
+    break
+
+}
+
+if ((#Light).lightsensor_brightness > 30) {
+
+    (#Light).light_movetobrightness(10)
+
+}",,0,0.541401,True,True,True,0.25,0.5,0.5,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row251_20260626_153734,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row251_20260626_153734/eval/row_evaluation.csv,8,57.492,False,"[""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""numeric_grounding""]","if ((#Clock).clock_hour == 0) {
+  (#DoorLock).doorControl_close()
+}
+
+brightness = (#LightSensor).lightLevel_light
+if (brightness > 30) {
+  (#Light).light_moveToRGB(10, 10, 10)
+}","
+active := 0
+
+if (active == 0) {
+
+    (#Door).door_close()
+
+    active = 1
+
+}
+
+if ((#Clock).clock_hour == 6) {
+
+    break
+
+}
+
+if ((#Light).lightsensor_brightness > 30) {
+
+    (#Light).light_movetobrightness(10)
+
+}",,0,0.541401,True,True,True,0.25,0.5,0.5,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row251_20260626_153802,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row251_20260626_153802/eval/row_evaluation.csv,0.0,True,True
+211,7,100.0,True,[],"if ((#Floor1 #PresenceSensor).presencesensor_presence == false) {
+  all(#Floor1 #Light).switch_off()
+}
+delay(1 HOUR)
+if ((#Floor2 #PresenceSensor).presencesensor_presence == false) {
+  all(#Floor2 #Light).switch_off()
+}","
+if ((#Floor1 #PresenceSensor).presencesensor_presence == false) {
+
+    all(#Floor1 #Light).switch_off()
+
+}
+
+delay(1 HOUR)
+
+if ((#Floor2 #PresenceSensor).presencesensor_presence == false) {
+
+    all(#Floor2 #Light).switch_off()
+
+}",,0,1.0,True,True,True,1.0,1.0,1.0,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row211_20260626_153831,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row211_20260626_153831/eval/row_evaluation.csv,7,100.0,True,[],"if ((#Floor1 #PresenceSensor).presencesensor_presence == false) {
+  all(#Floor1 #Light).switch_off()
+}
+delay(1 HOUR)
+if ((#Floor2 #PresenceSensor).presencesensor_presence == false) {
+  all(#Floor2 #Light).switch_off()
+}","
+if ((#Floor1 #PresenceSensor).presencesensor_presence == false) {
+
+    all(#Floor1 #Light).switch_off()
+
+}
+
+delay(1 HOUR)
+
+if ((#Floor2 #PresenceSensor).presencesensor_presence == false) {
+
+    all(#Floor2 #Light).switch_off()
+
+}",,0,1.0,True,True,True,1.0,1.0,1.0,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row211_20260626_153859,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row211_20260626_153859/eval/row_evaluation.csv,0.0,True,True
+186,7,56.9444,False,"[""cron_mismatch"",""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""numeric_grounding""]","if ((#Clock).clock_hour == 15) { (#RobotCleaner).robotCleanerCleaningMode_setRobotCleanerCleaningMode(""auto"") }","
+if ((#Clock).clock_hour == 0) {
+
+    break
+
+}
+
+(#RobotVacuumCleaner).robotvacuumcleaner_setrobotvacuumcleanermodemode(""auto"")",,0,0.731481,False,False,True,0.5,0.5,0.0,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row186_20260626_153928,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row186_20260626_153928/eval/row_evaluation.csv,7,56.9444,False,"[""cron_mismatch"",""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""numeric_grounding""]","if ((#Clock).clock_hour == 15) { (#RobotCleaner).robotCleanerCleaningMode_setRobotCleanerCleaningMode(""auto"") }","
+if ((#Clock).clock_hour == 0) {
+
+    break
+
+}
+
+(#RobotVacuumCleaner).robotvacuumcleaner_setrobotvacuumcleanermodemode(""auto"")",,0,0.731481,False,False,True,0.5,0.5,0.0,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row186_20260626_153955,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row186_20260626_153955/eval/row_evaluation.csv,0.0,True,True
+219,7,45.2558,False,"[""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""numeric_grounding""]","if ((#MotionSensor).motionSensor_motion == ""inactive"") {
+  all(#DoorLock).doorControl_lock()
+}","
+if ((#MotionSensor).motionsensor_motion == true) {
+
+    break
+
+}
+
+if ((#Clock).clock_hour == 23) {
+
+    all(#DoorLock).doorlock_lock()
+
+    break
+
+}",,0,0.70297,False,True,False,0.0,0.666667,0.0,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row219_20260626_154022,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row219_20260626_154022/eval/row_evaluation.csv,7,45.2558,False,"[""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""numeric_grounding""]","if ((#MotionSensor).motionSensor_motion == ""inactive"") {
+  all(#DoorLock).doorControl_lock()
+}","
+if ((#MotionSensor).motionsensor_motion == true) {
+
+    break
+
+}
+
+if ((#Clock).clock_hour == 23) {
+
+    all(#DoorLock).doorlock_lock()
+
+    break
+
+}",,0,0.70297,False,True,False,0.0,0.666667,0.0,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row219_20260626_154049,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row219_20260626_154049/eval/row_evaluation.csv,0.0,True,True
+187,7,68.7389,False,"[""gt_mismatch"",""gt_service_coverage"",""gt_receiver_coverage"",""numeric_grounding""]","(#Siren).siren_setsirenmode(""emergency"")","
+if ((#Clock).clock_hour == 0) {
+
+    break
+
+}
+
+(#Siren).siren_setsirenmode(""emergency"")",,0,0.707965,True,True,True,0.5,0.5,0.0,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row187_20260626_154116,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row187_20260626_154116/eval/row_evaluation.csv,7,68.7389,False,"[""gt_mismatch"",""gt_service_coverage"",""gt_receiver_coverage"",""numeric_grounding""]","(#Siren).siren_setsirenmode(""emergency"")","
+if ((#Clock).clock_hour == 0) {
+
+    break
+
+}
+
+(#Siren).siren_setsirenmode(""emergency"")",,0,0.707965,True,True,True,0.5,0.5,0.0,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row187_20260626_154143,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row187_20260626_154143/eval/row_evaluation.csv,0.0,True,True
+230,7,69.4003,False,"[""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""gt_receiver_coverage"",""numeric_grounding""]","if ((#Floor1 #PresenceSensor).presencesensor_presence == true) {
+  all(#Floor1 #Light).switch_on()
+}","
+if ((#Clock).clock_hour >= 20) {
+
+    break
+
+}
+
+if ((#Floor1 #PresenceSensor).presencesensor_presence == true) {
+
+    all(#Floor1 #Light).switch_on()
+
+}",,0,0.841121,False,True,False,0.666667,0.666667,0.0,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row230_20260626_154209,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row230_20260626_154209/eval/row_evaluation.csv,7,69.4003,False,"[""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""gt_receiver_coverage"",""numeric_grounding""]","if ((#Floor1 #PresenceSensor).presencesensor_presence == true) {
+  all(#Floor1 #Light).switch_on()
+}","
+if ((#Clock).clock_hour >= 20) {
+
+    break
+
+}
+
+if ((#Floor1 #PresenceSensor).presencesensor_presence == true) {
+
+    all(#Floor1 #Light).switch_on()
+
+}",,0,0.841121,False,True,False,0.666667,0.666667,0.0,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row230_20260626_154237,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row230_20260626_154237/eval/row_evaluation.csv,0.0,True,True
+216,7,59.532,False,"[""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""numeric_grounding""]","if ((#LivingRoom #PresenceSensor).presencesensor_presence == true) {
+  all(#LivingRoom #Light).switch_on()
+}","
+if ((#LivingRoom #PresenceSensor).presencesensor_presence == true) {
+
+    all(#Light).light_movetobrightness(100, 0)
+
+}",,0,0.817734,False,True,False,0.5,0.5,0.0,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row216_20260626_154304,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n_row216_20260626_154304/eval/row_evaluation.csv,7,59.532,False,"[""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""numeric_grounding""]","if ((#LivingRoom #PresenceSensor).presencesensor_presence == true) {
+  all(#LivingRoom #Light).switch_on()
+}","
+if ((#LivingRoom #PresenceSensor).presencesensor_presence == true) {
+
+    all(#Light).light_movetobrightness(100, 0)
+
+}",,0,0.817734,False,True,False,0.5,0.5,0.0,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row216_20260626_154331,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row216_20260626_154331/eval/row_evaluation.csv,0.0,True,True

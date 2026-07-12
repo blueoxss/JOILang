@@ -1,0 +1,36 @@
+{
+  "created_at": "2026-06-25T12:33:51.203053+00:00",
+  "prompt_patches_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_gen_prompt_experiments/mutation_payloads/mutation_payload_dpmac_gpt41mini_round01_20260625_213351.json",
+  "base_genome_path": "fallback",
+  "patched_genome_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/patch_apply_dpmac_gpt41mini_round01_gen01_20260625_213351/patched_genome.json",
+  "accepted_proposal_count": 1,
+  "advisor_child_scheduled_count": 1,
+  "advisor_backed_diff_count": 1,
+  "patch_count": 1,
+  "visible_patch_ids": [
+    "gpt41mini_round01_block02_service_mapping"
+  ],
+  "patch_visibility_ok": true,
+  "applications": [
+    {
+      "patch_id": "gpt41mini_round01_block02_service_mapping",
+      "operation": "append_micro_rule",
+      "target_block_id": "02",
+      "target_block_family": "Service_Mapping",
+      "changed": true,
+      "patch_text": "Never invent service/member names. Copy the exact canonical device-prefixed service member from the injected schema, preserving lowercase, underscores, and device prefix. If a generated member looks camelCase, class-style, capitalized, or paraphrased, replace it with the nearest schema-valid canonical member before final JSON."
+    }
+  ],
+  "before_blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ],
+  "after_blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ]
+}

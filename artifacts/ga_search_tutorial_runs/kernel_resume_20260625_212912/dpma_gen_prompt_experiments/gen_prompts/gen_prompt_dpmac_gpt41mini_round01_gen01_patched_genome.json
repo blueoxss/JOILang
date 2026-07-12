@@ -1,0 +1,23 @@
+{
+  "id": "patched_base_patched",
+  "blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ],
+  "params": {},
+  "block_params": {
+    "02": {
+      "micro_rules": [
+        "Never invent service/member names. Copy the exact canonical device-prefixed service member from the injected schema, preserving lowercase, underscores, and device prefix. If a generated member looks camelCase, class-style, capitalized, or paraphrased, replace it with the nearest schema-valid canonical member before final JSON."
+      ]
+    }
+  },
+  "seed": 0,
+  "advisor_metadata": {
+    "applied_patch_ids": [
+      "gpt41mini_round01_block02_service_mapping"
+    ]
+  }
+}

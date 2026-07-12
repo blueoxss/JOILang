@@ -1,0 +1,199 @@
+{
+  "advisor_meta": {
+    "schema_version": "row_advisor_prompt_patches_v1",
+    "source": "gpt41mini_round01",
+    "official_metric": "strict_det",
+    "cloud_is_auxiliary": true
+  },
+  "prompt_patches": [
+    {
+      "patch_id": "gpt41mini_round01_service_mapping_02",
+      "target_block_family": "Service_Mapping",
+      "target_block_id": "02",
+      "operation": "append_micro_rule",
+      "priority": 100,
+      "patch_text": "Always copy exact canonical service names from the schema with device prefixes and underscores; reject camelCase or paraphrased service names and replace them with schema-valid names before output.",
+      "rationale": "Frequent service mismatches with camelCase or hallucinated service names instead of canonical schema names.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "service mismatch: expected canonical schema service but generated service differs or is hallucinated."
+      ],
+      "mutation_intent": "gpt41mini_strict_det_prompt_repair"
+    },
+    {
+      "patch_id": "gpt41mini_round01_receiver_tag_preservation_02",
+      "target_block_family": "Receiver_Tag_Preservation",
+      "target_block_id": "02",
+      "operation": "append_micro_rule",
+      "priority": 99,
+      "patch_text": "Select and preserve the receiver tag exactly from the current command target; do not reuse receivers from previous rows and ensure services are attached only to the current receiver.",
+      "rationale": "Receiver mismatches caused by reusing receivers from previous rows or ignoring command-specific receiver tags.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "receiver mismatch: generated receiver differs from command/GT receiver."
+      ],
+      "mutation_intent": "gpt41mini_strict_det_prompt_repair"
+    },
+    {
+      "patch_id": "gpt41mini_round01_enum_grounding_02",
+      "target_block_family": "Enum_Grounding",
+      "target_block_id": "02",
+      "operation": "append_micro_rule",
+      "priority": 98,
+      "patch_text": "Copy enum string arguments exactly from the selected service descriptor; do not translate, paraphrase, or borrow enum values from other devices or previous rows.",
+      "rationale": "Enum argument mismatches due to paraphrasing or borrowing enum values from unrelated contexts.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "264",
+        "174",
+        "280",
+        "259",
+        "150",
+        "114",
+        "170"
+      ],
+      "evidence_diagnostics": [
+        "enum/string mismatch: generated enum argument differs from selected service descriptor."
+      ],
+      "mutation_intent": "gpt41mini_strict_det_prompt_repair"
+    },
+    {
+      "patch_id": "gpt41mini_round01_temporal_rule_06",
+      "target_block_family": "Temporal_Rule",
+      "target_block_id": "06",
+      "operation": "append_micro_rule",
+      "priority": 97,
+      "patch_text": "Classify schedule type precisely before JSON generation: use period=0 for one-shot or scheduled one-shot commands, preserve explicit cron triggers, and use positive period only for explicit repeated monitoring; never omit or misrepresent cron or period fields.",
+      "rationale": "Frequent cron and period mismatches causing schedule errors in generated code.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "schedule mismatch: cron/period policy differs from GT."
+      ],
+      "mutation_intent": "gpt41mini_strict_det_prompt_repair"
+    },
+    {
+      "patch_id": "gpt41mini_round01_numeric_unit_grounding_06",
+      "target_block_family": "Numeric_Unit_Grounding",
+      "target_block_id": "06",
+      "operation": "append_micro_rule",
+      "priority": 96,
+      "patch_text": "Preserve all numeric literals required by the command and bind them to the correct service arguments; convert units as specified by the service descriptor and never drop numeric thresholds or durations.",
+      "rationale": "Numeric mismatches due to missing literals or incorrect unit conversions.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "numeric mismatch: required numeric literal or converted unit is missing or incorrect."
+      ],
+      "mutation_intent": "gpt41mini_strict_det_prompt_repair"
+    },
+    {
+      "patch_id": "gpt41mini_round01_skeleton_06",
+      "target_block_family": "Skeleton",
+      "target_block_id": "06",
+      "operation": "append_micro_rule",
+      "priority": 95,
+      "patch_text": "Generate each dataset row independently using only the current command; never reuse JSON names, receivers, services, enum arguments, numeric arguments, or code skeletons from previous rows.",
+      "rationale": "Output collapse caused by reusing identical code skeletons across unrelated rows.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "output collapse: same generated code reused across unrelated rows."
+      ],
+      "mutation_intent": "gpt41mini_strict_det_prompt_repair"
+    },
+    {
+      "patch_id": "gpt41mini_round01_det_helper_06",
+      "target_block_family": "DET_Helper",
+      "target_block_id": "06",
+      "operation": "append_micro_rule",
+      "priority": 94,
+      "patch_text": "Before final output, verify component-wise equivalence: schedule, receiver, service, numeric, enum, dataflow, and output schema must match target exactly; perform detailed component comparison if schema-valid but not target-equivalent.",
+      "rationale": "Overall GT mismatches require component-wise final verification to ensure strict DET compliance.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "overall GT mismatch: perform component-wise final verification."
+      ],
+      "mutation_intent": "gpt41mini_strict_det_prompt_repair"
+    }
+  ]
+}

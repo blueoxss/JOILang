@@ -1,0 +1,2 @@
+﻿rows,gen_n_rc_nonzero,gen_n1_rc_nonzero,avg_det_before,avg_det_after,avg_det_delta,det_pass_before,det_pass_after,generated_nonempty_before,generated_nonempty_after,genome
+10,0,0,59.5459,59.5459,0.0,0.1,0.1,1.0,1.0,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_gen_prompt_experiments/gen_prompts/gen_prompt_dpmar_rulebased_gen02_patched_genome.json

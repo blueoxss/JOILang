@@ -1,0 +1,15 @@
+{
+  "created_at": "2026-06-25T03:12:35.286537+00:00",
+  "candidate_count": 1,
+  "search_mode": "monolith",
+  "advisor_mode": "none",
+  "candidates": [
+    {
+      "candidate_id": "candidate_000_base_prompt",
+      "path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/patched_eval_runs/gpt41mini_round01/row150_20260625_121225/candidates/candidate_000.json",
+      "source": "base_prompt",
+      "patch_refs": [],
+      "mutation_intent": "baseline"
+    }
+  ]
+}

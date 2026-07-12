@@ -1,0 +1,90 @@
+{
+  "created_at": "2026-06-25T03:02:04.062814+00:00",
+  "prompt_patches_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/full_det_qwen25_coder_7b_allrows_20260624_021859/qwen25_coder_7b/row_advisor_mapping/advisor_prompt_patches.json",
+  "base_genome_path": "fallback",
+  "patched_genome_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/patch_apply_det_rulebased_gen01_20260625_120203/patched_genome.json",
+  "accepted_proposal_count": 7,
+  "advisor_child_scheduled_count": 1,
+  "advisor_backed_diff_count": 7,
+  "patch_count": 7,
+  "visible_patch_ids": [
+    "row_advisor_001_Skeleton_06",
+    "row_advisor_002_Service_Mapping_02",
+    "row_advisor_003_Temporal_Rule_06",
+    "row_advisor_004_DET_Helper_06",
+    "row_advisor_005_Receiver_Tag_Preservation_02",
+    "row_advisor_006_Numeric_Unit_Grounding_06",
+    "row_advisor_007_Enum_Grounding_02"
+  ],
+  "patch_visibility_ok": true,
+  "applications": [
+    {
+      "patch_id": "row_advisor_001_Skeleton_06",
+      "operation": "append_micro_rule",
+      "target_block_id": "06",
+      "target_block_family": "Skeleton",
+      "changed": true,
+      "patch_text": "Solve each dataset row independently from the current command only. Never reuse a previous row's JSON name, receiver, service, enum argument, numeric argument, or code skeleton."
+    },
+    {
+      "patch_id": "row_advisor_002_Service_Mapping_02",
+      "operation": "append_micro_rule",
+      "target_block_id": "02",
+      "target_block_family": "Service_Mapping",
+      "changed": true,
+      "patch_text": "Never invent service/member names. Copy the exact canonical device-prefixed service member from the injected schema, preserving lowercase, underscores, and device prefix. If a generated member looks camelCase, class-style, capitalized, or paraphrased, replace it with the nearest schema-valid canonical member before final JSON."
+    },
+    {
+      "patch_id": "row_advisor_003_Temporal_Rule_06",
+      "operation": "append_micro_rule",
+      "target_block_id": "06",
+      "target_block_family": "Temporal_Rule",
+      "changed": true,
+      "patch_text": "Classify schedule type before writing JSON: one-shot action, fixed cron trigger, repeated period loop, delay sequence, or trigger-then-repeat. Use period=0 for one-shot or scheduled one-shot commands, preserve explicit cron triggers, and use positive period only when repeated monitoring is explicit."
+    },
+    {
+      "patch_id": "row_advisor_004_DET_Helper_06",
+      "operation": "append_micro_rule",
+      "target_block_id": "06",
+      "target_block_family": "DET_Helper",
+      "changed": true,
+      "patch_text": "When code is schema-valid but not target-equivalent, compare schedule, receiver, service, numeric, enum, dataflow, and action order before final output. Verify schedule, receiver, service, numeric, enum, dataflow, and output schema before final JSON."
+    },
+    {
+      "patch_id": "row_advisor_005_Receiver_Tag_Preservation_02",
+      "operation": "append_micro_rule",
+      "target_block_id": "02",
+      "target_block_family": "Receiver_Tag_Preservation",
+      "changed": true,
+      "patch_text": "Select the receiver tag from the current command target before choosing any service. Preserve owner/location/group/sector tags exactly and choose only services attached to that receiver; never reuse a receiver from a previous row."
+    },
+    {
+      "patch_id": "row_advisor_006_Numeric_Unit_Grounding_06",
+      "operation": "append_micro_rule",
+      "target_block_id": "06",
+      "target_block_family": "DET_Helper",
+      "changed": true,
+      "patch_text": "Preserve every numeric literal required by the current command and bind it to the selected service argument. Convert units using the service descriptor, such as minutes to seconds for seconds-based arguments, and never drop numeric thresholds or durations."
+    },
+    {
+      "patch_id": "row_advisor_007_Enum_Grounding_02",
+      "operation": "append_micro_rule",
+      "target_block_id": "02",
+      "target_block_family": "Enum_Grounding",
+      "changed": true,
+      "patch_text": "For enum-valued services, copy the allowed enum string exactly from the selected service descriptor. Do not translate, paraphrase, or borrow enum values from another device or previous row."
+    }
+  ],
+  "before_blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ],
+  "after_blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ]
+}

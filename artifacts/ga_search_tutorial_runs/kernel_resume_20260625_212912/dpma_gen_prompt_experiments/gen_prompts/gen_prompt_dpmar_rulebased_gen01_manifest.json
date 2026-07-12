@@ -1,0 +1,12 @@
+{
+  "variant": "dpmar_rulebased",
+  "generation": 1,
+  "gen_label": "gen01",
+  "created_at": "2026-06-25T21:32:23",
+  "mutation_payload_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_gen_prompt_experiments/mutation_payloads/mutation_payload_dpmar_rulebased_20260625_213223.json",
+  "apply_dir": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/patch_apply_dpmar_rulebased_gen01_20260625_213223",
+  "gen_prompt": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_gen_prompt_experiments/gen_prompts/gen_prompt_dpmar_rulebased_gen01.md",
+  "patched_genome": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_gen_prompt_experiments/gen_prompts/gen_prompt_dpmar_rulebased_gen01_patched_genome.json",
+  "diff": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_gen_prompt_experiments/gen_prompts/gen_prompt_dpmar_rulebased_gen01_diff.md",
+  "report": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_gen_prompt_experiments/gen_prompts/gen_prompt_dpmar_rulebased_gen01_patch_report.json"
+}

@@ -1,0 +1,36 @@
+{
+  "created_at": "2026-06-25T12:27:38.057962+00:00",
+  "prompt_patches_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260625_212302/manual_patch_20260625_212737/prompt_patches.json",
+  "base_genome_path": "fallback",
+  "patched_genome_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260625_212302/patch_apply_20260625_212737/patched_genome.json",
+  "accepted_proposal_count": 1,
+  "advisor_child_scheduled_count": 1,
+  "advisor_backed_diff_count": 1,
+  "patch_count": 1,
+  "visible_patch_ids": [
+    "manual_det_grounding_rule_001"
+  ],
+  "patch_visibility_ok": true,
+  "applications": [
+    {
+      "patch_id": "manual_det_grounding_rule_001",
+      "operation": "append_micro_rule",
+      "target_block_id": "06",
+      "target_block_family": "DET_Helper",
+      "changed": true,
+      "patch_text": "Before final JSON, verify schedule, receiver tags, service coverage, numeric/enum grounding, and temporal order against the command."
+    }
+  ],
+  "before_blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ],
+  "after_blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ]
+}

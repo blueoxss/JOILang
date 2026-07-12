@@ -1,0 +1,7 @@
+﻿failure_reason,count
+period_mismatch,1
+gt_mismatch,1
+gt_service_coverage,1
+unknown_service,1
+numeric_grounding,1
+enum_grounding,1

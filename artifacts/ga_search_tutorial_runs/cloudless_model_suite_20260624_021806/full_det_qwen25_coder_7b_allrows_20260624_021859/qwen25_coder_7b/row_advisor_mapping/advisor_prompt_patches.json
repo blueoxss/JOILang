@@ -4,7 +4,7 @@
     "source": "row_advisor_mapping",
     "official_metric": "strict_det",
     "cloud_is_auxiliary": true,
-    "created_at": "2026-06-24T21:47:10.541493",
+    "created_at": "2026-06-25T11:38:54.187051",
     "coverage_report": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/full_det_qwen25_coder_7b_allrows_20260624_021859/qwen25_coder_7b/row_advisor_mapping/advisor_mapping_coverage_report.csv",
     "note": "Generated from row-level concrete diagnostics. Patch application is optional and disabled by default in Cell 22."
   },

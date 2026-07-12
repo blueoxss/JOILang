@@ -1,0 +1,12 @@
+{
+  "variant": "gpt41mini_round01",
+  "generation": 1,
+  "gen_label": "gen01",
+  "created_at": "2026-06-25T12:09:28",
+  "patch_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/gpt41mini_advisor/advisor_prompt_patches_gpt41mini_round01.json",
+  "apply_dir": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/patch_apply_gpt41mini_round01_gen01_20260625_120928",
+  "merged_prompt": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/merged_joilang_code_prompts/merged_joilang_code_prompt_gpt41mini_round01_gen01.md",
+  "merged_diff": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/merged_joilang_code_prompts/merged_joilang_code_prompt_gpt41mini_round01_gen01_diff.md",
+  "merged_genome": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/merged_joilang_code_prompts/merged_joilang_code_prompt_gpt41mini_round01_gen01_patched_genome.json",
+  "merged_report": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/merged_joilang_code_prompts/merged_joilang_code_prompt_gpt41mini_round01_gen01_patch_report.json"
+}

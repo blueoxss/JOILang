@@ -1,0 +1,15 @@
+{
+  "created_at": "2026-06-26T06:37:34.546021+00:00",
+  "candidate_count": 1,
+  "search_mode": "monolith",
+  "advisor_mode": "none",
+  "candidates": [
+    {
+      "candidate_id": "candidate_000_base_prompt",
+      "path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/final_gen_compare_20260626_153449/gen_n1_row195_20260626_153706/candidates/candidate_000.json",
+      "source": "base_prompt",
+      "patch_refs": [],
+      "mutation_intent": "baseline"
+    }
+  ]
+}

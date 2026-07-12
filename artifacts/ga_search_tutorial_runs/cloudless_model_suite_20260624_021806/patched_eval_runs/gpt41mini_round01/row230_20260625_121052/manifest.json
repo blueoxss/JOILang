@@ -1,0 +1,36 @@
+{
+  "created_at": "2026-06-25T03:11:02.363656+00:00",
+  "artifact_schema": "ga_search.foundation.v1",
+  "run_dir": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/patched_eval_runs/gpt41mini_round01/row230_20260625_121052",
+  "search_mode": "monolith",
+  "advisor_mode": "none",
+  "model_render_mode": "monolith",
+  "official_score_policy": {
+    "primary_metric": "strict_det",
+    "cloud_is_auxiliary": true
+  },
+  "artifacts": {
+    "rendered_base_prompt": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/patched_eval_runs/gpt41mini_round01/row230_20260625_121052/rendered_base_prompt.md",
+    "render_metadata": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/patched_eval_runs/gpt41mini_round01/row230_20260625_121052/render_metadata.json",
+    "search_input": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/patched_eval_runs/gpt41mini_round01/row230_20260625_121052/search_input.json",
+    "decomposed_blocks": "",
+    "advisor_dir": "",
+    "candidates_manifest": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/patched_eval_runs/gpt41mini_round01/row230_20260625_121052/candidates/candidates_manifest.json"
+  },
+  "advisor_summary": {},
+  "candidate_summary": {
+    "created_at": "2026-06-25T03:11:02.356848+00:00",
+    "candidate_count": 1,
+    "search_mode": "monolith",
+    "advisor_mode": "none",
+    "candidates": [
+      {
+        "candidate_id": "candidate_000_base_prompt",
+        "path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/patched_eval_runs/gpt41mini_round01/row230_20260625_121052/candidates/candidate_000.json",
+        "source": "base_prompt",
+        "patch_refs": [],
+        "mutation_intent": "baseline"
+      }
+    ]
+  }
+}

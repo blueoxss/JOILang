@@ -1,0 +1,14 @@
+{
+  "candidate_id": "candidate_000_base_prompt",
+  "source": "base_prompt",
+  "search_mode": "monolith",
+  "base_prompt_ref": "rendered_base_prompt.md",
+  "patch_refs": [],
+  "rendered_candidate_prompt_path": null,
+  "blocks": null,
+  "metadata": {
+    "advisor_mode": "none",
+    "mutation_intent": "baseline",
+    "evidence_rows": []
+  }
+}

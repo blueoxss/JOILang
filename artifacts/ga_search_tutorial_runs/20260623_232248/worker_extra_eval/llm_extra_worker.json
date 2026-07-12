@@ -1,8 +1,0 @@
-{
-  "local_worker": "gpt_mg/version0_13/qwen_local_worker.py",
-  "worker_python": "/home/mgjeong/miniconda3/envs/l/bin/python",
-  "local_model_name": "/home/mgjeong/Desktop/llm/local_models/qwen25_coder_14b",
-  "local_device": "cuda:0",
-  "local_files_only": true,
-  "local_trust_remote_code": true
-}

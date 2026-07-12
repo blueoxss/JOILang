@@ -1,0 +1,26 @@
+{
+  "loop_name": "dpma_loop_cloud",
+  "advisor": "cloud",
+  "requested_generations": 10,
+  "completed_mutations": 1,
+  "rows": [
+    218,
+    222,
+    195,
+    186,
+    187,
+    251,
+    211,
+    219,
+    230,
+    216,
+    217,
+    264
+  ],
+  "model_key": "qwen25_coder_7b",
+  "max_new_tokens": 1024,
+  "root": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_gen_prompt_experiments/iterative_loops/dpma_loop_cloud_20260625_225300",
+  "last_genome": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_gen_prompt_experiments/gen_prompts/gen_prompt_dpma_loop_cloud_gen00_to_gen01_gen01_patched_genome.json",
+  "summary_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_gen_prompt_experiments/iterative_loops/dpma_loop_cloud_20260625_225300/generation_summary.csv",
+  "records_csv": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_gen_prompt_experiments/iterative_loops/dpma_loop_cloud_20260625_225300/iteration_records.csv"
+}

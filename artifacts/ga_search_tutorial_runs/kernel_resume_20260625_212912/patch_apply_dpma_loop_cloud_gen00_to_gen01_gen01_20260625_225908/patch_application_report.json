@@ -1,0 +1,99 @@
+{
+  "created_at": "2026-06-25T13:59:08.243367+00:00",
+  "prompt_patches_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/dpma_gen_prompt_experiments/mutation_payloads/mutation_payload_dpma_loop_cloud_gen00_to_gen01_20260625_225908.json",
+  "base_genome_path": "fallback",
+  "patched_genome_path": "/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/patch_apply_dpma_loop_cloud_gen00_to_gen01_gen01_20260625_225908/patched_genome.json",
+  "accepted_proposal_count": 8,
+  "advisor_child_scheduled_count": 1,
+  "advisor_backed_diff_count": 8,
+  "patch_count": 8,
+  "visible_patch_ids": [
+    "iter_gen00_00_unknown_service",
+    "iter_gen00_01_gt_service_coverage",
+    "iter_gen00_02_gt_receiver_coverage",
+    "iter_gen00_03_period_mismatch",
+    "iter_gen00_04_cron_mismatch",
+    "iter_gen00_05_numeric_grounding",
+    "iter_gen00_06_enum_grounding",
+    "iter_gen00_07_gt_mismatch"
+  ],
+  "patch_visibility_ok": true,
+  "applications": [
+    {
+      "patch_id": "iter_gen00_00_unknown_service",
+      "operation": "append_micro_rule",
+      "target_block_id": "02",
+      "target_block_family": "Service_Mapping",
+      "changed": true,
+      "patch_text": "Never invent service/member names. Copy the exact canonical device-prefixed service member from the injected schema; do not emit camelCase, class-style, capitalized, or paraphrased service names."
+    },
+    {
+      "patch_id": "iter_gen00_01_gt_service_coverage",
+      "operation": "append_micro_rule",
+      "target_block_id": "02",
+      "target_block_family": "Service_Mapping",
+      "changed": true,
+      "patch_text": "Include every service implied by the current command and select services only from the injected schema under the selected receiver; do not substitute adjacent service families."
+    },
+    {
+      "patch_id": "iter_gen00_02_gt_receiver_coverage",
+      "operation": "append_micro_rule",
+      "target_block_id": "02",
+      "target_block_family": "Receiver_Tag_Preservation",
+      "changed": true,
+      "patch_text": "Select receiver tags from the current command target before service selection. Preserve owner, location, group, and sector tags exactly, and never reuse a receiver from another row."
+    },
+    {
+      "patch_id": "iter_gen00_03_period_mismatch",
+      "operation": "append_micro_rule",
+      "target_block_id": "06",
+      "target_block_family": "Temporal_Rule",
+      "changed": true,
+      "patch_text": "Classify schedule type before writing JSON. Use period=0 for one-shot or scheduled one-shot commands, preserve explicit cron triggers, and use positive period only when repeated monitoring is explicit."
+    },
+    {
+      "patch_id": "iter_gen00_04_cron_mismatch",
+      "operation": "append_micro_rule",
+      "target_block_id": "06",
+      "target_block_family": "Temporal_Rule",
+      "changed": true,
+      "patch_text": "For explicit fixed times, weekdays, midnight, or scheduled commands, derive cron first and preserve it exactly; do not replace a fixed schedule with only a period loop or Clock guard."
+    },
+    {
+      "patch_id": "iter_gen00_05_numeric_grounding",
+      "operation": "append_micro_rule",
+      "target_block_id": "06",
+      "target_block_family": "DET_Helper",
+      "changed": true,
+      "patch_text": "Preserve every numeric literal required by the current command and bind it to the selected service argument or condition. Convert units using the selected service descriptor and never drop thresholds, durations, or target values."
+    },
+    {
+      "patch_id": "iter_gen00_06_enum_grounding",
+      "operation": "append_micro_rule",
+      "target_block_id": "02",
+      "target_block_family": "Enum_Grounding",
+      "changed": true,
+      "patch_text": "For enum-valued services, copy the allowed enum string exactly from the selected service descriptor; do not translate, paraphrase, or borrow enum values from another device or previous row."
+    },
+    {
+      "patch_id": "iter_gen00_07_gt_mismatch",
+      "operation": "append_micro_rule",
+      "target_block_id": "06",
+      "target_block_family": "DET_Helper",
+      "changed": true,
+      "patch_text": "Before final JSON, compare schedule, receiver, service, numeric literals, enum arguments, dataflow, and action order against the current command; repair concrete mismatches before output."
+    }
+  ],
+  "before_blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ],
+  "after_blocks": [
+    "01",
+    "02",
+    "03",
+    "06"
+  ]
+}

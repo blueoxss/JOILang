@@ -1,0 +1,33 @@
+﻿row_no,category,genome_id,candidate_index,det_score,det_pass,gt_exact,gt_similarity,schedule_match,cron_match,period_match,code_match,service_valid,receiver_valid,gt_service_coverage,gt_service_precision,gt_receiver_coverage,dataflow_score,numeric_grounding,enum_grounding,failure_reasons,diff_summary,gt_code,generated_code,gt_json,generated_json,generation,candidate_strategy,generation_error_type,generation_error_count,generation_prompt_tokens_total,generation_completion_tokens_total,generation_total_tokens_total,latency_sec,peak_vram_gb,raw_response_path,prompt_log_paths,service_schema_path,service_context_mode,service_context_source,service_list_retrieval_scores,repair_applied,repair_actions,backend
+251,8,suite_base,0,52.0533,False,False,0.360111,True,True,True,False,False,False,0.25,0.25,0.5,1.0,0.5,1.0,"[""gt_mismatch"",""gt_service_coverage"",""unknown_service"",""gt_receiver_coverage"",""numeric_grounding""]","{""gt_services"":[""clock_hour"",""door_close"",""light_movetobrightness"",""lightsensor_brightness""],""generated_services"":[""clock_hour"",""doorControl_close"",""lightLevel_light"",""light_moveToRGB""],""gt_receivers"":[""#Door"",""#Light"",""(#Clock"",""(#Light""],""generated_receivers"":[""#DoorLock"",""#Light"",""#LightSensor"",""(#Clock""],""gt_numeric_literals"":[""0"",""0"",""1"",""6"",""30"",""10""],""generated_numeric_literals"":[""30"",""10"",""10"",""10"",""6""],""gt_string_args"":[],""generated_string_args"":[]}","
+active := 0
+
+if (active == 0) {
+
+    (#Door).door_close()
+
+    active = 1
+
+}
+
+if ((#Clock).clock_hour == 6) {
+
+    break
+
+}
+
+if ((#Light).lightsensor_brightness > 30) {
+
+    (#Light).light_movetobrightness(10)
+
+}","active := false
+if (active == false) {
+  (#DoorLock).doorControl_close()
+  active = true
+}
+do {
+  brightness = (#LightSensor).lightLevel_light
+  if (brightness > 30) {
+    (#Light).light_moveToRGB(10, 10, 10)
+  }
+} while ((#Clock).clock_hour < 6)","{""name"":"""",""cron"":""0 0 * * *"",""period"":3600000,""script"":""\nactive := 0\n\nif (active == 0) {\n\n    (#Door).door_close()\n\n    active = 1\n\n}\n\nif ((#Clock).clock_hour == 6) {\n\n    break\n\n}\n\nif ((#Light).lightsensor_brightness > 30) {\n\n    (#Light).light_movetobrightness(10)\n\n}""}","{""name"":""MidnightDoorAndLightControl"",""cron"":""0 0 * * *"",""period"":3600000,""code"":""active := false\nif (active == false) {\n  (#DoorLock).doorControl_close()\n  active = true\n}\ndo {\n  brightness = (#LightSensor).lightLevel_light\n  if (brightness > 30) {\n    (#Light).light_moveToRGB(10, 10, 10)\n  }\n} while ((#Clock).clock_hour < 6)""}",0,worker_direct,,0,53156,138,0,29.461622,24.1082,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/pair_dpmar_rulebased_gen_n_row251_20260625_214409/qwen25_coder_7b/raw_responses/row_251_cand_0_gen_000.json,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/pair_dpmar_rulebased_gen_n_row251_20260625_214409/qwen25_coder_7b/prompts/row_251_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/kernel_resume_20260625_212912/pair_dpmar_rulebased_gen_n_row251_20260625_214409/qwen25_coder_7b/prompts/row_251_cand_0_gen_000.json""]",datasets/service_list_ver2.0.1.json,schema_fallback,provided_schema,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",False,[],worker

@@ -1,0 +1,17 @@
+﻿row_no,category,genome_id,candidate_index,det_score,det_pass,gt_exact,gt_similarity,schedule_match,cron_match,period_match,code_match,service_valid,receiver_valid,gt_service_coverage,gt_service_precision,gt_receiver_coverage,dataflow_score,numeric_grounding,enum_grounding,failure_reasons,diff_summary,gt_code,generated_code,gt_json,generated_json,generation,candidate_strategy,generation_error_type,generation_error_count,generation_prompt_tokens_total,generation_completion_tokens_total,generation_total_tokens_total,latency_sec,peak_vram_gb,raw_response_path,prompt_log_paths,service_schema_path,service_context_mode,service_context_source,service_list_retrieval_scores,repair_applied,repair_actions,backend
+264,8,eval_base,0,12.5,False,False,0.0,False,True,False,False,False,False,0.0,0.0,0.0,1.0,0.0,0.0,"[""missing_generated_code"",""period_mismatch"",""gt_mismatch"",""gt_service_coverage"",""gt_receiver_coverage"",""numeric_grounding"",""enum_grounding""]","{""gt_services"":[""doorlock_doorlockstate"",""levelcontrol_movetolevel"",""switch_off""],""generated_services"":[],""gt_receivers"":[""#DoorLock"",""#Entrance#Light""],""generated_receivers"":[],""gt_numeric_literals"":[""100"",""0"",""10""],""generated_numeric_literals"":[],""gt_string_args"":[""closed"",""closed""],""generated_string_args"":[]}","
+prev := (#DoorLock).doorlock_doorlockstate
+
+curr = (#DoorLock).doorlock_doorlockstate
+
+if (prev != ""closed"" and curr == ""closed"") {
+
+    (#Entrance #Light).levelcontrol_movetolevel(100, 0)
+
+    delay(10 SEC)
+
+    (#Entrance #Light).switch_off()
+
+}
+
+prev = curr",,"{""name"":"""",""cron"":"""",""period"":100,""script"":""\nprev := (#DoorLock).doorlock_doorlockstate\n\ncurr = (#DoorLock).doorlock_doorlockstate\n\nif (prev != \""closed\"" and curr == \""closed\"") {\n\n    (#Entrance #Light).levelcontrol_movetolevel(100, 0)\n\n    delay(10 SEC)\n\n    (#Entrance #Light).switch_off()\n\n}\n\nprev = curr""}","{""name"":"""",""cron"":"""",""period"":0,""code"":""""}",0,worker_direct,worker_crash,1,0,0,0,10.253681,,/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/patched_eval_runs/gpt41mini_round01/row264_20260625_121123/raw_responses/row_264_cand_0_gen_000.json,"[""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/patched_eval_runs/gpt41mini_round01/row264_20260625_121123/prompts/row_264_cand_0_gen_000.md"", ""/home/mgjeong/Desktop/llm/JOILang-Server/artifacts/ga_search_tutorial_runs/cloudless_model_suite_20260624_021806/patched_eval_runs/gpt41mini_round01/row264_20260625_121123/prompts/row_264_cand_0_gen_000.json""]",/home/mgjeong/Desktop/llm/JOILang-Server/datasets/service_list_ver2.0.1.json,schema_fallback,provided_schema,"{""status"": ""retrieval_disabled"", ""reason"": ""canonical ga_search has not enabled service retrieval yet""}",False,[],worker

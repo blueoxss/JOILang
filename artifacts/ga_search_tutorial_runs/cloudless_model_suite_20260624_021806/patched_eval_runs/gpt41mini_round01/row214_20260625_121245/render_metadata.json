@@ -1,0 +1,20 @@
+{
+  "created_at": "2026-06-25T03:12:55.873668+00:00",
+  "model_package": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13",
+  "model_package_id": "gpt_mg__version0_13",
+  "model_config_summary": {
+    "model_name": "gen_baseline_cot",
+    "model_version": "0.13",
+    "device_name": "qwen2.5-Coder-7B-Instruct"
+  },
+  "model_render_mode": "monolith",
+  "prompt_render": {
+    "mode": "monolith",
+    "loader": "config_loader.py",
+    "loader_function": "load_version_config",
+    "merged_prompt_output": "merged_system_prompt.md"
+  },
+  "merged_prompt_path": "/home/mgjeong/Desktop/llm/JOILang-Server/gpt_mg/version0_13/merged_system_prompt_260625.md",
+  "messages_count": 2,
+  "metadata": {}
+}

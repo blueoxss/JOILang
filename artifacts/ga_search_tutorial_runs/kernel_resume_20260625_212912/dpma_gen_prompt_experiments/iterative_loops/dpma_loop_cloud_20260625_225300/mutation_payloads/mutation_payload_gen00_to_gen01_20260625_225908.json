@@ -1,0 +1,273 @@
+{
+  "advisor_meta": {
+    "schema_version": "row_advisor_prompt_patches_v1",
+    "source": "dpma_loop_cloud_gen00_cloud",
+    "official_metric": "strict_det",
+    "cloud_is_auxiliary": true,
+    "normalized_from": "dpma_loop_cloud_cloud_gen00",
+    "normalized_at": "2026-06-25T22:59:08"
+  },
+  "prompt_patches": [
+    {
+      "patch_id": "iter_gen00_00_unknown_service",
+      "target_block_family": "Service_Mapping",
+      "target_block_id": "02",
+      "operation": "append_micro_rule",
+      "priority": 100,
+      "patch_text": "Never invent service/member names. Copy the exact canonical device-prefixed service member from the injected schema; do not emit camelCase, class-style, capitalized, or paraphrased service names.",
+      "rationale": "Generated from gen_0 strict DET failures; signal=unknown_service, count=9.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "row 218: service mismatch: gt=['door_doorstate', 'levelcontrol_movetolevel'], generated=['doorControl_door', 'light_control_setLevel']",
+        "row 222: service mismatch: gt=['armrobot_currentposition', 'speaker_speak', 'windowcovering_uporopen'], generated=['speaker_speak', 'windowControl_open', 'windowControl_window']",
+        "row 195: service mismatch: gt=['menuprovider_getmenu', 'speaker_speak'], generated=['menuProvider_getMenu', 'speaker_speak']",
+        "row 186: service mismatch: gt=['clock_hour', 'robotvacuumcleaner_setrobotvacuumcleanermodemode'], generated=['clock_hour', 'robotCleanerCleaningMode_setRobotCleanerCleaningMode']"
+      ],
+      "mutation_intent": "iterative_dpma_cloud_prompt_mutation",
+      "expected_effect": [],
+      "risk": "",
+      "token_delta_estimate": null
+    },
+    {
+      "patch_id": "iter_gen00_01_gt_service_coverage",
+      "target_block_family": "Service_Mapping",
+      "target_block_id": "02",
+      "operation": "append_micro_rule",
+      "priority": 99,
+      "patch_text": "Include every service implied by the current command and select services only from the injected schema under the selected receiver; do not substitute adjacent service families.",
+      "rationale": "Generated from gen_0 strict DET failures; signal=gt_service_coverage, count=11.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "row 218: service mismatch: gt=['door_doorstate', 'levelcontrol_movetolevel'], generated=['doorControl_door', 'light_control_setLevel']",
+        "row 222: service mismatch: gt=['armrobot_currentposition', 'speaker_speak', 'windowcovering_uporopen'], generated=['speaker_speak', 'windowControl_open', 'windowControl_window']",
+        "row 195: service mismatch: gt=['menuprovider_getmenu', 'speaker_speak'], generated=['menuProvider_getMenu', 'speaker_speak']",
+        "row 186: service mismatch: gt=['clock_hour', 'robotvacuumcleaner_setrobotvacuumcleanermodemode'], generated=['clock_hour', 'robotCleanerCleaningMode_setRobotCleanerCleaningMode']"
+      ],
+      "mutation_intent": "iterative_dpma_cloud_prompt_mutation",
+      "expected_effect": [],
+      "risk": "",
+      "token_delta_estimate": null
+    },
+    {
+      "patch_id": "iter_gen00_02_gt_receiver_coverage",
+      "target_block_family": "Receiver_Tag_Preservation",
+      "target_block_id": "02",
+      "operation": "append_micro_rule",
+      "priority": 98,
+      "patch_text": "Select receiver tags from the current command target before service selection. Preserve owner, location, group, and sector tags exactly, and never reuse a receiver from another row.",
+      "rationale": "Generated from gen_0 strict DET failures; signal=gt_receiver_coverage, count=10.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "row 218: receiver mismatch: gt=['#Hallway#Light', 'all(#Door'], generated=['#Hallway#Light', 'any(#Hallway#Door']",
+        "row 195: receiver mismatch: gt=['#MenuProvider', '#Speaker'], generated=['\"301동식당점심메뉴는\"+(#MenuProvider', '#Speaker']",
+        "row 186: receiver mismatch: gt=['#RobotVacuumCleaner', '(#Clock'], generated=['#RobotCleaner', '(#Clock']",
+        "row 187: receiver mismatch: gt=['#Siren', '(#Clock'], generated=['#Siren']"
+      ],
+      "mutation_intent": "iterative_dpma_cloud_prompt_mutation",
+      "expected_effect": [],
+      "risk": "",
+      "token_delta_estimate": null
+    },
+    {
+      "patch_id": "iter_gen00_03_period_mismatch",
+      "target_block_family": "Temporal_Rule",
+      "target_block_id": "06",
+      "operation": "append_micro_rule",
+      "priority": 97,
+      "patch_text": "Classify schedule type before writing JSON. Use period=0 for one-shot or scheduled one-shot commands, preserve explicit cron triggers, and use positive period only when repeated monitoring is explicit.",
+      "rationale": "Generated from gen_0 strict DET failures; signal=period_mismatch, count=8.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "row 218: period mismatch: gt=0, generated=3600000",
+        "row 222: period mismatch: gt=0, generated=-1",
+        "row 195: period mismatch: gt=0, generated=-1",
+        "row 219: period mismatch: gt=100, generated=3600000"
+      ],
+      "mutation_intent": "iterative_dpma_cloud_prompt_mutation",
+      "expected_effect": [],
+      "risk": "",
+      "token_delta_estimate": null
+    },
+    {
+      "patch_id": "iter_gen00_04_cron_mismatch",
+      "target_block_family": "Temporal_Rule",
+      "target_block_id": "06",
+      "operation": "append_micro_rule",
+      "priority": 96,
+      "patch_text": "For explicit fixed times, weekdays, midnight, or scheduled commands, derive cron first and preserve it exactly; do not replace a fixed schedule with only a period loop or Clock guard.",
+      "rationale": "Generated from gen_0 strict DET failures; signal=cron_mismatch, count=2.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "row 218: cron mismatch: gt='0 0-5 * * *', generated='0 0 * * *'",
+        "row 186: cron mismatch: gt='0 12 * * 6,7', generated='0 15 * * 6,7'"
+      ],
+      "mutation_intent": "iterative_dpma_cloud_prompt_mutation",
+      "expected_effect": [],
+      "risk": "",
+      "token_delta_estimate": null
+    },
+    {
+      "patch_id": "iter_gen00_05_numeric_grounding",
+      "target_block_family": "Numeric_Unit_Grounding",
+      "target_block_id": "06",
+      "operation": "append_micro_rule",
+      "priority": 95,
+      "patch_text": "Preserve every numeric literal required by the current command and bind it to the selected service argument or condition. Convert units using the selected service descriptor and never drop thresholds, durations, or target values.",
+      "rationale": "Generated from gen_0 strict DET failures; signal=numeric_grounding, count=9.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "row 218: numeric mismatch: gt=['50', '0'], generated=['50']",
+        "row 222: numeric mismatch: gt=['0'], generated=[]",
+        "row 186: numeric mismatch: gt=['0'], generated=['15']",
+        "row 187: numeric mismatch: gt=['0'], generated=[]"
+      ],
+      "mutation_intent": "iterative_dpma_cloud_prompt_mutation",
+      "expected_effect": [],
+      "risk": "",
+      "token_delta_estimate": null
+    },
+    {
+      "patch_id": "iter_gen00_06_enum_grounding",
+      "target_block_family": "Enum_Grounding",
+      "target_block_id": "02",
+      "operation": "append_micro_rule",
+      "priority": 94,
+      "patch_text": "For enum-valued services, copy the allowed enum string exactly from the selected service descriptor; do not translate, paraphrase, or borrow enum values from another device or previous row.",
+      "rationale": "Generated from gen_0 strict DET failures; signal=enum_grounding, count=3.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "row 222: enum/string mismatch: gt=['일어나세요'], generated=['closed', 'getup']",
+        "row 195: enum/string mismatch: gt=['오늘301동식당점심', '오늘301동식당의점심메뉴는', '입니다'], generated=['301동식당점심메뉴는', '오늘301동식당점심', '입니다']",
+        "row 264: enum/string mismatch: gt=['closed', 'closed'], generated=['locked']"
+      ],
+      "mutation_intent": "iterative_dpma_cloud_prompt_mutation",
+      "expected_effect": [],
+      "risk": "",
+      "token_delta_estimate": null
+    },
+    {
+      "patch_id": "iter_gen00_07_gt_mismatch",
+      "target_block_family": "DET_Helper",
+      "target_block_id": "06",
+      "operation": "append_micro_rule",
+      "priority": 93,
+      "patch_text": "Before final JSON, compare schedule, receiver, service, numeric literals, enum arguments, dataflow, and action order against the current command; repair concrete mismatches before output.",
+      "rationale": "Generated from gen_0 strict DET failures; signal=gt_mismatch, count=11.",
+      "evidence_rows": [
+        "218",
+        "222",
+        "195",
+        "186",
+        "187",
+        "251",
+        "211",
+        "219",
+        "230",
+        "216",
+        "217",
+        "264"
+      ],
+      "evidence_diagnostics": [
+        "row 218: gt_mismatch; failure_reasons=[\"cron_mismatch\",\"period_mismatch\",\"gt_mismatch\",\"gt_service_coverage\",\"unknown_service\",\"gt_receiver_coverage\",\"numeric_grounding\"]",
+        "row 222: gt_mismatch; failure_reasons=[\"period_mismatch\",\"gt_mismatch\",\"gt_service_coverage\",\"unknown_service\",\"numeric_grounding\",\"enum_grounding\"]",
+        "row 195: gt_mismatch; failure_reasons=[\"period_mismatch\",\"gt_mismatch\",\"gt_service_coverage\",\"unknown_service\",\"gt_receiver_coverage\",\"enum_grounding\"]",
+        "row 186: gt_mismatch; failure_reasons=[\"cron_mismatch\",\"gt_mismatch\",\"gt_service_coverage\",\"unknown_service\",\"gt_receiver_coverage\",\"numeric_grounding\"]"
+      ],
+      "mutation_intent": "iterative_dpma_cloud_prompt_mutation",
+      "expected_effect": [],
+      "risk": "",
+      "token_delta_estimate": null
+    }
+  ]
+}

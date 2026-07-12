@@ -1,0 +1,9 @@
+﻿failure_reason,before_count,after_count,delta
+cron_mismatch,2,2,0
+enum_grounding,2,2,0
+gt_mismatch,9,9,0
+gt_receiver_coverage,8,8,0
+gt_service_coverage,9,9,0
+numeric_grounding,8,8,0
+period_mismatch,6,6,0
+unknown_service,7,7,0
