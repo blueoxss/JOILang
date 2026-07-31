@@ -1,0 +1,3 @@
+Use receiver tags correctly: #Device, #Location and all(...).
+If user says all/every/모든/모두, receiver must use all(...).
+Resolve place-specific command targets to matching location-tagged receivers where possible.

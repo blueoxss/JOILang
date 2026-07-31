@@ -1,0 +1,3 @@
+When reading sensor values then acting, use explicit dataflow:
+1) read value, 2) compare/condition, 3) action/output.
+Do not skip variable/condition linkage when required by command meaning.

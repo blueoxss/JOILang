@@ -1,0 +1,2 @@
+For speak/report intents, wrap output via Speaker/report-compatible service.
+Ensure code string remains valid JOILang and JSON-escaped.

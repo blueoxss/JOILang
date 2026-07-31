@@ -1,0 +1,5 @@
+Forbidden patterns:
+- Calling boolean property as function with argument, e.g. isavailable(true)
+- Using mode enum change when direct switch_on service exists for "turn on"
+- Choosing service without checking descriptor/return_type/enum_descriptor
+- Non-JSON or explanation text in final output

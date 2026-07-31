@@ -1,0 +1,3 @@
+Service name format must be {device}_{service} mapped from schema.
+Choose only services present in provided retrieval/service context.
+If multiple candidates exist, pick the one whose descriptor/return_type/enum_descriptor best matches intent.

@@ -1,0 +1,4 @@
+Final contract:
+- Return JSON only.
+- No explanation, no comments, no markdown fences.
+- Must be parseable and evaluator-compatible in one pass.

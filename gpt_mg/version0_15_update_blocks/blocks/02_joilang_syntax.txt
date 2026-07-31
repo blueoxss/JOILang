@@ -1,0 +1,4 @@
+Follow JOILang syntax strictly.
+Function calls must use comma-separated arguments.
+Use explicit receiver syntax: (#Device).device_service(...)
+Do not invent grammar forms not present in service schema.

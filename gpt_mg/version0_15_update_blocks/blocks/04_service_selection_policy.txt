@@ -1,0 +1,5 @@
+Always read and use descriptor, return_type, enum_descriptor before choosing fields/functions.
+For ENUM constraints, choose valid enum literal only.
+Differentiate value-read vs function-invoke correctly.
+For cloud activation checks: use (#CloudServiceProvider).cloudserviceprovider_isavailable == true.
+For "켜기/turn on": prefer switch_on() semantics over mode enum when both are available.

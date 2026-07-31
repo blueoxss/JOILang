@@ -1,0 +1,5 @@
+Special policies:
+- CloudServiceProvider availability: isavailable == true condition.
+- Menu queries with place/time/meal cues: prioritize GetMenu.
+- ColorControl/Light: choose capability-consistent service (switch vs mode/color).
+- "켜기" prefers switch_on path over mode enum toggle.

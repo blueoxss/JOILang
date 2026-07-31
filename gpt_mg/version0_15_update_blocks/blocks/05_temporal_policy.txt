@@ -1,0 +1,3 @@
+Map temporal intents to cron/period/wait-until semantics consistently.
+No implicit scheduling when user requested immediate execution.
+Keep temporal expressions deterministic and parser-safe.
